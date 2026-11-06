@@ -1,0 +1,9427 @@
+{
+  "meta": {
+    "title": "一年級國語（上）教學題庫",
+    "scope": "首冊數字 + 第一課～第六課",
+    "generated": "2026-11-06",
+    "version": "1.1",
+    "changelog": [
+      "1.1: 疊詞題改為挖名詞（修正 Q0474–Q0477 歧義與「的的」）；合體字題加 components/layout/example_word 欄位（Codex 審核 B4）"
+    ],
+    "source": "C:/code_project/考試文檔 課本照片 44 張",
+    "notes": [
+      "第一、二、三、六課的部首/筆畫取自課本「我會寫字」頁；第四、五課與數字未拍到該頁，依教育部標準字體補充，strokes_source = 補充。",
+      "question.type 說明：zhuyin_to_char 看注音選字 / char_to_zhuyin 看字選注音 / stroke_count 筆畫數 / radical 部首 / cloze 課文填空 / word_fill 詞語填空 / antonym 相反詞 / combine 合體字 / polyphone 多音字 / measure_word 量詞 / reduplication 疊詞 / verb_pattern 動作一動作 / write 寫字任務。"
+    ],
+    "question_count": 481,
+    "character_count": 84
+  },
+  "lessons": [
+    {
+      "id": 0,
+      "title": "數字（首冊）",
+      "author": "",
+      "pages": [
+        80
+      ],
+      "text": [
+        "一二三四五六七八九十"
+      ]
+    },
+    {
+      "id": 1,
+      "title": "拍拍手",
+      "author": "馮輝岳",
+      "pages": [
+        16,
+        17
+      ],
+      "text": [
+        "拍拍手，拍一拍。",
+        "左拍右拍，拍拍拍。",
+        "你拍手，他也拍，",
+        "上拍下拍，拍拍拍。"
+      ]
+    },
+    {
+      "id": 2,
+      "title": "這是誰的",
+      "author": "鄒敦怜",
+      "pages": [
+        24,
+        25
+      ],
+      "text": [
+        "一二三，這是我的。",
+        "四五六，這是你的。",
+        "七八九，這是他的。",
+        "分好了，啊！多了一個，這是誰的？"
+      ]
+    },
+    {
+      "id": 3,
+      "title": "秋千",
+      "author": "嚴淑女",
+      "pages": [
+        32,
+        33
+      ],
+      "text": [
+        "秋千，秋千，和我玩。",
+        "上上上，陪我上高山。",
+        "下下下，陪我到大海。",
+        "秋千，秋千，我的好朋友，",
+        "秋千，秋千，我們一起玩。"
+      ]
+    },
+    {
+      "id": 4,
+      "title": "大個子，小個子",
+      "author": "林麗麗",
+      "pages": [
+        42,
+        43,
+        44,
+        45
+      ],
+      "text": [
+        "大個子，小個子，一起上課一起玩。",
+        "兩個人，手拉手，左看看，右找找。",
+        "小個子看到一隻大青蛙，",
+        "大個子找到三隻小青蛙。",
+        "小個子，大個子，看看找找好開心。"
+      ]
+    },
+    {
+      "id": 5,
+      "title": "比一比",
+      "author": "",
+      "pages": [
+        52,
+        53,
+        54,
+        55
+      ],
+      "text": [
+        "門裡門外，比一比，有什麼不同？",
+        "早上晚上，比一比，有什麼不同？",
+        "上山山上，比一比，有什麼不同？",
+        "王子的王，主人的主，比一比，又有什麼不同？"
+      ]
+    },
+    {
+      "id": 6,
+      "title": "小路",
+      "author": "",
+      "pages": [
+        62,
+        63,
+        64,
+        65
+      ],
+      "text": [
+        "長長的小路，開了小小的白花，也開了小小的紅花。",
+        "走在小路上，我向小紅花說你早，也向小白花說你好。",
+        "紅紅的小花，白白的小花，一朵又一朵，",
+        "從這一頭開到那一頭，從那一頭開到這一頭。",
+        "一朵朵小白花，一朵朵小紅花，陪我一起走在小路上。"
+      ]
+    }
+  ],
+  "characters": [
+    {
+      "char": "一",
+      "zhuyin": "ㄧ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "一",
+      "strokes_total": 1,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "二",
+      "zhuyin": "ㄦˋ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "二",
+      "strokes_total": 2,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "三",
+      "zhuyin": "ㄙㄢ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "一",
+      "strokes_total": 3,
+      "strokes_after_radical": 2,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "四",
+      "zhuyin": "ㄙˋ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "囗",
+      "strokes_total": 5,
+      "strokes_after_radical": 2,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "五",
+      "zhuyin": "ㄨˇ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "二",
+      "strokes_total": 4,
+      "strokes_after_radical": 2,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "六",
+      "zhuyin": "ㄌㄧㄡˋ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "八",
+      "strokes_total": 4,
+      "strokes_after_radical": 2,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "七",
+      "zhuyin": "ㄑㄧ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "一",
+      "strokes_total": 2,
+      "strokes_after_radical": 1,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "八",
+      "zhuyin": "ㄅㄚ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "八",
+      "strokes_total": 2,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "九",
+      "zhuyin": "ㄐㄧㄡˇ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "乙",
+      "strokes_total": 2,
+      "strokes_after_radical": 1,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "十",
+      "zhuyin": "ㄕˊ",
+      "lesson": 0,
+      "lesson_title": "數字（首冊）",
+      "radical": "十",
+      "strokes_total": 2,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": []
+    },
+    {
+      "char": "拍",
+      "zhuyin": "ㄆㄞ",
+      "lesson": 1,
+      "lesson_title": "拍拍手",
+      "radical": "手",
+      "strokes_total": 8,
+      "strokes_after_radical": 5,
+      "strokes_source": "課本p18",
+      "words": [
+        "拍手",
+        "拍球",
+        "拍打",
+        "拍照",
+        "球拍",
+        "拍一拍"
+      ]
+    },
+    {
+      "char": "手",
+      "zhuyin": "ㄕㄡˇ",
+      "lesson": 1,
+      "lesson_title": "拍拍手",
+      "radical": "手",
+      "strokes_total": 4,
+      "strokes_after_radical": 0,
+      "strokes_source": "課本p18",
+      "words": [
+        "拍手",
+        "左手",
+        "右手",
+        "手拉手"
+      ]
+    },
+    {
+      "char": "左",
+      "zhuyin": "ㄗㄨㄛˇ",
+      "lesson": 1,
+      "lesson_title": "拍拍手",
+      "radical": "工",
+      "strokes_total": 5,
+      "strokes_after_radical": 2,
+      "strokes_source": "課本p18",
+      "words": [
+        "左手",
+        "左拍右拍",
+        "左邊"
+      ]
+    },
+    {
+      "char": "右",
+      "zhuyin": "ㄧㄡˋ",
+      "lesson": 1,
+      "lesson_title": "拍拍手",
+      "radical": "口",
+      "strokes_total": 5,
+      "strokes_after_radical": 2,
+      "strokes_source": "課本p18",
+      "words": [
+        "右手",
+        "右邊"
+      ]
+    },
+    {
+      "char": "你",
+      "zhuyin": "ㄋㄧˇ",
+      "lesson": 1,
+      "lesson_title": "拍拍手",
+      "radical": "人",
+      "strokes_total": 7,
+      "strokes_after_radical": 5,
+      "strokes_source": "課本p18",
+      "words": [
+        "你拍手",
+        "你的",
+        "你好",
+        "你早"
+      ]
+    },
+    {
+      "char": "他",
+      "zhuyin": "ㄊㄚ",
+      "lesson": 1,
+      "lesson_title": "拍拍手",
+      "radical": "人",
+      "strokes_total": 5,
+      "strokes_after_radical": 3,
+      "strokes_source": "課本p18",
+      "words": [
+        "他也拍",
+        "他的"
+      ]
+    },
+    {
+      "char": "也",
+      "zhuyin": "ㄧㄝˇ",
+      "lesson": 1,
+      "lesson_title": "拍拍手",
+      "radical": "乙",
+      "strokes_total": 3,
+      "strokes_after_radical": 2,
+      "strokes_source": "課本p18",
+      "words": [
+        "他也拍",
+        "也開了"
+      ]
+    },
+    {
+      "char": "上",
+      "zhuyin": "ㄕㄤˋ",
+      "lesson": 1,
+      "lesson_title": "拍拍手",
+      "radical": "一",
+      "strokes_total": 3,
+      "strokes_after_radical": 2,
+      "strokes_source": "課本p18",
+      "words": [
+        "上面",
+        "上山",
+        "山上",
+        "上車",
+        "樹上",
+        "早上"
+      ]
+    },
+    {
+      "char": "下",
+      "zhuyin": "ㄒㄧㄚˋ",
+      "lesson": 1,
+      "lesson_title": "拍拍手",
+      "radical": "一",
+      "strokes_total": 3,
+      "strokes_after_radical": 2,
+      "strokes_source": "課本p18",
+      "words": [
+        "下面",
+        "下車",
+        "樹下",
+        "下大雨"
+      ]
+    },
+    {
+      "char": "這",
+      "zhuyin": "ㄓㄜˋ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "辵",
+      "strokes_total": 11,
+      "strokes_after_radical": 7,
+      "strokes_source": "課本p26",
+      "words": [
+        "這是",
+        "這一頭",
+        "這個"
+      ]
+    },
+    {
+      "char": "是",
+      "zhuyin": "ㄕˋ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "日",
+      "strokes_total": 9,
+      "strokes_after_radical": 5,
+      "strokes_source": "課本p26",
+      "words": [
+        "這是",
+        "是誰"
+      ]
+    },
+    {
+      "char": "誰",
+      "zhuyin": "ㄕㄟˊ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "言",
+      "strokes_total": 15,
+      "strokes_after_radical": 8,
+      "strokes_source": "課本p26",
+      "words": [
+        "誰的",
+        "是誰"
+      ]
+    },
+    {
+      "char": "的",
+      "zhuyin": "˙ㄉㄜ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "白",
+      "strokes_total": 8,
+      "strokes_after_radical": 3,
+      "strokes_source": "課本p26",
+      "words": [
+        "我的",
+        "你的",
+        "他的",
+        "誰的"
+      ]
+    },
+    {
+      "char": "我",
+      "zhuyin": "ㄨㄛˇ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "戈",
+      "strokes_total": 7,
+      "strokes_after_radical": 3,
+      "strokes_source": "課本p26",
+      "words": [
+        "我的",
+        "我們",
+        "陪我"
+      ]
+    },
+    {
+      "char": "分",
+      "zhuyin": "ㄈㄣ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "刀",
+      "strokes_total": 4,
+      "strokes_after_radical": 2,
+      "strokes_source": "課本p26",
+      "words": [
+        "分好了"
+      ]
+    },
+    {
+      "char": "好",
+      "zhuyin": "ㄏㄠˇ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "女",
+      "strokes_total": 6,
+      "strokes_after_radical": 3,
+      "strokes_source": "課本p26",
+      "words": [
+        "分好了",
+        "好朋友",
+        "好開心",
+        "你好",
+        "好久"
+      ]
+    },
+    {
+      "char": "了",
+      "zhuyin": "˙ㄌㄜ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "亅",
+      "strokes_total": 2,
+      "strokes_after_radical": 1,
+      "strokes_source": "課本p26",
+      "words": [
+        "分好了",
+        "多了一個",
+        "開了"
+      ]
+    },
+    {
+      "char": "啊",
+      "zhuyin": "ㄚ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "口",
+      "strokes_total": 11,
+      "strokes_after_radical": 8,
+      "strokes_source": "課本p26",
+      "words": [
+        "啊！"
+      ]
+    },
+    {
+      "char": "多",
+      "zhuyin": "ㄉㄨㄛ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "夕",
+      "strokes_total": 6,
+      "strokes_after_radical": 3,
+      "strokes_source": "課本p26",
+      "words": [
+        "多了一個"
+      ]
+    },
+    {
+      "char": "個",
+      "zhuyin": "˙ㄍㄜ",
+      "lesson": 2,
+      "lesson_title": "這是誰的",
+      "radical": "人",
+      "strokes_total": 10,
+      "strokes_after_radical": 8,
+      "strokes_source": "課本p26",
+      "words": [
+        "一個",
+        "大個子",
+        "小個子",
+        "兩個人"
+      ]
+    },
+    {
+      "char": "秋",
+      "zhuyin": "ㄑㄧㄡ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "禾",
+      "strokes_total": 9,
+      "strokes_after_radical": 4,
+      "strokes_source": "課本p34",
+      "words": [
+        "秋千",
+        "秋天"
+      ]
+    },
+    {
+      "char": "高",
+      "zhuyin": "ㄍㄠ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "高",
+      "strokes_total": 10,
+      "strokes_after_radical": 0,
+      "strokes_source": "課本p34",
+      "words": [
+        "高山",
+        "高高的"
+      ]
+    },
+    {
+      "char": "朋",
+      "zhuyin": "ㄆㄥˊ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "月",
+      "strokes_total": 8,
+      "strokes_after_radical": 4,
+      "strokes_source": "課本p34",
+      "words": [
+        "朋友",
+        "好朋友"
+      ]
+    },
+    {
+      "char": "千",
+      "zhuyin": "ㄑㄧㄢ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "十",
+      "strokes_total": 3,
+      "strokes_after_radical": 1,
+      "strokes_source": "課本p34",
+      "words": [
+        "秋千"
+      ]
+    },
+    {
+      "char": "山",
+      "zhuyin": "ㄕㄢ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "山",
+      "strokes_total": 3,
+      "strokes_after_radical": 0,
+      "strokes_source": "課本p34",
+      "words": [
+        "高山",
+        "上山",
+        "山上"
+      ]
+    },
+    {
+      "char": "友",
+      "zhuyin": "ㄧㄡˇ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "又",
+      "strokes_total": 4,
+      "strokes_after_radical": 2,
+      "strokes_source": "課本p34",
+      "words": [
+        "朋友"
+      ]
+    },
+    {
+      "char": "和",
+      "zhuyin": "ㄏㄢˋ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "口",
+      "strokes_total": 8,
+      "strokes_after_radical": 5,
+      "strokes_source": "課本p34",
+      "words": [
+        "和我玩"
+      ]
+    },
+    {
+      "char": "到",
+      "zhuyin": "ㄉㄠˋ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "刀",
+      "strokes_total": 8,
+      "strokes_after_radical": 6,
+      "strokes_source": "課本p34",
+      "words": [
+        "到大海",
+        "看到",
+        "找到"
+      ]
+    },
+    {
+      "char": "們",
+      "zhuyin": "˙ㄇㄣ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "人",
+      "strokes_total": 10,
+      "strokes_after_radical": 8,
+      "strokes_source": "課本p34",
+      "words": [
+        "我們"
+      ]
+    },
+    {
+      "char": "玩",
+      "zhuyin": "ㄨㄢˊ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "玉",
+      "strokes_total": 8,
+      "strokes_after_radical": 4,
+      "strokes_source": "課本p34",
+      "words": [
+        "和我玩",
+        "一起玩"
+      ]
+    },
+    {
+      "char": "大",
+      "zhuyin": "ㄉㄚˋ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "大",
+      "strokes_total": 3,
+      "strokes_after_radical": 0,
+      "strokes_source": "課本p34",
+      "words": [
+        "大海",
+        "大個子",
+        "大青蛙",
+        "長大"
+      ]
+    },
+    {
+      "char": "起",
+      "zhuyin": "ㄑㄧˇ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "走",
+      "strokes_total": 10,
+      "strokes_after_radical": 3,
+      "strokes_source": "課本p34",
+      "words": [
+        "一起",
+        "一起玩"
+      ]
+    },
+    {
+      "char": "陪",
+      "zhuyin": "ㄆㄟˊ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "阜",
+      "strokes_total": 11,
+      "strokes_after_radical": 8,
+      "strokes_source": "課本p34",
+      "words": [
+        "陪我"
+      ]
+    },
+    {
+      "char": "海",
+      "zhuyin": "ㄏㄞˇ",
+      "lesson": 3,
+      "lesson_title": "秋千",
+      "radical": "水",
+      "strokes_total": 10,
+      "strokes_after_radical": 7,
+      "strokes_source": "課本p34",
+      "words": [
+        "大海",
+        "海水",
+        "藍藍的大海"
+      ]
+    },
+    {
+      "char": "子",
+      "zhuyin": "˙ㄗ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "子",
+      "strokes_total": 3,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": [
+        "大個子",
+        "小個子",
+        "王子",
+        "句子"
+      ]
+    },
+    {
+      "char": "小",
+      "zhuyin": "ㄒㄧㄠˇ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "小",
+      "strokes_total": 3,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": [
+        "小個子",
+        "小青蛙",
+        "小路",
+        "小花"
+      ]
+    },
+    {
+      "char": "課",
+      "zhuyin": "ㄎㄜˋ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "言",
+      "strokes_total": 15,
+      "strokes_after_radical": 8,
+      "strokes_source": "補充",
+      "words": [
+        "上課"
+      ]
+    },
+    {
+      "char": "兩",
+      "zhuyin": "ㄌㄧㄤˇ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "入",
+      "strokes_total": 8,
+      "strokes_after_radical": 6,
+      "strokes_source": "補充",
+      "words": [
+        "兩個人"
+      ]
+    },
+    {
+      "char": "人",
+      "zhuyin": "ㄖㄣˊ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "人",
+      "strokes_total": 2,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": [
+        "兩個人",
+        "主人"
+      ]
+    },
+    {
+      "char": "拉",
+      "zhuyin": "ㄌㄚ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "手",
+      "strokes_total": 8,
+      "strokes_after_radical": 5,
+      "strokes_source": "補充",
+      "words": [
+        "手拉手"
+      ]
+    },
+    {
+      "char": "看",
+      "zhuyin": "ㄎㄢˋ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "目",
+      "strokes_total": 9,
+      "strokes_after_radical": 4,
+      "strokes_source": "補充",
+      "words": [
+        "看看",
+        "看到"
+      ]
+    },
+    {
+      "char": "找",
+      "zhuyin": "ㄓㄠˇ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "手",
+      "strokes_total": 7,
+      "strokes_after_radical": 4,
+      "strokes_source": "補充",
+      "words": [
+        "找找",
+        "找到"
+      ]
+    },
+    {
+      "char": "隻",
+      "zhuyin": "ㄓ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "隹",
+      "strokes_total": 10,
+      "strokes_after_radical": 2,
+      "strokes_source": "補充",
+      "words": [
+        "一隻",
+        "三隻"
+      ]
+    },
+    {
+      "char": "青",
+      "zhuyin": "ㄑㄧㄥ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "青",
+      "strokes_total": 8,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": [
+        "青蛙"
+      ]
+    },
+    {
+      "char": "蛙",
+      "zhuyin": "ㄨㄚ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "虫",
+      "strokes_total": 12,
+      "strokes_after_radical": 6,
+      "strokes_source": "補充",
+      "words": [
+        "青蛙"
+      ]
+    },
+    {
+      "char": "開",
+      "zhuyin": "ㄎㄞ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "門",
+      "strokes_total": 12,
+      "strokes_after_radical": 4,
+      "strokes_source": "補充",
+      "words": [
+        "開心",
+        "開了",
+        "開到"
+      ]
+    },
+    {
+      "char": "心",
+      "zhuyin": "ㄒㄧㄣ",
+      "lesson": 4,
+      "lesson_title": "大個子，小個子",
+      "radical": "心",
+      "strokes_total": 4,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": [
+        "開心"
+      ]
+    },
+    {
+      "char": "比",
+      "zhuyin": "ㄅㄧˇ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "比",
+      "strokes_total": 4,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": [
+        "比一比"
+      ]
+    },
+    {
+      "char": "門",
+      "zhuyin": "ㄇㄣˊ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "門",
+      "strokes_total": 8,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": [
+        "門裡",
+        "門外"
+      ]
+    },
+    {
+      "char": "裡",
+      "zhuyin": "ㄌㄧˇ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "衣",
+      "strokes_total": 13,
+      "strokes_after_radical": 7,
+      "strokes_source": "補充",
+      "words": [
+        "門裡"
+      ]
+    },
+    {
+      "char": "外",
+      "zhuyin": "ㄨㄞˋ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "夕",
+      "strokes_total": 5,
+      "strokes_after_radical": 2,
+      "strokes_source": "補充",
+      "words": [
+        "門外"
+      ]
+    },
+    {
+      "char": "有",
+      "zhuyin": "ㄧㄡˇ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "月",
+      "strokes_total": 6,
+      "strokes_after_radical": 2,
+      "strokes_source": "補充",
+      "words": [
+        "有什麼不同",
+        "有星星"
+      ]
+    },
+    {
+      "char": "什",
+      "zhuyin": "ㄕㄣˊ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "人",
+      "strokes_total": 4,
+      "strokes_after_radical": 2,
+      "strokes_source": "補充",
+      "words": [
+        "什麼"
+      ]
+    },
+    {
+      "char": "麼",
+      "zhuyin": "˙ㄇㄜ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "麻",
+      "strokes_total": 14,
+      "strokes_after_radical": 3,
+      "strokes_source": "補充",
+      "words": [
+        "什麼"
+      ]
+    },
+    {
+      "char": "不",
+      "zhuyin": "ㄅㄨˋ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "一",
+      "strokes_total": 4,
+      "strokes_after_radical": 3,
+      "strokes_source": "補充",
+      "words": [
+        "不同"
+      ]
+    },
+    {
+      "char": "同",
+      "zhuyin": "ㄊㄨㄥˊ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "口",
+      "strokes_total": 6,
+      "strokes_after_radical": 3,
+      "strokes_source": "補充",
+      "words": [
+        "不同"
+      ]
+    },
+    {
+      "char": "早",
+      "zhuyin": "ㄗㄠˇ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "日",
+      "strokes_total": 6,
+      "strokes_after_radical": 2,
+      "strokes_source": "補充",
+      "words": [
+        "早上",
+        "你早"
+      ]
+    },
+    {
+      "char": "晚",
+      "zhuyin": "ㄨㄢˇ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "日",
+      "strokes_total": 11,
+      "strokes_after_radical": 7,
+      "strokes_source": "補充",
+      "words": [
+        "晚上"
+      ]
+    },
+    {
+      "char": "王",
+      "zhuyin": "ㄨㄤˊ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "玉",
+      "strokes_total": 4,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": [
+        "王子"
+      ]
+    },
+    {
+      "char": "主",
+      "zhuyin": "ㄓㄨˇ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "丶",
+      "strokes_total": 5,
+      "strokes_after_radical": 4,
+      "strokes_source": "補充",
+      "words": [
+        "主人"
+      ]
+    },
+    {
+      "char": "又",
+      "zhuyin": "ㄧㄡˋ",
+      "lesson": 5,
+      "lesson_title": "比一比",
+      "radical": "又",
+      "strokes_total": 2,
+      "strokes_after_radical": 0,
+      "strokes_source": "補充",
+      "words": [
+        "又有",
+        "一朵又一朵"
+      ]
+    },
+    {
+      "char": "路",
+      "zhuyin": "ㄌㄨˋ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "足",
+      "strokes_total": 13,
+      "strokes_after_radical": 6,
+      "strokes_source": "課本p67",
+      "words": [
+        "小路",
+        "走在小路上"
+      ]
+    },
+    {
+      "char": "長",
+      "zhuyin": "ㄔㄤˊ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "長",
+      "strokes_total": 8,
+      "strokes_after_radical": 0,
+      "strokes_source": "課本p67",
+      "words": [
+        "長長的",
+        "長頸鹿",
+        "長短",
+        "長大",
+        "生長"
+      ]
+    },
+    {
+      "char": "白",
+      "zhuyin": "ㄅㄞˊ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "白",
+      "strokes_total": 5,
+      "strokes_after_radical": 0,
+      "strokes_source": "課本p67",
+      "words": [
+        "白花",
+        "白白的"
+      ]
+    },
+    {
+      "char": "花",
+      "zhuyin": "ㄏㄨㄚ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "艸",
+      "strokes_total": 8,
+      "strokes_after_radical": 4,
+      "strokes_source": "課本p67",
+      "words": [
+        "小花",
+        "白花",
+        "紅花"
+      ]
+    },
+    {
+      "char": "紅",
+      "zhuyin": "ㄏㄨㄥˊ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "糸",
+      "strokes_total": 9,
+      "strokes_after_radical": 3,
+      "strokes_source": "課本p67",
+      "words": [
+        "紅花",
+        "紅紅的"
+      ]
+    },
+    {
+      "char": "走",
+      "zhuyin": "ㄗㄡˇ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "走",
+      "strokes_total": 7,
+      "strokes_after_radical": 0,
+      "strokes_source": "課本p67",
+      "words": [
+        "走在",
+        "走一走"
+      ]
+    },
+    {
+      "char": "在",
+      "zhuyin": "ㄗㄞˋ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "土",
+      "strokes_total": 6,
+      "strokes_after_radical": 3,
+      "strokes_source": "課本p67",
+      "words": [
+        "走在小路上"
+      ]
+    },
+    {
+      "char": "向",
+      "zhuyin": "ㄒㄧㄤˋ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "口",
+      "strokes_total": 6,
+      "strokes_after_radical": 3,
+      "strokes_source": "課本p67",
+      "words": [
+        "向小紅花說"
+      ]
+    },
+    {
+      "char": "說",
+      "zhuyin": "ㄕㄨㄛ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "言",
+      "strokes_total": 14,
+      "strokes_after_radical": 7,
+      "strokes_source": "課本p67",
+      "words": [
+        "說你早",
+        "說你好",
+        "說一說"
+      ]
+    },
+    {
+      "char": "朵",
+      "zhuyin": "ㄉㄨㄛˇ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "木",
+      "strokes_total": 6,
+      "strokes_after_radical": 2,
+      "strokes_source": "課本p67",
+      "words": [
+        "一朵",
+        "一朵朵",
+        "一朵又一朵"
+      ]
+    },
+    {
+      "char": "從",
+      "zhuyin": "ㄘㄨㄥˊ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "彳",
+      "strokes_total": 11,
+      "strokes_after_radical": 8,
+      "strokes_source": "課本p67",
+      "words": [
+        "從這一頭"
+      ]
+    },
+    {
+      "char": "頭",
+      "zhuyin": "ㄊㄡˊ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "頁",
+      "strokes_total": 16,
+      "strokes_after_radical": 7,
+      "strokes_source": "課本p67",
+      "words": [
+        "這一頭",
+        "那一頭"
+      ]
+    },
+    {
+      "char": "那",
+      "zhuyin": "ㄋㄚˋ",
+      "lesson": 6,
+      "lesson_title": "小路",
+      "radical": "邑",
+      "strokes_total": 7,
+      "strokes_after_radical": 4,
+      "strokes_source": "課本p67",
+      "words": [
+        "那一頭",
+        "那裡"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "Q0001",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄧ」是哪一個字？",
+      "options": [
+        "起",
+        "比",
+        "一",
+        "你"
+      ],
+      "answer": "一",
+      "explanation": "「一」念作 ㄧ。"
+    },
+    {
+      "id": "Q0002",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄦˋ」是哪一個字？",
+      "options": [
+        "七",
+        "三",
+        "二",
+        "八"
+      ],
+      "answer": "二",
+      "explanation": "「二」念作 ㄦˋ。"
+    },
+    {
+      "id": "Q0003",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄙㄢ」是哪一個字？",
+      "options": [
+        "看",
+        "三",
+        "山",
+        "和"
+      ],
+      "answer": "三",
+      "explanation": "「三」念作 ㄙㄢ。"
+    },
+    {
+      "id": "Q0004",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄙˋ」是哪一個字？",
+      "options": [
+        "四",
+        "子",
+        "十",
+        "隻"
+      ],
+      "answer": "四",
+      "explanation": "「四」念作 ㄙˋ。"
+    },
+    {
+      "id": "Q0005",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄨˇ」是哪一個字？",
+      "options": [
+        "不",
+        "路",
+        "五",
+        "主"
+      ],
+      "answer": "五",
+      "explanation": "「五」念作 ㄨˇ。"
+    },
+    {
+      "id": "Q0006",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄌㄧㄡˋ」是哪一個字？",
+      "options": [
+        "了",
+        "右",
+        "兩",
+        "六"
+      ],
+      "answer": "六",
+      "explanation": "「六」念作 ㄌㄧㄡˋ。"
+    },
+    {
+      "id": "Q0007",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄑㄧ」是哪一個字？",
+      "options": [
+        "青",
+        "秋",
+        "比",
+        "七"
+      ],
+      "answer": "七",
+      "explanation": "「七」念作 ㄑㄧ。"
+    },
+    {
+      "id": "Q0008",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄅㄚ」是哪一個字？",
+      "options": [
+        "那",
+        "比",
+        "八",
+        "啊"
+      ],
+      "answer": "八",
+      "explanation": "「八」念作 ㄅㄚ。"
+    },
+    {
+      "id": "Q0009",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄐㄧㄡˇ」是哪一個字？",
+      "options": [
+        "九",
+        "友",
+        "六",
+        "秋"
+      ],
+      "answer": "九",
+      "explanation": "「九」念作 ㄐㄧㄡˇ。"
+    },
+    {
+      "id": "Q0010",
+      "type": "zhuyin_to_char",
+      "lesson": 0,
+      "prompt": "注音「ㄕˊ」是哪一個字？",
+      "options": [
+        "什",
+        "說",
+        "四",
+        "十"
+      ],
+      "answer": "十",
+      "explanation": "「十」念作 ㄕˊ。"
+    },
+    {
+      "id": "Q0011",
+      "type": "zhuyin_to_char",
+      "lesson": 1,
+      "prompt": "注音「ㄆㄞ」是哪一個字？（例詞：拍手）",
+      "options": [
+        "拍",
+        "在",
+        "開",
+        "白"
+      ],
+      "answer": "拍",
+      "explanation": "「拍」念作 ㄆㄞ。"
+    },
+    {
+      "id": "Q0012",
+      "type": "zhuyin_to_char",
+      "lesson": 1,
+      "prompt": "注音「ㄕㄡˇ」是哪一個字？（例詞：拍手）",
+      "options": [
+        "手",
+        "誰",
+        "頭",
+        "說"
+      ],
+      "answer": "手",
+      "explanation": "「手」念作 ㄕㄡˇ。"
+    },
+    {
+      "id": "Q0013",
+      "type": "zhuyin_to_char",
+      "lesson": 1,
+      "prompt": "注音「ㄗㄨㄛˇ」是哪一個字？（例詞：左手）",
+      "options": [
+        "在",
+        "早",
+        "子",
+        "左"
+      ],
+      "answer": "左",
+      "explanation": "「左」念作 ㄗㄨㄛˇ。"
+    },
+    {
+      "id": "Q0014",
+      "type": "zhuyin_to_char",
+      "lesson": 1,
+      "prompt": "注音「ㄧㄡˋ」是哪一個字？（例詞：右手）",
+      "options": [
+        "友",
+        "六",
+        "右",
+        "九"
+      ],
+      "answer": "右",
+      "explanation": "「右」念作 ㄧㄡˋ。"
+    },
+    {
+      "id": "Q0015",
+      "type": "zhuyin_to_char",
+      "lesson": 1,
+      "prompt": "注音「ㄋㄧˇ」是哪一個字？（例詞：你拍手）",
+      "options": [
+        "你",
+        "裡",
+        "比",
+        "一"
+      ],
+      "answer": "你",
+      "explanation": "「你」念作 ㄋㄧˇ。"
+    },
+    {
+      "id": "Q0016",
+      "type": "zhuyin_to_char",
+      "lesson": 1,
+      "prompt": "注音「ㄊㄚ」是哪一個字？（例詞：他也拍）",
+      "options": [
+        "他",
+        "大",
+        "那",
+        "八"
+      ],
+      "answer": "他",
+      "explanation": "「他」念作 ㄊㄚ。"
+    },
+    {
+      "id": "Q0017",
+      "type": "zhuyin_to_char",
+      "lesson": 1,
+      "prompt": "注音「ㄧㄝˇ」是哪一個字？（例詞：他也拍）",
+      "options": [
+        "你",
+        "手",
+        "也",
+        "右"
+      ],
+      "answer": "也",
+      "explanation": "「也」念作 ㄧㄝˇ。"
+    },
+    {
+      "id": "Q0018",
+      "type": "zhuyin_to_char",
+      "lesson": 1,
+      "prompt": "注音「ㄕㄤˋ」是哪一個字？（例詞：上面）",
+      "options": [
+        "誰",
+        "上",
+        "什",
+        "手"
+      ],
+      "answer": "上",
+      "explanation": "「上」念作 ㄕㄤˋ。"
+    },
+    {
+      "id": "Q0019",
+      "type": "zhuyin_to_char",
+      "lesson": 1,
+      "prompt": "注音「ㄒㄧㄚˋ」是哪一個字？（例詞：下面）",
+      "options": [
+        "小",
+        "向",
+        "心",
+        "下"
+      ],
+      "answer": "下",
+      "explanation": "「下」念作 ㄒㄧㄚˋ。"
+    },
+    {
+      "id": "Q0020",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「ㄓㄜˋ」是哪一個字？（例詞：這是）",
+      "options": [
+        "隻",
+        "找",
+        "了",
+        "這"
+      ],
+      "answer": "這",
+      "explanation": "「這」念作 ㄓㄜˋ。"
+    },
+    {
+      "id": "Q0021",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「ㄕˋ」是哪一個字？（例詞：這是）",
+      "options": [
+        "誰",
+        "十",
+        "是",
+        "什"
+      ],
+      "answer": "是",
+      "explanation": "「是」念作 ㄕˋ。"
+    },
+    {
+      "id": "Q0022",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「ㄕㄟˊ」是哪一個字？（例詞：誰的）",
+      "options": [
+        "誰",
+        "山",
+        "什",
+        "手"
+      ],
+      "answer": "誰",
+      "explanation": "「誰」念作 ㄕㄟˊ。"
+    },
+    {
+      "id": "Q0023",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「˙ㄉㄜ」是哪一個字？（例詞：我的）",
+      "options": [
+        "了",
+        "的",
+        "課",
+        "大"
+      ],
+      "answer": "的",
+      "explanation": "「的」念作 ˙ㄉㄜ。"
+    },
+    {
+      "id": "Q0024",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「ㄨㄛˇ」是哪一個字？（例詞：我的）",
+      "options": [
+        "我",
+        "左",
+        "多",
+        "朵"
+      ],
+      "answer": "我",
+      "explanation": "「我」念作 ㄨㄛˇ。"
+    },
+    {
+      "id": "Q0025",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「ㄈㄣ」是哪一個字？（例詞：分好了）",
+      "options": [
+        "什",
+        "分",
+        "門",
+        "們"
+      ],
+      "answer": "分",
+      "explanation": "「分」念作 ㄈㄣ。"
+    },
+    {
+      "id": "Q0026",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「ㄏㄠˇ」是哪一個字？（例詞：分好了）",
+      "options": [
+        "好",
+        "花",
+        "到",
+        "找"
+      ],
+      "answer": "好",
+      "explanation": "「好」念作 ㄏㄠˇ。"
+    },
+    {
+      "id": "Q0027",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「˙ㄌㄜ」是哪一個字？（例詞：分好了）",
+      "options": [
+        "課",
+        "路",
+        "了",
+        "的"
+      ],
+      "answer": "了",
+      "explanation": "「了」念作 ˙ㄌㄜ。"
+    },
+    {
+      "id": "Q0028",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「ㄚ」是哪一個字？（例詞：啊！）",
+      "options": [
+        "啊",
+        "八",
+        "那",
+        "拉"
+      ],
+      "answer": "啊",
+      "explanation": "「啊」念作 ㄚ。"
+    },
+    {
+      "id": "Q0029",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「ㄉㄨㄛ」是哪一個字？（例詞：多了一個）",
+      "options": [
+        "大",
+        "的",
+        "多",
+        "到"
+      ],
+      "answer": "多",
+      "explanation": "「多」念作 ㄉㄨㄛ。"
+    },
+    {
+      "id": "Q0030",
+      "type": "zhuyin_to_char",
+      "lesson": 2,
+      "prompt": "注音「˙ㄍㄜ」是哪一個字？（例詞：一個）",
+      "options": [
+        "課",
+        "個",
+        "麼",
+        "了"
+      ],
+      "answer": "個",
+      "explanation": "「個」念作 ˙ㄍㄜ。"
+    },
+    {
+      "id": "Q0031",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄑㄧㄡ」是哪一個字？（例詞：秋千）",
+      "options": [
+        "秋",
+        "右",
+        "有",
+        "起"
+      ],
+      "answer": "秋",
+      "explanation": "「秋」念作 ㄑㄧㄡ。"
+    },
+    {
+      "id": "Q0032",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄍㄠ」是哪一個字？（例詞：高山）",
+      "options": [
+        "早",
+        "高",
+        "找",
+        "到"
+      ],
+      "answer": "高",
+      "explanation": "「高」念作 ㄍㄠ。"
+    },
+    {
+      "id": "Q0033",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄆㄥˊ」是哪一個字？（例詞：朋友）",
+      "options": [
+        "千",
+        "朋",
+        "陪",
+        "拍"
+      ],
+      "answer": "朋",
+      "explanation": "「朋」念作 ㄆㄥˊ。"
+    },
+    {
+      "id": "Q0034",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄑㄧㄢ」是哪一個字？（例詞：秋千）",
+      "options": [
+        "青",
+        "秋",
+        "起",
+        "千"
+      ],
+      "answer": "千",
+      "explanation": "「千」念作 ㄑㄧㄢ。"
+    },
+    {
+      "id": "Q0035",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄕㄢ」是哪一個字？（例詞：高山）",
+      "options": [
+        "說",
+        "誰",
+        "是",
+        "山"
+      ],
+      "answer": "山",
+      "explanation": "「山」念作 ㄕㄢ。"
+    },
+    {
+      "id": "Q0036",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄧㄡˇ」是哪一個字？（例詞：朋友）",
+      "options": [
+        "友",
+        "又",
+        "九",
+        "六"
+      ],
+      "answer": "友",
+      "explanation": "「友」念作 ㄧㄡˇ。"
+    },
+    {
+      "id": "Q0037",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄏㄢˋ」是哪一個字？（例詞：和我玩）",
+      "options": [
+        "花",
+        "三",
+        "和",
+        "好"
+      ],
+      "answer": "和",
+      "explanation": "「和」念作 ㄏㄢˋ。"
+    },
+    {
+      "id": "Q0038",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄉㄠˋ」是哪一個字？（例詞：到大海）",
+      "options": [
+        "大",
+        "找",
+        "好",
+        "到"
+      ],
+      "answer": "到",
+      "explanation": "「到」念作 ㄉㄠˋ。"
+    },
+    {
+      "id": "Q0039",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「˙ㄇㄣ」是哪一個字？（例詞：我們）",
+      "options": [
+        "們",
+        "分",
+        "人",
+        "麼"
+      ],
+      "answer": "們",
+      "explanation": "「們」念作 ˙ㄇㄣ。"
+    },
+    {
+      "id": "Q0040",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄨㄢˊ」是哪一個字？（例詞：和我玩）",
+      "options": [
+        "玩",
+        "晚",
+        "陪",
+        "秋"
+      ],
+      "answer": "玩",
+      "explanation": "「玩」念作 ㄨㄢˊ。"
+    },
+    {
+      "id": "Q0041",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄉㄚˋ」是哪一個字？（例詞：大海）",
+      "options": [
+        "大",
+        "多",
+        "啊",
+        "朵"
+      ],
+      "answer": "大",
+      "explanation": "「大」念作 ㄉㄚˋ。"
+    },
+    {
+      "id": "Q0042",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄑㄧˇ」是哪一個字？（例詞：一起）",
+      "options": [
+        "七",
+        "你",
+        "起",
+        "比"
+      ],
+      "answer": "起",
+      "explanation": "「起」念作 ㄑㄧˇ。"
+    },
+    {
+      "id": "Q0043",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄆㄟˊ」是哪一個字？（例詞：陪我）",
+      "options": [
+        "陪",
+        "拍",
+        "誰",
+        "朋"
+      ],
+      "answer": "陪",
+      "explanation": "「陪」念作 ㄆㄟˊ。"
+    },
+    {
+      "id": "Q0044",
+      "type": "zhuyin_to_char",
+      "lesson": 3,
+      "prompt": "注音「ㄏㄞˇ」是哪一個字？（例詞：大海）",
+      "options": [
+        "白",
+        "紅",
+        "拍",
+        "海"
+      ],
+      "answer": "海",
+      "explanation": "「海」念作 ㄏㄞˇ。"
+    },
+    {
+      "id": "Q0045",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「˙ㄗ」是哪一個字？（例詞：大個子）",
+      "options": [
+        "左",
+        "子",
+        "是",
+        "走"
+      ],
+      "answer": "子",
+      "explanation": "「子」念作 ˙ㄗ。"
+    },
+    {
+      "id": "Q0046",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄒㄧㄠˇ」是哪一個字？（例詞：小個子）",
+      "options": [
+        "小",
+        "下",
+        "心",
+        "向"
+      ],
+      "answer": "小",
+      "explanation": "「小」念作 ㄒㄧㄠˇ。"
+    },
+    {
+      "id": "Q0047",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄎㄜˋ」是哪一個字？（例詞：上課）",
+      "options": [
+        "開",
+        "了",
+        "看",
+        "課"
+      ],
+      "answer": "課",
+      "explanation": "「課」念作 ㄎㄜˋ。"
+    },
+    {
+      "id": "Q0048",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄌㄧㄤˇ」是哪一個字？（例詞：兩個人）",
+      "options": [
+        "向",
+        "兩",
+        "六",
+        "了"
+      ],
+      "answer": "兩",
+      "explanation": "「兩」念作 ㄌㄧㄤˇ。"
+    },
+    {
+      "id": "Q0049",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄖㄣˊ」是哪一個字？（例詞：兩個人）",
+      "options": [
+        "人",
+        "分",
+        "什",
+        "門"
+      ],
+      "answer": "人",
+      "explanation": "「人」念作 ㄖㄣˊ。"
+    },
+    {
+      "id": "Q0050",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄌㄚ」是哪一個字？（例詞：手拉手）",
+      "options": [
+        "拉",
+        "那",
+        "八",
+        "啊"
+      ],
+      "answer": "拉",
+      "explanation": "「拉」念作 ㄌㄚ。"
+    },
+    {
+      "id": "Q0051",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄎㄢˋ」是哪一個字？（例詞：看看）",
+      "options": [
+        "開",
+        "看",
+        "三",
+        "和"
+      ],
+      "answer": "看",
+      "explanation": "「看」念作 ㄎㄢˋ。"
+    },
+    {
+      "id": "Q0052",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄓㄠˇ」是哪一個字？（例詞：找找）",
+      "options": [
+        "高",
+        "主",
+        "好",
+        "找"
+      ],
+      "answer": "找",
+      "explanation": "「找」念作 ㄓㄠˇ。"
+    },
+    {
+      "id": "Q0053",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄓ」是哪一個字？（例詞：一隻）",
+      "options": [
+        "隻",
+        "四",
+        "主",
+        "十"
+      ],
+      "answer": "隻",
+      "explanation": "「隻」念作 ㄓ。"
+    },
+    {
+      "id": "Q0054",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄑㄧㄥ」是哪一個字？（例詞：青蛙）",
+      "options": [
+        "秋",
+        "七",
+        "起",
+        "青"
+      ],
+      "answer": "青",
+      "explanation": "「青」念作 ㄑㄧㄥ。"
+    },
+    {
+      "id": "Q0055",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄨㄚ」是哪一個字？（例詞：青蛙）",
+      "options": [
+        "花",
+        "子",
+        "課",
+        "蛙"
+      ],
+      "answer": "蛙",
+      "explanation": "「蛙」念作 ㄨㄚ。"
+    },
+    {
+      "id": "Q0056",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄎㄞ」是哪一個字？（例詞：開心）",
+      "options": [
+        "課",
+        "白",
+        "開",
+        "在"
+      ],
+      "answer": "開",
+      "explanation": "「開」念作 ㄎㄞ。"
+    },
+    {
+      "id": "Q0057",
+      "type": "zhuyin_to_char",
+      "lesson": 4,
+      "prompt": "注音「ㄒㄧㄣ」是哪一個字？（例詞：開心）",
+      "options": [
+        "下",
+        "心",
+        "向",
+        "小"
+      ],
+      "answer": "心",
+      "explanation": "「心」念作 ㄒㄧㄣ。"
+    },
+    {
+      "id": "Q0058",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄅㄧˇ」是哪一個字？（例詞：比一比）",
+      "options": [
+        "起",
+        "裡",
+        "比",
+        "一"
+      ],
+      "answer": "比",
+      "explanation": "「比」念作 ㄅㄧˇ。"
+    },
+    {
+      "id": "Q0059",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄇㄣˊ」是哪一個字？（例詞：門裡）",
+      "options": [
+        "什",
+        "人",
+        "們",
+        "門"
+      ],
+      "answer": "門",
+      "explanation": "「門」念作 ㄇㄣˊ。"
+    },
+    {
+      "id": "Q0060",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄌㄧˇ」是哪一個字？（例詞：門裡）",
+      "options": [
+        "路",
+        "一",
+        "裡",
+        "比"
+      ],
+      "answer": "裡",
+      "explanation": "「裡」念作 ㄌㄧˇ。"
+    },
+    {
+      "id": "Q0061",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄨㄞˋ」是哪一個字？（例詞：門外）",
+      "options": [
+        "門",
+        "外",
+        "又",
+        "早"
+      ],
+      "answer": "外",
+      "explanation": "「外」念作 ㄨㄞˋ。"
+    },
+    {
+      "id": "Q0062",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄧㄡˇ」是哪一個字？（例詞：有什麼不同）",
+      "options": [
+        "又",
+        "有",
+        "秋",
+        "九"
+      ],
+      "answer": "有",
+      "explanation": "「有」念作 ㄧㄡˇ。"
+    },
+    {
+      "id": "Q0063",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄕㄣˊ」是哪一個字？（例詞：什麼）",
+      "options": [
+        "什",
+        "十",
+        "是",
+        "誰"
+      ],
+      "answer": "什",
+      "explanation": "「什」念作 ㄕㄣˊ。"
+    },
+    {
+      "id": "Q0064",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「˙ㄇㄜ」是哪一個字？（例詞：什麼）",
+      "options": [
+        "門",
+        "課",
+        "麼",
+        "們"
+      ],
+      "answer": "麼",
+      "explanation": "「麼」念作 ˙ㄇㄜ。"
+    },
+    {
+      "id": "Q0065",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄅㄨˋ」是哪一個字？（例詞：不同）",
+      "options": [
+        "五",
+        "路",
+        "不",
+        "八"
+      ],
+      "answer": "不",
+      "explanation": "「不」念作 ㄅㄨˋ。"
+    },
+    {
+      "id": "Q0066",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄊㄨㄥˊ」是哪一個字？（例詞：不同）",
+      "options": [
+        "他",
+        "同",
+        "紅",
+        "頭"
+      ],
+      "answer": "同",
+      "explanation": "「同」念作 ㄊㄨㄥˊ。"
+    },
+    {
+      "id": "Q0067",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄗㄠˇ」是哪一個字？（例詞：早上）",
+      "options": [
+        "早",
+        "左",
+        "子",
+        "到"
+      ],
+      "answer": "早",
+      "explanation": "「早」念作 ㄗㄠˇ。"
+    },
+    {
+      "id": "Q0068",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄨㄢˇ」是哪一個字？（例詞：晚上）",
+      "options": [
+        "玩",
+        "晚",
+        "門",
+        "比"
+      ],
+      "answer": "晚",
+      "explanation": "「晚」念作 ㄨㄢˇ。"
+    },
+    {
+      "id": "Q0069",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄨㄤˊ」是哪一個字？（例詞：王子）",
+      "options": [
+        "早",
+        "王",
+        "門",
+        "麼"
+      ],
+      "answer": "王",
+      "explanation": "「王」念作 ㄨㄤˊ。"
+    },
+    {
+      "id": "Q0070",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄓㄨˇ」是哪一個字？（例詞：主人）",
+      "options": [
+        "找",
+        "主",
+        "五",
+        "這"
+      ],
+      "answer": "主",
+      "explanation": "「主」念作 ㄓㄨˇ。"
+    },
+    {
+      "id": "Q0071",
+      "type": "zhuyin_to_char",
+      "lesson": 5,
+      "prompt": "注音「ㄧㄡˋ」是哪一個字？（例詞：又有）",
+      "options": [
+        "友",
+        "秋",
+        "六",
+        "又"
+      ],
+      "answer": "又",
+      "explanation": "「又」念作 ㄧㄡˋ。"
+    },
+    {
+      "id": "Q0072",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄌㄨˋ」是哪一個字？（例詞：小路）",
+      "options": [
+        "五",
+        "了",
+        "裡",
+        "路"
+      ],
+      "answer": "路",
+      "explanation": "「路」念作 ㄌㄨˋ。"
+    },
+    {
+      "id": "Q0073",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄔㄤˊ」是哪一個字？（例詞：長長的）",
+      "options": [
+        "上",
+        "朵",
+        "走",
+        "長"
+      ],
+      "answer": "長",
+      "explanation": "「長」念作 ㄔㄤˊ。"
+    },
+    {
+      "id": "Q0074",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄅㄞˊ」是哪一個字？（例詞：白花）",
+      "options": [
+        "海",
+        "白",
+        "八",
+        "不"
+      ],
+      "answer": "白",
+      "explanation": "「白」念作 ㄅㄞˊ。"
+    },
+    {
+      "id": "Q0075",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄏㄨㄚ」是哪一個字？（例詞：小花）",
+      "options": [
+        "海",
+        "蛙",
+        "花",
+        "好"
+      ],
+      "answer": "花",
+      "explanation": "「花」念作 ㄏㄨㄚ。"
+    },
+    {
+      "id": "Q0076",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄏㄨㄥˊ」是哪一個字？（例詞：紅花）",
+      "options": [
+        "花",
+        "紅",
+        "和",
+        "同"
+      ],
+      "answer": "紅",
+      "explanation": "「紅」念作 ㄏㄨㄥˊ。"
+    },
+    {
+      "id": "Q0077",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄗㄡˇ」是哪一個字？（例詞：走在）",
+      "options": [
+        "早",
+        "走",
+        "左",
+        "在"
+      ],
+      "answer": "走",
+      "explanation": "「走」念作 ㄗㄡˇ。"
+    },
+    {
+      "id": "Q0078",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄗㄞˋ」是哪一個字？（例詞：走在小路上）",
+      "options": [
+        "白",
+        "在",
+        "拍",
+        "海"
+      ],
+      "answer": "在",
+      "explanation": "「在」念作 ㄗㄞˋ。"
+    },
+    {
+      "id": "Q0079",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄒㄧㄤˋ」是哪一個字？（例詞：向小紅花說）",
+      "options": [
+        "心",
+        "小",
+        "向",
+        "下"
+      ],
+      "answer": "向",
+      "explanation": "「向」念作 ㄒㄧㄤˋ。"
+    },
+    {
+      "id": "Q0080",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄕㄨㄛ」是哪一個字？（例詞：說你早）",
+      "options": [
+        "說",
+        "誰",
+        "上",
+        "手"
+      ],
+      "answer": "說",
+      "explanation": "「說」念作 ㄕㄨㄛ。"
+    },
+    {
+      "id": "Q0081",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄉㄨㄛˇ」是哪一個字？（例詞：一朵）",
+      "options": [
+        "朵",
+        "的",
+        "我",
+        "左"
+      ],
+      "answer": "朵",
+      "explanation": "「朵」念作 ㄉㄨㄛˇ。"
+    },
+    {
+      "id": "Q0082",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄘㄨㄥˊ」是哪一個字？（例詞：從這一頭）",
+      "options": [
+        "紅",
+        "那",
+        "同",
+        "從"
+      ],
+      "answer": "從",
+      "explanation": "「從」念作 ㄘㄨㄥˊ。"
+    },
+    {
+      "id": "Q0083",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄊㄡˊ」是哪一個字？（例詞：這一頭）",
+      "options": [
+        "頭",
+        "他",
+        "手",
+        "走"
+      ],
+      "answer": "頭",
+      "explanation": "「頭」念作 ㄊㄡˊ。"
+    },
+    {
+      "id": "Q0084",
+      "type": "zhuyin_to_char",
+      "lesson": 6,
+      "prompt": "注音「ㄋㄚˋ」是哪一個字？（例詞：那一頭）",
+      "options": [
+        "你",
+        "大",
+        "他",
+        "那"
+      ],
+      "answer": "那",
+      "explanation": "「那」念作 ㄋㄚˋ。"
+    },
+    {
+      "id": "Q0085",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「一」的注音是什麼？",
+      "options": [
+        "ㄧ",
+        "ㄑㄧˇ",
+        "ㄌㄧˇ",
+        "ㄅㄧˇ"
+      ],
+      "answer": "ㄧ"
+    },
+    {
+      "id": "Q0086",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「二」的注音是什麼？",
+      "options": [
+        "ㄨㄛˇ",
+        "ㄆㄥˊ",
+        "ㄊㄡˊ",
+        "ㄦˋ"
+      ],
+      "answer": "ㄦˋ"
+    },
+    {
+      "id": "Q0087",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「三」的注音是什麼？",
+      "options": [
+        "ㄏㄢˋ",
+        "ㄙㄢ",
+        "ㄙˋ",
+        "ㄎㄢˋ"
+      ],
+      "answer": "ㄙㄢ"
+    },
+    {
+      "id": "Q0088",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「四」的注音是什麼？",
+      "options": [
+        "ㄙㄢ",
+        "˙ㄗ",
+        "ㄙˋ",
+        "ㄕˋ"
+      ],
+      "answer": "ㄙˋ"
+    },
+    {
+      "id": "Q0089",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「五」的注音是什麼？",
+      "options": [
+        "ㄌㄨˋ",
+        "ㄓㄨˇ",
+        "ㄅㄨˋ",
+        "ㄨˇ"
+      ],
+      "answer": "ㄨˇ"
+    },
+    {
+      "id": "Q0090",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「六」的注音是什麼？",
+      "options": [
+        "ㄌㄧˇ",
+        "ㄌㄚ",
+        "ㄧㄡˋ",
+        "ㄌㄧㄡˋ"
+      ],
+      "answer": "ㄌㄧㄡˋ"
+    },
+    {
+      "id": "Q0091",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「七」的注音是什麼？",
+      "options": [
+        "ㄑㄧㄢ",
+        "ㄧ",
+        "ㄑㄧ",
+        "ㄑㄧㄡ"
+      ],
+      "answer": "ㄑㄧ"
+    },
+    {
+      "id": "Q0092",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「八」的注音是什麼？",
+      "options": [
+        "ㄅㄧˇ",
+        "ㄊㄚ",
+        "ㄌㄚ",
+        "ㄅㄚ"
+      ],
+      "answer": "ㄅㄚ"
+    },
+    {
+      "id": "Q0093",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「九」的注音是什麼？",
+      "options": [
+        "ㄐㄧㄡˇ",
+        "ㄧㄡˇ",
+        "ㄌㄧㄡˋ",
+        "ㄑㄧㄡ"
+      ],
+      "answer": "ㄐㄧㄡˇ"
+    },
+    {
+      "id": "Q0094",
+      "type": "char_to_zhuyin",
+      "lesson": 0,
+      "prompt": "「十」的注音是什麼？",
+      "options": [
+        "ㄕˋ",
+        "ㄕˊ",
+        "ㄕㄟˊ",
+        "˙ㄗ"
+      ],
+      "answer": "ㄕˊ"
+    },
+    {
+      "id": "Q0095",
+      "type": "char_to_zhuyin",
+      "lesson": 1,
+      "prompt": "「拍」的注音是什麼？",
+      "options": [
+        "ㄆㄞ",
+        "ㄏㄞˇ",
+        "ㄎㄞ",
+        "ㄆㄟˊ"
+      ],
+      "answer": "ㄆㄞ"
+    },
+    {
+      "id": "Q0096",
+      "type": "char_to_zhuyin",
+      "lesson": 1,
+      "prompt": "「手」的注音是什麼？",
+      "options": [
+        "ㄕㄢ",
+        "ㄕㄡˇ",
+        "ㄕㄨㄛ",
+        "ㄕˊ"
+      ],
+      "answer": "ㄕㄡˇ"
+    },
+    {
+      "id": "Q0097",
+      "type": "char_to_zhuyin",
+      "lesson": 1,
+      "prompt": "「左」的注音是什麼？",
+      "options": [
+        "ㄉㄨㄛˇ",
+        "ㄕㄨㄛ",
+        "ㄨㄛˇ",
+        "ㄗㄨㄛˇ"
+      ],
+      "answer": "ㄗㄨㄛˇ"
+    },
+    {
+      "id": "Q0098",
+      "type": "char_to_zhuyin",
+      "lesson": 1,
+      "prompt": "「右」的注音是什麼？",
+      "options": [
+        "ㄧㄡˋ",
+        "ㄑㄧㄡ",
+        "ㄌㄧㄡˋ",
+        "ㄧㄡˇ"
+      ],
+      "answer": "ㄧㄡˋ"
+    },
+    {
+      "id": "Q0099",
+      "type": "char_to_zhuyin",
+      "lesson": 1,
+      "prompt": "「你」的注音是什麼？",
+      "options": [
+        "ㄅㄧˇ",
+        "ㄋㄧˇ",
+        "ㄌㄧˇ",
+        "ㄑㄧˇ"
+      ],
+      "answer": "ㄋㄧˇ"
+    },
+    {
+      "id": "Q0100",
+      "type": "char_to_zhuyin",
+      "lesson": 1,
+      "prompt": "「他」的注音是什麼？",
+      "options": [
+        "ㄊㄚ",
+        "ㄅㄚ",
+        "ㄌㄚ",
+        "ㄊㄨㄥˊ"
+      ],
+      "answer": "ㄊㄚ"
+    },
+    {
+      "id": "Q0101",
+      "type": "char_to_zhuyin",
+      "lesson": 1,
+      "prompt": "「也」的注音是什麼？",
+      "options": [
+        "ㄕㄤˋ",
+        "ㄧㄝˇ",
+        "ㄒㄧㄠˇ",
+        "ㄏㄞˇ"
+      ],
+      "answer": "ㄧㄝˇ"
+    },
+    {
+      "id": "Q0102",
+      "type": "char_to_zhuyin",
+      "lesson": 1,
+      "prompt": "「上」的注音是什麼？",
+      "options": [
+        "ㄕˊ",
+        "ㄕㄣˊ",
+        "ㄕㄤˋ",
+        "ㄕˋ"
+      ],
+      "answer": "ㄕㄤˋ"
+    },
+    {
+      "id": "Q0103",
+      "type": "char_to_zhuyin",
+      "lesson": 1,
+      "prompt": "「下」的注音是什麼？",
+      "options": [
+        "ㄒㄧㄠˇ",
+        "ㄒㄧㄣ",
+        "ㄒㄧㄤˋ",
+        "ㄒㄧㄚˋ"
+      ],
+      "answer": "ㄒㄧㄚˋ"
+    },
+    {
+      "id": "Q0104",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「這」的注音是什麼？",
+      "options": [
+        "˙ㄇㄜ",
+        "˙ㄍㄜ",
+        "ㄓㄠˇ",
+        "ㄓㄜˋ"
+      ],
+      "answer": "ㄓㄜˋ"
+    },
+    {
+      "id": "Q0105",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「是」的注音是什麼？",
+      "options": [
+        "ㄓ",
+        "ㄕㄟˊ",
+        "ㄕˋ",
+        "ㄕㄡˇ"
+      ],
+      "answer": "ㄕˋ"
+    },
+    {
+      "id": "Q0106",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「誰」的注音是什麼？",
+      "options": [
+        "ㄕˋ",
+        "ㄆㄟˊ",
+        "ㄕㄟˊ",
+        "ㄕˊ"
+      ],
+      "answer": "ㄕㄟˊ"
+    },
+    {
+      "id": "Q0107",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「的」的注音是什麼？",
+      "options": [
+        "ㄉㄨㄛ",
+        "˙ㄍㄜ",
+        "˙ㄌㄜ",
+        "˙ㄉㄜ"
+      ],
+      "answer": "˙ㄉㄜ"
+    },
+    {
+      "id": "Q0108",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「我」的注音是什麼？",
+      "options": [
+        "ㄉㄨㄛ",
+        "ㄗㄨㄛˇ",
+        "ㄕㄨㄛ",
+        "ㄨㄛˇ"
+      ],
+      "answer": "ㄨㄛˇ"
+    },
+    {
+      "id": "Q0109",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「分」的注音是什麼？",
+      "options": [
+        "˙ㄇㄣ",
+        "ㄇㄣˊ",
+        "ㄖㄣˊ",
+        "ㄈㄣ"
+      ],
+      "answer": "ㄈㄣ"
+    },
+    {
+      "id": "Q0110",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「好」的注音是什麼？",
+      "options": [
+        "ㄏㄞˇ",
+        "ㄓㄠˇ",
+        "ㄏㄠˇ",
+        "ㄏㄨㄥˊ"
+      ],
+      "answer": "ㄏㄠˇ"
+    },
+    {
+      "id": "Q0111",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「了」的注音是什麼？",
+      "options": [
+        "˙ㄍㄜ",
+        "ㄌㄧㄤˇ",
+        "ㄌㄚ",
+        "˙ㄌㄜ"
+      ],
+      "answer": "˙ㄌㄜ"
+    },
+    {
+      "id": "Q0112",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「啊」的注音是什麼？",
+      "options": [
+        "ㄌㄚ",
+        "ㄅㄚ",
+        "ㄚ",
+        "ㄊㄚ"
+      ],
+      "answer": "ㄚ"
+    },
+    {
+      "id": "Q0113",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「多」的注音是什麼？",
+      "options": [
+        "ㄨㄛˇ",
+        "ㄉㄨㄛˇ",
+        "ㄉㄨㄛ",
+        "ㄉㄚˋ"
+      ],
+      "answer": "ㄉㄨㄛ"
+    },
+    {
+      "id": "Q0114",
+      "type": "char_to_zhuyin",
+      "lesson": 2,
+      "prompt": "「個」的注音是什麼？",
+      "options": [
+        "˙ㄇㄜ",
+        "˙ㄌㄜ",
+        "ㄓㄜˋ",
+        "˙ㄍㄜ"
+      ],
+      "answer": "˙ㄍㄜ"
+    },
+    {
+      "id": "Q0115",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「秋」的注音是什麼？",
+      "options": [
+        "ㄑㄧㄡ",
+        "ㄑㄧㄥ",
+        "ㄧㄡˇ",
+        "ㄧㄡˋ"
+      ],
+      "answer": "ㄑㄧㄡ"
+    },
+    {
+      "id": "Q0116",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「高」的注音是什麼？",
+      "options": [
+        "ㄓㄠˇ",
+        "ㄍㄠ",
+        "˙ㄍㄜ",
+        "ㄉㄠˋ"
+      ],
+      "answer": "ㄍㄠ"
+    },
+    {
+      "id": "Q0117",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「朋」的注音是什麼？",
+      "options": [
+        "˙ㄉㄜ",
+        "ㄆㄟˊ",
+        "ㄆㄞ",
+        "ㄆㄥˊ"
+      ],
+      "answer": "ㄆㄥˊ"
+    },
+    {
+      "id": "Q0118",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「千」的注音是什麼？",
+      "options": [
+        "ㄑㄧˇ",
+        "ㄑㄧㄢ",
+        "ㄑㄧㄡ",
+        "ㄑㄧㄥ"
+      ],
+      "answer": "ㄑㄧㄢ"
+    },
+    {
+      "id": "Q0119",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「山」的注音是什麼？",
+      "options": [
+        "ㄕㄤˋ",
+        "ㄎㄢˋ",
+        "ㄕㄢ",
+        "ㄕㄡˇ"
+      ],
+      "answer": "ㄕㄢ"
+    },
+    {
+      "id": "Q0120",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「友」的注音是什麼？",
+      "options": [
+        "ㄧㄡˋ",
+        "ㄐㄧㄡˇ",
+        "ㄑㄧㄡ",
+        "ㄧㄡˇ"
+      ],
+      "answer": "ㄧㄡˇ"
+    },
+    {
+      "id": "Q0121",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「和」的注音是什麼？",
+      "options": [
+        "ㄕㄢ",
+        "ㄏㄞˇ",
+        "ㄏㄢˋ",
+        "ㄏㄨㄚ"
+      ],
+      "answer": "ㄏㄢˋ"
+    },
+    {
+      "id": "Q0122",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「到」的注音是什麼？",
+      "options": [
+        "ㄏㄠˇ",
+        "ㄉㄚˋ",
+        "ㄉㄠˋ",
+        "ㄍㄠ"
+      ],
+      "answer": "ㄉㄠˋ"
+    },
+    {
+      "id": "Q0123",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「們」的注音是什麼？",
+      "options": [
+        "ㄖㄣˊ",
+        "˙ㄇㄣ",
+        "ㄈㄣ",
+        "ㄕㄣˊ"
+      ],
+      "answer": "˙ㄇㄣ"
+    },
+    {
+      "id": "Q0124",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「玩」的注音是什麼？",
+      "options": [
+        "ㄏㄨㄚ",
+        "ㄨㄢˇ",
+        "ㄨㄢˊ",
+        "ㄎㄞ"
+      ],
+      "answer": "ㄨㄢˊ"
+    },
+    {
+      "id": "Q0125",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「大」的注音是什麼？",
+      "options": [
+        "ㄚ",
+        "ㄅㄚ",
+        "ㄊㄚ",
+        "ㄉㄚˋ"
+      ],
+      "answer": "ㄉㄚˋ"
+    },
+    {
+      "id": "Q0126",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「起」的注音是什麼？",
+      "options": [
+        "ㄑㄧㄢ",
+        "ㄧ",
+        "ㄑㄧˇ",
+        "ㄋㄧˇ"
+      ],
+      "answer": "ㄑㄧˇ"
+    },
+    {
+      "id": "Q0127",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「陪」的注音是什麼？",
+      "options": [
+        "ㄕㄟˊ",
+        "ㄆㄟˊ",
+        "ㄆㄥˊ",
+        "ㄆㄞ"
+      ],
+      "answer": "ㄆㄟˊ"
+    },
+    {
+      "id": "Q0128",
+      "type": "char_to_zhuyin",
+      "lesson": 3,
+      "prompt": "「海」的注音是什麼？",
+      "options": [
+        "ㄏㄨㄥˊ",
+        "ㄅㄞˊ",
+        "ㄆㄞ",
+        "ㄏㄞˇ"
+      ],
+      "answer": "ㄏㄞˇ"
+    },
+    {
+      "id": "Q0129",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「子」的注音是什麼？",
+      "options": [
+        "ㄗㄞˋ",
+        "ㄗㄠˇ",
+        "˙ㄗ",
+        "ㄗㄡˇ"
+      ],
+      "answer": "˙ㄗ"
+    },
+    {
+      "id": "Q0130",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「小」的注音是什麼？",
+      "options": [
+        "ㄒㄧㄤˋ",
+        "ㄒㄧㄣ",
+        "ㄒㄧㄠˇ",
+        "ㄒㄧㄚˋ"
+      ],
+      "answer": "ㄒㄧㄠˇ"
+    },
+    {
+      "id": "Q0131",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「課」的注音是什麼？",
+      "options": [
+        "˙ㄌㄜ",
+        "ㄎㄜˋ",
+        "ㄎㄢˋ",
+        "˙ㄍㄜ"
+      ],
+      "answer": "ㄎㄜˋ"
+    },
+    {
+      "id": "Q0132",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「兩」的注音是什麼？",
+      "options": [
+        "ㄌㄧˇ",
+        "ㄒㄧㄤˋ",
+        "˙ㄌㄜ",
+        "ㄌㄧㄤˇ"
+      ],
+      "answer": "ㄌㄧㄤˇ"
+    },
+    {
+      "id": "Q0133",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「人」的注音是什麼？",
+      "options": [
+        "ㄖㄣˊ",
+        "ㄈㄣ",
+        "˙ㄇㄣ",
+        "ㄕㄣˊ"
+      ],
+      "answer": "ㄖㄣˊ"
+    },
+    {
+      "id": "Q0134",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「拉」的注音是什麼？",
+      "options": [
+        "ㄌㄧㄡˋ",
+        "ㄌㄚ",
+        "ㄚ",
+        "ㄊㄚ"
+      ],
+      "answer": "ㄌㄚ"
+    },
+    {
+      "id": "Q0135",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「看」的注音是什麼？",
+      "options": [
+        "ㄎㄢˋ",
+        "ㄏㄢˋ",
+        "ㄙㄢ",
+        "ㄎㄞ"
+      ],
+      "answer": "ㄎㄢˋ"
+    },
+    {
+      "id": "Q0136",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「找」的注音是什麼？",
+      "options": [
+        "ㄓㄠˇ",
+        "ㄉㄠˋ",
+        "ㄓㄨˇ",
+        "ㄗㄠˇ"
+      ],
+      "answer": "ㄓㄠˇ"
+    },
+    {
+      "id": "Q0137",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「隻」的注音是什麼？",
+      "options": [
+        "ㄓ",
+        "ㄙˋ",
+        "ㄕˊ",
+        "ㄓㄜˋ"
+      ],
+      "answer": "ㄓ"
+    },
+    {
+      "id": "Q0138",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「青」的注音是什麼？",
+      "options": [
+        "ㄑㄧㄢ",
+        "ㄑㄧ",
+        "ㄑㄧㄡ",
+        "ㄑㄧㄥ"
+      ],
+      "answer": "ㄑㄧㄥ"
+    },
+    {
+      "id": "Q0139",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「蛙」的注音是什麼？",
+      "options": [
+        "ㄕㄤˋ",
+        "ㄏㄞˇ",
+        "ㄨㄚ",
+        "ㄏㄨㄚ"
+      ],
+      "answer": "ㄨㄚ"
+    },
+    {
+      "id": "Q0140",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「開」的注音是什麼？",
+      "options": [
+        "ㄆㄞ",
+        "ㄎㄞ",
+        "ㄏㄞˇ",
+        "ㄅㄞˊ"
+      ],
+      "answer": "ㄎㄞ"
+    },
+    {
+      "id": "Q0141",
+      "type": "char_to_zhuyin",
+      "lesson": 4,
+      "prompt": "「心」的注音是什麼？",
+      "options": [
+        "ㄒㄧㄠˇ",
+        "ㄒㄧㄣ",
+        "ㄒㄧㄤˋ",
+        "ㄒㄧㄚˋ"
+      ],
+      "answer": "ㄒㄧㄣ"
+    },
+    {
+      "id": "Q0142",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「比」的注音是什麼？",
+      "options": [
+        "ㄅㄨˋ",
+        "ㄅㄧˇ",
+        "ㄑㄧ",
+        "ㄅㄚ"
+      ],
+      "answer": "ㄅㄧˇ"
+    },
+    {
+      "id": "Q0143",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「門」的注音是什麼？",
+      "options": [
+        "ㄕㄣˊ",
+        "˙ㄇㄜ",
+        "ㄖㄣˊ",
+        "ㄇㄣˊ"
+      ],
+      "answer": "ㄇㄣˊ"
+    },
+    {
+      "id": "Q0144",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「裡」的注音是什麼？",
+      "options": [
+        "ㄌㄧˇ",
+        "ㄑㄧˇ",
+        "ㄌㄚ",
+        "˙ㄌㄜ"
+      ],
+      "answer": "ㄌㄧˇ"
+    },
+    {
+      "id": "Q0145",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「外」的注音是什麼？",
+      "options": [
+        "ㄑㄧㄥ",
+        "ㄨㄞˋ",
+        "ㄌㄚ",
+        "ㄗㄨㄛˇ"
+      ],
+      "answer": "ㄨㄞˋ"
+    },
+    {
+      "id": "Q0146",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「有」的注音是什麼？",
+      "options": [
+        "ㄑㄧㄡ",
+        "ㄧㄡˋ",
+        "ㄌㄧㄡˋ",
+        "ㄧㄡˇ"
+      ],
+      "answer": "ㄧㄡˇ"
+    },
+    {
+      "id": "Q0147",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「什」的注音是什麼？",
+      "options": [
+        "ㄕㄤˋ",
+        "ㄕˋ",
+        "ㄕㄣˊ",
+        "ㄕㄨㄛ"
+      ],
+      "answer": "ㄕㄣˊ"
+    },
+    {
+      "id": "Q0148",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「麼」的注音是什麼？",
+      "options": [
+        "˙ㄇㄜ",
+        "˙ㄌㄜ",
+        "˙ㄇㄣ",
+        "ㄓㄜˋ"
+      ],
+      "answer": "˙ㄇㄜ"
+    },
+    {
+      "id": "Q0149",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「不」的注音是什麼？",
+      "options": [
+        "ㄅㄚ",
+        "ㄓㄨˇ",
+        "ㄅㄨˋ",
+        "ㄅㄞˊ"
+      ],
+      "answer": "ㄅㄨˋ"
+    },
+    {
+      "id": "Q0150",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「同」的注音是什麼？",
+      "options": [
+        "ㄊㄡˊ",
+        "ㄊㄚ",
+        "ㄏㄨㄥˊ",
+        "ㄊㄨㄥˊ"
+      ],
+      "answer": "ㄊㄨㄥˊ"
+    },
+    {
+      "id": "Q0151",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「早」的注音是什麼？",
+      "options": [
+        "ㄗㄠˇ",
+        "ㄗㄞˋ",
+        "ㄍㄠ",
+        "ㄉㄠˋ"
+      ],
+      "answer": "ㄗㄠˇ"
+    },
+    {
+      "id": "Q0152",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「晚」的注音是什麼？",
+      "options": [
+        "ㄨㄢˇ",
+        "ㄅㄞˊ",
+        "ㄨㄚ",
+        "ㄨㄢˊ"
+      ],
+      "answer": "ㄨㄢˇ"
+    },
+    {
+      "id": "Q0153",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「王」的注音是什麼？",
+      "options": [
+        "˙ㄉㄜ",
+        "ㄨㄤˊ",
+        "ㄓㄜˋ",
+        "ㄨㄛˇ"
+      ],
+      "answer": "ㄨㄤˊ"
+    },
+    {
+      "id": "Q0154",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「主」的注音是什麼？",
+      "options": [
+        "ㄅㄨˋ",
+        "ㄓㄨˇ",
+        "ㄓㄜˋ",
+        "ㄌㄨˋ"
+      ],
+      "answer": "ㄓㄨˇ"
+    },
+    {
+      "id": "Q0155",
+      "type": "char_to_zhuyin",
+      "lesson": 5,
+      "prompt": "「又」的注音是什麼？",
+      "options": [
+        "ㄧㄡˇ",
+        "ㄌㄧㄡˋ",
+        "ㄧㄡˋ",
+        "ㄐㄧㄡˇ"
+      ],
+      "answer": "ㄧㄡˋ"
+    },
+    {
+      "id": "Q0156",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「路」的注音是什麼？",
+      "options": [
+        "ㄌㄧㄡˋ",
+        "ㄌㄧㄤˇ",
+        "ㄌㄧˇ",
+        "ㄌㄨˋ"
+      ],
+      "answer": "ㄌㄨˋ"
+    },
+    {
+      "id": "Q0157",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「長」的注音是什麼？",
+      "options": [
+        "ㄔㄤˊ",
+        "ㄎㄢˋ",
+        "ㄕㄤˋ",
+        "ㄏㄞˇ"
+      ],
+      "answer": "ㄔㄤˊ"
+    },
+    {
+      "id": "Q0158",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「白」的注音是什麼？",
+      "options": [
+        "ㄅㄨˋ",
+        "ㄆㄞ",
+        "ㄅㄞˊ",
+        "ㄅㄚ"
+      ],
+      "answer": "ㄅㄞˊ"
+    },
+    {
+      "id": "Q0159",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「花」的注音是什麼？",
+      "options": [
+        "ㄏㄠˇ",
+        "ㄏㄨㄚ",
+        "ㄨㄚ",
+        "ㄏㄢˋ"
+      ],
+      "answer": "ㄏㄨㄚ"
+    },
+    {
+      "id": "Q0160",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「紅」的注音是什麼？",
+      "options": [
+        "ㄘㄨㄥˊ",
+        "ㄏㄨㄥˊ",
+        "ㄏㄞˇ",
+        "ㄏㄨㄚ"
+      ],
+      "answer": "ㄏㄨㄥˊ"
+    },
+    {
+      "id": "Q0161",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「走」的注音是什麼？",
+      "options": [
+        "ㄗㄞˋ",
+        "ㄗㄨㄛˇ",
+        "ㄗㄡˇ",
+        "ㄊㄡˊ"
+      ],
+      "answer": "ㄗㄡˇ"
+    },
+    {
+      "id": "Q0162",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「在」的注音是什麼？",
+      "options": [
+        "˙ㄗ",
+        "ㄗㄞˋ",
+        "ㄎㄞ",
+        "ㄗㄡˇ"
+      ],
+      "answer": "ㄗㄞˋ"
+    },
+    {
+      "id": "Q0163",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「向」的注音是什麼？",
+      "options": [
+        "ㄒㄧㄚˋ",
+        "ㄒㄧㄤˋ",
+        "ㄒㄧㄣ",
+        "ㄌㄧㄤˇ"
+      ],
+      "answer": "ㄒㄧㄤˋ"
+    },
+    {
+      "id": "Q0164",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「說」的注音是什麼？",
+      "options": [
+        "ㄕㄨㄛ",
+        "ㄕㄟˊ",
+        "ㄗㄨㄛˇ",
+        "ㄕˋ"
+      ],
+      "answer": "ㄕㄨㄛ"
+    },
+    {
+      "id": "Q0165",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「朵」的注音是什麼？",
+      "options": [
+        "˙ㄉㄜ",
+        "ㄕㄨㄛ",
+        "ㄉㄨㄛˇ",
+        "ㄨㄛˇ"
+      ],
+      "answer": "ㄉㄨㄛˇ"
+    },
+    {
+      "id": "Q0166",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「從」的注音是什麼？",
+      "options": [
+        "ㄓㄜˋ",
+        "ㄏㄨㄥˊ",
+        "ㄊㄨㄥˊ",
+        "ㄘㄨㄥˊ"
+      ],
+      "answer": "ㄘㄨㄥˊ"
+    },
+    {
+      "id": "Q0167",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「頭」的注音是什麼？",
+      "options": [
+        "ㄊㄚ",
+        "ㄊㄡˊ",
+        "ㄗㄡˇ",
+        "ㄕㄡˇ"
+      ],
+      "answer": "ㄊㄡˊ"
+    },
+    {
+      "id": "Q0168",
+      "type": "char_to_zhuyin",
+      "lesson": 6,
+      "prompt": "「那」的注音是什麼？",
+      "options": [
+        "ㄅㄚ",
+        "ㄚ",
+        "ㄋㄚˋ",
+        "ㄋㄧˇ"
+      ],
+      "answer": "ㄋㄚˋ"
+    },
+    {
+      "id": "Q0169",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「一」總共有幾畫？",
+      "options": [
+        "1",
+        "3",
+        "4",
+        "2"
+      ],
+      "answer": "1",
+      "explanation": "「一」共 1 畫，部首「一」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0170",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「二」總共有幾畫？",
+      "options": [
+        "1",
+        "2",
+        "5",
+        "4"
+      ],
+      "answer": "2",
+      "explanation": "「二」共 2 畫，部首「二」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0171",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「三」總共有幾畫？",
+      "options": [
+        "4",
+        "3",
+        "2",
+        "6"
+      ],
+      "answer": "3",
+      "explanation": "「三」共 3 畫，部首「一」，扣除部首後 2 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0172",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「四」總共有幾畫？",
+      "options": [
+        "3",
+        "5",
+        "7",
+        "8"
+      ],
+      "answer": "5",
+      "explanation": "「四」共 5 畫，部首「囗」，扣除部首後 2 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0173",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「五」總共有幾畫？",
+      "options": [
+        "6",
+        "4",
+        "7",
+        "2"
+      ],
+      "answer": "4",
+      "explanation": "「五」共 4 畫，部首「二」，扣除部首後 2 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0174",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「六」總共有幾畫？",
+      "options": [
+        "4",
+        "7",
+        "1",
+        "5"
+      ],
+      "answer": "4",
+      "explanation": "「六」共 4 畫，部首「八」，扣除部首後 2 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0175",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「七」總共有幾畫？",
+      "options": [
+        "2",
+        "3",
+        "4",
+        "1"
+      ],
+      "answer": "2",
+      "explanation": "「七」共 2 畫，部首「一」，扣除部首後 1 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0176",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「八」總共有幾畫？",
+      "options": [
+        "4",
+        "5",
+        "1",
+        "2"
+      ],
+      "answer": "2",
+      "explanation": "「八」共 2 畫，部首「八」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0177",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「九」總共有幾畫？",
+      "options": [
+        "3",
+        "1",
+        "5",
+        "2"
+      ],
+      "answer": "2",
+      "explanation": "「九」共 2 畫，部首「乙」，扣除部首後 1 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0178",
+      "type": "stroke_count",
+      "lesson": 0,
+      "prompt": "「十」總共有幾畫？",
+      "options": [
+        "1",
+        "3",
+        "4",
+        "2"
+      ],
+      "answer": "2",
+      "explanation": "「十」共 2 畫，部首「十」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0179",
+      "type": "stroke_count",
+      "lesson": 1,
+      "prompt": "「拍」總共有幾畫？",
+      "options": [
+        "8",
+        "9",
+        "7",
+        "10"
+      ],
+      "answer": "8",
+      "explanation": "「拍」共 8 畫，部首「手」，扣除部首後 5 畫。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0180",
+      "type": "stroke_count",
+      "lesson": 1,
+      "prompt": "「手」總共有幾畫？",
+      "options": [
+        "7",
+        "5",
+        "4",
+        "2"
+      ],
+      "answer": "4",
+      "explanation": "「手」共 4 畫，部首「手」，扣除部首後 0 畫。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0181",
+      "type": "stroke_count",
+      "lesson": 1,
+      "prompt": "「左」總共有幾畫？",
+      "options": [
+        "6",
+        "5",
+        "4",
+        "2"
+      ],
+      "answer": "5",
+      "explanation": "「左」共 5 畫，部首「工」，扣除部首後 2 畫。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0182",
+      "type": "stroke_count",
+      "lesson": 1,
+      "prompt": "「右」總共有幾畫？",
+      "options": [
+        "7",
+        "8",
+        "6",
+        "5"
+      ],
+      "answer": "5",
+      "explanation": "「右」共 5 畫，部首「口」，扣除部首後 2 畫。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0183",
+      "type": "stroke_count",
+      "lesson": 1,
+      "prompt": "「你」總共有幾畫？",
+      "options": [
+        "4",
+        "7",
+        "8",
+        "6"
+      ],
+      "answer": "7",
+      "explanation": "「你」共 7 畫，部首「人」，扣除部首後 5 畫。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0184",
+      "type": "stroke_count",
+      "lesson": 1,
+      "prompt": "「他」總共有幾畫？",
+      "options": [
+        "5",
+        "4",
+        "7",
+        "2"
+      ],
+      "answer": "5",
+      "explanation": "「他」共 5 畫，部首「人」，扣除部首後 3 畫。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0185",
+      "type": "stroke_count",
+      "lesson": 1,
+      "prompt": "「也」總共有幾畫？",
+      "options": [
+        "4",
+        "6",
+        "3",
+        "2"
+      ],
+      "answer": "3",
+      "explanation": "「也」共 3 畫，部首「乙」，扣除部首後 2 畫。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0186",
+      "type": "stroke_count",
+      "lesson": 1,
+      "prompt": "「上」總共有幾畫？",
+      "options": [
+        "2",
+        "1",
+        "4",
+        "3"
+      ],
+      "answer": "3",
+      "explanation": "「上」共 3 畫，部首「一」，扣除部首後 2 畫。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0187",
+      "type": "stroke_count",
+      "lesson": 1,
+      "prompt": "「下」總共有幾畫？",
+      "options": [
+        "3",
+        "4",
+        "6",
+        "5"
+      ],
+      "answer": "3",
+      "explanation": "「下」共 3 畫，部首「一」，扣除部首後 2 畫。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0188",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「這」總共有幾畫？",
+      "options": [
+        "14",
+        "11",
+        "10",
+        "8"
+      ],
+      "answer": "11",
+      "explanation": "「這」共 11 畫，部首「辵」，扣除部首後 7 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0189",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「是」總共有幾畫？",
+      "options": [
+        "11",
+        "10",
+        "9",
+        "7"
+      ],
+      "answer": "9",
+      "explanation": "「是」共 9 畫，部首「日」，扣除部首後 5 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0190",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「誰」總共有幾畫？",
+      "options": [
+        "12",
+        "18",
+        "13",
+        "15"
+      ],
+      "answer": "15",
+      "explanation": "「誰」共 15 畫，部首「言」，扣除部首後 8 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0191",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「的」總共有幾畫？",
+      "options": [
+        "7",
+        "5",
+        "8",
+        "10"
+      ],
+      "answer": "8",
+      "explanation": "「的」共 8 畫，部首「白」，扣除部首後 3 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0192",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「我」總共有幾畫？",
+      "options": [
+        "4",
+        "10",
+        "5",
+        "7"
+      ],
+      "answer": "7",
+      "explanation": "「我」共 7 畫，部首「戈」，扣除部首後 3 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0193",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「分」總共有幾畫？",
+      "options": [
+        "5",
+        "7",
+        "2",
+        "4"
+      ],
+      "answer": "4",
+      "explanation": "「分」共 4 畫，部首「刀」，扣除部首後 2 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0194",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「好」總共有幾畫？",
+      "options": [
+        "7",
+        "6",
+        "9",
+        "4"
+      ],
+      "answer": "6",
+      "explanation": "「好」共 6 畫，部首「女」，扣除部首後 3 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0195",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「了」總共有幾畫？",
+      "options": [
+        "2",
+        "3",
+        "5",
+        "1"
+      ],
+      "answer": "2",
+      "explanation": "「了」共 2 畫，部首「亅」，扣除部首後 1 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0196",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「啊」總共有幾畫？",
+      "options": [
+        "12",
+        "11",
+        "10",
+        "9"
+      ],
+      "answer": "11",
+      "explanation": "「啊」共 11 畫，部首「口」，扣除部首後 8 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0197",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「多」總共有幾畫？",
+      "options": [
+        "4",
+        "3",
+        "6",
+        "5"
+      ],
+      "answer": "6",
+      "explanation": "「多」共 6 畫，部首「夕」，扣除部首後 3 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0198",
+      "type": "stroke_count",
+      "lesson": 2,
+      "prompt": "「個」總共有幾畫？",
+      "options": [
+        "9",
+        "11",
+        "8",
+        "10"
+      ],
+      "answer": "10",
+      "explanation": "「個」共 10 畫，部首「人」，扣除部首後 8 畫。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0199",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「秋」總共有幾畫？",
+      "options": [
+        "9",
+        "10",
+        "6",
+        "12"
+      ],
+      "answer": "9",
+      "explanation": "「秋」共 9 畫，部首「禾」，扣除部首後 4 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0200",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「高」總共有幾畫？",
+      "options": [
+        "10",
+        "8",
+        "7",
+        "13"
+      ],
+      "answer": "10",
+      "explanation": "「高」共 10 畫，部首「高」，扣除部首後 0 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0201",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「朋」總共有幾畫？",
+      "options": [
+        "11",
+        "7",
+        "10",
+        "8"
+      ],
+      "answer": "8",
+      "explanation": "「朋」共 8 畫，部首「月」，扣除部首後 4 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0202",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「千」總共有幾畫？",
+      "options": [
+        "4",
+        "2",
+        "6",
+        "3"
+      ],
+      "answer": "3",
+      "explanation": "「千」共 3 畫，部首「十」，扣除部首後 1 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0203",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「山」總共有幾畫？",
+      "options": [
+        "6",
+        "5",
+        "3",
+        "2"
+      ],
+      "answer": "3",
+      "explanation": "「山」共 3 畫，部首「山」，扣除部首後 0 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0204",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「友」總共有幾畫？",
+      "options": [
+        "5",
+        "4",
+        "6",
+        "1"
+      ],
+      "answer": "4",
+      "explanation": "「友」共 4 畫，部首「又」，扣除部首後 2 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0205",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「和」總共有幾畫？",
+      "options": [
+        "10",
+        "6",
+        "8",
+        "7"
+      ],
+      "answer": "8",
+      "explanation": "「和」共 8 畫，部首「口」，扣除部首後 5 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0206",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「到」總共有幾畫？",
+      "options": [
+        "7",
+        "5",
+        "9",
+        "8"
+      ],
+      "answer": "8",
+      "explanation": "「到」共 8 畫，部首「刀」，扣除部首後 6 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0207",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「們」總共有幾畫？",
+      "options": [
+        "13",
+        "11",
+        "10",
+        "12"
+      ],
+      "answer": "10",
+      "explanation": "「們」共 10 畫，部首「人」，扣除部首後 8 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0208",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「玩」總共有幾畫？",
+      "options": [
+        "6",
+        "8",
+        "5",
+        "11"
+      ],
+      "answer": "8",
+      "explanation": "「玩」共 8 畫，部首「玉」，扣除部首後 4 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0209",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「大」總共有幾畫？",
+      "options": [
+        "3",
+        "5",
+        "6",
+        "4"
+      ],
+      "answer": "3",
+      "explanation": "「大」共 3 畫，部首「大」，扣除部首後 0 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0210",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「起」總共有幾畫？",
+      "options": [
+        "8",
+        "9",
+        "10",
+        "13"
+      ],
+      "answer": "10",
+      "explanation": "「起」共 10 畫，部首「走」，扣除部首後 3 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0211",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「陪」總共有幾畫？",
+      "options": [
+        "11",
+        "8",
+        "14",
+        "9"
+      ],
+      "answer": "11",
+      "explanation": "「陪」共 11 畫，部首「阜」，扣除部首後 8 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0212",
+      "type": "stroke_count",
+      "lesson": 3,
+      "prompt": "「海」總共有幾畫？",
+      "options": [
+        "12",
+        "9",
+        "8",
+        "10"
+      ],
+      "answer": "10",
+      "explanation": "「海」共 10 畫，部首「水」，扣除部首後 7 畫。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0213",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「子」總共有幾畫？",
+      "options": [
+        "2",
+        "3",
+        "1",
+        "5"
+      ],
+      "answer": "3",
+      "explanation": "「子」共 3 畫，部首「子」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0214",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「小」總共有幾畫？",
+      "options": [
+        "5",
+        "1",
+        "2",
+        "3"
+      ],
+      "answer": "3",
+      "explanation": "「小」共 3 畫，部首「小」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0215",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「課」總共有幾畫？",
+      "options": [
+        "18",
+        "12",
+        "15",
+        "14"
+      ],
+      "answer": "15",
+      "explanation": "「課」共 15 畫，部首「言」，扣除部首後 8 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0216",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「兩」總共有幾畫？",
+      "options": [
+        "7",
+        "6",
+        "11",
+        "8"
+      ],
+      "answer": "8",
+      "explanation": "「兩」共 8 畫，部首「入」，扣除部首後 6 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0217",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「人」總共有幾畫？",
+      "options": [
+        "1",
+        "3",
+        "2",
+        "4"
+      ],
+      "answer": "2",
+      "explanation": "「人」共 2 畫，部首「人」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0218",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「拉」總共有幾畫？",
+      "options": [
+        "10",
+        "7",
+        "8",
+        "9"
+      ],
+      "answer": "8",
+      "explanation": "「拉」共 8 畫，部首「手」，扣除部首後 5 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0219",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「看」總共有幾畫？",
+      "options": [
+        "9",
+        "11",
+        "7",
+        "6"
+      ],
+      "answer": "9",
+      "explanation": "「看」共 9 畫，部首「目」，扣除部首後 4 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0220",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「找」總共有幾畫？",
+      "options": [
+        "7",
+        "8",
+        "5",
+        "6"
+      ],
+      "answer": "7",
+      "explanation": "「找」共 7 畫，部首「手」，扣除部首後 4 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0221",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「隻」總共有幾畫？",
+      "options": [
+        "13",
+        "10",
+        "9",
+        "11"
+      ],
+      "answer": "10",
+      "explanation": "「隻」共 10 畫，部首「隹」，扣除部首後 2 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0222",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「青」總共有幾畫？",
+      "options": [
+        "6",
+        "7",
+        "10",
+        "8"
+      ],
+      "answer": "8",
+      "explanation": "「青」共 8 畫，部首「青」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0223",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「蛙」總共有幾畫？",
+      "options": [
+        "12",
+        "10",
+        "15",
+        "13"
+      ],
+      "answer": "12",
+      "explanation": "「蛙」共 12 畫，部首「虫」，扣除部首後 6 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0224",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「開」總共有幾畫？",
+      "options": [
+        "12",
+        "9",
+        "11",
+        "13"
+      ],
+      "answer": "12",
+      "explanation": "「開」共 12 畫，部首「門」，扣除部首後 4 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0225",
+      "type": "stroke_count",
+      "lesson": 4,
+      "prompt": "「心」總共有幾畫？",
+      "options": [
+        "6",
+        "7",
+        "4",
+        "1"
+      ],
+      "answer": "4",
+      "explanation": "「心」共 4 畫，部首「心」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0226",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「比」總共有幾畫？",
+      "options": [
+        "5",
+        "4",
+        "1",
+        "2"
+      ],
+      "answer": "4",
+      "explanation": "「比」共 4 畫，部首「比」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0227",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「門」總共有幾畫？",
+      "options": [
+        "8",
+        "10",
+        "6",
+        "9"
+      ],
+      "answer": "8",
+      "explanation": "「門」共 8 畫，部首「門」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0228",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「裡」總共有幾畫？",
+      "options": [
+        "13",
+        "14",
+        "15",
+        "11"
+      ],
+      "answer": "13",
+      "explanation": "「裡」共 13 畫，部首「衣」，扣除部首後 7 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0229",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「外」總共有幾畫？",
+      "options": [
+        "6",
+        "4",
+        "2",
+        "5"
+      ],
+      "answer": "5",
+      "explanation": "「外」共 5 畫，部首「夕」，扣除部首後 2 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0230",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「有」總共有幾畫？",
+      "options": [
+        "6",
+        "3",
+        "9",
+        "4"
+      ],
+      "answer": "6",
+      "explanation": "「有」共 6 畫，部首「月」，扣除部首後 2 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0231",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「什」總共有幾畫？",
+      "options": [
+        "3",
+        "7",
+        "5",
+        "4"
+      ],
+      "answer": "4",
+      "explanation": "「什」共 4 畫，部首「人」，扣除部首後 2 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0232",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「麼」總共有幾畫？",
+      "options": [
+        "15",
+        "13",
+        "14",
+        "11"
+      ],
+      "answer": "14",
+      "explanation": "「麼」共 14 畫，部首「麻」，扣除部首後 3 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0233",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「不」總共有幾畫？",
+      "options": [
+        "1",
+        "2",
+        "4",
+        "6"
+      ],
+      "answer": "4",
+      "explanation": "「不」共 4 畫，部首「一」，扣除部首後 3 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0234",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「同」總共有幾畫？",
+      "options": [
+        "3",
+        "7",
+        "6",
+        "9"
+      ],
+      "answer": "6",
+      "explanation": "「同」共 6 畫，部首「口」，扣除部首後 3 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0235",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「早」總共有幾畫？",
+      "options": [
+        "6",
+        "9",
+        "7",
+        "4"
+      ],
+      "answer": "6",
+      "explanation": "「早」共 6 畫，部首「日」，扣除部首後 2 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0236",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「晚」總共有幾畫？",
+      "options": [
+        "10",
+        "14",
+        "11",
+        "9"
+      ],
+      "answer": "11",
+      "explanation": "「晚」共 11 畫，部首「日」，扣除部首後 7 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0237",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「王」總共有幾畫？",
+      "options": [
+        "2",
+        "1",
+        "4",
+        "6"
+      ],
+      "answer": "4",
+      "explanation": "「王」共 4 畫，部首「玉」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0238",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「主」總共有幾畫？",
+      "options": [
+        "4",
+        "7",
+        "2",
+        "5"
+      ],
+      "answer": "5",
+      "explanation": "「主」共 5 畫，部首「丶」，扣除部首後 4 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0239",
+      "type": "stroke_count",
+      "lesson": 5,
+      "prompt": "「又」總共有幾畫？",
+      "options": [
+        "3",
+        "2",
+        "1",
+        "5"
+      ],
+      "answer": "2",
+      "explanation": "「又」共 2 畫，部首「又」，扣除部首後 0 畫。（教育部標準字體，課本照片中無此頁）",
+      "source": "補充"
+    },
+    {
+      "id": "Q0240",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「路」總共有幾畫？",
+      "options": [
+        "11",
+        "15",
+        "14",
+        "13"
+      ],
+      "answer": "13",
+      "explanation": "「路」共 13 畫，部首「足」，扣除部首後 6 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0241",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「長」總共有幾畫？",
+      "options": [
+        "5",
+        "6",
+        "8",
+        "9"
+      ],
+      "answer": "8",
+      "explanation": "「長」共 8 畫，部首「長」，扣除部首後 0 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0242",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「白」總共有幾畫？",
+      "options": [
+        "4",
+        "5",
+        "6",
+        "7"
+      ],
+      "answer": "5",
+      "explanation": "「白」共 5 畫，部首「白」，扣除部首後 0 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0243",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「花」總共有幾畫？",
+      "options": [
+        "10",
+        "8",
+        "11",
+        "6"
+      ],
+      "answer": "8",
+      "explanation": "「花」共 8 畫，部首「艸」，扣除部首後 4 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0244",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「紅」總共有幾畫？",
+      "options": [
+        "12",
+        "9",
+        "11",
+        "7"
+      ],
+      "answer": "9",
+      "explanation": "「紅」共 9 畫，部首「糸」，扣除部首後 3 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0245",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「走」總共有幾畫？",
+      "options": [
+        "5",
+        "4",
+        "7",
+        "10"
+      ],
+      "answer": "7",
+      "explanation": "「走」共 7 畫，部首「走」，扣除部首後 0 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0246",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「在」總共有幾畫？",
+      "options": [
+        "9",
+        "5",
+        "6",
+        "3"
+      ],
+      "answer": "6",
+      "explanation": "「在」共 6 畫，部首「土」，扣除部首後 3 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0247",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「向」總共有幾畫？",
+      "options": [
+        "6",
+        "8",
+        "9",
+        "3"
+      ],
+      "answer": "6",
+      "explanation": "「向」共 6 畫，部首「口」，扣除部首後 3 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0248",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「說」總共有幾畫？",
+      "options": [
+        "15",
+        "11",
+        "16",
+        "14"
+      ],
+      "answer": "14",
+      "explanation": "「說」共 14 畫，部首「言」，扣除部首後 7 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0249",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「朵」總共有幾畫？",
+      "options": [
+        "9",
+        "6",
+        "4",
+        "3"
+      ],
+      "answer": "6",
+      "explanation": "「朵」共 6 畫，部首「木」，扣除部首後 2 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0250",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「從」總共有幾畫？",
+      "options": [
+        "8",
+        "14",
+        "10",
+        "11"
+      ],
+      "answer": "11",
+      "explanation": "「從」共 11 畫，部首「彳」，扣除部首後 8 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0251",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「頭」總共有幾畫？",
+      "options": [
+        "16",
+        "18",
+        "17",
+        "19"
+      ],
+      "answer": "16",
+      "explanation": "「頭」共 16 畫，部首「頁」，扣除部首後 7 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0252",
+      "type": "stroke_count",
+      "lesson": 6,
+      "prompt": "「那」總共有幾畫？",
+      "options": [
+        "4",
+        "8",
+        "9",
+        "7"
+      ],
+      "answer": "7",
+      "explanation": "「那」共 7 畫，部首「邑」，扣除部首後 4 畫。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0253",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「一」的部首是什麼？",
+      "options": [
+        "戈",
+        "頁",
+        "一",
+        "土"
+      ],
+      "answer": "一",
+      "explanation": "「一」是「一」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0254",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「二」的部首是什麼？",
+      "options": [
+        "二",
+        "十",
+        "子",
+        "白"
+      ],
+      "answer": "二",
+      "explanation": "「二」是「二」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0255",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「三」的部首是什麼？",
+      "options": [
+        "大",
+        "乙",
+        "一",
+        "子"
+      ],
+      "answer": "一",
+      "explanation": "「三」是「一」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0256",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「四」的部首是什麼？",
+      "options": [
+        "言",
+        "月",
+        "囗",
+        "日"
+      ],
+      "answer": "囗",
+      "explanation": "「四」是「囗」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0257",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「五」的部首是什麼？",
+      "options": [
+        "大",
+        "二",
+        "麻",
+        "門"
+      ],
+      "answer": "二",
+      "explanation": "「五」是「二」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0258",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「六」的部首是什麼？",
+      "options": [
+        "土",
+        "亅",
+        "八",
+        "走"
+      ],
+      "answer": "八",
+      "explanation": "「六」是「八」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0259",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「七」的部首是什麼？",
+      "options": [
+        "手",
+        "心",
+        "一",
+        "人"
+      ],
+      "answer": "一",
+      "explanation": "「七」是「一」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0260",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「八」的部首是什麼？",
+      "options": [
+        "八",
+        "囗",
+        "高",
+        "大"
+      ],
+      "answer": "八",
+      "explanation": "「八」是「八」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0261",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「九」的部首是什麼？",
+      "options": [
+        "乙",
+        "走",
+        "丶",
+        "辵"
+      ],
+      "answer": "乙",
+      "explanation": "「九」是「乙」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0262",
+      "type": "radical",
+      "lesson": 0,
+      "prompt": "「十」的部首是什麼？",
+      "options": [
+        "艸",
+        "木",
+        "十",
+        "白"
+      ],
+      "answer": "十",
+      "explanation": "「十」是「十」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0263",
+      "type": "radical",
+      "lesson": 1,
+      "prompt": "「拍」的部首是什麼？",
+      "options": [
+        "手",
+        "頁",
+        "亅",
+        "女"
+      ],
+      "answer": "手",
+      "explanation": "「拍」是「手」部。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0264",
+      "type": "radical",
+      "lesson": 1,
+      "prompt": "「手」的部首是什麼？",
+      "options": [
+        "言",
+        "山",
+        "衣",
+        "手"
+      ],
+      "answer": "手",
+      "explanation": "「手」是「手」部。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0265",
+      "type": "radical",
+      "lesson": 1,
+      "prompt": "「左」的部首是什麼？",
+      "options": [
+        "工",
+        "青",
+        "比",
+        "隹"
+      ],
+      "answer": "工",
+      "explanation": "「左」是「工」部。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0266",
+      "type": "radical",
+      "lesson": 1,
+      "prompt": "「右」的部首是什麼？",
+      "options": [
+        "長",
+        "口",
+        "心",
+        "女"
+      ],
+      "answer": "口",
+      "explanation": "「右」是「口」部。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0267",
+      "type": "radical",
+      "lesson": 1,
+      "prompt": "「你」的部首是什麼？",
+      "options": [
+        "土",
+        "人",
+        "艸",
+        "木"
+      ],
+      "answer": "人",
+      "explanation": "「你」是「人」部。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0268",
+      "type": "radical",
+      "lesson": 1,
+      "prompt": "「他」的部首是什麼？",
+      "options": [
+        "虫",
+        "高",
+        "人",
+        "足"
+      ],
+      "answer": "人",
+      "explanation": "「他」是「人」部。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0269",
+      "type": "radical",
+      "lesson": 1,
+      "prompt": "「也」的部首是什麼？",
+      "options": [
+        "二",
+        "禾",
+        "乙",
+        "日"
+      ],
+      "answer": "乙",
+      "explanation": "「也」是「乙」部。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0270",
+      "type": "radical",
+      "lesson": 1,
+      "prompt": "「上」的部首是什麼？",
+      "options": [
+        "口",
+        "十",
+        "一",
+        "玉"
+      ],
+      "answer": "一",
+      "explanation": "「上」是「一」部。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0271",
+      "type": "radical",
+      "lesson": 1,
+      "prompt": "「下」的部首是什麼？",
+      "options": [
+        "手",
+        "彳",
+        "一",
+        "口"
+      ],
+      "answer": "一",
+      "explanation": "「下」是「一」部。",
+      "source": "課本p18"
+    },
+    {
+      "id": "Q0272",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「這」的部首是什麼？",
+      "options": [
+        "隹",
+        "比",
+        "辵",
+        "彳"
+      ],
+      "answer": "辵",
+      "explanation": "「這」是「辵」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0273",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「是」的部首是什麼？",
+      "options": [
+        "日",
+        "刀",
+        "艸",
+        "山"
+      ],
+      "answer": "日",
+      "explanation": "「是」是「日」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0274",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「誰」的部首是什麼？",
+      "options": [
+        "高",
+        "言",
+        "心",
+        "比"
+      ],
+      "answer": "言",
+      "explanation": "「誰」是「言」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0275",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「的」的部首是什麼？",
+      "options": [
+        "白",
+        "青",
+        "月",
+        "小"
+      ],
+      "answer": "白",
+      "explanation": "「的」是「白」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0276",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「我」的部首是什麼？",
+      "options": [
+        "戈",
+        "一",
+        "禾",
+        "夕"
+      ],
+      "answer": "戈",
+      "explanation": "「我」是「戈」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0277",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「分」的部首是什麼？",
+      "options": [
+        "刀",
+        "艸",
+        "工",
+        "高"
+      ],
+      "answer": "刀",
+      "explanation": "「分」是「刀」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0278",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「好」的部首是什麼？",
+      "options": [
+        "工",
+        "隹",
+        "十",
+        "女"
+      ],
+      "answer": "女",
+      "explanation": "「好」是「女」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0279",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「了」的部首是什麼？",
+      "options": [
+        "艸",
+        "隹",
+        "辵",
+        "亅"
+      ],
+      "answer": "亅",
+      "explanation": "「了」是「亅」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0280",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「啊」的部首是什麼？",
+      "options": [
+        "麻",
+        "隹",
+        "十",
+        "口"
+      ],
+      "answer": "口",
+      "explanation": "「啊」是「口」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0281",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「多」的部首是什麼？",
+      "options": [
+        "夕",
+        "足",
+        "阜",
+        "走"
+      ],
+      "answer": "夕",
+      "explanation": "「多」是「夕」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0282",
+      "type": "radical",
+      "lesson": 2,
+      "prompt": "「個」的部首是什麼？",
+      "options": [
+        "禾",
+        "八",
+        "高",
+        "人"
+      ],
+      "answer": "人",
+      "explanation": "「個」是「人」部。",
+      "source": "課本p26"
+    },
+    {
+      "id": "Q0283",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「秋」的部首是什麼？",
+      "options": [
+        "禾",
+        "戈",
+        "日",
+        "水"
+      ],
+      "answer": "禾",
+      "explanation": "「秋」是「禾」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0284",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「高」的部首是什麼？",
+      "options": [
+        "手",
+        "辵",
+        "一",
+        "高"
+      ],
+      "answer": "高",
+      "explanation": "「高」是「高」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0285",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「朋」的部首是什麼？",
+      "options": [
+        "月",
+        "青",
+        "手",
+        "辵"
+      ],
+      "answer": "月",
+      "explanation": "「朋」是「月」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0286",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「千」的部首是什麼？",
+      "options": [
+        "十",
+        "心",
+        "夕",
+        "丶"
+      ],
+      "answer": "十",
+      "explanation": "「千」是「十」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0287",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「山」的部首是什麼？",
+      "options": [
+        "夕",
+        "辵",
+        "山",
+        "小"
+      ],
+      "answer": "山",
+      "explanation": "「山」是「山」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0288",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「友」的部首是什麼？",
+      "options": [
+        "水",
+        "十",
+        "又",
+        "亅"
+      ],
+      "answer": "又",
+      "explanation": "「友」是「又」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0289",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「和」的部首是什麼？",
+      "options": [
+        "口",
+        "麻",
+        "走",
+        "言"
+      ],
+      "answer": "口",
+      "explanation": "「和」是「口」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0290",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「到」的部首是什麼？",
+      "options": [
+        "足",
+        "刀",
+        "門",
+        "白"
+      ],
+      "answer": "刀",
+      "explanation": "「到」是「刀」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0291",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「們」的部首是什麼？",
+      "options": [
+        "夕",
+        "人",
+        "又",
+        "門"
+      ],
+      "answer": "人",
+      "explanation": "「們」是「人」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0292",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「玩」的部首是什麼？",
+      "options": [
+        "木",
+        "艸",
+        "水",
+        "玉"
+      ],
+      "answer": "玉",
+      "explanation": "「玩」是「玉」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0293",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「大」的部首是什麼？",
+      "options": [
+        "頁",
+        "足",
+        "水",
+        "大"
+      ],
+      "answer": "大",
+      "explanation": "「大」是「大」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0294",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「起」的部首是什麼？",
+      "options": [
+        "足",
+        "手",
+        "走",
+        "二"
+      ],
+      "answer": "走",
+      "explanation": "「起」是「走」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0295",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「陪」的部首是什麼？",
+      "options": [
+        "阜",
+        "月",
+        "虫",
+        "小"
+      ],
+      "answer": "阜",
+      "explanation": "「陪」是「阜」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0296",
+      "type": "radical",
+      "lesson": 3,
+      "prompt": "「海」的部首是什麼？",
+      "options": [
+        "隹",
+        "水",
+        "長",
+        "乙"
+      ],
+      "answer": "水",
+      "explanation": "「海」是「水」部。",
+      "source": "課本p34"
+    },
+    {
+      "id": "Q0297",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「子」的部首是什麼？",
+      "options": [
+        "長",
+        "乙",
+        "白",
+        "子"
+      ],
+      "answer": "子",
+      "explanation": "「子」是「子」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0298",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「小」的部首是什麼？",
+      "options": [
+        "長",
+        "小",
+        "女",
+        "隹"
+      ],
+      "answer": "小",
+      "explanation": "「小」是「小」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0299",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「課」的部首是什麼？",
+      "options": [
+        "目",
+        "乙",
+        "言",
+        "隹"
+      ],
+      "answer": "言",
+      "explanation": "「課」是「言」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0300",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「兩」的部首是什麼？",
+      "options": [
+        "入",
+        "又",
+        "隹",
+        "長"
+      ],
+      "answer": "入",
+      "explanation": "「兩」是「入」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0301",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「人」的部首是什麼？",
+      "options": [
+        "人",
+        "八",
+        "青",
+        "木"
+      ],
+      "answer": "人",
+      "explanation": "「人」是「人」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0302",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「拉」的部首是什麼？",
+      "options": [
+        "女",
+        "手",
+        "人",
+        "小"
+      ],
+      "answer": "手",
+      "explanation": "「拉」是「手」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0303",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「看」的部首是什麼？",
+      "options": [
+        "比",
+        "乙",
+        "目",
+        "一"
+      ],
+      "answer": "目",
+      "explanation": "「看」是「目」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0304",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「找」的部首是什麼？",
+      "options": [
+        "二",
+        "門",
+        "八",
+        "手"
+      ],
+      "answer": "手",
+      "explanation": "「找」是「手」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0305",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「隻」的部首是什麼？",
+      "options": [
+        "八",
+        "比",
+        "隹",
+        "亅"
+      ],
+      "answer": "隹",
+      "explanation": "「隻」是「隹」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0306",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「青」的部首是什麼？",
+      "options": [
+        "足",
+        "二",
+        "比",
+        "青"
+      ],
+      "answer": "青",
+      "explanation": "「青」是「青」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0307",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「蛙」的部首是什麼？",
+      "options": [
+        "土",
+        "麻",
+        "虫",
+        "入"
+      ],
+      "answer": "虫",
+      "explanation": "「蛙」是「虫」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0308",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「開」的部首是什麼？",
+      "options": [
+        "門",
+        "土",
+        "邑",
+        "夕"
+      ],
+      "answer": "門",
+      "explanation": "「開」是「門」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0309",
+      "type": "radical",
+      "lesson": 4,
+      "prompt": "「心」的部首是什麼？",
+      "options": [
+        "心",
+        "門",
+        "高",
+        "戈"
+      ],
+      "answer": "心",
+      "explanation": "「心」是「心」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0310",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「比」的部首是什麼？",
+      "options": [
+        "白",
+        "月",
+        "乙",
+        "比"
+      ],
+      "answer": "比",
+      "explanation": "「比」是「比」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0311",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「門」的部首是什麼？",
+      "options": [
+        "言",
+        "二",
+        "門",
+        "衣"
+      ],
+      "answer": "門",
+      "explanation": "「門」是「門」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0312",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「裡」的部首是什麼？",
+      "options": [
+        "虫",
+        "衣",
+        "邑",
+        "麻"
+      ],
+      "answer": "衣",
+      "explanation": "「裡」是「衣」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0313",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「外」的部首是什麼？",
+      "options": [
+        "夕",
+        "女",
+        "高",
+        "子"
+      ],
+      "answer": "夕",
+      "explanation": "「外」是「夕」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0314",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「有」的部首是什麼？",
+      "options": [
+        "月",
+        "戈",
+        "手",
+        "頁"
+      ],
+      "answer": "月",
+      "explanation": "「有」是「月」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0315",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「什」的部首是什麼？",
+      "options": [
+        "人",
+        "比",
+        "足",
+        "水"
+      ],
+      "answer": "人",
+      "explanation": "「什」是「人」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0316",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「麼」的部首是什麼？",
+      "options": [
+        "十",
+        "足",
+        "二",
+        "麻"
+      ],
+      "answer": "麻",
+      "explanation": "「麼」是「麻」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0317",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「不」的部首是什麼？",
+      "options": [
+        "一",
+        "入",
+        "言",
+        "目"
+      ],
+      "answer": "一",
+      "explanation": "「不」是「一」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0318",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「同」的部首是什麼？",
+      "options": [
+        "口",
+        "隹",
+        "辵",
+        "大"
+      ],
+      "answer": "口",
+      "explanation": "「同」是「口」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0319",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「早」的部首是什麼？",
+      "options": [
+        "又",
+        "心",
+        "麻",
+        "日"
+      ],
+      "answer": "日",
+      "explanation": "「早」是「日」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0320",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「晚」的部首是什麼？",
+      "options": [
+        "衣",
+        "日",
+        "八",
+        "土"
+      ],
+      "answer": "日",
+      "explanation": "「晚」是「日」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0321",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「王」的部首是什麼？",
+      "options": [
+        "頁",
+        "丶",
+        "玉",
+        "足"
+      ],
+      "answer": "玉",
+      "explanation": "「王」是「玉」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0322",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「主」的部首是什麼？",
+      "options": [
+        "工",
+        "丶",
+        "玉",
+        "刀"
+      ],
+      "answer": "丶",
+      "explanation": "「主」是「丶」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0323",
+      "type": "radical",
+      "lesson": 5,
+      "prompt": "「又」的部首是什麼？",
+      "options": [
+        "彳",
+        "玉",
+        "辵",
+        "又"
+      ],
+      "answer": "又",
+      "explanation": "「又」是「又」部。",
+      "source": "補充"
+    },
+    {
+      "id": "Q0324",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「路」的部首是什麼？",
+      "options": [
+        "丶",
+        "木",
+        "足",
+        "虫"
+      ],
+      "answer": "足",
+      "explanation": "「路」是「足」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0325",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「長」的部首是什麼？",
+      "options": [
+        "大",
+        "子",
+        "邑",
+        "長"
+      ],
+      "answer": "長",
+      "explanation": "「長」是「長」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0326",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「白」的部首是什麼？",
+      "options": [
+        "又",
+        "白",
+        "彳",
+        "糸"
+      ],
+      "answer": "白",
+      "explanation": "「白」是「白」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0327",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「花」的部首是什麼？",
+      "options": [
+        "心",
+        "阜",
+        "艸",
+        "青"
+      ],
+      "answer": "艸",
+      "explanation": "「花」是「艸」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0328",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「紅」的部首是什麼？",
+      "options": [
+        "手",
+        "糸",
+        "亅",
+        "虫"
+      ],
+      "answer": "糸",
+      "explanation": "「紅」是「糸」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0329",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「走」的部首是什麼？",
+      "options": [
+        "走",
+        "足",
+        "二",
+        "大"
+      ],
+      "answer": "走",
+      "explanation": "「走」是「走」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0330",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「在」的部首是什麼？",
+      "options": [
+        "阜",
+        "彳",
+        "土",
+        "比"
+      ],
+      "answer": "土",
+      "explanation": "「在」是「土」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0331",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「向」的部首是什麼？",
+      "options": [
+        "子",
+        "口",
+        "丶",
+        "二"
+      ],
+      "answer": "口",
+      "explanation": "「向」是「口」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0332",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「說」的部首是什麼？",
+      "options": [
+        "足",
+        "子",
+        "艸",
+        "言"
+      ],
+      "answer": "言",
+      "explanation": "「說」是「言」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0333",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「朵」的部首是什麼？",
+      "options": [
+        "衣",
+        "日",
+        "一",
+        "木"
+      ],
+      "answer": "木",
+      "explanation": "「朵」是「木」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0334",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「從」的部首是什麼？",
+      "options": [
+        "彳",
+        "又",
+        "手",
+        "亅"
+      ],
+      "answer": "彳",
+      "explanation": "「從」是「彳」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0335",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「頭」的部首是什麼？",
+      "options": [
+        "走",
+        "子",
+        "頁",
+        "隹"
+      ],
+      "answer": "頁",
+      "explanation": "「頭」是「頁」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0336",
+      "type": "radical",
+      "lesson": 6,
+      "prompt": "「那」的部首是什麼？",
+      "options": [
+        "邑",
+        "一",
+        "人",
+        "口"
+      ],
+      "answer": "邑",
+      "explanation": "「那」是「邑」部。",
+      "source": "課本p67"
+    },
+    {
+      "id": "Q0337",
+      "type": "cloze",
+      "lesson": 1,
+      "prompt": "課文填空：拍拍＿，拍一拍。",
+      "options": [
+        "你",
+        "手",
+        "也",
+        "下"
+      ],
+      "answer": "手",
+      "explanation": "原句：拍拍手，拍一拍。",
+      "sentence": "拍拍手，拍一拍。"
+    },
+    {
+      "id": "Q0338",
+      "type": "cloze",
+      "lesson": 1,
+      "prompt": "課文填空：＿拍手，拍一拍。",
+      "options": [
+        "拍",
+        "他",
+        "也",
+        "上"
+      ],
+      "answer": "拍",
+      "explanation": "原句：拍拍手，拍一拍。",
+      "sentence": "拍拍手，拍一拍。"
+    },
+    {
+      "id": "Q0339",
+      "type": "cloze",
+      "lesson": 1,
+      "prompt": "課文填空：＿拍右拍，拍拍拍。",
+      "options": [
+        "他",
+        "左",
+        "下",
+        "手"
+      ],
+      "answer": "左",
+      "explanation": "原句：左拍右拍，拍拍拍。",
+      "sentence": "左拍右拍，拍拍拍。"
+    },
+    {
+      "id": "Q0340",
+      "type": "cloze",
+      "lesson": 1,
+      "prompt": "課文填空：左＿右拍，拍拍拍。",
+      "options": [
+        "也",
+        "拍",
+        "他",
+        "你"
+      ],
+      "answer": "拍",
+      "explanation": "原句：左拍右拍，拍拍拍。",
+      "sentence": "左拍右拍，拍拍拍。"
+    },
+    {
+      "id": "Q0341",
+      "type": "cloze",
+      "lesson": 1,
+      "prompt": "課文填空：你＿手，他也拍，",
+      "options": [
+        "上",
+        "左",
+        "拍",
+        "下"
+      ],
+      "answer": "拍",
+      "explanation": "原句：你拍手，他也拍，",
+      "sentence": "你拍手，他也拍，"
+    },
+    {
+      "id": "Q0342",
+      "type": "cloze",
+      "lesson": 1,
+      "prompt": "課文填空：你拍＿，他也拍，",
+      "options": [
+        "手",
+        "右",
+        "上",
+        "左"
+      ],
+      "answer": "手",
+      "explanation": "原句：你拍手，他也拍，",
+      "sentence": "你拍手，他也拍，"
+    },
+    {
+      "id": "Q0343",
+      "type": "cloze",
+      "lesson": 1,
+      "prompt": "課文填空：＿拍下拍，拍拍拍。",
+      "options": [
+        "他",
+        "手",
+        "右",
+        "上"
+      ],
+      "answer": "上",
+      "explanation": "原句：上拍下拍，拍拍拍。",
+      "sentence": "上拍下拍，拍拍拍。"
+    },
+    {
+      "id": "Q0344",
+      "type": "cloze",
+      "lesson": 1,
+      "prompt": "課文填空：上拍＿拍，拍拍拍。",
+      "options": [
+        "他",
+        "下",
+        "也",
+        "你"
+      ],
+      "answer": "下",
+      "explanation": "原句：上拍下拍，拍拍拍。",
+      "sentence": "上拍下拍，拍拍拍。"
+    },
+    {
+      "id": "Q0345",
+      "type": "cloze",
+      "lesson": 2,
+      "prompt": "課文填空：一二三，這是＿的。",
+      "options": [
+        "我",
+        "誰",
+        "分",
+        "個"
+      ],
+      "answer": "我",
+      "explanation": "原句：一二三，這是我的。",
+      "sentence": "一二三，這是我的。"
+    },
+    {
+      "id": "Q0346",
+      "type": "cloze",
+      "lesson": 2,
+      "prompt": "課文填空：一二三，這＿我的。",
+      "options": [
+        "了",
+        "是",
+        "分",
+        "誰"
+      ],
+      "answer": "是",
+      "explanation": "原句：一二三，這是我的。",
+      "sentence": "一二三，這是我的。"
+    },
+    {
+      "id": "Q0347",
+      "type": "cloze",
+      "lesson": 2,
+      "prompt": "課文填空：四五六，這＿你的。",
+      "options": [
+        "啊",
+        "多",
+        "是",
+        "誰"
+      ],
+      "answer": "是",
+      "explanation": "原句：四五六，這是你的。",
+      "sentence": "四五六，這是你的。"
+    },
+    {
+      "id": "Q0348",
+      "type": "cloze",
+      "lesson": 2,
+      "prompt": "課文填空：四五六，這是你＿。",
+      "options": [
+        "的",
+        "了",
+        "啊",
+        "分"
+      ],
+      "answer": "的",
+      "explanation": "原句：四五六，這是你的。",
+      "sentence": "四五六，這是你的。"
+    },
+    {
+      "id": "Q0349",
+      "type": "cloze",
+      "lesson": 2,
+      "prompt": "課文填空：七八九，這是他＿。",
+      "options": [
+        "的",
+        "了",
+        "我",
+        "分"
+      ],
+      "answer": "的",
+      "explanation": "原句：七八九，這是他的。",
+      "sentence": "七八九，這是他的。"
+    },
+    {
+      "id": "Q0350",
+      "type": "cloze",
+      "lesson": 2,
+      "prompt": "課文填空：七八九，這＿他的。",
+      "options": [
+        "多",
+        "誰",
+        "是",
+        "啊"
+      ],
+      "answer": "是",
+      "explanation": "原句：七八九，這是他的。",
+      "sentence": "七八九，這是他的。"
+    },
+    {
+      "id": "Q0351",
+      "type": "cloze",
+      "lesson": 2,
+      "prompt": "課文填空：分好了，啊！多了一個，這＿誰的？",
+      "options": [
+        "是",
+        "又",
+        "看",
+        "走"
+      ],
+      "answer": "是",
+      "explanation": "原句：分好了，啊！多了一個，這是誰的？",
+      "sentence": "分好了，啊！多了一個，這是誰的？"
+    },
+    {
+      "id": "Q0352",
+      "type": "cloze",
+      "lesson": 2,
+      "prompt": "課文填空：分好了，啊！多了一個，這是誰＿？",
+      "options": [
+        "的",
+        "什",
+        "朋",
+        "在"
+      ],
+      "answer": "的",
+      "explanation": "原句：分好了，啊！多了一個，這是誰的？",
+      "sentence": "分好了，啊！多了一個，這是誰的？"
+    },
+    {
+      "id": "Q0353",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：＿千，秋千，和我玩。",
+      "options": [
+        "大",
+        "高",
+        "起",
+        "秋"
+      ],
+      "answer": "秋",
+      "explanation": "原句：秋千，秋千，和我玩。",
+      "sentence": "秋千，秋千，和我玩。"
+    },
+    {
+      "id": "Q0354",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：秋＿，秋千，和我玩。",
+      "options": [
+        "陪",
+        "海",
+        "千",
+        "起"
+      ],
+      "answer": "千",
+      "explanation": "原句：秋千，秋千，和我玩。",
+      "sentence": "秋千，秋千，和我玩。"
+    },
+    {
+      "id": "Q0355",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：上上上，陪我上＿山。",
+      "options": [
+        "和",
+        "高",
+        "大",
+        "到"
+      ],
+      "answer": "高",
+      "explanation": "原句：上上上，陪我上高山。",
+      "sentence": "上上上，陪我上高山。"
+    },
+    {
+      "id": "Q0356",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：上上上，＿我上高山。",
+      "options": [
+        "玩",
+        "友",
+        "陪",
+        "千"
+      ],
+      "answer": "陪",
+      "explanation": "原句：上上上，陪我上高山。",
+      "sentence": "上上上，陪我上高山。"
+    },
+    {
+      "id": "Q0357",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：下下下，陪我到＿海。",
+      "options": [
+        "友",
+        "秋",
+        "和",
+        "大"
+      ],
+      "answer": "大",
+      "explanation": "原句：下下下，陪我到大海。",
+      "sentence": "下下下，陪我到大海。"
+    },
+    {
+      "id": "Q0358",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：下下下，＿我到大海。",
+      "options": [
+        "和",
+        "秋",
+        "友",
+        "陪"
+      ],
+      "answer": "陪",
+      "explanation": "原句：下下下，陪我到大海。",
+      "sentence": "下下下，陪我到大海。"
+    },
+    {
+      "id": "Q0359",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：秋千，秋千，我的好＿友，",
+      "options": [
+        "到",
+        "和",
+        "陪",
+        "朋"
+      ],
+      "answer": "朋",
+      "explanation": "原句：秋千，秋千，我的好朋友，",
+      "sentence": "秋千，秋千，我的好朋友，"
+    },
+    {
+      "id": "Q0360",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：秋＿，秋千，我的好朋友，",
+      "options": [
+        "高",
+        "千",
+        "玩",
+        "和"
+      ],
+      "answer": "千",
+      "explanation": "原句：秋千，秋千，我的好朋友，",
+      "sentence": "秋千，秋千，我的好朋友，"
+    },
+    {
+      "id": "Q0361",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：秋千，秋千，我＿一起玩。",
+      "options": [
+        "們",
+        "到",
+        "海",
+        "大"
+      ],
+      "answer": "們",
+      "explanation": "原句：秋千，秋千，我們一起玩。",
+      "sentence": "秋千，秋千，我們一起玩。"
+    },
+    {
+      "id": "Q0362",
+      "type": "cloze",
+      "lesson": 3,
+      "prompt": "課文填空：＿千，秋千，我們一起玩。",
+      "options": [
+        "大",
+        "秋",
+        "山",
+        "友"
+      ],
+      "answer": "秋",
+      "explanation": "原句：秋千，秋千，我們一起玩。",
+      "sentence": "秋千，秋千，我們一起玩。"
+    },
+    {
+      "id": "Q0363",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：大個＿，小個子，一起上課一起玩。",
+      "options": [
+        "人",
+        "青",
+        "子",
+        "開"
+      ],
+      "answer": "子",
+      "explanation": "原句：大個子，小個子，一起上課一起玩。",
+      "sentence": "大個子，小個子，一起上課一起玩。"
+    },
+    {
+      "id": "Q0364",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：大個子，＿個子，一起上課一起玩。",
+      "options": [
+        "看",
+        "小",
+        "隻",
+        "蛙"
+      ],
+      "answer": "小",
+      "explanation": "原句：大個子，小個子，一起上課一起玩。",
+      "sentence": "大個子，小個子，一起上課一起玩。"
+    },
+    {
+      "id": "Q0365",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：＿個人，手拉手，左看看，右找找。",
+      "options": [
+        "子",
+        "兩",
+        "蛙",
+        "青"
+      ],
+      "answer": "兩",
+      "explanation": "原句：兩個人，手拉手，左看看，右找找。",
+      "sentence": "兩個人，手拉手，左看看，右找找。"
+    },
+    {
+      "id": "Q0366",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：兩個人，手拉手，左看看，右＿找。",
+      "options": [
+        "隻",
+        "開",
+        "找",
+        "小"
+      ],
+      "answer": "找",
+      "explanation": "原句：兩個人，手拉手，左看看，右找找。",
+      "sentence": "兩個人，手拉手，左看看，右找找。"
+    },
+    {
+      "id": "Q0367",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：小個子＿到一隻大青蛙，",
+      "options": [
+        "看",
+        "心",
+        "找",
+        "拉"
+      ],
+      "answer": "看",
+      "explanation": "原句：小個子看到一隻大青蛙，",
+      "sentence": "小個子看到一隻大青蛙，"
+    },
+    {
+      "id": "Q0368",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：小個子看到一隻大青＿，",
+      "options": [
+        "開",
+        "課",
+        "蛙",
+        "拉"
+      ],
+      "answer": "蛙",
+      "explanation": "原句：小個子看到一隻大青蛙，",
+      "sentence": "小個子看到一隻大青蛙，"
+    },
+    {
+      "id": "Q0369",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：大個子＿到三隻小青蛙。",
+      "options": [
+        "拉",
+        "找",
+        "開",
+        "兩"
+      ],
+      "answer": "找",
+      "explanation": "原句：大個子找到三隻小青蛙。",
+      "sentence": "大個子找到三隻小青蛙。"
+    },
+    {
+      "id": "Q0370",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：大個子找到三＿小青蛙。",
+      "options": [
+        "心",
+        "開",
+        "人",
+        "隻"
+      ],
+      "answer": "隻",
+      "explanation": "原句：大個子找到三隻小青蛙。",
+      "sentence": "大個子找到三隻小青蛙。"
+    },
+    {
+      "id": "Q0371",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：小個子，大個子，看看＿找好開心。",
+      "options": [
+        "隻",
+        "課",
+        "青",
+        "找"
+      ],
+      "answer": "找",
+      "explanation": "原句：小個子，大個子，看看找找好開心。",
+      "sentence": "小個子，大個子，看看找找好開心。"
+    },
+    {
+      "id": "Q0372",
+      "type": "cloze",
+      "lesson": 4,
+      "prompt": "課文填空：小個＿，大個子，看看找找好開心。",
+      "options": [
+        "課",
+        "子",
+        "人",
+        "蛙"
+      ],
+      "answer": "子",
+      "explanation": "原句：小個子，大個子，看看找找好開心。",
+      "sentence": "小個子，大個子，看看找找好開心。"
+    },
+    {
+      "id": "Q0373",
+      "type": "cloze",
+      "lesson": 5,
+      "prompt": "課文填空：門＿門外，比一比，有什麼不同？",
+      "options": [
+        "裡",
+        "又",
+        "晚",
+        "主"
+      ],
+      "answer": "裡",
+      "explanation": "原句：門裡門外，比一比，有什麼不同？",
+      "sentence": "門裡門外，比一比，有什麼不同？"
+    },
+    {
+      "id": "Q0374",
+      "type": "cloze",
+      "lesson": 5,
+      "prompt": "課文填空：＿裡門外，比一比，有什麼不同？",
+      "options": [
+        "又",
+        "早",
+        "主",
+        "門"
+      ],
+      "answer": "門",
+      "explanation": "原句：門裡門外，比一比，有什麼不同？",
+      "sentence": "門裡門外，比一比，有什麼不同？"
+    },
+    {
+      "id": "Q0375",
+      "type": "cloze",
+      "lesson": 5,
+      "prompt": "課文填空：早上晚上，比一比，＿什麼不同？",
+      "options": [
+        "主",
+        "又",
+        "有",
+        "門"
+      ],
+      "answer": "有",
+      "explanation": "原句：早上晚上，比一比，有什麼不同？",
+      "sentence": "早上晚上，比一比，有什麼不同？"
+    },
+    {
+      "id": "Q0376",
+      "type": "cloze",
+      "lesson": 5,
+      "prompt": "課文填空：早上晚上，比一比，有＿麼不同？",
+      "options": [
+        "主",
+        "什",
+        "外",
+        "王"
+      ],
+      "answer": "什",
+      "explanation": "原句：早上晚上，比一比，有什麼不同？",
+      "sentence": "早上晚上，比一比，有什麼不同？"
+    },
+    {
+      "id": "Q0377",
+      "type": "cloze",
+      "lesson": 5,
+      "prompt": "課文填空：上山山上，比一比，＿什麼不同？",
+      "options": [
+        "有",
+        "又",
+        "王",
+        "晚"
+      ],
+      "answer": "有",
+      "explanation": "原句：上山山上，比一比，有什麼不同？",
+      "sentence": "上山山上，比一比，有什麼不同？"
+    },
+    {
+      "id": "Q0378",
+      "type": "cloze",
+      "lesson": 5,
+      "prompt": "課文填空：上山山上，比一比，有什麼＿同？",
+      "options": [
+        "早",
+        "又",
+        "不",
+        "外"
+      ],
+      "answer": "不",
+      "explanation": "原句：上山山上，比一比，有什麼不同？",
+      "sentence": "上山山上，比一比，有什麼不同？"
+    },
+    {
+      "id": "Q0379",
+      "type": "cloze",
+      "lesson": 5,
+      "prompt": "課文填空：王子的王，主人的主，比一比，又有什麼不＿？",
+      "options": [
+        "外",
+        "同",
+        "裡",
+        "晚"
+      ],
+      "answer": "同",
+      "explanation": "原句：王子的王，主人的主，比一比，又有什麼不同？",
+      "sentence": "王子的王，主人的主，比一比，又有什麼不同？"
+    },
+    {
+      "id": "Q0380",
+      "type": "cloze",
+      "lesson": 5,
+      "prompt": "課文填空：王子的王，主人的主，比一比，又＿什麼不同？",
+      "options": [
+        "裡",
+        "有",
+        "早",
+        "外"
+      ],
+      "answer": "有",
+      "explanation": "原句：王子的王，主人的主，比一比，又有什麼不同？",
+      "sentence": "王子的王，主人的主，比一比，又有什麼不同？"
+    },
+    {
+      "id": "Q0381",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：長長的小＿，開了小小的白花，也開了小小的紅花。",
+      "options": [
+        "頭",
+        "從",
+        "走",
+        "路"
+      ],
+      "answer": "路",
+      "explanation": "原句：長長的小路，開了小小的白花，也開了小小的紅花。",
+      "sentence": "長長的小路，開了小小的白花，也開了小小的紅花。"
+    },
+    {
+      "id": "Q0382",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：長長的小路，開了小小的白花，也開了小小的＿花。",
+      "options": [
+        "走",
+        "頭",
+        "紅",
+        "在"
+      ],
+      "answer": "紅",
+      "explanation": "原句：長長的小路，開了小小的白花，也開了小小的紅花。",
+      "sentence": "長長的小路，開了小小的白花，也開了小小的紅花。"
+    },
+    {
+      "id": "Q0383",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：走＿小路上，我向小紅花說你早，也向小白花說你好。",
+      "options": [
+        "那",
+        "頭",
+        "在",
+        "從"
+      ],
+      "answer": "在",
+      "explanation": "原句：走在小路上，我向小紅花說你早，也向小白花說你好。",
+      "sentence": "走在小路上，我向小紅花說你早，也向小白花說你好。"
+    },
+    {
+      "id": "Q0384",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：走在小路上，我＿小紅花說你早，也向小白花說你好。",
+      "options": [
+        "朵",
+        "那",
+        "向",
+        "長"
+      ],
+      "answer": "向",
+      "explanation": "原句：走在小路上，我向小紅花說你早，也向小白花說你好。",
+      "sentence": "走在小路上，我向小紅花說你早，也向小白花說你好。"
+    },
+    {
+      "id": "Q0385",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：紅紅的小＿，白白的小花，一朵又一朵，",
+      "options": [
+        "向",
+        "長",
+        "路",
+        "花"
+      ],
+      "answer": "花",
+      "explanation": "原句：紅紅的小花，白白的小花，一朵又一朵，",
+      "sentence": "紅紅的小花，白白的小花，一朵又一朵，"
+    },
+    {
+      "id": "Q0386",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：＿紅的小花，白白的小花，一朵又一朵，",
+      "options": [
+        "在",
+        "紅",
+        "路",
+        "向"
+      ],
+      "answer": "紅",
+      "explanation": "原句：紅紅的小花，白白的小花，一朵又一朵，",
+      "sentence": "紅紅的小花，白白的小花，一朵又一朵，"
+    },
+    {
+      "id": "Q0387",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：從這一頭開到＿一頭，從那一頭開到這一頭。",
+      "options": [
+        "長",
+        "那",
+        "白",
+        "路"
+      ],
+      "answer": "那",
+      "explanation": "原句：從這一頭開到那一頭，從那一頭開到這一頭。",
+      "sentence": "從這一頭開到那一頭，從那一頭開到這一頭。"
+    },
+    {
+      "id": "Q0388",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：＿這一頭開到那一頭，從那一頭開到這一頭。",
+      "options": [
+        "朵",
+        "從",
+        "花",
+        "白"
+      ],
+      "answer": "從",
+      "explanation": "原句：從這一頭開到那一頭，從那一頭開到這一頭。",
+      "sentence": "從這一頭開到那一頭，從那一頭開到這一頭。"
+    },
+    {
+      "id": "Q0389",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：一朵朵小白花，一朵朵小紅花，陪我一起走在小＿上。",
+      "options": [
+        "路",
+        "長",
+        "頭",
+        "向"
+      ],
+      "answer": "路",
+      "explanation": "原句：一朵朵小白花，一朵朵小紅花，陪我一起走在小路上。",
+      "sentence": "一朵朵小白花，一朵朵小紅花，陪我一起走在小路上。"
+    },
+    {
+      "id": "Q0390",
+      "type": "cloze",
+      "lesson": 6,
+      "prompt": "課文填空：一＿朵小白花，一朵朵小紅花，陪我一起走在小路上。",
+      "options": [
+        "朵",
+        "向",
+        "頭",
+        "那"
+      ],
+      "answer": "朵",
+      "explanation": "原句：一朵朵小白花，一朵朵小紅花，陪我一起走在小路上。",
+      "sentence": "一朵朵小白花，一朵朵小紅花，陪我一起走在小路上。"
+    },
+    {
+      "id": "Q0391",
+      "type": "word_fill",
+      "lesson": 1,
+      "prompt": "詞語填空：「＿手」",
+      "options": [
+        "海",
+        "朋",
+        "拍",
+        "在"
+      ],
+      "answer": "拍",
+      "explanation": "正確詞語是「拍手」。",
+      "word": "拍手"
+    },
+    {
+      "id": "Q0392",
+      "type": "word_fill",
+      "lesson": 1,
+      "prompt": "詞語填空：「拍＿」",
+      "options": [
+        "手",
+        "誰",
+        "什",
+        "是"
+      ],
+      "answer": "手",
+      "explanation": "正確詞語是「拍手」。",
+      "word": "拍手"
+    },
+    {
+      "id": "Q0393",
+      "type": "word_fill",
+      "lesson": 1,
+      "prompt": "詞語填空：「＿手」",
+      "options": [
+        "早",
+        "走",
+        "朵",
+        "左"
+      ],
+      "answer": "左",
+      "explanation": "正確詞語是「左手」。",
+      "word": "左手"
+    },
+    {
+      "id": "Q0394",
+      "type": "word_fill",
+      "lesson": 1,
+      "prompt": "詞語填空：「＿手」",
+      "options": [
+        "右",
+        "九",
+        "六",
+        "友"
+      ],
+      "answer": "右",
+      "explanation": "正確詞語是「右手」。",
+      "word": "右手"
+    },
+    {
+      "id": "Q0395",
+      "type": "word_fill",
+      "lesson": 1,
+      "prompt": "詞語填空：「＿的」",
+      "options": [
+        "一",
+        "比",
+        "你",
+        "起"
+      ],
+      "answer": "你",
+      "explanation": "正確詞語是「你的」。",
+      "word": "你的"
+    },
+    {
+      "id": "Q0396",
+      "type": "word_fill",
+      "lesson": 1,
+      "prompt": "詞語填空：「＿的」",
+      "options": [
+        "八",
+        "他",
+        "啊",
+        "頭"
+      ],
+      "answer": "他",
+      "explanation": "正確詞語是「他的」。",
+      "word": "他的"
+    },
+    {
+      "id": "Q0397",
+      "type": "word_fill",
+      "lesson": 1,
+      "prompt": "詞語填空：「＿山」",
+      "options": [
+        "上",
+        "手",
+        "長",
+        "十"
+      ],
+      "answer": "上",
+      "explanation": "正確詞語是「上山」。",
+      "word": "上山"
+    },
+    {
+      "id": "Q0398",
+      "type": "word_fill",
+      "lesson": 2,
+      "prompt": "詞語填空：「＿是」",
+      "options": [
+        "了",
+        "找",
+        "隻",
+        "這"
+      ],
+      "answer": "這",
+      "explanation": "正確詞語是「這是」。",
+      "word": "這是"
+    },
+    {
+      "id": "Q0399",
+      "type": "word_fill",
+      "lesson": 2,
+      "prompt": "詞語填空：「這＿」",
+      "options": [
+        "是",
+        "子",
+        "四",
+        "說"
+      ],
+      "answer": "是",
+      "explanation": "正確詞語是「這是」。",
+      "word": "這是"
+    },
+    {
+      "id": "Q0400",
+      "type": "word_fill",
+      "lesson": 2,
+      "prompt": "詞語填空：「＿的」",
+      "options": [
+        "什",
+        "十",
+        "山",
+        "誰"
+      ],
+      "answer": "誰",
+      "explanation": "正確詞語是「誰的」。",
+      "word": "誰的"
+    },
+    {
+      "id": "Q0401",
+      "type": "word_fill",
+      "lesson": 2,
+      "prompt": "詞語填空：「我＿」",
+      "options": [
+        "個",
+        "的",
+        "多",
+        "朵"
+      ],
+      "answer": "的",
+      "explanation": "正確詞語是「我的」。",
+      "word": "我的"
+    },
+    {
+      "id": "Q0402",
+      "type": "word_fill",
+      "lesson": 2,
+      "prompt": "詞語填空：「＿的」",
+      "options": [
+        "多",
+        "說",
+        "左",
+        "我"
+      ],
+      "answer": "我",
+      "explanation": "正確詞語是「我的」。",
+      "word": "我的"
+    },
+    {
+      "id": "Q0403",
+      "type": "word_fill",
+      "lesson": 2,
+      "prompt": "詞語填空：「你＿」",
+      "options": [
+        "花",
+        "紅",
+        "好",
+        "高"
+      ],
+      "answer": "好",
+      "explanation": "正確詞語是「你好」。",
+      "word": "你好"
+    },
+    {
+      "id": "Q0404",
+      "type": "word_fill",
+      "lesson": 2,
+      "prompt": "詞語填空：「開＿」",
+      "options": [
+        "裡",
+        "了",
+        "六",
+        "的"
+      ],
+      "answer": "了",
+      "explanation": "正確詞語是「開了」。",
+      "word": "開了"
+    },
+    {
+      "id": "Q0405",
+      "type": "word_fill",
+      "lesson": 2,
+      "prompt": "詞語填空：「一＿」",
+      "options": [
+        "個",
+        "麼",
+        "的",
+        "了"
+      ],
+      "answer": "個",
+      "explanation": "正確詞語是「一個」。",
+      "word": "一個"
+    },
+    {
+      "id": "Q0406",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「＿千」",
+      "options": [
+        "秋",
+        "青",
+        "七",
+        "起"
+      ],
+      "answer": "秋",
+      "explanation": "正確詞語是「秋千」。",
+      "word": "秋千"
+    },
+    {
+      "id": "Q0407",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「＿山」",
+      "options": [
+        "個",
+        "好",
+        "早",
+        "高"
+      ],
+      "answer": "高",
+      "explanation": "正確詞語是「高山」。",
+      "word": "高山"
+    },
+    {
+      "id": "Q0408",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「＿友」",
+      "options": [
+        "起",
+        "朋",
+        "拍",
+        "陪"
+      ],
+      "answer": "朋",
+      "explanation": "正確詞語是「朋友」。",
+      "word": "朋友"
+    },
+    {
+      "id": "Q0409",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「秋＿」",
+      "options": [
+        "秋",
+        "青",
+        "千",
+        "七"
+      ],
+      "answer": "千",
+      "explanation": "正確詞語是「秋千」。",
+      "word": "秋千"
+    },
+    {
+      "id": "Q0410",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「高＿」",
+      "options": [
+        "三",
+        "說",
+        "山",
+        "看"
+      ],
+      "answer": "山",
+      "explanation": "正確詞語是「高山」。",
+      "word": "高山"
+    },
+    {
+      "id": "Q0411",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「朋＿」",
+      "options": [
+        "秋",
+        "六",
+        "又",
+        "友"
+      ],
+      "answer": "友",
+      "explanation": "正確詞語是「朋友」。",
+      "word": "朋友"
+    },
+    {
+      "id": "Q0412",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「看＿」",
+      "options": [
+        "找",
+        "好",
+        "大",
+        "到"
+      ],
+      "answer": "到",
+      "explanation": "正確詞語是「看到」。",
+      "word": "看到"
+    },
+    {
+      "id": "Q0413",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「我＿」",
+      "options": [
+        "人",
+        "麼",
+        "門",
+        "們"
+      ],
+      "answer": "們",
+      "explanation": "正確詞語是「我們」。",
+      "word": "我們"
+    },
+    {
+      "id": "Q0414",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「＿海」",
+      "options": [
+        "啊",
+        "拉",
+        "大",
+        "到"
+      ],
+      "answer": "大",
+      "explanation": "正確詞語是「大海」。",
+      "word": "大海"
+    },
+    {
+      "id": "Q0415",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「一＿」",
+      "options": [
+        "裡",
+        "千",
+        "起",
+        "秋"
+      ],
+      "answer": "起",
+      "explanation": "正確詞語是「一起」。",
+      "word": "一起"
+    },
+    {
+      "id": "Q0416",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「＿我」",
+      "options": [
+        "陪",
+        "誰",
+        "朋",
+        "拍"
+      ],
+      "answer": "陪",
+      "explanation": "正確詞語是「陪我」。",
+      "word": "陪我"
+    },
+    {
+      "id": "Q0417",
+      "type": "word_fill",
+      "lesson": 3,
+      "prompt": "詞語填空：「大＿」",
+      "options": [
+        "和",
+        "白",
+        "拍",
+        "海"
+      ],
+      "answer": "海",
+      "explanation": "正確詞語是「大海」。",
+      "word": "大海"
+    },
+    {
+      "id": "Q0418",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「王＿」",
+      "options": [
+        "左",
+        "子",
+        "四",
+        "早"
+      ],
+      "answer": "子",
+      "explanation": "正確詞語是「王子」。",
+      "word": "王子"
+    },
+    {
+      "id": "Q0419",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「＿路」",
+      "options": [
+        "下",
+        "心",
+        "向",
+        "小"
+      ],
+      "answer": "小",
+      "explanation": "正確詞語是「小路」。",
+      "word": "小路"
+    },
+    {
+      "id": "Q0420",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「上＿」",
+      "options": [
+        "開",
+        "這",
+        "課",
+        "個"
+      ],
+      "answer": "課",
+      "explanation": "正確詞語是「上課」。",
+      "word": "上課"
+    },
+    {
+      "id": "Q0421",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「主＿」",
+      "options": [
+        "人",
+        "什",
+        "們",
+        "門"
+      ],
+      "answer": "人",
+      "explanation": "正確詞語是「主人」。",
+      "word": "主人"
+    },
+    {
+      "id": "Q0422",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「＿到」",
+      "options": [
+        "看",
+        "課",
+        "和",
+        "山"
+      ],
+      "answer": "看",
+      "explanation": "正確詞語是「看到」。",
+      "word": "看到"
+    },
+    {
+      "id": "Q0423",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「＿到」",
+      "options": [
+        "找",
+        "主",
+        "隻",
+        "高"
+      ],
+      "answer": "找",
+      "explanation": "正確詞語是「找到」。",
+      "word": "找到"
+    },
+    {
+      "id": "Q0424",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「一＿」",
+      "options": [
+        "找",
+        "這",
+        "是",
+        "隻"
+      ],
+      "answer": "隻",
+      "explanation": "正確詞語是「一隻」。",
+      "word": "一隻"
+    },
+    {
+      "id": "Q0425",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「＿蛙」",
+      "options": [
+        "起",
+        "青",
+        "千",
+        "秋"
+      ],
+      "answer": "青",
+      "explanation": "正確詞語是「青蛙」。",
+      "word": "青蛙"
+    },
+    {
+      "id": "Q0426",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「青＿」",
+      "options": [
+        "兩",
+        "蛙",
+        "花",
+        "開"
+      ],
+      "answer": "蛙",
+      "explanation": "正確詞語是「青蛙」。",
+      "word": "青蛙"
+    },
+    {
+      "id": "Q0427",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「＿心」",
+      "options": [
+        "課",
+        "在",
+        "海",
+        "開"
+      ],
+      "answer": "開",
+      "explanation": "正確詞語是「開心」。",
+      "word": "開心"
+    },
+    {
+      "id": "Q0428",
+      "type": "word_fill",
+      "lesson": 4,
+      "prompt": "詞語填空：「開＿」",
+      "options": [
+        "向",
+        "下",
+        "心",
+        "小"
+      ],
+      "answer": "心",
+      "explanation": "正確詞語是「開心」。",
+      "word": "開心"
+    },
+    {
+      "id": "Q0429",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「＿裡」",
+      "options": [
+        "門",
+        "們",
+        "什",
+        "分"
+      ],
+      "answer": "門",
+      "explanation": "正確詞語是「門裡」。",
+      "word": "門裡"
+    },
+    {
+      "id": "Q0430",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「門＿」",
+      "options": [
+        "比",
+        "裡",
+        "七",
+        "起"
+      ],
+      "answer": "裡",
+      "explanation": "正確詞語是「門裡」。",
+      "word": "門裡"
+    },
+    {
+      "id": "Q0431",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「門＿」",
+      "options": [
+        "外",
+        "門",
+        "不",
+        "主"
+      ],
+      "answer": "外",
+      "explanation": "正確詞語是「門外」。",
+      "word": "門外"
+    },
+    {
+      "id": "Q0432",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「＿麼」",
+      "options": [
+        "是",
+        "什",
+        "門",
+        "十"
+      ],
+      "answer": "什",
+      "explanation": "正確詞語是「什麼」。",
+      "word": "什麼"
+    },
+    {
+      "id": "Q0433",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「什＿」",
+      "options": [
+        "的",
+        "麼",
+        "們",
+        "門"
+      ],
+      "answer": "麼",
+      "explanation": "正確詞語是「什麼」。",
+      "word": "什麼"
+    },
+    {
+      "id": "Q0434",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「＿同」",
+      "options": [
+        "主",
+        "不",
+        "白",
+        "八"
+      ],
+      "answer": "不",
+      "explanation": "正確詞語是「不同」。",
+      "word": "不同"
+    },
+    {
+      "id": "Q0435",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「不＿」",
+      "options": [
+        "頭",
+        "同",
+        "從",
+        "他"
+      ],
+      "answer": "同",
+      "explanation": "正確詞語是「不同」。",
+      "word": "不同"
+    },
+    {
+      "id": "Q0436",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「＿上」",
+      "options": [
+        "子",
+        "找",
+        "早",
+        "走"
+      ],
+      "answer": "早",
+      "explanation": "正確詞語是「早上」。",
+      "word": "早上"
+    },
+    {
+      "id": "Q0437",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「＿上」",
+      "options": [
+        "比",
+        "晚",
+        "玩",
+        "不"
+      ],
+      "answer": "晚",
+      "explanation": "正確詞語是「晚上」。",
+      "word": "晚上"
+    },
+    {
+      "id": "Q0438",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「＿子」",
+      "options": [
+        "有",
+        "王",
+        "裡",
+        "外"
+      ],
+      "answer": "王",
+      "explanation": "正確詞語是「王子」。",
+      "word": "王子"
+    },
+    {
+      "id": "Q0439",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「＿人」",
+      "options": [
+        "五",
+        "主",
+        "找",
+        "不"
+      ],
+      "answer": "主",
+      "explanation": "正確詞語是「主人」。",
+      "word": "主人"
+    },
+    {
+      "id": "Q0440",
+      "type": "word_fill",
+      "lesson": 5,
+      "prompt": "詞語填空：「＿有」",
+      "options": [
+        "九",
+        "又",
+        "有",
+        "六"
+      ],
+      "answer": "又",
+      "explanation": "正確詞語是「又有」。",
+      "word": "又有"
+    },
+    {
+      "id": "Q0441",
+      "type": "word_fill",
+      "lesson": 6,
+      "prompt": "詞語填空：「小＿」",
+      "options": [
+        "五",
+        "兩",
+        "路",
+        "拉"
+      ],
+      "answer": "路",
+      "explanation": "正確詞語是「小路」。",
+      "word": "小路"
+    },
+    {
+      "id": "Q0442",
+      "type": "word_fill",
+      "lesson": 6,
+      "prompt": "詞語填空：「＿大」",
+      "options": [
+        "上",
+        "花",
+        "那",
+        "長"
+      ],
+      "answer": "長",
+      "explanation": "正確詞語是「長大」。",
+      "word": "長大"
+    },
+    {
+      "id": "Q0443",
+      "type": "word_fill",
+      "lesson": 6,
+      "prompt": "詞語填空：「＿花」",
+      "options": [
+        "不",
+        "拍",
+        "白",
+        "海"
+      ],
+      "answer": "白",
+      "explanation": "正確詞語是「白花」。",
+      "word": "白花"
+    },
+    {
+      "id": "Q0444",
+      "type": "word_fill",
+      "lesson": 6,
+      "prompt": "詞語填空：「小＿」",
+      "options": [
+        "紅",
+        "和",
+        "海",
+        "花"
+      ],
+      "answer": "花",
+      "explanation": "正確詞語是「小花」。",
+      "word": "小花"
+    },
+    {
+      "id": "Q0445",
+      "type": "word_fill",
+      "lesson": 6,
+      "prompt": "詞語填空：「＿花」",
+      "options": [
+        "和",
+        "從",
+        "紅",
+        "好"
+      ],
+      "answer": "紅",
+      "explanation": "正確詞語是「紅花」。",
+      "word": "紅花"
+    },
+    {
+      "id": "Q0446",
+      "type": "word_fill",
+      "lesson": 6,
+      "prompt": "詞語填空：「＿在」",
+      "options": [
+        "在",
+        "早",
+        "子",
+        "走"
+      ],
+      "answer": "走",
+      "explanation": "正確詞語是「走在」。",
+      "word": "走在"
+    },
+    {
+      "id": "Q0447",
+      "type": "word_fill",
+      "lesson": 6,
+      "prompt": "詞語填空：「一＿」",
+      "options": [
+        "朵",
+        "說",
+        "我",
+        "的"
+      ],
+      "answer": "朵",
+      "explanation": "正確詞語是「一朵」。",
+      "word": "一朵"
+    },
+    {
+      "id": "Q0448",
+      "type": "word_fill",
+      "lesson": 6,
+      "prompt": "詞語填空：「＿裡」",
+      "options": [
+        "大",
+        "那",
+        "拉",
+        "八"
+      ],
+      "answer": "那",
+      "explanation": "正確詞語是「那裡」。",
+      "word": "那裡"
+    },
+    {
+      "id": "Q0449",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「門裡」的相反詞是什麼？",
+      "options": [
+        "下",
+        "門外",
+        "晚上",
+        "大"
+      ],
+      "answer": "門外",
+      "explanation": "「門裡」和「門外」意思相反。"
+    },
+    {
+      "id": "Q0450",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「門外」的相反詞是什麼？",
+      "options": [
+        "小",
+        "門裡",
+        "早上",
+        "上"
+      ],
+      "answer": "門裡",
+      "explanation": "「門外」和「門裡」意思相反。"
+    },
+    {
+      "id": "Q0451",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「早上」的相反詞是什麼？",
+      "options": [
+        "下",
+        "左",
+        "小",
+        "晚上"
+      ],
+      "answer": "晚上",
+      "explanation": "「早上」和「晚上」意思相反。"
+    },
+    {
+      "id": "Q0452",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「晚上」的相反詞是什麼？",
+      "options": [
+        "左",
+        "右",
+        "早上",
+        "門裡"
+      ],
+      "answer": "早上",
+      "explanation": "「晚上」和「早上」意思相反。"
+    },
+    {
+      "id": "Q0453",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「上」的相反詞是什麼？",
+      "options": [
+        "晚上",
+        "小",
+        "門外",
+        "下"
+      ],
+      "answer": "下",
+      "explanation": "「上」和「下」意思相反。"
+    },
+    {
+      "id": "Q0454",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「下」的相反詞是什麼？",
+      "options": [
+        "左",
+        "上",
+        "晚上",
+        "早上"
+      ],
+      "answer": "上",
+      "explanation": "「下」和「上」意思相反。"
+    },
+    {
+      "id": "Q0455",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「左」的相反詞是什麼？",
+      "options": [
+        "右",
+        "小",
+        "晚上",
+        "大"
+      ],
+      "answer": "右",
+      "explanation": "「左」和「右」意思相反。"
+    },
+    {
+      "id": "Q0456",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「右」的相反詞是什麼？",
+      "options": [
+        "早上",
+        "左",
+        "下",
+        "門裡"
+      ],
+      "answer": "左",
+      "explanation": "「右」和「左」意思相反。"
+    },
+    {
+      "id": "Q0457",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「大」的相反詞是什麼？",
+      "options": [
+        "左",
+        "下",
+        "右",
+        "小"
+      ],
+      "answer": "小",
+      "explanation": "「大」和「小」意思相反。"
+    },
+    {
+      "id": "Q0458",
+      "type": "antonym",
+      "lesson": 5,
+      "prompt": "「小」的相反詞是什麼？",
+      "options": [
+        "大",
+        "門外",
+        "早上",
+        "下"
+      ],
+      "answer": "大",
+      "explanation": "「小」和「大」意思相反。"
+    },
+    {
+      "id": "Q0459",
+      "type": "combine",
+      "lesson": 2,
+      "prompt": "「扌」＋「白」＝？",
+      "options": [
+        "那",
+        "右",
+        "拍",
+        "四"
+      ],
+      "answer": "拍",
+      "explanation": "「扌」加「白」合起來是「拍」。",
+      "components": [
+        "扌",
+        "白"
+      ],
+      "layout": "left_right",
+      "example_word": ""
+    },
+    {
+      "id": "Q0460",
+      "type": "combine",
+      "lesson": 2,
+      "prompt": "「白」＋「勺」＝？",
+      "options": [
+        "的",
+        "誰",
+        "從",
+        "了"
+      ],
+      "answer": "的",
+      "explanation": "「白」加「勺」合起來是「的」。",
+      "components": [
+        "白",
+        "勺"
+      ],
+      "layout": "left_right",
+      "example_word": ""
+    },
+    {
+      "id": "Q0461",
+      "type": "combine",
+      "lesson": 3,
+      "prompt": "「禾」＋「火」＝？",
+      "options": [
+        "六",
+        "秋",
+        "七",
+        "課"
+      ],
+      "answer": "秋",
+      "explanation": "「禾」加「火」合起來是「秋」，例如「秋天」。",
+      "components": [
+        "禾",
+        "火"
+      ],
+      "layout": "left_right",
+      "example_word": "秋天"
+    },
+    {
+      "id": "Q0462",
+      "type": "combine",
+      "lesson": 3,
+      "prompt": "「氵」＋「每」＝？",
+      "options": [
+        "了",
+        "海",
+        "友",
+        "朋"
+      ],
+      "answer": "海",
+      "explanation": "「氵」加「每」合起來是「海」，例如「海水」。",
+      "components": [
+        "氵",
+        "每"
+      ],
+      "layout": "left_right",
+      "example_word": "海水"
+    },
+    {
+      "id": "Q0463",
+      "type": "combine",
+      "lesson": 3,
+      "prompt": "「月」＋「月」＝？",
+      "options": [
+        "朋",
+        "走",
+        "千",
+        "路"
+      ],
+      "answer": "朋",
+      "explanation": "「月」加「月」合起來是「朋」，例如「朋友」。",
+      "components": [
+        "月",
+        "月"
+      ],
+      "layout": "left_right",
+      "example_word": "朋友"
+    },
+    {
+      "id": "Q0464",
+      "type": "combine",
+      "lesson": 3,
+      "prompt": "「女」＋「子」＝？",
+      "options": [
+        "麼",
+        "一",
+        "你",
+        "好"
+      ],
+      "answer": "好",
+      "explanation": "「女」加「子」合起來是「好」，例如「好久」。",
+      "components": [
+        "女",
+        "子"
+      ],
+      "layout": "left_right",
+      "example_word": "好久"
+    },
+    {
+      "id": "Q0465",
+      "type": "polyphone",
+      "lesson": 6,
+      "prompt": "「長頸鹿」的「長」念作？",
+      "options": [
+        "ㄓㄤˋ",
+        "ㄔㄤˊ",
+        "ㄓㄤˇ",
+        "ㄔㄤˇ"
+      ],
+      "answer": "ㄔㄤˊ",
+      "explanation": "「長」讀音不同，意思也不一樣：長頸鹿 的長念 ㄔㄤˊ。"
+    },
+    {
+      "id": "Q0466",
+      "type": "polyphone",
+      "lesson": 6,
+      "prompt": "「長短」的「長」念作？",
+      "options": [
+        "ㄓㄤˇ",
+        "ㄔㄤˊ",
+        "ㄔㄤˇ",
+        "ㄓㄤˋ"
+      ],
+      "answer": "ㄔㄤˊ",
+      "explanation": "「長」讀音不同，意思也不一樣：長短 的長念 ㄔㄤˊ。"
+    },
+    {
+      "id": "Q0467",
+      "type": "polyphone",
+      "lesson": 6,
+      "prompt": "「長大」的「長」念作？",
+      "options": [
+        "ㄓㄤˋ",
+        "ㄓㄤˇ",
+        "ㄔㄤˊ",
+        "ㄔㄤˇ"
+      ],
+      "answer": "ㄓㄤˇ",
+      "explanation": "「長」讀音不同，意思也不一樣：長大 的長念 ㄓㄤˇ。"
+    },
+    {
+      "id": "Q0468",
+      "type": "polyphone",
+      "lesson": 6,
+      "prompt": "「生長」的「長」念作？",
+      "options": [
+        "ㄓㄤˋ",
+        "ㄔㄤˊ",
+        "ㄔㄤˇ",
+        "ㄓㄤˇ"
+      ],
+      "answer": "ㄓㄤˇ",
+      "explanation": "「長」讀音不同，意思也不一樣：生長 的長念 ㄓㄤˇ。"
+    },
+    {
+      "id": "Q0469",
+      "type": "measure_word",
+      "lesson": 6,
+      "prompt": "一＿小花（請選量詞）",
+      "options": [
+        "人",
+        "隻",
+        "朵",
+        "頭"
+      ],
+      "answer": "朵",
+      "explanation": "一朵小花。"
+    },
+    {
+      "id": "Q0470",
+      "type": "measure_word",
+      "lesson": 6,
+      "prompt": "一＿蝴蝶（請選量詞）",
+      "options": [
+        "隻",
+        "朵",
+        "人",
+        "頭"
+      ],
+      "answer": "隻",
+      "explanation": "一隻蝴蝶。"
+    },
+    {
+      "id": "Q0471",
+      "type": "measure_word",
+      "lesson": 6,
+      "prompt": "一＿青蛙（請選量詞）",
+      "options": [
+        "隻",
+        "頭",
+        "個",
+        "朵"
+      ],
+      "answer": "隻",
+      "explanation": "一隻青蛙。"
+    },
+    {
+      "id": "Q0472",
+      "type": "measure_word",
+      "lesson": 6,
+      "prompt": "一＿小朋友（請選量詞）",
+      "options": [
+        "個",
+        "隻",
+        "頭",
+        "朵"
+      ],
+      "answer": "個",
+      "explanation": "一個小朋友。"
+    },
+    {
+      "id": "Q0473",
+      "type": "measure_word",
+      "lesson": 6,
+      "prompt": "一＿人（請選量詞）",
+      "options": [
+        "朵",
+        "個",
+        "隻",
+        "頭"
+      ],
+      "answer": "個",
+      "explanation": "一個人。"
+    },
+    {
+      "id": "Q0474",
+      "type": "reduplication",
+      "lesson": 6,
+      "prompt": "課本裡的詞語：紅紅的＿＿",
+      "options": [
+        "大樹",
+        "大海",
+        "小花",
+        "小路"
+      ],
+      "answer": "小花",
+      "explanation": "課本「認識詞語」：紅紅的小花。"
+    },
+    {
+      "id": "Q0475",
+      "type": "reduplication",
+      "lesson": 6,
+      "prompt": "課本裡的詞語：藍藍的＿＿",
+      "options": [
+        "大樹",
+        "大海",
+        "小花",
+        "小路"
+      ],
+      "answer": "大海",
+      "explanation": "課本「認識詞語」：藍藍的大海。"
+    },
+    {
+      "id": "Q0476",
+      "type": "reduplication",
+      "lesson": 6,
+      "prompt": "課本裡的詞語：長長的＿＿",
+      "options": [
+        "小花",
+        "大海",
+        "大樹",
+        "小路"
+      ],
+      "answer": "小路",
+      "explanation": "課本「認識詞語」：長長的小路。"
+    },
+    {
+      "id": "Q0477",
+      "type": "reduplication",
+      "lesson": 6,
+      "prompt": "課本裡的詞語：高高的＿＿",
+      "options": [
+        "大樹",
+        "大海",
+        "小花",
+        "小路"
+      ],
+      "answer": "大樹",
+      "explanation": "課本「認識詞語」：高高的大樹。"
+    },
+    {
+      "id": "Q0478",
+      "type": "verb_pattern",
+      "lesson": 5,
+      "prompt": "「比」可以怎麼說？（動作＋一＋動作）",
+      "options": [
+        "跑一跑",
+        "拍一拍",
+        "走一走",
+        "比一比"
+      ],
+      "answer": "比一比",
+      "explanation": "比 → 比一比"
+    },
+    {
+      "id": "Q0479",
+      "type": "verb_pattern",
+      "lesson": 5,
+      "prompt": "「跑」可以怎麼說？（動作＋一＋動作）",
+      "options": [
+        "跑一跑",
+        "走一走",
+        "比一比",
+        "拍一拍"
+      ],
+      "answer": "跑一跑",
+      "explanation": "跑 → 跑一跑"
+    },
+    {
+      "id": "Q0480",
+      "type": "verb_pattern",
+      "lesson": 5,
+      "prompt": "「拍」可以怎麼說？（動作＋一＋動作）",
+      "options": [
+        "拍一拍",
+        "跑一跑",
+        "走一走",
+        "比一比"
+      ],
+      "answer": "拍一拍",
+      "explanation": "拍 → 拍一拍"
+    },
+    {
+      "id": "Q0481",
+      "type": "verb_pattern",
+      "lesson": 5,
+      "prompt": "「走」可以怎麼說？（動作＋一＋動作）",
+      "options": [
+        "拍一拍",
+        "跑一跑",
+        "比一比",
+        "走一走"
+      ],
+      "answer": "走一走",
+      "explanation": "走 → 走一走"
+    }
+  ],
+  "writing_tasks": [
+    {
+      "id": "W0001",
+      "type": "write",
+      "lesson": 0,
+      "char": "一",
+      "zhuyin": "ㄧ",
+      "hint_word": "",
+      "radical": "一",
+      "strokes_total": 1,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0002",
+      "type": "write",
+      "lesson": 0,
+      "char": "二",
+      "zhuyin": "ㄦˋ",
+      "hint_word": "",
+      "radical": "二",
+      "strokes_total": 2,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0003",
+      "type": "write",
+      "lesson": 0,
+      "char": "三",
+      "zhuyin": "ㄙㄢ",
+      "hint_word": "",
+      "radical": "一",
+      "strokes_total": 3,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0004",
+      "type": "write",
+      "lesson": 0,
+      "char": "四",
+      "zhuyin": "ㄙˋ",
+      "hint_word": "",
+      "radical": "囗",
+      "strokes_total": 5,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0005",
+      "type": "write",
+      "lesson": 0,
+      "char": "五",
+      "zhuyin": "ㄨˇ",
+      "hint_word": "",
+      "radical": "二",
+      "strokes_total": 4,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0006",
+      "type": "write",
+      "lesson": 0,
+      "char": "六",
+      "zhuyin": "ㄌㄧㄡˋ",
+      "hint_word": "",
+      "radical": "八",
+      "strokes_total": 4,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0007",
+      "type": "write",
+      "lesson": 0,
+      "char": "七",
+      "zhuyin": "ㄑㄧ",
+      "hint_word": "",
+      "radical": "一",
+      "strokes_total": 2,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0008",
+      "type": "write",
+      "lesson": 0,
+      "char": "八",
+      "zhuyin": "ㄅㄚ",
+      "hint_word": "",
+      "radical": "八",
+      "strokes_total": 2,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0009",
+      "type": "write",
+      "lesson": 0,
+      "char": "九",
+      "zhuyin": "ㄐㄧㄡˇ",
+      "hint_word": "",
+      "radical": "乙",
+      "strokes_total": 2,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0010",
+      "type": "write",
+      "lesson": 0,
+      "char": "十",
+      "zhuyin": "ㄕˊ",
+      "hint_word": "",
+      "radical": "十",
+      "strokes_total": 2,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0011",
+      "type": "write",
+      "lesson": 1,
+      "char": "拍",
+      "zhuyin": "ㄆㄞ",
+      "hint_word": "拍手",
+      "radical": "手",
+      "strokes_total": 8,
+      "strokes_source": "課本p18"
+    },
+    {
+      "id": "W0012",
+      "type": "write",
+      "lesson": 1,
+      "char": "手",
+      "zhuyin": "ㄕㄡˇ",
+      "hint_word": "拍手",
+      "radical": "手",
+      "strokes_total": 4,
+      "strokes_source": "課本p18"
+    },
+    {
+      "id": "W0013",
+      "type": "write",
+      "lesson": 1,
+      "char": "左",
+      "zhuyin": "ㄗㄨㄛˇ",
+      "hint_word": "左手",
+      "radical": "工",
+      "strokes_total": 5,
+      "strokes_source": "課本p18"
+    },
+    {
+      "id": "W0014",
+      "type": "write",
+      "lesson": 1,
+      "char": "右",
+      "zhuyin": "ㄧㄡˋ",
+      "hint_word": "右手",
+      "radical": "口",
+      "strokes_total": 5,
+      "strokes_source": "課本p18"
+    },
+    {
+      "id": "W0015",
+      "type": "write",
+      "lesson": 1,
+      "char": "你",
+      "zhuyin": "ㄋㄧˇ",
+      "hint_word": "你拍手",
+      "radical": "人",
+      "strokes_total": 7,
+      "strokes_source": "課本p18"
+    },
+    {
+      "id": "W0016",
+      "type": "write",
+      "lesson": 1,
+      "char": "他",
+      "zhuyin": "ㄊㄚ",
+      "hint_word": "他也拍",
+      "radical": "人",
+      "strokes_total": 5,
+      "strokes_source": "課本p18"
+    },
+    {
+      "id": "W0017",
+      "type": "write",
+      "lesson": 1,
+      "char": "也",
+      "zhuyin": "ㄧㄝˇ",
+      "hint_word": "他也拍",
+      "radical": "乙",
+      "strokes_total": 3,
+      "strokes_source": "課本p18"
+    },
+    {
+      "id": "W0018",
+      "type": "write",
+      "lesson": 1,
+      "char": "上",
+      "zhuyin": "ㄕㄤˋ",
+      "hint_word": "上面",
+      "radical": "一",
+      "strokes_total": 3,
+      "strokes_source": "課本p18"
+    },
+    {
+      "id": "W0019",
+      "type": "write",
+      "lesson": 1,
+      "char": "下",
+      "zhuyin": "ㄒㄧㄚˋ",
+      "hint_word": "下面",
+      "radical": "一",
+      "strokes_total": 3,
+      "strokes_source": "課本p18"
+    },
+    {
+      "id": "W0020",
+      "type": "write",
+      "lesson": 2,
+      "char": "這",
+      "zhuyin": "ㄓㄜˋ",
+      "hint_word": "這是",
+      "radical": "辵",
+      "strokes_total": 11,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0021",
+      "type": "write",
+      "lesson": 2,
+      "char": "是",
+      "zhuyin": "ㄕˋ",
+      "hint_word": "這是",
+      "radical": "日",
+      "strokes_total": 9,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0022",
+      "type": "write",
+      "lesson": 2,
+      "char": "誰",
+      "zhuyin": "ㄕㄟˊ",
+      "hint_word": "誰的",
+      "radical": "言",
+      "strokes_total": 15,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0023",
+      "type": "write",
+      "lesson": 2,
+      "char": "的",
+      "zhuyin": "˙ㄉㄜ",
+      "hint_word": "我的",
+      "radical": "白",
+      "strokes_total": 8,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0024",
+      "type": "write",
+      "lesson": 2,
+      "char": "我",
+      "zhuyin": "ㄨㄛˇ",
+      "hint_word": "我的",
+      "radical": "戈",
+      "strokes_total": 7,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0025",
+      "type": "write",
+      "lesson": 2,
+      "char": "分",
+      "zhuyin": "ㄈㄣ",
+      "hint_word": "分好了",
+      "radical": "刀",
+      "strokes_total": 4,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0026",
+      "type": "write",
+      "lesson": 2,
+      "char": "好",
+      "zhuyin": "ㄏㄠˇ",
+      "hint_word": "分好了",
+      "radical": "女",
+      "strokes_total": 6,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0027",
+      "type": "write",
+      "lesson": 2,
+      "char": "了",
+      "zhuyin": "˙ㄌㄜ",
+      "hint_word": "分好了",
+      "radical": "亅",
+      "strokes_total": 2,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0028",
+      "type": "write",
+      "lesson": 2,
+      "char": "啊",
+      "zhuyin": "ㄚ",
+      "hint_word": "啊！",
+      "radical": "口",
+      "strokes_total": 11,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0029",
+      "type": "write",
+      "lesson": 2,
+      "char": "多",
+      "zhuyin": "ㄉㄨㄛ",
+      "hint_word": "多了一個",
+      "radical": "夕",
+      "strokes_total": 6,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0030",
+      "type": "write",
+      "lesson": 2,
+      "char": "個",
+      "zhuyin": "˙ㄍㄜ",
+      "hint_word": "一個",
+      "radical": "人",
+      "strokes_total": 10,
+      "strokes_source": "課本p26"
+    },
+    {
+      "id": "W0031",
+      "type": "write",
+      "lesson": 3,
+      "char": "秋",
+      "zhuyin": "ㄑㄧㄡ",
+      "hint_word": "秋千",
+      "radical": "禾",
+      "strokes_total": 9,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0032",
+      "type": "write",
+      "lesson": 3,
+      "char": "高",
+      "zhuyin": "ㄍㄠ",
+      "hint_word": "高山",
+      "radical": "高",
+      "strokes_total": 10,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0033",
+      "type": "write",
+      "lesson": 3,
+      "char": "朋",
+      "zhuyin": "ㄆㄥˊ",
+      "hint_word": "朋友",
+      "radical": "月",
+      "strokes_total": 8,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0034",
+      "type": "write",
+      "lesson": 3,
+      "char": "千",
+      "zhuyin": "ㄑㄧㄢ",
+      "hint_word": "秋千",
+      "radical": "十",
+      "strokes_total": 3,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0035",
+      "type": "write",
+      "lesson": 3,
+      "char": "山",
+      "zhuyin": "ㄕㄢ",
+      "hint_word": "高山",
+      "radical": "山",
+      "strokes_total": 3,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0036",
+      "type": "write",
+      "lesson": 3,
+      "char": "友",
+      "zhuyin": "ㄧㄡˇ",
+      "hint_word": "朋友",
+      "radical": "又",
+      "strokes_total": 4,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0037",
+      "type": "write",
+      "lesson": 3,
+      "char": "和",
+      "zhuyin": "ㄏㄢˋ",
+      "hint_word": "和我玩",
+      "radical": "口",
+      "strokes_total": 8,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0038",
+      "type": "write",
+      "lesson": 3,
+      "char": "到",
+      "zhuyin": "ㄉㄠˋ",
+      "hint_word": "到大海",
+      "radical": "刀",
+      "strokes_total": 8,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0039",
+      "type": "write",
+      "lesson": 3,
+      "char": "們",
+      "zhuyin": "˙ㄇㄣ",
+      "hint_word": "我們",
+      "radical": "人",
+      "strokes_total": 10,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0040",
+      "type": "write",
+      "lesson": 3,
+      "char": "玩",
+      "zhuyin": "ㄨㄢˊ",
+      "hint_word": "和我玩",
+      "radical": "玉",
+      "strokes_total": 8,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0041",
+      "type": "write",
+      "lesson": 3,
+      "char": "大",
+      "zhuyin": "ㄉㄚˋ",
+      "hint_word": "大海",
+      "radical": "大",
+      "strokes_total": 3,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0042",
+      "type": "write",
+      "lesson": 3,
+      "char": "起",
+      "zhuyin": "ㄑㄧˇ",
+      "hint_word": "一起",
+      "radical": "走",
+      "strokes_total": 10,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0043",
+      "type": "write",
+      "lesson": 3,
+      "char": "陪",
+      "zhuyin": "ㄆㄟˊ",
+      "hint_word": "陪我",
+      "radical": "阜",
+      "strokes_total": 11,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0044",
+      "type": "write",
+      "lesson": 3,
+      "char": "海",
+      "zhuyin": "ㄏㄞˇ",
+      "hint_word": "大海",
+      "radical": "水",
+      "strokes_total": 10,
+      "strokes_source": "課本p34"
+    },
+    {
+      "id": "W0045",
+      "type": "write",
+      "lesson": 4,
+      "char": "子",
+      "zhuyin": "˙ㄗ",
+      "hint_word": "大個子",
+      "radical": "子",
+      "strokes_total": 3,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0046",
+      "type": "write",
+      "lesson": 4,
+      "char": "小",
+      "zhuyin": "ㄒㄧㄠˇ",
+      "hint_word": "小個子",
+      "radical": "小",
+      "strokes_total": 3,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0047",
+      "type": "write",
+      "lesson": 4,
+      "char": "課",
+      "zhuyin": "ㄎㄜˋ",
+      "hint_word": "上課",
+      "radical": "言",
+      "strokes_total": 15,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0048",
+      "type": "write",
+      "lesson": 4,
+      "char": "兩",
+      "zhuyin": "ㄌㄧㄤˇ",
+      "hint_word": "兩個人",
+      "radical": "入",
+      "strokes_total": 8,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0049",
+      "type": "write",
+      "lesson": 4,
+      "char": "人",
+      "zhuyin": "ㄖㄣˊ",
+      "hint_word": "兩個人",
+      "radical": "人",
+      "strokes_total": 2,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0050",
+      "type": "write",
+      "lesson": 4,
+      "char": "拉",
+      "zhuyin": "ㄌㄚ",
+      "hint_word": "手拉手",
+      "radical": "手",
+      "strokes_total": 8,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0051",
+      "type": "write",
+      "lesson": 4,
+      "char": "看",
+      "zhuyin": "ㄎㄢˋ",
+      "hint_word": "看看",
+      "radical": "目",
+      "strokes_total": 9,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0052",
+      "type": "write",
+      "lesson": 4,
+      "char": "找",
+      "zhuyin": "ㄓㄠˇ",
+      "hint_word": "找找",
+      "radical": "手",
+      "strokes_total": 7,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0053",
+      "type": "write",
+      "lesson": 4,
+      "char": "隻",
+      "zhuyin": "ㄓ",
+      "hint_word": "一隻",
+      "radical": "隹",
+      "strokes_total": 10,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0054",
+      "type": "write",
+      "lesson": 4,
+      "char": "青",
+      "zhuyin": "ㄑㄧㄥ",
+      "hint_word": "青蛙",
+      "radical": "青",
+      "strokes_total": 8,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0055",
+      "type": "write",
+      "lesson": 4,
+      "char": "蛙",
+      "zhuyin": "ㄨㄚ",
+      "hint_word": "青蛙",
+      "radical": "虫",
+      "strokes_total": 12,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0056",
+      "type": "write",
+      "lesson": 4,
+      "char": "開",
+      "zhuyin": "ㄎㄞ",
+      "hint_word": "開心",
+      "radical": "門",
+      "strokes_total": 12,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0057",
+      "type": "write",
+      "lesson": 4,
+      "char": "心",
+      "zhuyin": "ㄒㄧㄣ",
+      "hint_word": "開心",
+      "radical": "心",
+      "strokes_total": 4,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0058",
+      "type": "write",
+      "lesson": 5,
+      "char": "比",
+      "zhuyin": "ㄅㄧˇ",
+      "hint_word": "比一比",
+      "radical": "比",
+      "strokes_total": 4,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0059",
+      "type": "write",
+      "lesson": 5,
+      "char": "門",
+      "zhuyin": "ㄇㄣˊ",
+      "hint_word": "門裡",
+      "radical": "門",
+      "strokes_total": 8,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0060",
+      "type": "write",
+      "lesson": 5,
+      "char": "裡",
+      "zhuyin": "ㄌㄧˇ",
+      "hint_word": "門裡",
+      "radical": "衣",
+      "strokes_total": 13,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0061",
+      "type": "write",
+      "lesson": 5,
+      "char": "外",
+      "zhuyin": "ㄨㄞˋ",
+      "hint_word": "門外",
+      "radical": "夕",
+      "strokes_total": 5,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0062",
+      "type": "write",
+      "lesson": 5,
+      "char": "有",
+      "zhuyin": "ㄧㄡˇ",
+      "hint_word": "有什麼不同",
+      "radical": "月",
+      "strokes_total": 6,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0063",
+      "type": "write",
+      "lesson": 5,
+      "char": "什",
+      "zhuyin": "ㄕㄣˊ",
+      "hint_word": "什麼",
+      "radical": "人",
+      "strokes_total": 4,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0064",
+      "type": "write",
+      "lesson": 5,
+      "char": "麼",
+      "zhuyin": "˙ㄇㄜ",
+      "hint_word": "什麼",
+      "radical": "麻",
+      "strokes_total": 14,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0065",
+      "type": "write",
+      "lesson": 5,
+      "char": "不",
+      "zhuyin": "ㄅㄨˋ",
+      "hint_word": "不同",
+      "radical": "一",
+      "strokes_total": 4,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0066",
+      "type": "write",
+      "lesson": 5,
+      "char": "同",
+      "zhuyin": "ㄊㄨㄥˊ",
+      "hint_word": "不同",
+      "radical": "口",
+      "strokes_total": 6,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0067",
+      "type": "write",
+      "lesson": 5,
+      "char": "早",
+      "zhuyin": "ㄗㄠˇ",
+      "hint_word": "早上",
+      "radical": "日",
+      "strokes_total": 6,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0068",
+      "type": "write",
+      "lesson": 5,
+      "char": "晚",
+      "zhuyin": "ㄨㄢˇ",
+      "hint_word": "晚上",
+      "radical": "日",
+      "strokes_total": 11,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0069",
+      "type": "write",
+      "lesson": 5,
+      "char": "王",
+      "zhuyin": "ㄨㄤˊ",
+      "hint_word": "王子",
+      "radical": "玉",
+      "strokes_total": 4,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0070",
+      "type": "write",
+      "lesson": 5,
+      "char": "主",
+      "zhuyin": "ㄓㄨˇ",
+      "hint_word": "主人",
+      "radical": "丶",
+      "strokes_total": 5,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0071",
+      "type": "write",
+      "lesson": 5,
+      "char": "又",
+      "zhuyin": "ㄧㄡˋ",
+      "hint_word": "又有",
+      "radical": "又",
+      "strokes_total": 2,
+      "strokes_source": "補充"
+    },
+    {
+      "id": "W0072",
+      "type": "write",
+      "lesson": 6,
+      "char": "路",
+      "zhuyin": "ㄌㄨˋ",
+      "hint_word": "小路",
+      "radical": "足",
+      "strokes_total": 13,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0073",
+      "type": "write",
+      "lesson": 6,
+      "char": "長",
+      "zhuyin": "ㄔㄤˊ",
+      "hint_word": "長長的",
+      "radical": "長",
+      "strokes_total": 8,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0074",
+      "type": "write",
+      "lesson": 6,
+      "char": "白",
+      "zhuyin": "ㄅㄞˊ",
+      "hint_word": "白花",
+      "radical": "白",
+      "strokes_total": 5,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0075",
+      "type": "write",
+      "lesson": 6,
+      "char": "花",
+      "zhuyin": "ㄏㄨㄚ",
+      "hint_word": "小花",
+      "radical": "艸",
+      "strokes_total": 8,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0076",
+      "type": "write",
+      "lesson": 6,
+      "char": "紅",
+      "zhuyin": "ㄏㄨㄥˊ",
+      "hint_word": "紅花",
+      "radical": "糸",
+      "strokes_total": 9,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0077",
+      "type": "write",
+      "lesson": 6,
+      "char": "走",
+      "zhuyin": "ㄗㄡˇ",
+      "hint_word": "走在",
+      "radical": "走",
+      "strokes_total": 7,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0078",
+      "type": "write",
+      "lesson": 6,
+      "char": "在",
+      "zhuyin": "ㄗㄞˋ",
+      "hint_word": "走在小路上",
+      "radical": "土",
+      "strokes_total": 6,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0079",
+      "type": "write",
+      "lesson": 6,
+      "char": "向",
+      "zhuyin": "ㄒㄧㄤˋ",
+      "hint_word": "向小紅花說",
+      "radical": "口",
+      "strokes_total": 6,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0080",
+      "type": "write",
+      "lesson": 6,
+      "char": "說",
+      "zhuyin": "ㄕㄨㄛ",
+      "hint_word": "說你早",
+      "radical": "言",
+      "strokes_total": 14,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0081",
+      "type": "write",
+      "lesson": 6,
+      "char": "朵",
+      "zhuyin": "ㄉㄨㄛˇ",
+      "hint_word": "一朵",
+      "radical": "木",
+      "strokes_total": 6,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0082",
+      "type": "write",
+      "lesson": 6,
+      "char": "從",
+      "zhuyin": "ㄘㄨㄥˊ",
+      "hint_word": "從這一頭",
+      "radical": "彳",
+      "strokes_total": 11,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0083",
+      "type": "write",
+      "lesson": 6,
+      "char": "頭",
+      "zhuyin": "ㄊㄡˊ",
+      "hint_word": "這一頭",
+      "radical": "頁",
+      "strokes_total": 16,
+      "strokes_source": "課本p67"
+    },
+    {
+      "id": "W0084",
+      "type": "write",
+      "lesson": 6,
+      "char": "那",
+      "zhuyin": "ㄋㄚˋ",
+      "hint_word": "那一頭",
+      "radical": "邑",
+      "strokes_total": 7,
+      "strokes_source": "課本p67"
+    }
+  ],
+  "focus": {
+    "拍_詞語": [
+      "拍手",
+      "拍球",
+      "拍打",
+      "拍照",
+      "球拍"
+    ],
+    "方位": {
+      "上": "上面",
+      "下": "下面",
+      "左": "左手",
+      "右": "右手"
+    },
+    "誰做什麼事": [
+      [
+        "妹妹",
+        "溜滑梯"
+      ],
+      [
+        "姐姐",
+        "寫功課"
+      ],
+      [
+        "弟弟",
+        "拍手"
+      ]
+    ],
+    "合體字_二": [
+      [
+        "扌",
+        "白",
+        "拍"
+      ],
+      [
+        "白",
+        "勺",
+        "的"
+      ]
+    ],
+    "啊_句": [
+      "啊！多了一個，這是誰的？",
+      "啊！下大雨了，我忘了帶傘！",
+      "啊！這幅畫好美呀！"
+    ],
+    "這是_句": [
+      "這是我的媽媽。",
+      "這是爸爸做的蛋糕。",
+      "這是我的祕密基地。"
+    ],
+    "你我他_句": [
+      "我是力元，請問你叫什麼名字？",
+      "我叫千美，他是我的弟弟又安。",
+      "一起去玩吧！"
+    ],
+    "合體字_三": [
+      [
+        "禾",
+        "火",
+        "秋",
+        "秋天"
+      ],
+      [
+        "氵",
+        "每",
+        "海",
+        "海水"
+      ],
+      [
+        "月",
+        "月",
+        "朋",
+        "朋友"
+      ],
+      [
+        "女",
+        "子",
+        "好",
+        "好久"
+      ]
+    ],
+    "上下_動作": [
+      "你先上車。",
+      "我要下車了。"
+    ],
+    "上下_位置": [
+      "耶誕樹上有星星。",
+      "耶誕樹下有禮物。"
+    ],
+    "相反詞": [
+      [
+        "門裡",
+        "門外"
+      ],
+      [
+        "早上",
+        "晚上"
+      ],
+      [
+        "上",
+        "下"
+      ],
+      [
+        "左",
+        "右"
+      ],
+      [
+        "大",
+        "小"
+      ]
+    ],
+    "動作一動作": [
+      [
+        "比",
+        "比一比"
+      ],
+      [
+        "跑",
+        "跑一跑"
+      ],
+      [
+        "拍",
+        "拍一拍"
+      ],
+      [
+        "走",
+        "走一走"
+      ]
+    ],
+    "是_句": [
+      [
+        "他是誰？",
+        "他是小時候的你呀！"
+      ],
+      [
+        "這個是什麼？",
+        "這個是鉛筆盒。"
+      ],
+      [
+        "那裡是哪裡？",
+        "那裡是學校的操場。"
+      ]
+    ],
+    "疊詞": [
+      [
+        "紅紅的",
+        "小花"
+      ],
+      [
+        "藍藍的",
+        "大海"
+      ],
+      [
+        "長長的",
+        "小路"
+      ],
+      [
+        "高高的",
+        "大樹"
+      ]
+    ],
+    "量詞": [
+      [
+        "朵",
+        "小花"
+      ],
+      [
+        "隻",
+        "蝴蝶"
+      ],
+      [
+        "隻",
+        "青蛙"
+      ],
+      [
+        "個",
+        "小朋友"
+      ],
+      [
+        "個",
+        "人"
+      ]
+    ],
+    "一X又一X": [
+      "一朵又一朵的小花",
+      "一隻又一隻的蝴蝶",
+      "一個又一個的小朋友"
+    ],
+    "多音字_長": [
+      [
+        "ㄔㄤˊ",
+        [
+          "長頸鹿",
+          "長短"
+        ]
+      ],
+      [
+        "ㄓㄤˇ",
+        [
+          "長大",
+          "生長"
+        ]
+      ]
+    ],
+    "識字有方法": [
+      [
+        "手",
+        "象形：手掌"
+      ],
+      [
+        "口",
+        "象形：嘴巴"
+      ],
+      [
+        "山",
+        "象形：山峰"
+      ],
+      [
+        "木",
+        "象形：樹木"
+      ]
+    ],
+    "寫字幫手": [
+      [
+        "你",
+        "這裡要寫橫鉤（亅）"
+      ],
+      [
+        "多",
+        "上下要對齊"
+      ],
+      [
+        "起",
+        "右邊的巳要封起來"
+      ],
+      [
+        "路",
+        "撇和捺要接起來"
+      ]
+    ]
+  }
+}

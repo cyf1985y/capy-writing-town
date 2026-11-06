@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>卡比巴拉溫泉町 · 寫字小鎮 v1</title>
+<style>
+body{font:16px system-ui,"Noto Sans TC",sans-serif;background:#eeeade;color:#344b45;margin:0;padding:16px 20px}
+h1{font-size:20px;margin:0 0 8px}
+#stage{position:relative;border-radius:16px;overflow:hidden;background:#dce4dd;max-width:1600px}
+#stage canvas{display:block;max-width:100%}
+#startBtn{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);font:inherit;font-size:28px;padding:18px 44px;border-radius:999px;border:4px solid #fff;background:#386c56;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3);cursor:pointer;touch-action:manipulation;user-select:none}
+#startBtn:focus-visible{outline:4px solid #f08c00}
+#startBtn:disabled{opacity:.6;cursor:default}
+#status{margin:8px 0;min-height:1.4em}
+#status.err{color:#c92a2a;font-weight:600}
+#done{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0;min-height:40px}
+details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;border-radius:8px;padding:8px;max-height:220px;overflow:auto}
+</style>
+<h1>卡比巴拉溫泉町 · 寫字小鎮（第一版：上、下、手）</h1>
+<div id="stage"><button id="startBtn" type="button" disabled>載入中…</button></div>
+<p id="status">載入契約與題庫…</p>
+<div id="done"></div>
+<details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
+<script type="importmap">{"imports":{"three":"./vendor-v2/build/three.module.js","three/addons/":"./vendor-v2/examples/jsm/"}}</script>
+<script type="module">
+import { loadContract, describeLoadError } from './game/content.js';
+import { WritingPanel, renderArtifactCard } from './game/writing-panel.js';
+import { loadTown } from './game/town-loader.js';
+import { Lobby } from './game/lobby.js';
+import { Store, clearProfile } from './game/store.js';
+import { Reward } from './game/reward.js';
+const $ = s => document.querySelector(s);
+const qs = new URLSearchParams(location.search);
+const PROFILE_ID = qs.get('profile') || 'local-child-1'; // 第一版單一本機 profile，無選擇 UI
+const MODE = 'demo3';
+const t0 = performance.now();
+const diag = { errors: [], events: [], loadMs: {}, measures: [] };
+window.addEventListener('error', e => diag.errors.push(e.message)); window.addEventListener('unhandledrejection', e => diag.errors.push(String(e.reason)));
+const setStatus = (m, err = false) => { $('#status').textContent = m; $('#status').className = err ? 'err' : ''; };
+const log = m => { diag.events.push({ t: Math.round(performance.now()), m }); $('#diag').textContent = JSON.stringify(diag, null, 1); };
+
+// 1) 契約與題庫（SHA 不符即拒載，按鈕不啟用）
+let loaded;
+try { loaded = await loadContract('../'); diag.loadMs.contract = Math.round(performance.now() - t0); }
+catch (err) { setStatus(describeLoadError(err), true); $('#startBtn').textContent = '無法開始'; throw err; }
+const { contract } = loaded;
+const demoIds = contract.modes.demo3.writingTaskIds;
+
+// 2) 大廳
+let town;
+try {
+  town = await loadTown({ container: $('#stage'), base: '../models/Town_v5/stage5/', separateObjects: [contract.reward.effect.npcInstance], onStatus: setStatus, errors: diag.errors });
+  $('#stage').append($('#startBtn')); // 按鈕保持在 canvas 之上
+  diag.loadMs.town = Math.round(performance.now() - t0);
+} catch (err) { setStatus('場景載入失敗：' + err.message, true); throw err; }
+const lobby = new Lobby(town); lobby.start();
+window.addEventListener('resize', () => { town.resize(); lobby.requestFrame(); });
+diag.inventory = town.inventory;
+diag.navigation = performance.getEntriesByType('navigation')[0]?.toJSON?.() ?? null;
+
+// 3) 存檔與回饋：開 IndexedDB、讀存檔、由帳本推導 N101 固定姿態與蒸氣
+const crashAt = qs.get('crashAt'); if (crashAt) log('crashAt=' + crashAt + (sessionStorage.getItem('capy_crash_fired') ? ' (already fired: ' + sessionStorage.getItem('capy_crash_fired') + ')' : ''));
+const store = new Store({ contract, contentSha256: loaded.contentSha256, profileId: PROFILE_ID, mode: MODE, crashAt: sessionStorage.getItem('capy_crash_fired') ? null : crashAt, log });
+try { await store.open(); if (qs.get('reset') === '1') { await clearProfile(store.db, PROFILE_ID); log('profile cleared'); } }
+catch (err) { setStatus('存檔無法開啟（IndexedDB）：' + err.message, true); throw err; }
+let saved = await store.load();
+diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifacts: saved.artifacts.length, summary: store.readSummary() };
+store.writeSummary(); // localStorage 只是快取；每次載入以 IndexedDB 為準重寫（提交後、摘要前中斷的情況會在這裡自癒）
+const reward = new Reward({ town, lobby, contract, log });
+reward.applyState({ rewardCount: saved.ledger.length });
+for (const a of saved.artifacts.sort((x, y) => x.createdAt.localeCompare(y.createdAt))) $('#done').append(renderArtifactCard(a, { size: 72 }));
+
+// 4) 面板：完成一字 → store.commitCompletion（作品／進度／帳本同交易）→ 關閉面板後播回饋
+const session = { artifacts: [], deferred: [], cancels: [], commits: [] };
+let queueIndex = 0, pendingEffect = null;
+function pickNext() { const i = demoIds.findIndex(id => !saved.passedTaskIds.includes(id)); queueIndex = i >= 0 ? i : (queueIndex + 1) % demoIds.length; }
+const panel = new WritingPanel({
+  dataBase: './vendor-v2/hanzi-writer/data/',
+  log,
+  onOpen: () => { lobby.pause('panel'); $('#startBtn').disabled = true; },
+  onClose: async info => {
+    lobby.resume('panel'); $('#startBtn').disabled = false; $('#startBtn').focus(); log('panel closed ' + JSON.stringify(info));
+    if (pendingEffect) { const e = pendingEffect; pendingEffect = null; await reward.play(e); }
+    saved = await store.load(); diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifacts: saved.artifacts.length };
+    if (info.reason === 'done') pickNext();
+    setStatus(nextLabel());
+  },
+  onCancel: i => { session.cancels.push(i); },
+  onAttempt: async i => { log(`new attempt ${i.reason} ${i.attemptId}`); await store.markInProgress(loaded.writingTasks.get(i.taskId), i.attemptId); },
+  onDeferred: async i => { session.deferred.push(i); log('deferred ' + JSON.stringify(i)); await store.markDeferred(loaded.writingTasks.get(i.taskId), i.attemptId, i.reason); },
+  onArtifact: async a => {
+    const task = loaded.writingTasks.get(a.taskId);
+    const result = await store.commitCompletion(task, a);   // 失敗會 throw → 面板顯示「重試保存」
+    session.artifacts.push(a); session.commits.push(result);
+    $('#done').append(renderArtifactCard(a, { size: 72 }));
+    pendingEffect = result;                                 // 面板關閉、RAF 恢復後再播
+    log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
+  },
+});
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js'); installTestDriver(panel); window.__game = { town, lobby, panel, session, diag, loaded, store, reward, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+function nextLabel() {
+  const t = loaded.writingTasks.get(demoIds[queueIndex]);
+  const allDone = demoIds.every(id => saved.passedTaskIds.includes(id));
+  return (allDone ? '三個字都寫好了！可以再寫一次（不會重複發獎）。' : '') + `下一個字：「${t.char}」（${t.id}）。按「開始寫字」。`;
+}
+pickNext();
+
+// 4) 入口：DOM 大按鈕。滑鼠／觸控／鍵盤（Enter、Space 由 button 原生處理）都走同一個 click；panel.start() 已開啟時直接忽略。
+let opening = false;
+async function startWriting() {
+  if (opening || panel.isOpen()) { log('start ignored (already open)'); return; }
+  opening = true;
+  try {
+    const task = loaded.writingTasks.get(demoIds[queueIndex]);
+    const attemptId = crypto.randomUUID();
+    const ok = await panel.start(task, { attemptId, index: queueIndex, total: demoIds.length });
+    if (ok) await store.markInProgress(task, attemptId);
+    log(`start ${task.id} -> ${ok}`);
+  } finally { opening = false; }
+}
+$('#startBtn').addEventListener('click', startWriting);
+$('#startBtn').addEventListener('pointerdown', e => e.preventDefault()); // 避免按鈕按壓把 pointerdown 傳給 canvas 後的焦點抖動
+// 禁止雙擊與選取；觸控上 click 只會來一次，不另外處理 touchstart 以免重複開啟
+$('#startBtn').addEventListener('dblclick', e => e.preventDefault());
+
+// 暖機：等第一幀真的畫出來（shader 編譯完成）再亮按鈕，避免孩子一按就卡
+await new Promise(res => { const r0 = lobby.renderCount; const tick = () => (lobby.renderCount > r0 ? res() : requestAnimationFrame(tick)); tick(); });
+diag.loadMs.firstFrame = Math.round(performance.now() - t0);
+$('#startBtn').textContent = contract.entry.label; $('#startBtn').disabled = false;
+setStatus(nextLabel());
+diag.loadMs.ready = Math.round(performance.now() - t0);
+// 測試自動跑（?test=1&autoplay=1）：用合成筆跡依序寫完 demo3 三字，供 headless 截圖與煙霧測試；不是真人操作
+if (qs.get('test') === '1' && qs.get('autoplay') === '1') {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  (async () => { for (let i = 0; i < demoIds.length; i++) { $('#startBtn').click(); await sleep(900); await window.__wpDrawAll({ jitter: 6 }); await sleep(1500); document.querySelector('button[data-act="next"]')?.click(); await sleep(1500); } log('autoplay done'); })();
+}
+// 載入後靜置 2 秒量一次 draw calls 與 RAF／render 頻率
+setTimeout(async () => { diag.measures.push({ when: 'lobby_idle', ...(await lobby.measure(2000)) }); log('measured lobby_idle'); }, 500);
+</script>
+</html>
