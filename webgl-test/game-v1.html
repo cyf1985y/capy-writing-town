@@ -80,10 +80,13 @@ const panel = new WritingPanel({
   onOpen: () => { lobby.pause('panel'); $('#startBtn').disabled = true; },
   onClose: async info => {
     lobby.resume('panel'); $('#startBtn').disabled = false; $('#startBtn').focus(); log('panel closed ' + JSON.stringify(info));
-    if (pendingEffect) { const e = pendingEffect; pendingEffect = null; await reward.play(e); }
+    const effect = pendingEffect; pendingEffect = null;
+    if (effect) await reward.play(effect);
     saved = await store.load(); diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifacts: saved.artifacts.length };
     if (info.reason === 'done') pickNext();
-    setStatus(nextLabel());
+    // 已領過獎的字再寫一次：只保存作品、沒有動畫，要在狀態列講清楚，孩子才不會以為壞了
+    const note = effect && !effect.rewardNew ? `「${effect.char}」的獎勵之前已經領過，這次只保存作品，小鎮不會再有動畫。` : '';
+    setStatus(note + nextLabel(!!note));
   },
   onCancel: i => { session.cancels.push(i); },
   onAttempt: async i => { log(`new attempt ${i.reason} ${i.attemptId}`); await store.markInProgress(loaded.writingTasks.get(i.taskId), i.attemptId); },
@@ -93,15 +96,15 @@ const panel = new WritingPanel({
     const result = await store.commitCompletion(task, a);   // 失敗會 throw → 面板顯示「重試保存」
     session.artifacts.push(a); session.commits.push(result);
     $('#done').append(renderArtifactCard(a, { size: 72 }));
-    pendingEffect = result;                                 // 面板關閉、RAF 恢復後再播
+    pendingEffect = { ...result, char: a.char };            // 面板關閉、RAF 恢復後再播（rewardNew=false 時只更新狀態列）
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
 if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js'); installTestDriver(panel); window.__game = { town, lobby, panel, session, diag, loaded, store, reward, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
-function nextLabel() {
+function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
-  const allDone = demoIds.every(id => saved.passedTaskIds.includes(id));
-  return (allDone ? '三個字都寫好了！可以再寫一次（不會重複發獎）。' : '') + `下一個字：「${t.char}」（${t.id}）。按「開始寫字」。`;
+  const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
+  return (allDone ? '三個字都寫好了，獎勵也都領過了！還可以再練習，但卡比巴拉不會再有動畫。' : '') + `下一個字：「${t.char}」（${t.id}）。按「開始寫字」。`;
 }
 pickNext();
 
