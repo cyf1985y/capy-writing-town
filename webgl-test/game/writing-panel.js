@@ -4,8 +4,8 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=7';
-import { bravo, flash, spark } from './fx.js?v=7'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=20';
+import { bravo, flash, spark } from './fx.js?v=20'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -29,33 +29,50 @@ export const QUIZ_CONFIG = Object.freeze({
 // - 同一筆錯滿 EARLY_HINT_AFTER 次，就自動閃示範這一筆並畫出方向箭頭（Hanzi Writer 自己的提示仍在第 3 次）。
 export const EARLY_HINT_AFTER = 2;
 
+// v5 手指寫字（契約 v5 feedback.writing.fatFinger）：QUIZ_CONFIG.leniency 不動（與九字核對表一致，九字都 < 12 畫），
+// 執行時對「總筆畫 >= 12 的字」整字放寬，或對「下一筆標準筆畫很短」的那一筆放寬 1.35 倍。
+export const FAT_FINGER = Object.freeze({ boost: 1.35, minStrokes: 12, shortStroke: 200 });
+/** v5 唸字句型：一般「字，詞的字」；詞尾是助詞、詞裡同字重複（看看、比一比）、或動詞結尾（這是、和我玩）改停頓句「字，詞，字」，
+ *  三字以上且不以該字結尾的短句、詞尾是標點也改停頓句。避免「是，這是的是」「誰，誰的的誰」「的，我的的的」這種繞口令。 */
+const PARTICLES = new Set([...'的了嗎呢吧啊呀喔']), PUNCT = new Set([...'！？。，!?']), VERB_END = new Set(['這是', '和我玩']);
+export function introText(char, word) {
+  if (!word || word === char) return char;
+  const pause = PARTICLES.has(word.at(-1)) || PUNCT.has(word.at(-1)) || word.split(char).length > 2 || VERB_END.has(word)
+    || ([...word].length >= 3 && word.at(-1) !== char); // 三字以上的短句（走在小路上、他也拍）不接「的字」
+  return pause ? `${char}，${word}，${char}` : `${char}，${word}的${char}`;
+}
+const medianLen = m => m.reduce((a, p, i) => i ? a + Math.hypot(p[0] - m[i - 1][0], p[1] - m[i - 1][1]) : 0, 0);
+
 const CSS = `
-.wp-overlay{position:fixed;inset:0;z-index:1000;background:rgba(40,52,48,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:#344b45;touch-action:none;overscroll-behavior:contain}
+.wp-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:none;overscroll-behavior:contain}
 .wp-dialog{position:relative;background:#fffdf7;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:18px 22px 20px;width:min(92vw,520px);max-height:96vh;overflow:auto;box-sizing:border-box;outline:none}
 .wp-head{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
 .wp-head h2{margin:0;font-size:22px}
 .wp-head .wp-zhuyin{font-size:16px;color:#6c7d77}
 .wp-head .wp-hint{margin-left:auto;font-size:14px;color:#6c7d77}
-.wp-grid{position:relative;width:min(80vw,360px);aspect-ratio:1;margin:6px auto 10px;background:#fff;border:3px solid #c49a6c;border-radius:12px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.wp-grid{position:relative;width:min(80vw,360px);aspect-ratio:1;margin:6px auto 10px;background:#fff;border:3px solid #F4B6A8;border-radius:12px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.wp-grid .wp-target,.wp-grid .wp-target *{touch-action:none;user-select:none;-webkit-user-select:none}
+.wp-guide .wp-mark{font-size:26px;text-anchor:middle;dominant-baseline:central;animation:wp-pulse 1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.wp-guide .wp-glow{fill:#FFD6A5;opacity:.75;animation:wp-pulse 1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 .wp-grid svg.wp-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .wp-grid .wp-target{position:absolute;inset:0;width:100%;height:100%}
 .wp-grid .wp-target svg{display:block;width:100%;height:100%;touch-action:none}
 .wp-msg{min-height:1.5em;text-align:center;font-size:17px;margin:4px 0 10px}
 .wp-msg.wp-ok{color:#2b8a3e}.wp-msg.wp-err{color:#c92a2a}
 .wp-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-.wp-actions button{font:inherit;font-size:18px;padding:12px 18px;min-width:96px;border-radius:12px;border:2px solid #aab7a8;background:#fff;cursor:pointer;touch-action:manipulation}
-.wp-actions button.wp-primary{background:#386c56;border-color:#386c56;color:#fff}
+.wp-actions button{font:inherit;font-size:18px;padding:12px 18px;min-width:96px;border-radius:12px;border:2px solid #F7C9C0;background:#fff;cursor:pointer;touch-action:manipulation}
+.wp-actions button.wp-primary{background:var(--ui-primaryDark,#E8665C);border-color:var(--ui-primaryDark,#E8665C);color:#fff}
 .wp-actions button:disabled{opacity:.45;cursor:default}
 .wp-progress{display:flex;gap:6px;justify-content:center;margin:0 0 6px}
 .wp-progress span{width:14px;height:14px;border-radius:50%;background:#e3ddd0;display:inline-block}
-.wp-progress span.wp-done{background:#386c56}.wp-progress span.wp-now{background:#d9480f}
+.wp-progress span.wp-done{background:var(--ui-primaryDark,#E8665C)}.wp-progress span.wp-now{background:var(--ui-accent,#FFA94D)}
 .wp-grid svg.wp-guide{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}
 .wp-guide .wp-dot{fill:#f08c00;stroke:#fff;animation:wp-pulse 1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 .wp-guide .wp-arrow{fill:none;stroke:#f08c00;stroke-linecap:round;stroke-linejoin:round;opacity:.85;stroke-dasharray:8 6;animation:wp-dash .8s linear infinite}
 @keyframes wp-pulse{0%,100%{transform:scale(.75);opacity:.95}50%{transform:scale(1.25);opacity:.6}}
 @keyframes wp-dash{to{stroke-dashoffset:-14}}
-.wp-say{font:inherit;font-size:20px;line-height:1;background:#fff;border:2px solid #c49a6c;border-radius:10px;padding:3px 7px;cursor:pointer;touch-action:manipulation}
-.wp-card{display:inline-block;background:#fff;border:2px solid #c49a6c;border-radius:10px;padding:6px}
+.wp-say{font:inherit;font-size:20px;line-height:1;background:#fff;border:2px solid #F4B6A8;border-radius:10px;padding:3px 7px;cursor:pointer;touch-action:manipulation}
+.wp-card{display:inline-block;background:#fff;border:2px solid #F4B6A8;border-radius:10px;padding:6px}
 `;
 
 function injectCss() {
@@ -115,8 +132,7 @@ export class WritingPanel {
   /** v4：唸「字，詞的字」。在 start() 內同步呼叫（仍在按鈕手勢內），iOS 才肯出聲。 */
   _say(kind = 'intro') {
     const s = this.state; if (!s || !this.voice) return false;
-    const w = s.task.hint_word;
-    const text = kind === 'done' ? s.char : (w && w !== s.char ? `${s.char}，${w}的${s.char}` : s.char);
+    const text = kind === 'done' ? s.char : introText(s.char, s.task.hint_word);
     const ok = this.voice.say(text); this.log(`say(${kind}) ${text} -> ${ok}`); return ok;
   }
 
@@ -150,6 +166,7 @@ export class WritingPanel {
     try { s.writer?.cancelQuiz(); } catch { /* ignore */ }
     this.voice?.stop();
     document.removeEventListener('keydown', this._onKey, true);
+    window.removeEventListener('touchend', this._onTouchEnd, true); window.removeEventListener('touchcancel', this._onTouchEnd, true);
     this.el?.remove(); this.el = null;
     this.open = false;
     if (!s.done && reason === 'cancel') this.o.onCancel?.({ taskId: s.task.id, char: s.char, attemptId: s.attemptId });
@@ -187,12 +204,25 @@ export class WritingPanel {
     el.querySelector('.wp-say').addEventListener('click', () => this._say('intro'));
     // v4：手指／滑鼠寫字時留下星光尾巴（純裝飾，不影響判定）
     const grid = el.querySelector('.wp-grid'); let drawing = false, lastSpark = 0;
-    grid.addEventListener('pointerdown', () => { drawing = true; });
+    grid.addEventListener('pointerdown', e => { if (e.isPrimary !== false) drawing = true; });
     el.addEventListener('pointerup', () => { drawing = false; }); el.addEventListener('pointercancel', () => { drawing = false; });
     grid.addEventListener('pointermove', e => {
-      if (!drawing || !this.state || this.state.done) return; const now = performance.now(); if (now - lastSpark < 28) return; lastSpark = now;
+      if (!drawing || e.isPrimary === false || !this.state || this.state.done) return; const now = performance.now(); if (now - lastSpark < 28) return; lastSpark = now;
       const r = grid.getBoundingClientRect(); spark(grid, e.clientX - r.left, e.clientY - r.top); this.state.sparks = (this.state.sparks ?? 0) + 1;
     });
+    // v5 防手掌誤觸：鎖定第一根手指，第二指以上的 touch 事件在捕獲階段攔下（Hanzi Writer 讀 touches[0]、筆畫結束聽 document 的 touchend）
+    const target = el.querySelector('.wp-target'); this._lockId = null;
+    const block = e => { e.stopPropagation(); if (e.cancelable) e.preventDefault(); if (this.state) this.state.multiTouchBlocked = (this.state.multiTouchBlocked ?? 0) + 1; };
+    target.addEventListener('touchstart', e => {
+      if (this._lockId === null) { this._lockId = e.changedTouches[0].identifier; if (e.touches.length > 1) block(e); }
+      else block(e);
+    }, { capture: true, passive: false });
+    target.addEventListener('touchmove', e => { if (this._lockId !== null && e.touches[0]?.identifier !== this._lockId) block(e); }, { capture: true, passive: false });
+    this._onTouchEnd = e => {
+      if (this._lockId === null) return;
+      if ([...e.changedTouches].some(t => t.identifier === this._lockId)) this._lockId = null; else e.stopPropagation(); // 別的手指放開：不讓 Hanzi Writer 以為這一筆結束
+    };
+    window.addEventListener('touchend', this._onTouchEnd, true); window.addEventListener('touchcancel', this._onTouchEnd, true);
     el.querySelector('.wp-actions').addEventListener('click', e => { const b = e.target.closest('button[data-act]'); if (b) this._act(b.dataset.act); });
     document.body.append(el);
     this.el = el;
@@ -255,7 +285,10 @@ export class WritingPanel {
       const w1 = `${ax - L * Math.cos(a - 0.5)},${ay - L * Math.sin(a - 0.5)}`, w2 = `${ax - L * Math.cos(a + 0.5)},${ay - L * Math.sin(a + 0.5)}`;
       h += `<polyline class="wp-arrow" points="${pts}" stroke-width="${7 * k}" style="stroke-dasharray:${8 * k} ${6 * k}"/><polyline class="wp-arrow" points="${w1} ${ax},${ay} ${w2}" stroke-width="${7 * k}" style="stroke-dasharray:none"/>`;
     }
-    h += `<circle class="wp-dot" cx="${x0}" cy="${y0}" r="${11 * k}" stroke-width="${3 * k}"/></g>`;
+    h += `</g>`;
+    // v5：起筆處放會閃的胡蘿蔔光點（文字不能放進上下翻轉的群組，所以換算成格子座標）
+    const px = t.x + x0 * t.scale, py = sz - t.y - y0 * t.scale;
+    h += `<circle class="wp-glow" cx="${px}" cy="${py}" r="17"/><text class="wp-mark" x="${px}" y="${py}">🥕</text>`;
     g.setAttribute('viewBox', `0 0 ${sz} ${sz}`); g.innerHTML = h;
     s.guide = { stroke: n, arrow };
   }
@@ -269,8 +302,9 @@ export class WritingPanel {
     this._progress(s.totalStrokes, 0);
     this._setButtons({ demo: true, retry: true, cancel: true, next: false });
     s.earlyHints = 0; this._guide(0);
+    s.leniencyByStroke = []; s.leniencyBoostAll = s.totalStrokes >= FAT_FINGER.minStrokes;
     s.writer.quiz({
-      leniency: QUIZ_CONFIG.leniency,
+      leniency: this._leniencyFor(0),
       showHintAfterMisses: QUIZ_CONFIG.showHintAfterMisses,
       highlightOnComplete: QUIZ_CONFIG.highlightOnComplete,
       acceptBackwardsStrokes: QUIZ_CONFIG.acceptBackwardsStrokes,
@@ -278,6 +312,7 @@ export class WritingPanel {
       quizStartStrokeNum: QUIZ_CONFIG.quizStartStrokeNum,
       onCorrectStroke: d => {
         s.drawnPaths.push(d.drawnPath.points.map(p => ({ x: p.x, y: p.y })));
+        this._setLeniency(d.strokeNum + 1);
         this._progress(s.totalStrokes, d.strokeNum + 1);
         this._setMsg(d.strokesRemaining ? `對了！還有 ${d.strokesRemaining} 筆` : '全部寫完了！', 'wp-ok');
         this.o.sound?.stroke(d.strokeNum); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g);
@@ -300,6 +335,14 @@ export class WritingPanel {
     });
   }
 
+  /** v5：第 n 筆用的判定容錯（記錄在作品 meta.leniencyByStroke） */
+  _leniencyFor(n) {
+    const s = this.state, med = s.medians?.[n];
+    const v = s.leniencyBoostAll || (med && medianLen(med) < FAT_FINGER.shortStroke) ? QUIZ_CONFIG.leniency * FAT_FINGER.boost : QUIZ_CONFIG.leniency;
+    s.leniencyByStroke[n] = v; return v;
+  }
+  _setLeniency(n) { const q = this.state.writer?._quiz?._options; if (q && n < this.state.totalStrokes) q.leniency = this._leniencyFor(n); } // Hanzi Writer 每筆結束時才讀 leniency
+
   async _complete(summary) {
     const s = this.state;
     s.done = true; this._guide(-1);
@@ -308,7 +351,7 @@ export class WritingPanel {
       drawnPaths: s.drawnPaths, mistakes: s.mistakes, hints: s.hints + s.demoViews,
       createdAt: new Date().toISOString(), writerVersion: WRITER_VERSION, dataSha256: s.dataSha256,
       // 補充欄位（不在契約最小格式內，但對驗收有用）
-      meta: { dataVersion: DATA_VERSION, pointSpace: 'hanzi-writer character coords (1024 em, y-up)', totalStrokes: s.totalStrokes, durationMs: Math.round(performance.now() - s.quizStartedAt), earlyHints: s.earlyHints ?? 0, panelOpenMs: Math.round(performance.now() - s.startedAt), attemptIndex: s.quizRuns, previousAttemptIds: s.previousAttemptIds, demoViews: s.demoViews, quizConfig: QUIZ_CONFIG },
+      meta: { dataVersion: DATA_VERSION, pointSpace: 'hanzi-writer character coords (1024 em, y-up)', totalStrokes: s.totalStrokes, durationMs: Math.round(performance.now() - s.quizStartedAt), earlyHints: s.earlyHints ?? 0, leniencyByStroke: s.leniencyByStroke, multiTouchBlocked: s.multiTouchBlocked ?? 0, panelOpenMs: Math.round(performance.now() - s.startedAt), attemptIndex: s.quizRuns, previousAttemptIds: s.previousAttemptIds, demoViews: s.demoViews, quizConfig: QUIZ_CONFIG },
     };
     this._setButtons({ demo: false, retry: false, cancel: false, next: false });
     this._setMsg('寫得好！正在保存…', 'wp-ok');

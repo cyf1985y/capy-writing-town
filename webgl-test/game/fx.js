@@ -31,6 +31,26 @@ export class Sound {
   complete() { [0, 2, 4, 5, 7].forEach((k, j) => this._tone(PENTA[k], { at: j * 0.09, dur: 0.3, type: 'triangle', gain: 0.18 })); this._tone(PENTA[9], { at: 0.5, dur: 0.6, type: 'sine', gain: 0.12 }); }
   /** 卡比巴拉跳：短促「啾」 */
   squeak(pitch = 1) { this._tone(700 * pitch, { dur: 0.14, type: 'square', gain: 0.05, slide: 1.6 }); this._tone(1100 * pitch, { at: 0.1, dur: 0.1, type: 'sine', gain: 0.06, slide: 1.3 }); }
+  /** v5 點水豚：低頻「噗嚕」氣泡音（兩顆泡泡） */
+  puru() {
+    const c = this.ctx; if (!c || this.muted || c.state !== 'running') return;
+    [0, 0.13].forEach((at, i) => {
+      const t = c.currentTime + at, o = c.createOscillator(), g = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+      o.type = 'sine'; o.frequency.setValueAtTime(i ? 150 : 190, t); o.frequency.exponentialRampToValueAtTime(i ? 95 : 120, t + 0.16);
+      lfo.frequency.value = 38; lg.gain.value = 22; lfo.connect(lg).connect(o.frequency);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.32, t + 0.015); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+      o.connect(g).connect(c.destination); o.start(t); lfo.start(t); o.stop(t + 0.25); lfo.stop(t + 0.25);
+    });
+  }
+  /** v5 點兔子：高頻「Boing！」彈簧音 */
+  boing() {
+    const c = this.ctx; if (!c || this.muted || c.state !== 'running') return;
+    const t = c.currentTime, o = c.createOscillator(), g = c.createGain(), lfo = c.createOscillator(), lg = c.createGain();
+    o.type = 'triangle'; o.frequency.setValueAtTime(320, t); o.frequency.exponentialRampToValueAtTime(980, t + 0.12); o.frequency.exponentialRampToValueAtTime(620, t + 0.4);
+    lfo.frequency.setValueAtTime(18, t); lfo.frequency.linearRampToValueAtTime(7, t + 0.4); lg.gain.setValueAtTime(90, t); lg.gain.linearRampToValueAtTime(10, t + 0.4); lfo.connect(lg).connect(o.frequency);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.2, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.42);
+    o.connect(g).connect(c.destination); o.start(t); lfo.start(t); o.stop(t + 0.45); lfo.stop(t + 0.45);
+  }
   /** 鏡頭飛過去：輕柔滑音 */
   whoosh() { this._tone(330, { dur: 0.5, type: 'sine', gain: 0.06, slide: 2 }); }
 }
@@ -69,7 +89,7 @@ const FX_CSS = `
 .fx-shake{animation:fx-shake 300ms}
 @keyframes fx-squash{0%{transform:scale(1)}35%{transform:scale(1.035,.965)}70%{transform:scale(.985,1.015)}100%{transform:scale(1)}}
 .fx-squash{animation:fx-squash 240ms ease-out}
-.fx-spark{position:absolute;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff 0,#ffd43b 45%,rgba(255,212,59,0) 70%);animation:fx-spark 520ms ease-out forwards}
+.fx-spark{position:absolute;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff 0,var(--c,#ffd43b) 45%,transparent 72%);animation:fx-spark 560ms ease-out forwards}
 @keyframes fx-spark{0%{transform:translate(var(--x),var(--y)) scale(1.3);opacity:1}100%{transform:translate(calc(var(--x) + var(--dx)),calc(var(--y) + var(--dy))) scale(.2);opacity:0}}
 @keyframes fx-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 `;
@@ -105,9 +125,11 @@ export function bravo(container, text = '好棒！') {
 
 export function flash(el, cls = 'fx-flash') { injectCss(); el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(() => el.classList.remove(cls), 450); }
 
+const CANDY = ['#FF8FAB', '#FFD166', '#7EE0B5', '#8EC5FF', '#C3A6FF', '#FFA94D'];
 /** v4：手指寫字時的星光尾巴（px，相對 container） */
 export function spark(container, x, y) {
   const l = layerIn(container), d = document.createElement('i'); d.className = 'fx-spark';
+  d.style.setProperty('--c', CANDY[(Math.random() * CANDY.length) | 0]); // v5：彩色糖果
   d.style.setProperty('--x', x + 'px'); d.style.setProperty('--y', y + 'px');
   d.style.setProperty('--dx', (Math.random() - 0.5) * 18 + 'px'); d.style.setProperty('--dy', (Math.random() * 14 + 4) + 'px');
   l.append(d); setTimeout(() => d.remove(), 560);

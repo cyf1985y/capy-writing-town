@@ -22,7 +22,7 @@ export class Reward {
     this.durationMs = 800;
     this.busy = false; // v3：位移／小跳中為 true，town-fx 的呼吸動畫此時不碰 N101
   }
-  _setNpc(matrix) { this.npc.matrix.copy(matrix); this.npc.matrixWorld.copy(matrix); }
+  _setNpc(matrix) { if (this.decorate) matrix = this.decorate(matrix); this.npc.matrix.copy(matrix); this.npc.matrixWorld.copy(matrix); } // v5：decorate＝角色放大
   /** 重開／載入：由存檔推導固定姿態（不累加） */
   applyState({ rewardCount }) {
     const on = rewardCount > 0;

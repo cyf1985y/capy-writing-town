@@ -3,11 +3,11 @@
 import * as THREE from 'three';
 
 const CSS = `
-.al-overlay{position:fixed;inset:0;z-index:900;background:rgba(40,52,48,.6);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:#344b45}
+.al-overlay{position:fixed;inset:0;z-index:900;background:rgba(91,58,74,.6);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A)}
 .al-box{background:#fffdf7;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:16px 18px 18px;width:min(94vw,640px);max-height:92vh;overflow:auto;box-sizing:border-box}
 .al-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
 .al-head h2{margin:0;font-size:21px}.al-head span{color:#6c7d77;font-size:14px}
-.al-head button{margin-left:auto;font:inherit;font-size:18px;padding:6px 14px;border-radius:12px;border:2px solid #aab7a8;background:#fff;cursor:pointer}
+.al-head button{margin-left:auto;font:inherit;font-size:18px;padding:6px 14px;border-radius:12px;border:2px solid #F7C9C0;background:#fff;cursor:pointer}
 .al-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 @media (max-width:600px){.al-grid{grid-template-columns:repeat(2,1fr)}}
 .al-card{font:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px;border-radius:14px;border:3px solid #e3ddd0;background:#fff;cursor:pointer;touch-action:manipulation;color:inherit}
@@ -49,26 +49,27 @@ export class Album {
   /** 用遊戲鏡頭方向近拍一隻卡比巴拉（全彩），回傳 dataURL */
   _snap(object) {
     if (this.thumbs.has(object)) return this.thumbs.get(object);
-    const mesh = this.town.separate.get(object); if (!mesh) return '';
+    const figs = this.townFx.figureFor?.(object) ?? [this.town.separate.get(object)].filter(Boolean); if (!figs.length) return ''; // v5：兔子拍程序化模型，水豚連胡蘿蔔
+    const fbox = new THREE.Box3(); figs.forEach(f => { f.updateWorldMatrix?.(false, true); fbox.expandByObject(f); });
     const { renderer, scene, camera } = this.town, canvas = renderer.domElement;
-    const box = new THREE.Box3().setFromObject(mesh), c = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
+    const box = fbox, c = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
     const cam = camera.clone(), off = camera.position.clone().sub(this.townFx.home.target);
     cam.position.copy(c).add(off); cam.lookAt(c);
     const viewH = Math.max(size.x, size.y, size.z) * 1.25;
     cam.zoom = (camera.top - camera.bottom) / viewH; cam.updateProjectionMatrix(); cam.updateMatrixWorld();
     // 只拍這一隻：Mesh 與燈光加到圖層 7，相機只看圖層 7（未解鎖卡片的剪影才會是卡比巴拉的形狀）
     const L = 7, lights = []; scene.traverse(o => { if (o.isLight) { o.layers.enable(L); lights.push(o); } });
-    mesh.layers.enable(L); cam.layers.set(L);
-    const bg = scene.background; scene.background = new THREE.Color('#e9efe6');
+    figs.forEach(f => f.traverse(o => o.layers.enable(L))); cam.layers.set(L);
+    const bg = scene.background; scene.background = new THREE.Color('#00ff00'); // v5：去背用純綠（白兔、奶油色都離它很遠）
     const u = this.townFx.u, floor0 = u.uZoneFloor.value; u.uZoneFloor.value = 1; // 圖鑑裡一律全彩
     renderer.render(scene, cam);
-    scene.background = bg; mesh.layers.disable(L); lights.forEach(o => o.layers.disable(L));
+    scene.background = bg; figs.forEach(f => f.traverse(o => o.layers.disable(L))); lights.forEach(o => o.layers.disable(L));
     const side = Math.min(canvas.width, canvas.height), out = document.createElement('canvas'); out.width = out.height = 160;
     const g2 = out.getContext('2d', { willReadFrequently: true });
     g2.drawImage(canvas, (canvas.width - side) / 2, (canvas.height - side) / 2, side, side, 0, 0, 160, 160);
     // 背景色去掉（透明），未解鎖時 CSS 剪影才只剩卡比巴拉輪廓
     const img = g2.getImageData(0, 0, 160, 160), d = img.data;
-    for (let i = 0; i < d.length; i += 4) { const e = Math.abs(d[i] - 0xe9) + Math.abs(d[i + 1] - 0xef) + Math.abs(d[i + 2] - 0xe6); if (e < 24) d[i + 3] = 0; else if (e < 60) d[i + 3] = Math.round(255 * (e - 24) / 36); }
+    for (let i = 0; i < d.length; i += 4) { const e = Math.abs(d[i]) + Math.abs(d[i + 1] - 0xff) + Math.abs(d[i + 2]); if (e < 60) d[i + 3] = 0; else if (e < 140) { d[i + 3] = Math.round(255 * (e - 60) / 80); d[i + 1] = Math.min(d[i + 1], (d[i] + d[i + 2]) / 2 + 40); /* 邊緣去綠 */ } }
     g2.putImageData(img, 0, 0);
     u.uZoneFloor.value = floor0;
     this.lobby.requestFrame(); // 下一幀畫回原本的小鎮
@@ -78,8 +79,8 @@ export class Album {
   open(passedTaskIds, { highlight = [] } = {}) {
     if (this.el) return;
     const list = this.status(passedTaskIds), got = list.filter(r => r.unlocked).length;
-    const el = document.createElement('div'); el.className = 'al-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', '卡比巴拉圖鑑');
-    el.innerHTML = `<div class="al-box"><div class="al-head"><h2>卡比巴拉圖鑑</h2><span>${got} / ${list.length} 位朋友</span><button type="button" data-close>關閉</button></div><div class="al-grid"></div></div>`;
+    const el = document.createElement('div'); el.className = 'al-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', this.cfg.title || '卡比巴拉圖鑑');
+    el.innerHTML = `<div class="al-box"><div class="al-head"><h2>${this.cfg.title || '卡比巴拉圖鑑'}</h2><span>${got} / ${list.length} 位朋友</span><button type="button" data-close>關閉</button></div><div class="al-grid"></div></div>`;
     const grid = el.querySelector('.al-grid');
     for (const r of list) {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'al-card' + (r.unlocked ? '' : ' locked') + (r.unlocked && (highlight.includes(r.object) || !this.seen.has(r.object)) ? ' new' : '');
