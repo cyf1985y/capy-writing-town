@@ -54,7 +54,7 @@ export async function loadTown({ container, base = '../models/Town_v5/stage5/', 
   const separate = new Map();              // name → Mesh（獨立渲染）
   const steamMeshes = [];                   // 12 片蒸氣（單獨 Mesh，方便分組開關）
   const groups = new Map();
-  const separateSet = new Set(separateObjects);
+  const separateSet = new Set(typeof separateObjects === 'function' ? separateObjects(manifest) : separateObjects); // v3：可傳函式，由 manifest 決定（例如全部 8 隻卡比巴拉）
   model.traverse(o => {
     if (!o.isMesh) return;
     if (separateSet.has(o.name) || o.material.name === 'Steam') return; // 不進 batch

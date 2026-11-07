@@ -20,6 +20,7 @@ export class Reward {
     for (const s of town.steamMeshes) s.visible = !this.steam.includes(s);
     this.state = { atPool: false, steamOn: false };
     this.durationMs = 800;
+    this.busy = false; // v3：位移／小跳中為 true，town-fx 的呼吸動畫此時不碰 N101
   }
   _setNpc(matrix) { this.npc.matrix.copy(matrix); this.npc.matrixWorld.copy(matrix); }
   /** 重開／載入：由存檔推導固定姿態（不累加） */
@@ -35,24 +36,26 @@ export class Reward {
   play({ rewardNew }) {
     if (!rewardNew) { this.log('reward replay: no new reward, no displacement'); return Promise.resolve(false); }
     if (this.state.atPool) { return this._hop(); }
+    this.busy = true;
     return new Promise(resolve => {
       const from = new THREE.Vector3().setFromMatrixPosition(this.rest), to = new THREE.Vector3().setFromMatrixPosition(this.end), m = this.rest.clone(); let t = 0;
       this.lobby.animators.add(dt => {
         t = Math.min(1, t + dt * 1000 / this.durationMs);
         const e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // easeInOutQuad
         m.setPosition(from.clone().lerp(to, e)); this._setNpc(m);
-        if (t >= 1) { this._setNpc(this.end); for (const s of this.steam) s.visible = true; this.state = { atPool: true, steamOn: true }; this.log(`reward: npc moved ${this.distance.toFixed(3)} m, steam147 on`); resolve(true); return false; }
+        if (t >= 1) { this._setNpc(this.end); for (const s of this.steam) s.visible = true; this.state = { atPool: true, steamOn: true }; this.log(`reward: npc moved ${this.distance.toFixed(3)} m, steam147 on`); this.busy = false; resolve(true); return false; }
         return true;
       });
     });
   }
   _hop() {
+    this.busy = true;
     return new Promise(resolve => {
       const base = new THREE.Vector3().setFromMatrixPosition(this.end), m = this.end.clone(); let t = 0;
       this.lobby.animators.add(dt => {
         t = Math.min(1, t + dt * 1000 / 500);
         m.setPosition(base.clone().add(new THREE.Vector3(0, Math.sin(t * Math.PI) * 0.25, 0))); this._setNpc(m);
-        if (t >= 1) { this._setNpc(this.end); resolve(true); return false; }
+        if (t >= 1) { this._setNpc(this.end); this.busy = false; resolve(true); return false; }
         return true;
       });
     });

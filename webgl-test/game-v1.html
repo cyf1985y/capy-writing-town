@@ -2,13 +2,14 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>卡比巴拉溫泉町 · 寫字小鎮 v1（按課次）</title>
+<title>卡比巴拉溫泉町 · 寫字小鎮</title>
 <style>
 body{font:16px system-ui,"Noto Sans TC",sans-serif;background:#eeeade;color:#344b45;margin:0;padding:16px 20px}
-h1{font-size:20px;margin:0 0 8px}
+h1{font-size:20px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
+#muteBtn{margin-left:auto;font-size:22px;background:none;border:2px solid #b9c7bf;border-radius:12px;padding:2px 8px;cursor:pointer;touch-action:manipulation}
 #stage{position:relative;border-radius:16px;overflow:hidden;background:#dce4dd;max-width:1600px}
 #stage canvas{display:block;max-width:100%}
-#startBtn{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);font:inherit;font-size:28px;padding:18px 44px;border-radius:999px;border:4px solid #fff;background:#386c56;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3);cursor:pointer;touch-action:manipulation;user-select:none}
+#startBtn{display:block;margin:12px auto 0;font:inherit;font-size:28px;padding:16px 44px;border-radius:999px;border:4px solid #fff;background:#386c56;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3);cursor:pointer;touch-action:manipulation;user-select:none}
 #startBtn:focus-visible{outline:4px solid #f08c00}
 #startBtn:disabled{opacity:.6;cursor:default}
 #status{margin:8px 0;min-height:1.4em}
@@ -20,22 +21,26 @@ h1{font-size:20px;margin:0 0 8px}
 #chapters button.done{border-color:#f08c00}
 #chapters button:disabled{opacity:.5;cursor:default}
 #chapters small{display:block;font-size:12px;opacity:.8}
+@media (max-width:600px){#chapters{display:none}body{padding:10px 8px}h1{font-size:17px}} /* 手機用地圖上的數字標記選課 */
 details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;border-radius:8px;padding:8px;max-height:220px;overflow:auto}
 </style>
-<h1>卡比巴拉溫泉町 · 寫字小鎮（一上國語，按課次）</h1>
+<h1>卡比巴拉溫泉町 · 寫字小鎮<button id="muteBtn" type="button" aria-label="聲音開關">🔊</button></h1>
 <div id="chapters" aria-label="選課"></div>
-<div id="stage"><button id="startBtn" type="button" disabled>載入中…</button></div>
+<div id="stage"></div>
+<button id="startBtn" type="button" disabled>載入中…</button>
 <p id="status">載入契約與題庫…</p>
 <div id="done"></div>
 <details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
 <script type="importmap">{"imports":{"three":"./vendor-v2/build/three.module.js","three/addons/":"./vendor-v2/examples/jsm/"}}</script>
 <script type="module">
-import { loadContract, describeLoadError } from './game/content.js';
-import { WritingPanel, renderArtifactCard } from './game/writing-panel.js';
-import { loadTown } from './game/town-loader.js';
-import { Lobby } from './game/lobby.js';
-import { Store, clearProfile } from './game/store.js';
-import { Reward } from './game/reward.js';
+import { loadContract, describeLoadError } from './game/content.js?v=4';
+import { WritingPanel, renderArtifactCard } from './game/writing-panel.js?v=4';
+import { loadTown } from './game/town-loader.js?v=4';
+import { Lobby } from './game/lobby.js?v=4';
+import { Store, clearProfile } from './game/store.js?v=4';
+import { Reward } from './game/reward.js?v=4';
+import { Sound } from './game/fx.js?v=4';
+import { TownFx, residentNames } from './game/town-fx.js?v=4';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 const PROFILE_ID = qs.get('profile') || 'local-child-1'; // 第一版單一本機 profile，無選擇 UI
@@ -49,7 +54,7 @@ const log = m => { diag.events.push({ t: Math.round(performance.now()), m }); $(
 
 // 1) 契約與題庫（SHA 不符即拒載，按鈕不啟用）
 let loaded;
-try { loaded = await loadContract('../', 'game/contract_v2.json'); diag.loadMs.contract = Math.round(performance.now() - t0); }
+try { loaded = await loadContract('../', 'game/contract_v3.json'); diag.loadMs.contract = Math.round(performance.now() - t0); }
 catch (err) { setStatus(describeLoadError(err), true); $('#startBtn').textContent = '無法開始'; throw err; }
 const { contract } = loaded;
 { const want = qs.get('lesson') != null ? 'lesson_' + qs.get('lesson') : (localStorage.getItem('capy_lesson') || contract.chapters.defaultMode); MODE = contract.modes[want] ? want : contract.chapters.defaultMode; }
@@ -58,12 +63,18 @@ let demoIds = contract.modes[MODE].writingTaskIds;
 // 2) 大廳
 let town;
 try {
-  town = await loadTown({ container: $('#stage'), base: '../models/Town_v5/stage5/', separateObjects: [contract.reward.effect.npcInstance], onStatus: setStatus, errors: diag.errors });
-  $('#stage').append($('#startBtn')); // 按鈕保持在 canvas 之上
+  town = await loadTown({ container: $('#stage'), base: '../models/Town_v5/stage5/', separateObjects: manifest => [...new Set([contract.reward.effect.npcInstance, ...residentNames(manifest)])], onStatus: setStatus, errors: diag.errors });
+  // v3：按鈕移到小鎮下方，不擋地圖上的課次標記
   diag.loadMs.town = Math.round(performance.now() - t0);
 } catch (err) { setStatus('場景載入失敗：' + err.message, true); throw err; }
 const lobby = new Lobby(town); lobby.start();
-window.addEventListener('resize', () => { town.resize(); lobby.requestFrame(); });
+const fitStage = () => town.resize(Math.min(1600, $('#stage').clientWidth)); // v3：寬度貼齊版面（手機不再多留 40px）
+fitStage();
+window.addEventListener('resize', () => { fitStage(); lobby.requestFrame(); townFx?.placePins(); });
+let townFx = null;
+const sound = new Sound();
+$('#muteBtn').textContent = sound.muted ? '🔇' : '🔊';
+$('#muteBtn').addEventListener('click', () => { sound.unlock(); sound.setMuted(!sound.muted); $('#muteBtn').textContent = sound.muted ? '🔇' : '🔊'; if (!sound.muted) sound.stroke(2); });
 diag.inventory = town.inventory;
 diag.navigation = performance.getEntriesByType('navigation')[0]?.toJSON?.() ?? null;
 
@@ -77,8 +88,12 @@ diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifa
 store.writeSummary(); // localStorage 只是快取；每次載入以 IndexedDB 為準重寫（提交後、摘要前中斷的情況會在這裡自癒）
 const reward = new Reward({ town, lobby, contract, log });
 reward.applyState({ rewardCount: saved.ledger.length });
+townFx = new TownFx({ town, lobby, contract, reward, sound, stage: $('#stage'), log });
+diag.townFx = { tintedMaterials: townFx.tintedMaterials, residents: townFx.residents.map(r => r.name + '@' + townFx.zoneIds[r.zone]), props: townFx.props.length, color: townFx.setProgress(saved.passedTaskIds, { instant: true }) };
 function renderCards() { $('#done').replaceChildren(); for (const a of saved.artifacts.filter(a => demoIds.includes(a.taskId)).sort((x, y) => x.createdAt.localeCompare(y.createdAt))) $('#done').append(renderArtifactCard(a, { size: 72 })); }
 function renderChapters() {
+  const counts = {}; for (const id of contract.chapters.order) { const m = contract.modes[id]; counts[m.lesson] = [m.writingTaskIds.filter(t => saved.passedTaskIds.includes(t)).length, m.writingTaskIds.length, (m.lesson ? '第' + m.lesson + '課 ' : '') + m.title]; }
+  townFx?.updatePins(contract.modes[MODE].lesson, counts);
   $('#chapters').replaceChildren(...contract.chapters.order.map(id => {
     const m = contract.modes[id], n = m.writingTaskIds.filter(t => saved.passedTaskIds.includes(t)).length, b = document.createElement('button');
     b.type = 'button'; b.dataset.mode = id; b.className = (id === MODE ? 'active ' : '') + (n === m.writingTaskIds.length ? 'done' : '');
@@ -86,8 +101,9 @@ function renderChapters() {
     b.addEventListener('click', () => switchChapter(id)); return b;
   }));
 }
-function switchChapter(id) {
+function switchChapter(id, { fly = true } = {}) {
   if (panel.isOpen() || !contract.modes[id]) return;
+  if (fly && id !== MODE) townFx.flyToLesson(contract.modes[id].lesson);
   MODE = id; demoIds = contract.modes[id].writingTaskIds; store.mode = id; localStorage.setItem('capy_lesson', id);
   queueIndex = 0; pickNext(); renderChapters(); renderCards(); setStatus(nextLabel()); log('chapter ' + id);
 }
@@ -99,17 +115,23 @@ let queueIndex = 0, pendingEffect = null;
 function pickNext() { const i = demoIds.findIndex(id => !saved.passedTaskIds.includes(id)); queueIndex = i >= 0 ? i : (queueIndex + 1) % demoIds.length; }
 const panel = new WritingPanel({
   dataBase: './vendor-v2/hanzi-writer/data/',
+  sound,
   log,
   onOpen: () => { lobby.pause('panel'); $('#startBtn').disabled = true; },
   onClose: async info => {
-    lobby.resume('panel'); $('#startBtn').disabled = false; $('#startBtn').focus(); log('panel closed ' + JSON.stringify(info));
+    lobby.resume('panel'); log('panel closed ' + JSON.stringify(info));
     const effect = pendingEffect; pendingEffect = null;
-    if (effect) await reward.play(effect);
-    saved = await store.load(); diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifacts: saved.artifacts.length };
+    saved = await store.load();
+    if (effect) {
+      townFx.setProgress(saved.passedTaskIds);            // 區域彩度在鏡頭飛過去時同步變化
+      await Promise.all([reward.play(effect), townFx.celebrate(contract.modes[MODE].lesson)]);
+      diag.lastCelebration = townFx.lastCelebration;
+    } diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifacts: saved.artifacts.length };
     renderChapters();
+    $('#startBtn').disabled = false; $('#startBtn').focus(); // 慶祝動畫播完才能開下一個字
     if (info.reason === 'done') pickNext();
     // 已領過獎的字再寫一次：只保存作品、沒有動畫，要在狀態列講清楚，孩子才不會以為壞了
-    const note = effect && !effect.rewardNew ? `「${effect.char}」的獎勵之前已經領過，這次只保存作品，小鎮不會再有動畫。` : '';
+    const note = effect && !effect.rewardNew ? `「${effect.char}」又寫了一次，很棒！（這個字的獎勵之前領過了）` : '';
     setStatus(note + nextLabel(!!note));
   },
   onCancel: i => { session.cancels.push(i); },
@@ -124,12 +146,13 @@ const panel = new WritingPanel({
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
-if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js'); installTestDriver(panel); window.__game = { town, lobby, panel, session, diag, loaded, store, reward, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=4'); installTestDriver(panel); window.__game = { town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
-  return (allDone ? (contract.modes[MODE].completionLabel || '這一課的字都寫好了！') + '獎勵也都領過了，還可以再練習，但卡比巴拉不會再有動畫。' : '') + `下一個字：「${t.char}」（${t.id}）。按「開始寫字」。`;
+  return (allDone ? (contract.modes[MODE].completionLabel || '這一課的字都寫好了！') + '小鎮又變得更彩色了！還可以再練習，或點地圖上的數字換一課。' : '') + `下一個字：「${t.char}」（${t.id}）。按「開始寫字」。`;
 }
+townFx.mountPins({ onPick: l => switchChapter('lesson_' + l) });
 pickNext(); renderChapters();
 
 // 4) 入口：DOM 大按鈕。滑鼠／觸控／鍵盤（Enter、Space 由 button 原生處理）都走同一個 click；panel.start() 已開啟時直接忽略。
@@ -145,7 +168,7 @@ async function startWriting() {
     log(`start ${task.id} -> ${ok}`);
   } finally { opening = false; }
 }
-$('#startBtn').addEventListener('click', startWriting);
+$('#startBtn').addEventListener('click', () => { sound.unlock(); startWriting(); });
 $('#startBtn').addEventListener('pointerdown', e => e.preventDefault()); // 避免按鈕按壓把 pointerdown 傳給 canvas 後的焦點抖動
 // 禁止雙擊與選取；觸控上 click 只會來一次，不另外處理 touchstart 以免重複開啟
 $('#startBtn').addEventListener('dblclick', e => e.preventDefault());

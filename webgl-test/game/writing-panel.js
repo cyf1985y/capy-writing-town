@@ -5,6 +5,7 @@
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
 import { sha256Hex } from './content.js';
+import { bravo, flash } from './fx.js'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -25,7 +26,7 @@ export const QUIZ_CONFIG = Object.freeze({
 
 const CSS = `
 .wp-overlay{position:fixed;inset:0;z-index:1000;background:rgba(40,52,48,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:#344b45;touch-action:none;overscroll-behavior:contain}
-.wp-dialog{background:#fffdf7;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:18px 22px 20px;width:min(92vw,520px);max-height:96vh;overflow:auto;box-sizing:border-box;outline:none}
+.wp-dialog{position:relative;background:#fffdf7;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:18px 22px 20px;width:min(92vw,520px);max-height:96vh;overflow:auto;box-sizing:border-box;outline:none}
 .wp-head{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
 .wp-head h2{margin:0;font-size:22px}
 .wp-head .wp-zhuyin{font-size:16px;color:#6c7d77}
@@ -86,6 +87,7 @@ export class WritingPanel {
    * @param {(info)=>void} o.onDeferred  字形缺失：{taskId,char,attemptId,reason}
    * @param {(info)=>void} o.onCancel    取消：{taskId,char,attemptId}
    * @param {()=>void} o.onOpen / o.onClose  供大廳暫停／恢復 RAF
+   * @param {import('./fx.js').Sound} [o.sound]  v3：筆畫／完成音效
    */
   constructor(o) {
     injectCss();
@@ -150,7 +152,7 @@ export class WritingPanel {
           <button type="button" data-act="demo">看示範</button>
           <button type="button" data-act="retry">重試</button>
           <button type="button" data-act="cancel">取消</button>
-          <button type="button" data-act="next" class="wp-primary" hidden>下一個</button>
+          <button type="button" data-act="next" class="wp-primary" hidden>去小鎮看看 ▶</button>
         </div>
       </div>`;
     // 輸入隔離：覆層以下的 3D 場景收不到任何指標起始／移動／滾輪／鍵盤事件。
@@ -225,12 +227,14 @@ export class WritingPanel {
         s.drawnPaths.push(d.drawnPath.points.map(p => ({ x: p.x, y: p.y })));
         this._progress(s.totalStrokes, d.strokeNum + 1);
         this._setMsg(d.strokesRemaining ? `對了！還有 ${d.strokesRemaining} 筆` : '全部寫完了！', 'wp-ok');
+        this.o.sound?.stroke(d.strokeNum); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g);
         this.log(`correct stroke ${d.strokeNum + 1}/${s.totalStrokes}, points=${d.drawnPath.points.length}`);
       },
       onMistake: d => {
         s.mistakes += 1;
         if (QUIZ_CONFIG.showHintAfterMisses !== false && d.mistakesOnStroke >= QUIZ_CONFIG.showHintAfterMisses) s.hints += 1; // 此次會閃示範筆
         this._setMsg(d.isBackwards ? '方向反了，再試一次' : '再試一次，看看這一筆', 'wp-err');
+        this.o.sound?.mistake(); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g, 'fx-shake');
         this.log(`mistake on stroke ${d.strokeNum + 1} (onStroke=${d.mistakesOnStroke}, backwards=${d.isBackwards})`);
       },
       onComplete: summary => this._complete(summary),
@@ -249,9 +253,10 @@ export class WritingPanel {
     };
     this._setButtons({ demo: false, retry: false, cancel: false, next: false });
     this._setMsg('寫得好！正在保存…', 'wp-ok');
+    this.o.sound?.complete(); { const d = this.el?.querySelector('.wp-dialog'); if (d) bravo(d, s.mistakes === 0 ? '太棒了！' : '好棒！'); }
     try {
       await this.o.onArtifact?.(artifact);
-      this._setMsg(`「${s.char}」寫好了！`, 'wp-ok');
+      this._setMsg(`「${s.char}」寫好了！去小鎮看看卡比巴拉！`, 'wp-ok');
       this._setButtons({ demo: false, retry: true, cancel: false, next: true });
     } catch (err) {
       this.log('save failed: ' + err);
@@ -290,7 +295,7 @@ export class WritingPanel {
     }
     if (act === 'resave') {
       const b = this._btn('resave'); b.disabled = true;
-      try { await this.o.onArtifact?.(this._pendingArtifact); this._setMsg(`「${s.char}」寫好了！`, 'wp-ok'); b.textContent = '下一個'; b.dataset.act = 'next'; b.disabled = false; this._btn('retry').disabled = false; }
+      try { await this.o.onArtifact?.(this._pendingArtifact); this._setMsg(`「${s.char}」寫好了！`, 'wp-ok'); b.textContent = '去小鎮看看 ▶'; b.dataset.act = 'next'; b.disabled = false; this._btn('retry').disabled = false; }
       catch (err) { b.disabled = false; this._setMsg('保存仍失敗：' + (err?.message || err), 'wp-err'); }
       return;
     }
