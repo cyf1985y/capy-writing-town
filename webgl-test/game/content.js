@@ -1,4 +1,5 @@
-// 題庫與契約載入：核對 contract_v1.json.content.contentSha256，不符即拒載（不靜默繼續）。
+// 題庫與契約載入：核對契約 content.contentSha256，不符即拒載（不靜默繼續）。
+// 預設讀 contract_v1.json；game-v1.html 傳 contractFile 改讀 contract_v2.json（按課次章節）。
 // 不修改既有檔案；純瀏覽器 ESM。
 
 export async function sha256Hex(bytes) {
@@ -14,10 +15,11 @@ export async function fetchBytes(url) {
 
 /**
  * @param {string} base  專案根目錄相對於頁面的前綴，例如 '../'
+ * @param {string} contractFile  契約檔相對專案根目錄的路徑
  * @returns {Promise<{contract, content, contentSha256, writingTasks:Map, questions:Map}>}
  */
-export async function loadContract(base = '../') {
-  const contract = JSON.parse(new TextDecoder().decode(await fetchBytes(base + 'game/contract_v1.json')));
+export async function loadContract(base = '../', contractFile = 'game/contract_v1.json') {
+  const contract = JSON.parse(new TextDecoder().decode(await fetchBytes(base + contractFile)));
   const bytes = await fetchBytes(base + contract.content.file);
   const hash = await sha256Hex(bytes);
   if (hash !== contract.content.contentSha256) {
@@ -33,11 +35,12 @@ export async function loadContract(base = '../') {
   }
   const writingTasks = new Map(content.writing_tasks.map(t => [t.id, t]));
   const questions = new Map(content.questions.map(q => [q.id, q]));
-  // 白名單 ID 必須存在、type=write、lesson=1
+  // 白名單 ID 必須存在、type=write；課次須等於模式宣告的 lesson（未宣告的舊模式一律 lesson=1）
   for (const mode of Object.values(contract.modes)) {
+    const lesson = mode.lesson ?? 1;
     for (const id of mode.writingTaskIds) {
       const t = writingTasks.get(id);
-      if (!t || t.type !== 'write' || t.lesson !== 1) {
+      if (!t || t.type !== 'write' || t.lesson !== lesson) {
         const err = new Error(`INVALID_WHITELIST_TASK:${id}`);
         throw err;
       }

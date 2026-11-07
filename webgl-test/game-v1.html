@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>卡比巴拉溫泉町 · 寫字小鎮 v1</title>
+<title>卡比巴拉溫泉町 · 寫字小鎮 v1（按課次）</title>
 <style>
 body{font:16px system-ui,"Noto Sans TC",sans-serif;background:#eeeade;color:#344b45;margin:0;padding:16px 20px}
 h1{font-size:20px;margin:0 0 8px}
@@ -14,9 +14,16 @@ h1{font-size:20px;margin:0 0 8px}
 #status{margin:8px 0;min-height:1.4em}
 #status.err{color:#c92a2a;font-weight:600}
 #done{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0;min-height:40px}
+#chapters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+#chapters button{font:inherit;font-size:15px;padding:8px 12px;border-radius:12px;border:2px solid #b9c7bf;background:#fff;color:#344b45;cursor:pointer;touch-action:manipulation}
+#chapters button.active{background:#386c56;border-color:#386c56;color:#fff}
+#chapters button.done{border-color:#f08c00}
+#chapters button:disabled{opacity:.5;cursor:default}
+#chapters small{display:block;font-size:12px;opacity:.8}
 details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;border-radius:8px;padding:8px;max-height:220px;overflow:auto}
 </style>
-<h1>卡比巴拉溫泉町 · 寫字小鎮（第一版：上、下、手）</h1>
+<h1>卡比巴拉溫泉町 · 寫字小鎮（一上國語，按課次）</h1>
+<div id="chapters" aria-label="選課"></div>
 <div id="stage"><button id="startBtn" type="button" disabled>載入中…</button></div>
 <p id="status">載入契約與題庫…</p>
 <div id="done"></div>
@@ -32,7 +39,8 @@ import { Reward } from './game/reward.js';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 const PROFILE_ID = qs.get('profile') || 'local-child-1'; // 第一版單一本機 profile，無選擇 UI
-const MODE = 'demo3';
+// 章節＝契約 v2 的 lesson_N 模式；網址 ?lesson=N 優先，其次上次選的（localStorage），最後契約預設
+let MODE = 'demo3';
 const t0 = performance.now();
 const diag = { errors: [], events: [], loadMs: {}, measures: [] };
 window.addEventListener('error', e => diag.errors.push(e.message)); window.addEventListener('unhandledrejection', e => diag.errors.push(String(e.reason)));
@@ -41,10 +49,11 @@ const log = m => { diag.events.push({ t: Math.round(performance.now()), m }); $(
 
 // 1) 契約與題庫（SHA 不符即拒載，按鈕不啟用）
 let loaded;
-try { loaded = await loadContract('../'); diag.loadMs.contract = Math.round(performance.now() - t0); }
+try { loaded = await loadContract('../', 'game/contract_v2.json'); diag.loadMs.contract = Math.round(performance.now() - t0); }
 catch (err) { setStatus(describeLoadError(err), true); $('#startBtn').textContent = '無法開始'; throw err; }
 const { contract } = loaded;
-const demoIds = contract.modes.demo3.writingTaskIds;
+{ const want = qs.get('lesson') != null ? 'lesson_' + qs.get('lesson') : (localStorage.getItem('capy_lesson') || contract.chapters.defaultMode); MODE = contract.modes[want] ? want : contract.chapters.defaultMode; }
+let demoIds = contract.modes[MODE].writingTaskIds;
 
 // 2) 大廳
 let town;
@@ -68,7 +77,21 @@ diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifa
 store.writeSummary(); // localStorage 只是快取；每次載入以 IndexedDB 為準重寫（提交後、摘要前中斷的情況會在這裡自癒）
 const reward = new Reward({ town, lobby, contract, log });
 reward.applyState({ rewardCount: saved.ledger.length });
-for (const a of saved.artifacts.sort((x, y) => x.createdAt.localeCompare(y.createdAt))) $('#done').append(renderArtifactCard(a, { size: 72 }));
+function renderCards() { $('#done').replaceChildren(); for (const a of saved.artifacts.filter(a => demoIds.includes(a.taskId)).sort((x, y) => x.createdAt.localeCompare(y.createdAt))) $('#done').append(renderArtifactCard(a, { size: 72 })); }
+function renderChapters() {
+  $('#chapters').replaceChildren(...contract.chapters.order.map(id => {
+    const m = contract.modes[id], n = m.writingTaskIds.filter(t => saved.passedTaskIds.includes(t)).length, b = document.createElement('button');
+    b.type = 'button'; b.dataset.mode = id; b.className = (id === MODE ? 'active ' : '') + (n === m.writingTaskIds.length ? 'done' : '');
+    b.innerHTML = `${m.lesson ? '第' + m.lesson + '課 ' : ''}${m.title}<small>${n}／${m.writingTaskIds.length} 字</small>`;
+    b.addEventListener('click', () => switchChapter(id)); return b;
+  }));
+}
+function switchChapter(id) {
+  if (panel.isOpen() || !contract.modes[id]) return;
+  MODE = id; demoIds = contract.modes[id].writingTaskIds; store.mode = id; localStorage.setItem('capy_lesson', id);
+  queueIndex = 0; pickNext(); renderChapters(); renderCards(); setStatus(nextLabel()); log('chapter ' + id);
+}
+renderCards();
 
 // 4) 面板：完成一字 → store.commitCompletion（作品／進度／帳本同交易）→ 關閉面板後播回饋
 const session = { artifacts: [], deferred: [], cancels: [], commits: [] };
@@ -83,6 +106,7 @@ const panel = new WritingPanel({
     const effect = pendingEffect; pendingEffect = null;
     if (effect) await reward.play(effect);
     saved = await store.load(); diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifacts: saved.artifacts.length };
+    renderChapters();
     if (info.reason === 'done') pickNext();
     // 已領過獎的字再寫一次：只保存作品、沒有動畫，要在狀態列講清楚，孩子才不會以為壞了
     const note = effect && !effect.rewardNew ? `「${effect.char}」的獎勵之前已經領過，這次只保存作品，小鎮不會再有動畫。` : '';
@@ -104,9 +128,9 @@ if (qs.get('test') === '1') { const { installTestDriver } = await import('./game
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
-  return (allDone ? '三個字都寫好了，獎勵也都領過了！還可以再練習，但卡比巴拉不會再有動畫。' : '') + `下一個字：「${t.char}」（${t.id}）。按「開始寫字」。`;
+  return (allDone ? (contract.modes[MODE].completionLabel || '這一課的字都寫好了！') + '獎勵也都領過了，還可以再練習，但卡比巴拉不會再有動畫。' : '') + `下一個字：「${t.char}」（${t.id}）。按「開始寫字」。`;
 }
-pickNext();
+pickNext(); renderChapters();
 
 // 4) 入口：DOM 大按鈕。滑鼠／觸控／鍵盤（Enter、Space 由 button 原生處理）都走同一個 click；panel.start() 已開啟時直接忽略。
 let opening = false;
