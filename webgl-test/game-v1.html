@@ -26,6 +26,10 @@ h1{color:var(--ui-primaryDark,#E8665C)}
 #chapters button:disabled{opacity:.5;cursor:default}
 #chapters small{display:block;font-size:12px;opacity:.8}
 @media (max-width:600px){#chapters{display:none}body{padding:10px 8px}h1{font-size:15px;gap:6px}#albumBtn{font-size:14px;padding:4px 7px;white-space:nowrap}#muteBtn{font-size:18px}} /* 手機用地圖上的數字標記選課 */
+body.lobby2d #albumBtn,body.lobby2d #muteBtn{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:0;font-weight:700}
+body.lobby2d #albumBtn img,body.lobby2d #muteBtn img{width:44px;height:44px;display:block;filter:drop-shadow(0 2px 3px rgba(91,58,74,.25))}
+@media (max-width:600px){body.lobby2d #albumBtn img,body.lobby2d #muteBtn img{width:36px;height:36px}}
+body.lobby2d #stage{background:none}
 details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;border-radius:8px;padding:8px;max-height:220px;overflow:auto}
 </style>
 <h1><span id="gameTitle">卡比巴拉×小兔兔 · 甜點寫字樂園</span><button id="albumBtn" type="button" disabled>📖 圖鑑</button><button id="muteBtn" type="button" aria-label="聲音開關">🔊</button></h1>
@@ -37,16 +41,17 @@ details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;b
 <details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
 <script type="importmap">{"imports":{"three":"./vendor-v2/build/three.module.js","three/addons/":"./vendor-v2/examples/jsm/"}}</script>
 <script type="module">
-import { loadContract, describeLoadError } from './game/content.js?v=24';
-import { WritingPanel, renderArtifactCard } from './game/writing-panel.js?v=24';
-import { loadTown } from './game/town-loader.js?v=24';
-import { Lobby } from './game/lobby.js?v=24';
-import { Store, clearProfile } from './game/store.js?v=24';
-import { Reward } from './game/reward.js?v=24';
-import { Sound, Voice } from './game/fx.js?v=24';
-import { TownFx, residentNames } from './game/town-fx.js?v=24';
-import { Album } from './game/album.js?v=24';
-import { applyTheme, applyUiColors } from './game/theme.js?v=24';
+import { loadContract, describeLoadError } from './game/content.js?v=25';
+import { WritingPanel, renderArtifactCard } from './game/writing-panel.js?v=25';
+import { loadTown } from './game/town-loader.js?v=25';
+import { Lobby } from './game/lobby.js?v=25';
+import { Store, clearProfile } from './game/store.js?v=25';
+import { Reward } from './game/reward.js?v=25';
+import { Sound, Voice } from './game/fx.js?v=25';
+import { TownFx, residentNames } from './game/town-fx.js?v=25';
+import { Album } from './game/album.js?v=25';
+import { applyTheme, applyUiColors } from './game/theme.js?v=25';
+import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D } from './game/lobby2d.js?v=25';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 const PROFILE_ID = qs.get('profile') || 'local-child-1'; // 第一版單一本機 profile，無選擇 UI
@@ -60,15 +65,21 @@ const log = m => { diag.events.push({ t: Math.round(performance.now()), m }); $(
 
 // 1) 契約與題庫（SHA 不符即拒載，按鈕不啟用）
 let loaded;
-try { loaded = await loadContract('../', 'game/contract_v7.json'); diag.loadMs.contract = Math.round(performance.now() - t0); }
+try { loaded = await loadContract('../', 'game/contract_v8.json'); diag.loadMs.contract = Math.round(performance.now() - t0); }
 catch (err) { setStatus(describeLoadError(err), true); $('#startBtn').textContent = '無法開始'; throw err; }
 const { contract } = loaded;
 { const want = qs.get('lesson') != null ? 'lesson_' + qs.get('lesson') : (localStorage.getItem('capy_lesson') || contract.chapters.defaultMode); MODE = contract.modes[want] ? want : contract.chapters.defaultMode; }
 let demoIds = contract.modes[MODE].writingTaskIds;
 
-// 2) 大廳
+// 2) 大廳：v8 預設 2D 插畫小鎮（契約 lobby.mode）；?lobby=3d 切回 v7 的 3D 小鎮
+const LOBBY2D = (qs.get('lobby') || contract.lobby?.mode) !== '3d'; diag.lobby = LOBBY2D ? '2d' : '3d';
+const STAGE_AR = LOBBY2D ? contract.art2d.size[1] / contract.art2d.size[0] : 941 / 1672; // 高／寬
 let town;
-try {
+if (LOBBY2D) try {
+  town = await new Town2D({ contract, stage: $('#stage'), onStatus: setStatus }).load();
+  diag.loadMs.town = Math.round(performance.now() - t0);
+} catch (err) { setStatus('小鎮插畫載入失敗：' + err.message, true); throw err; }
+else try {
   // v4：預設讀減面＋WebP 版（game/assets，新檔）；?model=orig 讀原檔對照
 const MODEL = qs.get('model') === 'orig' ? null : (qs.get('test') === '1' && /^[\w.-]+\.glb$/.test(qs.get('glb') || '') ? './game/assets/' + qs.get('glb') : './game/assets/Town_blockout_lite.glb'); diag.model = MODEL || 'models/Town_v5/stage5/Town_blockout.glb';
   town = await loadTown({ container: $('#stage'), base: '../models/Town_v5/stage5/', glbUrl: MODEL, separateObjects: manifest => [...new Set([contract.reward.effect.npcInstance, ...residentNames(manifest)])], onStatus: setStatus, errors: diag.errors });
@@ -76,25 +87,26 @@ const MODEL = qs.get('model') === 'orig' ? null : (qs.get('test') === '1' && /^[
   diag.loadMs.town = Math.round(performance.now() - t0);
 } catch (err) { setStatus('場景載入失敗：' + err.message, true); throw err; }
 applyUiColors(contract.theme.ui); document.title = contract.theme.title; $('#gameTitle').textContent = contract.theme.title;
-diag.theme = applyTheme(town, contract.theme); // v5：甜點樂園燈光／色調映射／水色
-const lobby = new Lobby(town); lobby.start();
+if (!LOBBY2D) diag.theme = applyTheme(town, contract.theme); // v5：甜點樂園燈光／色調映射／水色（只有 3D 版）
+const lobby = LOBBY2D ? new Lobby2D(town) : new Lobby(town); lobby.start();
 // v3：寬度貼齊版面；v7：平板／桌機（寬 ≥ 600）再依螢幕高度限制，讓開始鈕、狀態列、字卡列都在同一頁
 const fitStage = () => {
   const st = $('#stage'); let w = Math.min(1600, st.clientWidth);
   if (innerWidth >= 600) {
     const top = st.getBoundingClientRect().top, below = $('#done').getBoundingClientRect().bottom - st.getBoundingClientRect().bottom + 14;
-    const wByH = Math.floor((innerHeight - top - below) * 1672 / 941);
+    const wByH = Math.floor((innerHeight - top - below) / STAGE_AR);
     if (wByH >= 520) w = Math.min(w, wByH);
   }
-  town.resize(w); diag.stageFit = { width: w, height: Math.round(w * 941 / 1672), viewport: [innerWidth, innerHeight] };
+  town.resize(w); diag.stageFit = { width: w, height: Math.round(w * STAGE_AR), viewport: [innerWidth, innerHeight] };
 };
 fitStage();
 window.addEventListener('resize', () => { fitStage(); lobby.requestFrame(); townFx?.placePins(); });
 let townFx = null;
 const sound = new Sound();
 const voice = new Voice(sound); // v4：唸字（瀏覽器內建語音）
-$('#muteBtn').textContent = sound.muted ? '🔇' : '🔊';
-$('#muteBtn').addEventListener('click', () => { sound.unlock(); sound.setMuted(!sound.muted); $('#muteBtn').textContent = sound.muted ? '🔇' : '🔊'; if (!sound.muted) sound.stroke(2); });
+const showMute = () => { if (LOBBY2D) $('#muteBtn').innerHTML = `<img alt="" src="${town.url(sound.muted ? 'btn_mute' : 'btn_sound')}">`; else $('#muteBtn').textContent = sound.muted ? '🔇' : '🔊'; };
+showMute(); if (LOBBY2D) { document.body.classList.add('lobby2d'); $('#albumBtn').innerHTML = `<img alt="" src="${town.url('btn_album')}">圖鑑`; }
+$('#muteBtn').addEventListener('click', () => { sound.unlock(); sound.setMuted(!sound.muted); showMute(); if (!sound.muted) sound.stroke(2); });
 diag.inventory = town.inventory;
 diag.navigation = performance.getEntriesByType('navigation')[0]?.toJSON?.() ?? null;
 
@@ -106,11 +118,11 @@ catch (err) { setStatus('存檔無法開啟（IndexedDB）：' + err.message, tr
 let saved = await store.load();
 diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifacts: saved.artifacts.length, summary: store.readSummary() };
 store.writeSummary(); // localStorage 只是快取；每次載入以 IndexedDB 為準重寫（提交後、摘要前中斷的情況會在這裡自癒）
-const reward = new Reward({ town, lobby, contract, log });
+const reward = LOBBY2D ? new Reward2D({ town, lobby, contract, log }) : new Reward({ town, lobby, contract, log });
 reward.applyState({ rewardCount: saved.ledger.length });
-townFx = new TownFx({ town, lobby, contract, reward, sound, stage: $('#stage'), log });
+townFx = new (LOBBY2D ? TownFx2D : TownFx)({ town, lobby, contract, reward, sound, stage: $('#stage'), log });
 diag.townFx = { tintedMaterials: townFx.tintedMaterials, residents: townFx.residents.map(r => r.name + '@' + townFx.zoneIds[r.zone]), props: townFx.props.length, color: townFx.setProgress(saved.passedTaskIds, { instant: true }) };
-const album = new Album({ town, lobby, townFx, contract, voice, sound, log }); // v4：卡比巴拉圖鑑（完成一課解鎖一隻）
+const album = new (LOBBY2D ? Album2D : Album)({ town, lobby, townFx, contract, voice, sound, log }); // v4：卡比巴拉圖鑑（完成一課解鎖一隻）
 function updateAlbumBtn() { const n = album.unseenCount(saved.passedTaskIds); if (n) $('#albumBtn').dataset.new = n; else delete $('#albumBtn').dataset.new; }
 album.onClose = updateAlbumBtn;
 $('#albumBtn').addEventListener('click', () => { if (panel.isOpen()) return; sound.unlock(); album.open(saved.passedTaskIds); updateAlbumBtn(); });
@@ -175,7 +187,7 @@ const panel = new WritingPanel({
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
-if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=24'); installTestDriver(panel); window.__game = { town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=25'); installTestDriver(panel); window.__game = { LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
@@ -206,7 +218,8 @@ $('#startBtn').addEventListener('dblclick', e => e.preventDefault());
 await new Promise(res => { const r0 = lobby.renderCount; const tick = () => (lobby.renderCount > r0 ? res() : requestAnimationFrame(tick)); tick(); });
 diag.loadMs.firstFrame = Math.round(performance.now() - t0);
 $('#startBtn').textContent = contract.entry.label; $('#startBtn').disabled = false;
-fitStage(); townFx.placePins(); // v7：章節列、按鈕文字都就位後再量一次版面 $('#albumBtn').disabled = false; updateAlbumBtn();
+fitStage(); townFx.placePins(); /* v7：章節列、按鈕文字都就位後再量一次版面 */
+$('#albumBtn').disabled = false; updateAlbumBtn(); // v8 修正：v7 這行被上一行的 // 註解吃掉，圖鑑鈕一直是停用
 setStatus(nextLabel());
 diag.loadMs.ready = Math.round(performance.now() - t0);
 // 測試自動跑（?test=1&autoplay=1）：用合成筆跡依序寫完 demo3 三字，供 headless 截圖與煙霧測試；不是真人操作

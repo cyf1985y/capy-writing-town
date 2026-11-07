@@ -1,0 +1,182 @@
+{
+ "capy_cocoa_idle": {
+  "file": "capy_cocoa_idle.webp",
+  "w": 298,
+  "h": 360
+ },
+ "capy_cocoa_happy": {
+  "file": "capy_cocoa_happy.webp",
+  "w": 320,
+  "h": 360
+ },
+ "capy_cocoa_surprised": {
+  "file": "capy_cocoa_surprised.webp",
+  "w": 288,
+  "h": 360
+ },
+ "capy_cocoa_wave": {
+  "file": "capy_cocoa_wave.webp",
+  "w": 306,
+  "h": 360
+ },
+ "bunny_a_idle": {
+  "file": "bunny_a_idle.webp",
+  "w": 276,
+  "h": 360
+ },
+ "bunny_a_happy": {
+  "file": "bunny_a_happy.webp",
+  "w": 280,
+  "h": 360
+ },
+ "bunny_a_surprised": {
+  "file": "bunny_a_surprised.webp",
+  "w": 268,
+  "h": 360
+ },
+ "bunny_a_wave": {
+  "file": "bunny_a_wave.webp",
+  "w": 268,
+  "h": 360
+ },
+ "capy_orange_idle": {
+  "file": "capy_orange_idle.webp",
+  "w": 286,
+  "h": 360
+ },
+ "capy_orange_happy": {
+  "file": "capy_orange_happy.webp",
+  "w": 315,
+  "h": 360
+ },
+ "capy_orange_surprised": {
+  "file": "capy_orange_surprised.webp",
+  "w": 283,
+  "h": 360
+ },
+ "capy_orange_wave": {
+  "file": "capy_orange_wave.webp",
+  "w": 298,
+  "h": 360
+ },
+ "bunny_b_idle": {
+  "file": "bunny_b_idle.webp",
+  "w": 238,
+  "h": 360
+ },
+ "bunny_b_happy": {
+  "file": "bunny_b_happy.webp",
+  "w": 248,
+  "h": 360
+ },
+ "bunny_b_surprised": {
+  "file": "bunny_b_surprised.webp",
+  "w": 239,
+  "h": 360
+ },
+ "bunny_b_wave": {
+  "file": "bunny_b_wave.webp",
+  "w": 247,
+  "h": 360
+ },
+ "pin_entry": {
+  "file": "pin_entry.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_cafe": {
+  "file": "pin_cafe.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_bridge": {
+  "file": "pin_bridge.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_plaza": {
+  "file": "pin_plaza.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_onsen": {
+  "file": "pin_onsen.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_sakura": {
+  "file": "pin_sakura.webp",
+  "w": 160,
+  "h": 160
+ },
+ "btn_album": {
+  "file": "btn_album.webp",
+  "w": 157,
+  "h": 160
+ },
+ "btn_sound": {
+  "file": "btn_sound.webp",
+  "w": 154,
+  "h": 160
+ },
+ "btn_mute": {
+  "file": "btn_mute.webp",
+  "w": 154,
+  "h": 160
+ },
+ "btn_back": {
+  "file": "btn_back.webp",
+  "w": 154,
+  "h": 160
+ },
+ "btn_home": {
+  "file": "btn_home.webp",
+  "w": 158,
+  "h": 160
+ },
+ "fx_star": {
+  "file": "fx_star.webp",
+  "w": 164,
+  "h": 160
+ },
+ "fx_heart": {
+  "file": "fx_heart.webp",
+  "w": 187,
+  "h": 160
+ },
+ "fx_sparkle": {
+  "file": "fx_sparkle.webp",
+  "w": 156,
+  "h": 160
+ },
+ "fx_candy": {
+  "file": "fx_candy.webp",
+  "w": 280,
+  "h": 160
+ },
+ "fx_petal": {
+  "file": "fx_petal.webp",
+  "w": 143,
+  "h": 160
+ },
+ "fx_macaron": {
+  "file": "fx_macaron.webp",
+  "w": 189,
+  "h": 160
+ },
+ "card_open": {
+  "file": "card_open.webp",
+  "w": 397,
+  "h": 600
+ },
+ "card_locked": {
+  "file": "card_locked.webp",
+  "w": 398,
+  "h": 600
+ },
+ "town_b": {
+  "file": "town_b.webp",
+  "w": 1536,
+  "h": 1024
+ }
+}
