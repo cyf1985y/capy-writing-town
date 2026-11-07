@@ -4,8 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=25';
-import { bravo, flash, spark } from './fx.js?v=25'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=26';
+import { bravo, flash, spark } from './fx.js?v=26';
+import { starsOf } from './stars.js?v=26'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -73,6 +74,20 @@ const CSS = `
 @keyframes wp-dash{to{stroke-dashoffset:-14}}
 .wp-say{font:inherit;font-size:20px;line-height:1;background:#fff;border:2px solid #F4B6A8;border-radius:10px;padding:3px 7px;cursor:pointer;touch-action:manipulation}
 .wp-card{display:inline-block;background:#fff;border:2px solid #F4B6A8;border-radius:10px;padding:6px}
+.wp-talk{display:flex;align-items:center;gap:10px;margin:4px 0 8px}
+.wp-buddy{flex:0 0 auto;width:clamp(58px,15vw,78px);text-align:center;transform-origin:50% 100%}
+.wp-buddy img{width:100%;aspect-ratio:1;object-fit:contain;display:block}
+.wp-buddy small{display:block;font-size:11px;color:#8a6f7c;line-height:1.1}
+.wp-buddy.wp-hop{animation:wp-hop .6s ease-out}
+@keyframes wp-hop{0%{transform:scale(1.08,.9)}35%{transform:translateY(-22%) scale(.95,1.06)}70%{transform:translateY(0) scale(1.08,.92)}100%{transform:none}}
+.wp-talk .wp-msg{flex:1;margin:0}
+.wp-buddy:not([hidden])+.wp-msg{position:relative;background:#fff;border:2px solid #F7C9C0;border-radius:14px;padding:8px 10px}
+.wp-buddy:not([hidden])+.wp-msg::before{content:'';position:absolute;left:-9px;top:50%;margin-top:-7px;border:7px solid transparent;border-right-color:#F7C9C0;border-left:0}
+.wp-stars{display:flex;justify-content:center;gap:6px;margin:-2px 0 8px;height:46px}
+.wp-stars>*{width:46px;height:46px;object-fit:contain;animation:wp-star .5s cubic-bezier(.3,1.6,.5,1) backwards}
+.wp-stars span{font-size:40px;line-height:46px;text-align:center;color:#FFB800}
+.wp-stars .off{filter:grayscale(1) opacity(.3)}
+@keyframes wp-star{0%{transform:scale(0) rotate(-40deg)}100%{transform:none}}
 `;
 
 function injectCss() {
@@ -187,7 +202,8 @@ export class WritingPanel {
           <div class="wp-target"></div>
           <svg class="wp-guide" aria-hidden="true"></svg>
         </div>
-        <div class="wp-msg">載入字形…</div>
+        <div class="wp-talk"><div class="wp-buddy" hidden><img alt=""><small></small></div><div class="wp-msg">載入字形…</div></div>
+        <div class="wp-stars" hidden></div>
         <div class="wp-actions">
           <button type="button" data-act="demo">看示範</button>
           <button type="button" data-act="retry">重試</button>
@@ -228,6 +244,28 @@ export class WritingPanel {
     this.el = el;
     document.addEventListener('keydown', this._onKey, true);
     el.querySelector('.wp-dialog').focus();
+    // v9 陪寫小夥伴：已解鎖的朋友坐在訊息旁邊，訊息變成牠說的話
+    this._buddy = this.o.buddy?.pick?.() ?? null;
+    if (this._buddy) { const b = el.querySelector('.wp-buddy'); b.hidden = false; b.querySelector('small').textContent = this._buddy.name; this._buddyPose('wave', 1300, true); s.buddy = this._buddy.name; }
+  }
+
+  /** v9：小夥伴換姿勢（ms 後回到 idle；hop＝跳一下） */
+  _buddyPose(pose, ms = 0, hop = false) {
+    const b = this._buddy, box = this.el?.querySelector('.wp-buddy'), img = box?.querySelector('img'); if (!b || !img) return;
+    img.src = b.urls[pose] ?? b.urls.idle;
+    if (hop) { box.classList.remove('wp-hop'); void box.offsetWidth; box.classList.add('wp-hop'); }
+    clearTimeout(this._buddyT); if (ms) this._buddyT = setTimeout(() => { if (this.el && this._buddy === b) img.src = b.urls.idle; }, ms);
+  }
+  /** v9：完成時的星星（依序彈出，每顆一個音） */
+  _showStars(n) {
+    const row = this.el?.querySelector('.wp-stars'); if (!row) return;
+    row.innerHTML = ''; row.hidden = false;
+    for (let i = 0; i < 3; i++) {
+      const e = this.o.starUrl ? Object.assign(document.createElement('img'), { src: this.o.starUrl, alt: '' }) : Object.assign(document.createElement('span'), { textContent: '★' });
+      if (i >= n) e.classList.add('off'); e.style.animationDelay = (0.25 + i * 0.28) + 's'; row.append(e);
+      if (i < n) setTimeout(() => this.o.sound?.stroke(4 + i * 2), 250 + i * 280);
+    }
+    row.setAttribute('aria-label', `${n} 顆星`);
   }
 
   _key(e) {
@@ -302,6 +340,7 @@ export class WritingPanel {
     this._progress(s.totalStrokes, 0);
     this._setButtons({ demo: true, retry: true, cancel: true, next: false });
     s.earlyHints = 0; this._guide(0);
+    { const st = this.el?.querySelector('.wp-stars'); if (st) st.hidden = true; } // v9：重寫時先收起星星
     s.leniencyByStroke = []; s.leniencyBoostAll = s.totalStrokes >= FAT_FINGER.minStrokes;
     s.writer.quiz({
       leniency: this._leniencyFor(0),
@@ -318,6 +357,7 @@ export class WritingPanel {
         this.o.sound?.stroke(d.strokeNum); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g);
         const tg = this.el?.querySelector('.wp-target'); if (tg) flash(tg, 'fx-squash');
         this._guide(d.strokesRemaining ? d.strokeNum + 1 : -1);
+        if (d.strokesRemaining) this._buddyPose('happy', 650, true);
         this.log(`correct stroke ${d.strokeNum + 1}/${s.totalStrokes}, points=${d.drawnPath.points.length}`);
       },
       onMistake: d => {
@@ -329,6 +369,7 @@ export class WritingPanel {
         }
         this._setMsg(d.isBackwards ? '方向反了，從橘色點開始寫' : d.mistakesOnStroke >= EARLY_HINT_AFTER ? '照著橘色箭頭寫這一筆' : '再試一次，從橘色點開始', 'wp-err');
         this.o.sound?.mistake(); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g, 'fx-shake');
+        this._buddyPose('surprised', 900);
         this.log(`mistake on stroke ${d.strokeNum + 1} (onStroke=${d.mistakesOnStroke}, backwards=${d.isBackwards})`);
       },
       onComplete: summary => this._complete(summary),
@@ -356,9 +397,13 @@ export class WritingPanel {
     this._setButtons({ demo: false, retry: false, cancel: false, next: false });
     this._setMsg('寫得好！正在保存…', 'wp-ok');
     this.o.sound?.complete(); setTimeout(() => { if (this.state === s) this._say('done'); }, 700); { const d = this.el?.querySelector('.wp-dialog'); if (d) bravo(d, s.mistakes === 0 ? '太棒了！' : '好棒！'); }
+    // v9：星星（由這次的 mistakes／hints 算）＋和之前最佳比較；小夥伴跳起來
+    const stars = starsOf(artifact), prevBest = this.o.bestStars?.(s.task.id) ?? 0;
+    s.stars = stars; s.prevBest = prevBest; this._showStars(stars); this._buddyPose('happy', 0, true); setTimeout(() => this._buddyPose('wave', 0, true), 900);
+    const starNote = prevBest && stars > prevBest ? `比上次多 ${stars - prevBest} 顆星！` : stars === 3 ? '三顆星！' : stars === 2 ? '下次不寫錯就有三顆星喔！' : '下次自己寫，星星會更多喔！';
     try {
       await this.o.onArtifact?.(artifact);
-      this._setMsg(`「${s.char}」寫好了！去小鎮看看卡比巴拉！`, 'wp-ok');
+      this._setMsg(`「${s.char}」寫好了！${starNote}${this.o.doneNote?.(s.task.id) ?? ''}`, 'wp-ok');
       this._setButtons({ demo: false, retry: true, cancel: false, next: true });
     } catch (err) {
       this.log('save failed: ' + err);

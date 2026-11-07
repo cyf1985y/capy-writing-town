@@ -4,7 +4,7 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=25';
+import { Album } from './album.js?v=26';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -18,6 +18,10 @@ const CSS = `
 .t2-char::before{content:'';position:absolute;inset:-12px}
 .t2-char img{display:block;height:100%;width:auto;transform-origin:50% 100%;animation:t2-bob 2.6s ease-in-out infinite;filter:drop-shadow(0 3px 2px rgba(91,58,74,.22))}
 .t2-char.hidden{display:none}
+.t2-char.shadow img{filter:brightness(0) opacity(.55) drop-shadow(0 0 2px #fff) drop-shadow(0 0 1px #fff);animation:none}
+.t2-char.shadow.near img{animation:t2-wiggle 1.3s ease-in-out infinite}
+.t2-char.shadow::after{content:'?';position:absolute;left:50%;top:-4%;transform:translate(-50%,-100%);font:900 clamp(12px,1.6vw,22px)/1 system-ui;color:#fff;background:rgba(91,58,74,.55);border-radius:50%;width:1.4em;height:1.4em;display:flex;align-items:center;justify-content:center}
+@keyframes t2-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
 .t2-char.pop img{animation:t2-pop .7s cubic-bezier(.3,1.6,.5,1)}
 .t2-char.hop img{animation:t2-hop .55s ease-out}
 .t2-char.squash img{animation:t2-squash .5s ease-out}
@@ -36,7 +40,8 @@ const CSS = `
 .t2-pin{position:absolute;z-index:150;transform:translate(-50%,-50%);width:clamp(48px,7.2%,92px);aspect-ratio:1;border:0;padding:0;background:none;cursor:pointer;touch-action:manipulation;transition:transform .15s,opacity .25s;-webkit-tap-highlight-color:transparent}
 .t2-pin img{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 4px rgba(91,58,74,.3))}
 .t2-pin b{position:absolute;left:-6%;top:-6%;min-width:42%;aspect-ratio:1;border-radius:50%;background:#fff;border:2px solid #F7C9C0;font:800 clamp(11px,1.15vw,16px)/1 system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);display:flex;align-items:center;justify-content:center;box-sizing:border-box}
-.t2-pin small{position:absolute;top:96%;left:50%;transform:translateX(-50%);font:700 clamp(9px,.9vw,12px) system-ui;color:#fff;background:rgba(91,58,74,.85);border-radius:6px;padding:0 4px;white-space:nowrap}
+.t2-pin small{position:absolute;z-index:1;top:96%;left:50%;transform:translateX(-50%);font:700 clamp(9px,.9vw,12px) system-ui;color:#fff;background:rgba(91,58,74,.85);border-radius:6px;padding:0 4px;white-space:nowrap}
+.t2-pin small i{font-style:normal;color:#FFD54A}
 .t2-pin.done b{background:var(--ui-accent,#FFA94D);border-color:#fff;color:#fff}
 .t2-pin.active{transform:translate(-50%,-50%) scale(1.18);z-index:160}
 .t2-pin.active b{background:var(--ui-primaryDark,#E8665C);border-color:#fff;color:#fff}
@@ -167,14 +172,20 @@ export class TownFx2D {
     const sat = this.zoneIds.map(z => Math.max(ratio[z] ?? 0, glob));
     const outside = Math.max(glob, sat.reduce((a, b) => a + b, 0) / sat.length);
     this._drawFog(sat, outside, instant);
-    // 朋友出現：剛解鎖的跳出來
-    const on = new Set(this.unlockedNames(passedTaskIds));
-    for (const c of this.town.chars.values()) {
-      const was = !c.el.classList.contains('hidden'), now = on.has(c.name);
-      c.el.classList.toggle('hidden', !now);
-      if (now && !was && !instant) this._anim(c, 'pop', 700);
+    // 朋友出現：剛解鎖的跳出來；v9 還沒解鎖但該課寫過一半的，先出現影子（剩 ≤ 3 字會晃）
+    const on = new Set(this.unlockedNames(passedTaskIds)), pv = this.contract.feedback?.friendPreview ?? { showAtRatio: 0.5, nearRemaining: 3 };
+    this.preview = {};
+    for (const r of this.contract.album.residents) {
+      if (on.has(r.object) || r.unlockLesson == null) continue;
+      const ids = this.contract.modes['lesson_' + r.unlockLesson]?.writingTaskIds || [], done = ids.filter(id => passed.has(id)).length;
+      if (ids.length && done / ids.length >= pv.showAtRatio) this.preview[r.object] = { remaining: ids.length - done, near: ids.length - done <= pv.nearRemaining };
     }
-    this.colorState = { saturation: sat.map(v => +v.toFixed(2)), outside: +outside.toFixed(2), visibleFriends: [...on] };
+    for (const c of this.town.chars.values()) {
+      const was = this._visible(c), now = on.has(c.name), pre = this.preview[c.name], wasShadow = c.el.classList.contains('shadow');
+      c.el.classList.toggle('hidden', !now && !pre); c.el.classList.toggle('shadow', !now && !!pre); c.el.classList.toggle('near', !now && !!pre?.near);
+      if (!instant && ((now && !was) || (pre && !wasShadow))) this._anim(c, 'pop', 700);
+    }
+    this.colorState = { saturation: sat.map(v => +v.toFixed(2)), outside: +outside.toFixed(2), visibleFriends: [...on], shadows: this.preview };
     return this.colorState;
   }
   _drawFog(sat, outside, instant) {
@@ -196,10 +207,11 @@ export class TownFx2D {
     cv.style.opacity = 1; old.style.opacity = 0; this.fogFront = 1 - this.fogFront;
     if (instant) requestAnimationFrame(() => requestAnimationFrame(() => { cv.style.transition = old.style.transition = ''; }));
   }
+  _visible(c) { return !c.el.classList.contains('hidden') && !c.el.classList.contains('shadow'); }
   _anim(c, cls, ms) { const el = c.el; el.classList.remove('pop', 'hop', 'squash'); void el.offsetWidth; el.classList.add(cls); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove(cls), ms); }
   _idleWave() {
     if (this.lobby.mode !== 'active' || this.busy || document.hidden) return;
-    const vis = [...this.town.chars.values()].filter(c => !c.el.classList.contains('hidden') && c.pose === 'idle');
+    const vis = [...this.town.chars.values()].filter(c => this._visible(c) && c.pose === 'idle');
     if (!vis.length) return;
     const c = vis[Math.floor(Math.random() * vis.length)];
     this.town.pose(c.name, Math.random() < 0.5 ? 'wave' : 'happy');
@@ -208,6 +220,10 @@ export class TownFx2D {
   _tap(e) {
     const el = e.target.closest?.('.t2-char'); if (!el) return null;
     const c = this.town.chars.get(el.dataset.name); this.sound?.unlock();
+    if (c.el.classList.contains('shadow')) { // v9：點影子＝預告
+      const n = this.preview?.[c.name]?.remaining ?? 0; this._anim(c, 'squash', 500); this.sound?.squeak(0.8);
+      this.voice?.say(`再寫${n}個字，我就來了！`); this.log('tap shadow ' + c.name + ' remaining=' + n); return c.name;
+    }
     this.town.pose(c.name, 'surprised'); this._anim(c, 'squash', 500);
     clearTimeout(c._pt); c._pt = setTimeout(() => { this.town.pose(c.name, 'happy'); c._pt = setTimeout(() => this.town.pose(c.name, 'idle'), 850); }, 450);
     const kind = c.sprite.startsWith('capy') ? 'capy' : 'bunny';
@@ -247,7 +263,7 @@ export class TownFx2D {
     return token === this.camToken ? this.flyHome() : false;
   }
   async flyToResident(name) {
-    const c = this.town.chars.get(name); if (!c || c.el.classList.contains('hidden')) return false;
+    const c = this.town.chars.get(name); if (!c || !this._visible(c)) return false;
     this._showPins(false); this.sound?.whoosh();
     if (!(await this._zoomTo([c.at[0], c.at[1] - 60], 2.4))) return false;
     const token = this.camToken; this.busy = true;
@@ -264,7 +280,7 @@ export class TownFx2D {
     g.style.left = ((center[0] - r) / this.town.W * 100) + '%'; g.style.top = ((center[1] - r) / this.town.H * 100) + '%';
     g.style.width = (2 * r / this.town.W * 100) + '%'; g.style.height = (2 * r / this.town.H * 100) + '%';
     g.classList.remove('on'); void g.offsetWidth; g.classList.add('on');
-    const vis = [...this.town.chars.values()].filter(c => !c.el.classList.contains('hidden'));
+    const vis = [...this.town.chars.values()].filter(c => this._visible(c));
     let rs = i >= 0 ? vis.filter(c => c.zone === this.zoneIds[i]) : vis;
     if (rs.length < 2) rs = [...vis].sort((a, b) => Math.hypot(a.at[0] - center[0], a.at[1] - center[1]) - Math.hypot(b.at[0] - center[0], b.at[1] - center[1])).slice(0, 2);
     rs.forEach((c, k) => setTimeout(() => { this.town.pose(c.name, 'happy'); this._anim(c, 'hop', 550); }, 100 + k * 180));
@@ -291,8 +307,8 @@ export class TownFx2D {
     for (const b of this.pins ?? []) {
       const l = +b.dataset.lesson, c = counts[l];
       b.classList.toggle('active', l === activeLesson); b.classList.toggle('done', !!c && c[0] === c[1]);
-      b.querySelector('small').textContent = c ? `${c[0]}/${c[1]}` : '';
-      b.title = c ? `${c[2]}（${c[0]}/${c[1]} 字）` : ''; b.setAttribute('aria-label', b.title);
+      b.querySelector('small').innerHTML = c ? `${c[0]}/${c[1]}` + (c[3] ? ` <i>★${c[3]}</i>` : '') : ''; /* v9：c[3]＝星星合計 */
+      b.title = c ? `${c[2]}（${c[0]}/${c[1]} 字${c[3] != null ? `，★${c[3]}/${c[4]}` : ''}）` : ''; b.setAttribute('aria-label', b.title);
     }
   }
   _showPins(on) { this.town.view.classList.toggle('t2-pins-hidden', !on); }
