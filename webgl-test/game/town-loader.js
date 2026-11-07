@@ -13,7 +13,7 @@ export const STAGE = 'stage5';
 
 async function readJSON(url) { const r = await fetch(url); if (!r.ok) throw new Error(url + ' HTTP ' + r.status); return r.json(); }
 
-export async function loadTown({ container, base = '../models/Town_v5/stage5/', separateObjects = [], onStatus = () => {}, errors = [] }) {
+export async function loadTown({ container, base = '../models/Town_v5/stage5/', separateObjects = [], glbUrl = null, onStatus = () => {}, errors = [] }) {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.debug.onShaderError = (gl, program, vs, fs) => { errors.push('Shader link failed: ' + gl.getProgramInfoLog(program) + ' | vertex: ' + gl.getShaderInfoLog(vs) + ' | fragment: ' + gl.getShaderInfoLog(fs)); onStatus('Shader 編譯失敗；此頁不得計為通過。'); };
   renderer.domElement.addEventListener('webglcontextlost', () => { errors.push('WebGL context lost'); onStatus('WebGL context 已遺失；請重新載入後重測。'); });
@@ -29,7 +29,7 @@ export async function loadTown({ container, base = '../models/Town_v5/stage5/', 
 
   onStatus('載入場景…');
   const manifest = await readJSON(base + 'scene_manifest.json');
-  const model = (await new GLTFLoader().loadAsync(base + 'Town_blockout.glb')).scene;
+  const model = (await new GLTFLoader().loadAsync(glbUrl || base + 'Town_blockout.glb')).scene; // v4：可改讀減面版（新檔），原檔只讀
   model.traverse(o => { if (o.isMesh) { o.castShadow = !o.name.startsWith('Continuous_river') && o.material.name !== 'Steam'; o.receiveShadow = true; } });
 
   // 水流／蒸氣 shader：與 town-v5.js 相同，時間由 uFlowTime 統一控制（lobby 用可暫停的效果時間）

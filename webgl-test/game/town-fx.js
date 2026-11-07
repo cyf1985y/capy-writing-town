@@ -5,7 +5,7 @@
 // - 擺設（P/S/I 開頭的 instanced 物件）寫完字時在該區彈一下；動畫結束後還原原始矩陣。
 // 存檔不新增欄位：彩度由 passedTaskIds 推導；反應動畫不寫存檔。
 import * as THREE from 'three';
-import { burst } from './fx.js';
+import { burst } from './fx.js?v=7';
 
 const ease = t => (t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 const WATER = new Set(['Blockout_water', 'Waterfall', 'River_foam', 'Steam']);
@@ -70,6 +70,9 @@ export class TownFx {
     this.t = 0;
     this._m = new THREE.Matrix4(); this._s = new THREE.Matrix4();
     lobby.animators.add(dt => { this._frame(dt); return true; });
+    // v4 效能：陰影圖只在有東西移動（跳、彈、獎勵位移）時重畫；平常呼吸起伏太小，沿用上一張陰影。
+    // 省下每幀一次的整鎮陰影繪製（三角面約減半）。
+    this.shadowMap = town.renderer.shadowMap; this.shadowMap.autoUpdate = false; this.shadowMap.needsUpdate = true; this._wasMoving = true; this.shadowUpdates = 0;
 
     // ---- 點擊卡比巴拉 ----
     town.renderer.domElement.addEventListener('pointerdown', e => this._tap(e));
@@ -145,6 +148,9 @@ export class TownFx {
       mm.copy(p.base); mm.multiply(sc.makeScale(1 + (s - 1) * 0.3, s, 1 + (s - 1) * 0.3)); p.mesh.setMatrixAt(p.instanceId, mm); touched.add(p.mesh);
     }
     for (const mesh of touched) mesh.instanceMatrix.needsUpdate = true;
+    const moving = touched.size > 0 || !!this.reward?.busy || this.residents.some(r => r.hop);
+    if (moving || this._wasMoving) { this.shadowMap.needsUpdate = true; this.shadowUpdates++; } // 動完再補一張，停在最終姿勢
+    this._wasMoving = moving;
   }
 
   hop(r, delay = 0, h = 1.1) { r.hop = { t0: this.t + delay, dur: 0.5, h }; setTimeout(() => this.sound?.squeak(0.9 + Math.random() * 0.3), delay * 1000); }

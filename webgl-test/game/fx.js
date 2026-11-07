@@ -35,6 +35,29 @@ export class Sound {
   whoosh() { this._tone(330, { dur: 0.5, type: 'sine', gain: 0.06, slide: 2 }); }
 }
 
+/** v4：瀏覽器內建語音唸字（不用音檔）。優先 zh-TW 語音；沒有中文語音時 say() 回傳 false，遊戲照常。靜音鍵同時關掉語音。 */
+export class Voice {
+  constructor(sound) {
+    this.sound = sound; this.ok = typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance === 'function';
+    this.voice = null; this.spoken = [];
+    if (this.ok) { this._pick(); try { speechSynthesis.addEventListener('voiceschanged', () => this._pick()); } catch { /* 舊版 Safari */ } }
+  }
+  _pick() {
+    const vs = speechSynthesis.getVoices(), L = v => (v.lang || '').replace('_', '-').toLowerCase();
+    this.voice = vs.find(v => L(v) === 'zh-tw') || vs.find(v => L(v) === 'zh-cn') || vs.find(v => L(v).startsWith('zh') && !/hk|yue/.test(L(v))) || null;
+  }
+  /** 必須至少一次在使用者手勢內呼叫（iOS 規定）；開始寫字按鈕的 click 會同步呼叫到這裡。 */
+  say(text, { rate = 0.75 } = {}) {
+    if (!this.ok || !text || this.sound?.muted) return false;
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text); u.lang = this.voice?.lang || 'zh-TW'; if (this.voice) u.voice = this.voice; u.rate = rate; u.pitch = 1.1;
+      speechSynthesis.speak(u); this.spoken.push(text); return true;
+    } catch { return false; }
+  }
+  stop() { try { if (this.ok) speechSynthesis.cancel(); } catch { /* ignore */ } }
+}
+
 const FX_CSS = `
 .fx-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:5}
 .fx-star{position:absolute;left:0;top:0;font-size:26px;line-height:1;will-change:transform,opacity;animation:fx-fly var(--d,900ms) cubic-bezier(.2,.7,.3,1) forwards}
@@ -44,6 +67,10 @@ const FX_CSS = `
 .fx-flash{animation:fx-flash 420ms ease-out}
 @keyframes fx-flash{0%{box-shadow:0 0 0 0 rgba(43,138,62,.0)}30%{box-shadow:0 0 0 10px rgba(43,138,62,.35)}100%{box-shadow:0 0 0 0 rgba(43,138,62,0)}}
 .fx-shake{animation:fx-shake 300ms}
+@keyframes fx-squash{0%{transform:scale(1)}35%{transform:scale(1.035,.965)}70%{transform:scale(.985,1.015)}100%{transform:scale(1)}}
+.fx-squash{animation:fx-squash 240ms ease-out}
+.fx-spark{position:absolute;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff 0,#ffd43b 45%,rgba(255,212,59,0) 70%);animation:fx-spark 520ms ease-out forwards}
+@keyframes fx-spark{0%{transform:translate(var(--x),var(--y)) scale(1.3);opacity:1}100%{transform:translate(calc(var(--x) + var(--dx)),calc(var(--y) + var(--dy))) scale(.2);opacity:0}}
 @keyframes fx-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 `;
 function injectCss() { if (document.getElementById('fx-style')) return; const s = document.createElement('style'); s.id = 'fx-style'; s.textContent = FX_CSS; document.head.append(s); }
@@ -77,3 +104,11 @@ export function bravo(container, text = '好棒！') {
 }
 
 export function flash(el, cls = 'fx-flash') { injectCss(); el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(() => el.classList.remove(cls), 450); }
+
+/** v4：手指寫字時的星光尾巴（px，相對 container） */
+export function spark(container, x, y) {
+  const l = layerIn(container), d = document.createElement('i'); d.className = 'fx-spark';
+  d.style.setProperty('--x', x + 'px'); d.style.setProperty('--y', y + 'px');
+  d.style.setProperty('--dx', (Math.random() - 0.5) * 18 + 'px'); d.style.setProperty('--dy', (Math.random() * 14 + 4) + 'px');
+  l.append(d); setTimeout(() => d.remove(), 560);
+}

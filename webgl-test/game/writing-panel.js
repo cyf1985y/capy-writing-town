@@ -4,8 +4,8 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js';
-import { bravo, flash } from './fx.js'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）
+import { sha256Hex } from './content.js?v=7';
+import { bravo, flash, spark } from './fx.js?v=7'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -23,6 +23,11 @@ export const QUIZ_CONFIG = Object.freeze({
   strokeWidth: 2,
   padding: 20,
 });
+
+// v4 起筆提示（面板自己的提示，不改 QUIZ_CONFIG，九字核對表的 quizConfig 維持一致）：
+// - 每一筆開始前在起點放一個會閃的點；
+// - 同一筆錯滿 EARLY_HINT_AFTER 次，就自動閃示範這一筆並畫出方向箭頭（Hanzi Writer 自己的提示仍在第 3 次）。
+export const EARLY_HINT_AFTER = 2;
 
 const CSS = `
 .wp-overlay{position:fixed;inset:0;z-index:1000;background:rgba(40,52,48,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:#344b45;touch-action:none;overscroll-behavior:contain}
@@ -44,6 +49,12 @@ const CSS = `
 .wp-progress{display:flex;gap:6px;justify-content:center;margin:0 0 6px}
 .wp-progress span{width:14px;height:14px;border-radius:50%;background:#e3ddd0;display:inline-block}
 .wp-progress span.wp-done{background:#386c56}.wp-progress span.wp-now{background:#d9480f}
+.wp-grid svg.wp-guide{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}
+.wp-guide .wp-dot{fill:#f08c00;stroke:#fff;animation:wp-pulse 1s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.wp-guide .wp-arrow{fill:none;stroke:#f08c00;stroke-linecap:round;stroke-linejoin:round;opacity:.85;stroke-dasharray:8 6;animation:wp-dash .8s linear infinite}
+@keyframes wp-pulse{0%,100%{transform:scale(.75);opacity:.95}50%{transform:scale(1.25);opacity:.6}}
+@keyframes wp-dash{to{stroke-dashoffset:-14}}
+.wp-say{font:inherit;font-size:20px;line-height:1;background:#fff;border:2px solid #c49a6c;border-radius:10px;padding:3px 7px;cursor:pointer;touch-action:manipulation}
 .wp-card{display:inline-block;background:#fff;border:2px solid #c49a6c;border-radius:10px;padding:6px}
 `;
 
@@ -98,6 +109,15 @@ export class WritingPanel {
     this.el = null;
     this.log = o.log || (() => {});
     this._onKey = e => this._key(e);
+    this.voice = o.voice || null; // v4：fx.js 的 Voice，可省略
+  }
+
+  /** v4：唸「字，詞的字」。在 start() 內同步呼叫（仍在按鈕手勢內），iOS 才肯出聲。 */
+  _say(kind = 'intro') {
+    const s = this.state; if (!s || !this.voice) return false;
+    const w = s.task.hint_word;
+    const text = kind === 'done' ? s.char : (w && w !== s.char ? `${s.char}，${w}的${s.char}` : s.char);
+    const ok = this.voice.say(text); this.log(`say(${kind}) ${text} -> ${ok}`); return ok;
   }
 
   isOpen() { return this.open; }
@@ -108,6 +128,7 @@ export class WritingPanel {
     this.open = true;
     this.state = { task, char: task.char, attemptId, index, total, drawnPaths: [], mistakes: 0, hints: 0, demoViews: 0, writer: null, done: false, startedAt: performance.now() };
     this._build();
+    this._say('intro');
     this.o.onOpen?.();
     try {
       const { data, sha256 } = await loadCharData(task.char, this.dataBase);
@@ -127,6 +148,7 @@ export class WritingPanel {
     if (!this.open) return;
     const s = this.state;
     try { s.writer?.cancelQuiz(); } catch { /* ignore */ }
+    this.voice?.stop();
     document.removeEventListener('keydown', this._onKey, true);
     this.el?.remove(); this.el = null;
     this.open = false;
@@ -141,11 +163,12 @@ export class WritingPanel {
     const el = document.createElement('div'); el.className = 'wp-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', `寫字：${s.char}`);
     el.innerHTML = `
       <div class="wp-dialog" tabindex="-1">
-        <div class="wp-head"><h2>${s.char}</h2><span class="wp-zhuyin">${s.task.zhuyin ?? ''}　${s.task.hint_word ?? ''}</span><span class="wp-hint">第 ${s.index + 1} / ${s.total} 字</span></div>
+        <div class="wp-head"><h2>${s.char}</h2><span class="wp-zhuyin">${s.task.zhuyin ?? ''}　${s.task.hint_word ?? ''}</span><button type="button" class="wp-say" aria-label="再唸一次">🔈</button><span class="wp-hint">第 ${s.index + 1} / ${s.total} 字</span></div>
         <div class="wp-progress"></div>
         <div class="wp-grid">
           <svg class="wp-lines" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="0" x2="50" y2="100" stroke="#e8c9a8" stroke-width=".6" stroke-dasharray="2 2"/><line x1="0" y1="50" x2="100" y2="50" stroke="#e8c9a8" stroke-width=".6" stroke-dasharray="2 2"/></svg>
           <div class="wp-target"></div>
+          <svg class="wp-guide" aria-hidden="true"></svg>
         </div>
         <div class="wp-msg">載入字形…</div>
         <div class="wp-actions">
@@ -161,6 +184,15 @@ export class WritingPanel {
     for (const type of ['pointerdown', 'pointermove', 'mousedown', 'mousemove', 'click', 'dblclick', 'contextmenu', 'wheel', 'touchstart', 'touchmove']) {
       el.addEventListener(type, e => { e.stopPropagation(); if (type === 'wheel' || type === 'contextmenu') e.preventDefault(); }, { passive: type !== 'wheel' && type !== 'contextmenu' });
     }
+    el.querySelector('.wp-say').addEventListener('click', () => this._say('intro'));
+    // v4：手指／滑鼠寫字時留下星光尾巴（純裝飾，不影響判定）
+    const grid = el.querySelector('.wp-grid'); let drawing = false, lastSpark = 0;
+    grid.addEventListener('pointerdown', () => { drawing = true; });
+    el.addEventListener('pointerup', () => { drawing = false; }); el.addEventListener('pointercancel', () => { drawing = false; });
+    grid.addEventListener('pointermove', e => {
+      if (!drawing || !this.state || this.state.done) return; const now = performance.now(); if (now - lastSpark < 28) return; lastSpark = now;
+      const r = grid.getBoundingClientRect(); spark(grid, e.clientX - r.left, e.clientY - r.top); this.state.sparks = (this.state.sparks ?? 0) + 1;
+    });
     el.querySelector('.wp-actions').addEventListener('click', e => { const b = e.target.closest('button[data-act]'); if (b) this._act(b.dataset.act); });
     document.body.append(el);
     this.el = el;
@@ -205,7 +237,27 @@ export class WritingPanel {
       onLoadCharDataError: err => this._deferred(err),
     });
     s.totalStrokes = data.strokes.length;
+    s.medians = data.medians; s.guideSize = size;
+    s.guideXf = HanziWriter.getScalingTransform(size, size, QUIZ_CONFIG.padding);
     this._progress(s.totalStrokes, 0);
+  }
+
+  /** v4：畫第 n 筆的起筆點；arrow=true 時再沿筆畫中線畫方向箭頭。n 超出範圍就清掉。 */
+  _guide(n, { arrow = false } = {}) {
+    const s = this.state, g = this.el?.querySelector('.wp-guide'); if (!g) return;
+    const med = s?.medians?.[n];
+    if (!med || s.done) { g.innerHTML = ''; s && (s.guide = null); return; }
+    const t = s.guideXf, sz = s.guideSize, k = 1 / t.scale, [x0, y0] = med[0];
+    let h = `<g transform="${t.transform}">`;
+    if (arrow && med.length > 1) {
+      const pts = med.map(([x, y]) => `${x},${y}`).join(' ');
+      const [ax, ay] = med[med.length - 1], [bx, by] = med[Math.max(0, med.length - 2)], a = Math.atan2(ay - by, ax - bx), L = 34 * k;
+      const w1 = `${ax - L * Math.cos(a - 0.5)},${ay - L * Math.sin(a - 0.5)}`, w2 = `${ax - L * Math.cos(a + 0.5)},${ay - L * Math.sin(a + 0.5)}`;
+      h += `<polyline class="wp-arrow" points="${pts}" stroke-width="${7 * k}" style="stroke-dasharray:${8 * k} ${6 * k}"/><polyline class="wp-arrow" points="${w1} ${ax},${ay} ${w2}" stroke-width="${7 * k}" style="stroke-dasharray:none"/>`;
+    }
+    h += `<circle class="wp-dot" cx="${x0}" cy="${y0}" r="${11 * k}" stroke-width="${3 * k}"/></g>`;
+    g.setAttribute('viewBox', `0 0 ${sz} ${sz}`); g.innerHTML = h;
+    s.guide = { stroke: n, arrow };
   }
 
   _startQuiz() {
@@ -216,6 +268,7 @@ export class WritingPanel {
     s.drawnPaths = []; s.mistakes = 0; s.hints = 0; s.demoViews = 0; s.done = false; s.quizStartedAt = performance.now(); s.quizRuns = (s.quizRuns ?? 0) + 1;
     this._progress(s.totalStrokes, 0);
     this._setButtons({ demo: true, retry: true, cancel: true, next: false });
+    s.earlyHints = 0; this._guide(0);
     s.writer.quiz({
       leniency: QUIZ_CONFIG.leniency,
       showHintAfterMisses: QUIZ_CONFIG.showHintAfterMisses,
@@ -228,12 +281,18 @@ export class WritingPanel {
         this._progress(s.totalStrokes, d.strokeNum + 1);
         this._setMsg(d.strokesRemaining ? `對了！還有 ${d.strokesRemaining} 筆` : '全部寫完了！', 'wp-ok');
         this.o.sound?.stroke(d.strokeNum); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g);
+        const tg = this.el?.querySelector('.wp-target'); if (tg) flash(tg, 'fx-squash');
+        this._guide(d.strokesRemaining ? d.strokeNum + 1 : -1);
         this.log(`correct stroke ${d.strokeNum + 1}/${s.totalStrokes}, points=${d.drawnPath.points.length}`);
       },
       onMistake: d => {
         s.mistakes += 1;
         if (QUIZ_CONFIG.showHintAfterMisses !== false && d.mistakesOnStroke >= QUIZ_CONFIG.showHintAfterMisses) s.hints += 1; // 此次會閃示範筆
-        this._setMsg(d.isBackwards ? '方向反了，再試一次' : '再試一次，看看這一筆', 'wp-err');
+        else if (d.mistakesOnStroke === EARLY_HINT_AFTER) { // v4：錯第 2 次就示範這一筆＋方向箭頭（算一次提示）
+          s.hints += 1; s.earlyHints += 1; this._guide(d.strokeNum, { arrow: true });
+          try { s.writer.highlightStroke(d.strokeNum); } catch { /* ignore */ }
+        }
+        this._setMsg(d.isBackwards ? '方向反了，從橘色點開始寫' : d.mistakesOnStroke >= EARLY_HINT_AFTER ? '照著橘色箭頭寫這一筆' : '再試一次，從橘色點開始', 'wp-err');
         this.o.sound?.mistake(); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g, 'fx-shake');
         this.log(`mistake on stroke ${d.strokeNum + 1} (onStroke=${d.mistakesOnStroke}, backwards=${d.isBackwards})`);
       },
@@ -243,17 +302,17 @@ export class WritingPanel {
 
   async _complete(summary) {
     const s = this.state;
-    s.done = true;
+    s.done = true; this._guide(-1);
     const artifact = {
       artifactId: uuid(), taskId: s.task.id, attemptId: s.attemptId, char: s.char,
       drawnPaths: s.drawnPaths, mistakes: s.mistakes, hints: s.hints + s.demoViews,
       createdAt: new Date().toISOString(), writerVersion: WRITER_VERSION, dataSha256: s.dataSha256,
       // 補充欄位（不在契約最小格式內，但對驗收有用）
-      meta: { dataVersion: DATA_VERSION, pointSpace: 'hanzi-writer character coords (1024 em, y-up)', totalStrokes: s.totalStrokes, durationMs: Math.round(performance.now() - s.quizStartedAt), panelOpenMs: Math.round(performance.now() - s.startedAt), attemptIndex: s.quizRuns, previousAttemptIds: s.previousAttemptIds, demoViews: s.demoViews, quizConfig: QUIZ_CONFIG },
+      meta: { dataVersion: DATA_VERSION, pointSpace: 'hanzi-writer character coords (1024 em, y-up)', totalStrokes: s.totalStrokes, durationMs: Math.round(performance.now() - s.quizStartedAt), earlyHints: s.earlyHints ?? 0, panelOpenMs: Math.round(performance.now() - s.startedAt), attemptIndex: s.quizRuns, previousAttemptIds: s.previousAttemptIds, demoViews: s.demoViews, quizConfig: QUIZ_CONFIG },
     };
     this._setButtons({ demo: false, retry: false, cancel: false, next: false });
     this._setMsg('寫得好！正在保存…', 'wp-ok');
-    this.o.sound?.complete(); { const d = this.el?.querySelector('.wp-dialog'); if (d) bravo(d, s.mistakes === 0 ? '太棒了！' : '好棒！'); }
+    this.o.sound?.complete(); setTimeout(() => { if (this.state === s) this._say('done'); }, 700); { const d = this.el?.querySelector('.wp-dialog'); if (d) bravo(d, s.mistakes === 0 ? '太棒了！' : '好棒！'); }
     try {
       await this.o.onArtifact?.(artifact);
       this._setMsg(`「${s.char}」寫好了！去小鎮看看卡比巴拉！`, 'wp-ok');
@@ -282,7 +341,7 @@ export class WritingPanel {
     if (act === 'retry') { if (!s.writer) return; s.writer.cancelQuiz(); this._setMsg(`再寫一次「${s.char}」`); s.nextAttemptReason = 'retry'; this._startQuiz(); return; }
     if (act === 'demo') {
       if (!s.writer) return;
-      s.writer.cancelQuiz(); s.nextAttemptReason = 'demo'; const demoViews = s.demoViews + 1;
+      s.writer.cancelQuiz(); s.nextAttemptReason = 'demo'; const demoViews = s.demoViews + 1; this._guide(-1);
       this._setButtons({ demo: false, retry: false, cancel: true, next: false });
       this._setMsg('看看怎麼寫…');
       await s.writer.animateCharacter();
