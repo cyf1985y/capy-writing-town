@@ -42,8 +42,10 @@ export class Lobby {
   _render() {
     const t = this.town;
     for (const u of t.waterUniforms) u.value = this.effectTime;
+    const sm = t.renderer.shadowMap, shadowFrame = sm.enabled && (sm.autoUpdate || sm.needsUpdate); // v6：這一幀會不會重畫陰影
     t.renderer.info.reset(); t.renderer.render(t.scene, t.camera);
     this.renderCount++; this.lastDrawCalls = t.renderer.info.render.calls; this.lastTriangles = t.renderer.info.render.triangles;
+    this.shadowFrames = (this.shadowFrames || 0) + (shadowFrame ? 1 : 0); this.sumDrawCalls = (this.sumDrawCalls || 0) + this.lastDrawCalls; this.maxDrawCalls = Math.max(this.maxDrawCalls || 0, this.lastDrawCalls);
   }
   _tick(now) {
     this.rafId = 0; this.rafCount++;
@@ -58,9 +60,11 @@ export class Lobby {
   }
   /** 量 N 毫秒內的 RAF 次數與 render 次數（不叫 FPS） */
   async measure(ms = 2000) {
-    const r0 = this.renderCount, f0 = this.rafCount, t0 = performance.now();
+    const r0 = this.renderCount, f0 = this.rafCount, t0 = performance.now(), s0 = this.shadowFrames || 0, d0 = this.sumDrawCalls || 0; this.maxDrawCalls = 0;
     await new Promise(res => setTimeout(res, ms));
+    const frames = this.renderCount - r0;
     const dt = (performance.now() - t0) / 1000;
-    return { mode: this.mode, seconds: +dt.toFixed(3), rafPerSec: +((this.rafCount - f0) / dt).toFixed(1), renderPerSec: +((this.renderCount - r0) / dt).toFixed(1), drawCalls: this.lastDrawCalls, triangles: this.lastTriangles };
+    return { mode: this.mode, seconds: +dt.toFixed(3), rafPerSec: +((this.rafCount - f0) / dt).toFixed(1), renderPerSec: +((this.renderCount - r0) / dt).toFixed(1), drawCalls: this.lastDrawCalls, triangles: this.lastTriangles,
+      avgDrawCalls: frames ? +(((this.sumDrawCalls || 0) - d0) / frames).toFixed(1) : null, maxDrawCalls: this.maxDrawCalls, shadowFrames: (this.shadowFrames || 0) - s0 }; // v6
   }
 }

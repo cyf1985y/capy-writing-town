@@ -5,12 +5,13 @@
 // - 擺設（P/S/I 開頭的 instanced 物件）寫完字時在該區彈一下；動畫結束後還原原始矩陣。
 // 存檔不新增欄位：彩度由 passedTaskIds 推導；反應動畫不寫存檔。
 import * as THREE from 'three';
-import { burst } from './fx.js?v=20';
-import { makeBunny, makeCarrot } from './characters.js?v=20';
+import { burst } from './fx.js?v=23';
+import { sharedAssets, instanced, EAR_POS } from './characters.js?v=23';
 
 const ease = t => (t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 const WATER = new Set(['Blockout_water', 'Waterfall', 'River_foam', 'Steam']);
 const floorOf = cfg => cfg?.floor ?? 0.22;
+const srgb = hex => new THREE.Color().setStyle(hex, THREE.LinearSRGBColorSpace);
 
 export function residentNames(manifest) {
   return manifest.architecture_instances.filter(a => a.building === 'Resident_static').map(a => a.object);
@@ -33,24 +34,39 @@ export class TownFx {
     this.nearestZone = p => { let bi = 0, bd = Infinity; this.centers.forEach((c, i) => { const d = (c.x - p.x) ** 2 + (c.z - p.z) ** 2; if (d < bd) { bd = d; bi = i; } }); return bi; };
 
     // ---- 卡比巴拉 ----
-    // v5：N101＝呆萌水豚（放大＋頭頂胡蘿蔔），N102＝長耳小兔兔（程序化模型取代原 Mesh，座標與朝向沿用）
+    // v5：N101＝呆萌水豚（放大＋頭頂胡蘿蔔），N102＝長耳小兔兔（程序化模型取代原 Mesh）。
+    // v6：兔子身體／左耳／右耳、胡蘿蔔各自全場共用一個 InstancedMesh；所有角色重新設定朝向（面向鏡頭）。
     const cc = contract.characters || {}; this.K = cc.scale ?? 1; const K = this.K;
     this.residents = residentNames(town.manifest).map((name, k) => {
       const mesh = town.separate.get(name); if (!mesh) return null;
       const pos = new THREE.Vector3().setFromMatrixPosition(mesh.userData.restMatrix);
       const kind = /_N102_/.test(name) && cc.N102 ? 'bunny' : 'capy';
-      const r = { name, mesh, kind, zone: this.nearestZone(pos), phase: k * 1.7, hop: null, tap: null, isRewardNpc: name === contract.reward.effect.npcInstance };
-      if (kind === 'bunny') {
-        const b = makeBunny(k % 2 ? { fur: '#FFE3EC', inner: '#FF9AA2' } : {}); r.bunny = b;
-        b.group.matrixAutoUpdate = false; b.group.name = 'bunny:' + name; town.scene.add(b.group);
-        mesh.visible = false; mesh.castShadow = false;
-        r.bunnyBase = null; // 第一次 _frame 時依鏡頭方向算（兔子臉朝玩家）
-      } else if (cc.N101) { r.carrot = makeCarrot(); r.carrot.name = 'carrot:' + name; town.scene.add(r.carrot); }
+      const r = { name, mesh, kind, k, zone: this.nearestZone(pos), phase: k * 1.7, hop: null, tap: null, isRewardNpc: name === contract.reward.effect.npcInstance };
+      if (kind === 'bunny') { mesh.visible = false; mesh.castShadow = false; }
       return r;
     }).filter(Boolean);
-    this._S = new THREE.Matrix4(); this._T = new THREE.Matrix4(); this._R = new THREE.Matrix4();
-    // 獎勵 NPC（水豚）位移時由 reward.js 設矩陣：套同樣的放大
-    if (reward && K !== 1) reward.decorate = m => m.clone().multiply(new THREE.Matrix4().makeScale(K, K, K));
+    const A = sharedAssets(), bunnies = this.residents.filter(r => r.kind === 'bunny'), capys = this.residents.filter(r => r.kind === 'capy');
+    bunnies.forEach((r, i) => { r.bi = i; });
+    if (bunnies.length) {
+      const furs = bunnies.map((r, i) => (i % 2 ? '#FFE3EC' : '#FFFFFF'));
+      this.bunnyBody = instanced(A.bunnyBody, bunnies.length, { colors: furs }); this.bunnyBody.name = 'bunnies:body';
+      this.bunnyEarL = instanced(A.bunnyEar, bunnies.length, { colors: furs }); this.bunnyEarL.name = 'bunnies:earL';
+      this.bunnyEarR = instanced(A.bunnyEar, bunnies.length, { colors: furs }); this.bunnyEarR.name = 'bunnies:earR';
+      town.scene.add(this.bunnyBody, this.bunnyEarL, this.bunnyEarR);
+    }
+    if (cc.N101 && capys.length) { capys.forEach((r, i) => { r.ci = i; }); this.carrots = instanced(A.carrot, capys.length); this.carrots.name = 'carrots'; town.scene.add(this.carrots); }
+    this._S = new THREE.Matrix4(); this._T = new THREE.Matrix4(); this._R = new THREE.Matrix4(); this._M2 = new THREE.Matrix4(); this._v = new THREE.Vector3();
+    A.material.userData.noTint = true;
+    // v6 甜點道具：巨型焦糖布丁、雙色馬卡龍坐墊（每種一個 InstancedMesh，不動）
+    this.desserts = [];
+    for (const [kind, geo] of [['pudding', A.pudding], ['macaron', A.macaron]]) {
+      const cfg = contract.props?.[kind]; if (!cfg?.at?.length) continue;
+      const im = instanced(geo, cfg.at.length, { colors: cfg.colors });
+      cfg.at.forEach(([x, y, z], i) => im.setMatrixAt(i, new THREE.Matrix4().makeRotationY(i * 1.3).scale(new THREE.Vector3(cfg.scale, cfg.scale, cfg.scale)).setPosition(x, y, z)));
+      im.instanceMatrix.needsUpdate = true; im.name = 'dessert:' + kind; town.scene.add(im); this.desserts.push(im);
+    }
+    // 獎勵 NPC（水豚）位移時由 reward.js 設矩陣：換成面向鏡頭的朝向＋放大（位置照 reward.js）
+    if (reward) { const npc = this.residents.find(r => r.isRewardNpc); reward.decorate = m => this._face(npc, m).multiply(new THREE.Matrix4().makeScale(K, K, K)); }
 
     // ---- 擺設（instanced）----
     this.props = [];
@@ -72,6 +88,12 @@ export class TownFx {
       uZoneFloor: { value: f0 },
       uPastel: { value: contract.theme?.pastelRemap?.strength ?? 0 },               // v5：0 = 原色
       uShadowTint: { value: new THREE.Vector3(...(contract.theme?.pastelRemap?.shadowTint ?? [0, 0, 0])) },
+      // v6 屋頂糖霜色（依區域）、牆面餅乾奶黃／牛奶白
+      // 注意：這段 shader 接在 sRGB 輸出轉換之後，顏色要用 sRGB 數值（setStyle 指定 Linear 表示不轉換）
+      uRoofC: { value: this.zoneIds.map(z => srgb(contract.theme?.roofByZone?.[z] ?? '#FF9AA2')) },
+      uWallC: { value: srgb(contract.theme?.wall?.biscuit ?? '#FFF0D4') },
+      uMilkC: { value: srgb(contract.theme?.wall?.milk ?? '#FFFDF9') },
+      uTimber: { value: contract.theme?.wall?.timberShade ?? 0.8 },
     };
     this.target = { s: this.zoneIds.map(() => f0), floor: f0 };
     this._installTint();
@@ -80,18 +102,23 @@ export class TownFx {
     const cam = town.camera;
     this.home = { pos: cam.position.clone(), target: town.controls.target.clone(), zoom: cam.zoom };
     this.offset = this.home.pos.clone().sub(this.home.target);
-    // v5：兔子的基準矩陣＝原位置＋面向鏡頭（±0.35 rad 變化），不沿用原水豚的朝向
-    const yaw0 = Math.atan2(this.offset.x, this.offset.z);
-    // 放大後兔子和附近水豚會重疊：離水豚 2.6 m 內就往外推（最多 1.3 m，只動兔子）
-    const capyPos = this.residents.filter(r => r.kind === 'capy').map(r => new THREE.Vector3().setFromMatrixPosition(r.mesh.userData.restMatrix));
-    this.residents.forEach((r, k) => {
-      if (r.kind !== 'bunny') return;
-      const p = new THREE.Vector3().setFromMatrixPosition(r.mesh.userData.restMatrix), push = new THREE.Vector3();
-      for (const c of capyPos) { const d = Math.hypot(p.x - c.x, p.z - c.z); if (d < 2.6 && Math.abs(p.y - c.y) < 1) push.add(new THREE.Vector3(p.x - c.x, 0, p.z - c.z).normalize().multiplyScalar(2.6 - d)); }
-      if (push.length() > 1.3) push.setLength(1.3);
-      r.bunnyNudge = +push.length().toFixed(2);
-      r.bunnyBase = new THREE.Matrix4().makeRotationY(yaw0 + (k % 3 - 1) * 0.35).setPosition(p.add(push));
+    // v6：所有角色面向鏡頭，左右交錯 ±facingSpread（約 31°），讓臉朝畫面左下或右下
+    const yaw0 = Math.atan2(this.offset.x, this.offset.z), spread = cc.facingSpread ?? 0.55;
+    this.residents.forEach((r, i) => { r.yaw = yaw0 + (r.kind === 'capy' ? (cc.N101?.frontYaw ?? 0) : 0) + (i % 2 ? spread : -spread); });
+    // 位置：契約指定的偏移（例如高台兔子避開樓梯）＋兔子離水豚 2.6 m 內往外推（最多 1.3 m）
+    const capyPos = capys.map(r => new THREE.Vector3().setFromMatrixPosition(r.mesh.userData.restMatrix));
+    this.residents.forEach(r => {
+      const p = new THREE.Vector3().setFromMatrixPosition(r.mesh.userData.restMatrix), off = cc.offsets?.[r.name];
+      r.offset = new THREE.Vector3(off?.[0] ?? 0, 0, off?.[1] ?? 0);
+      if (r.kind === 'bunny') {
+        const push = new THREE.Vector3();
+        for (const c of capyPos) { const d = Math.hypot(p.x - c.x, p.z - c.z); if (d < 2.6 && Math.abs(p.y - c.y) < 1) push.add(new THREE.Vector3(p.x - c.x, 0, p.z - c.z).normalize().multiplyScalar(2.6 - d)); }
+        if (push.length() > 1.3) push.setLength(1.3);
+        r.bunnyNudge = +push.length().toFixed(2); r.offset.add(push);
+      }
+      r.restFace = this._face(r, r.mesh.userData.restMatrix);
     });
+    if (reward) reward.applyState({ rewardCount: reward.state.atPool ? 1 : 0 }); // 讓獎勵 NPC 立刻套用新朝向
     this.camToken = 0;
 
     // ---- 每幀動畫（常駐）----
@@ -110,9 +137,17 @@ export class TownFx {
   // ======== 彩度 ========
   _installTint() {
     const u = this.u, mats = new Set();
-    this.town.scene.traverse(o => { if (o.isMesh) (Array.isArray(o.material) ? o.material : [o.material]).forEach(mt => { if (!WATER.has(mt.name)) mats.add(mt); }); });
+    this.town.scene.traverse(o => { if (o.isMesh) (Array.isArray(o.material) ? o.material : [o.material]).forEach(mt => { if (!WATER.has(mt.name) && !mt.userData.noTint) mats.add(mt); }); }); // v6：角色／道具材質不上區域色
     const frag = [
       // v5 馬卡龍色相偏移：依原色色相找最近的甜點色（草莓粉／奶油黃／薄荷綠／蘇打藍），越暗的顏色混越多，保留明暗
+      '#if MAT_KIND == 1',   // v6 屋頂：依最近區域換糖霜色，保留瓦片明暗
+      ' { vec3 c0=gl_FragColor.rgb; float l0=dot(c0,vec3(0.299,0.587,0.114)); float bd=1e9; vec3 rc=uRoofC[0];',
+      '   for(int i=0;i<5;i++){ vec2 dd=vZoneWorld.xz-uZoneC[i]; float d=dot(dd,dd); if(d<bd){ bd=d; rc=uRoofC[i]; } }',
+      '   gl_FragColor.rgb = rc*mix(0.78,1.06,smoothstep(0.06,0.5,l0)); }',
+      '#elif MAT_KIND == 2', // v6 牆面：深色木料→烤餅乾奶黃、淺色紙窗→牛奶白
+      ' { vec3 c0=gl_FragColor.rgb; float l0=dot(c0,vec3(0.299,0.587,0.114));',
+      '   gl_FragColor.rgb = mix(uWallC*uTimber, uMilkC, smoothstep(0.12,0.55,l0)) + uShadowTint*(1.0-smoothstep(0.0,0.45,l0)); }',
+      '#else',
       ' { vec3 c0=gl_FragColor.rgb; float mx=max(c0.r,max(c0.g,c0.b)), mn=min(c0.r,min(c0.g,c0.b)), dl=mx-mn+1e-5, h;',
       '   if(mx==c0.r) h=mod((c0.g-c0.b)/dl,6.0); else if(mx==c0.g) h=(c0.b-c0.r)/dl+2.0; else h=(c0.r-c0.g)/dl+4.0; h*=60.0;',
       '   vec3 P_PINK=vec3(1.0,0.718,0.698), P_CREAM=vec3(1.0,0.961,0.729), P_MINT=vec3(0.71,0.918,0.843), P_SODA=vec3(0.78,0.808,0.918);',
@@ -123,6 +158,7 @@ export class TownFx {
       '   vec3 tgt = pal*mix(0.62,1.0,smoothstep(0.0,0.7,l0));',
       '   float k = uPastel*(0.5+0.5*(1.0-smoothstep(0.3,0.85,l0)));',
       '   gl_FragColor.rgb = mix(c0, tgt, k) + uShadowTint*(1.0-smoothstep(0.0,0.45,l0)); }',
+      '#endif',
       ' float zw=0.0, zs=0.0, zg=0.0;',
       ' for(int i=0;i<5;i++){ vec2 dd=vZoneWorld.xz-uZoneC[i]; float w=exp(-dot(dd,dd)/98.0)+1e-4; zw+=w; zs+=w*uZoneS[i]; zg+=w*uZoneG[i]; }',
       ' zs/=zw; zg/=zw; float sat=max(uZoneFloor, zs);',
@@ -130,15 +166,20 @@ export class TownFx {
       ' gl_FragColor.rgb = mix(vec3(lum)*(0.9+0.1*sat), gl_FragColor.rgb, sat) + vec3(1.0,0.86,0.55)*zg*0.28;',
       ' #include <dithering_fragment>',
     ].join('\n');
+    const mk = this.contract.theme?.materialKinds || {}, kindOf = mt => (mk.roof || []).includes(mt.name) ? 1 : (mk.wall || []).includes(mt.name) ? 2 : 0;
+    this.materialKinds = { roof: 0, wall: 0, other: 0 };
     for (const mt of mats) {
+      const kind = kindOf(mt); this.materialKinds[['other', 'roof', 'wall'][kind]]++;
+      if (kind && mk.roughness) mt.roughness = mk.roughness; // 糖霜粉質感
       mt.onBeforeCompile = shader => {
         Object.assign(shader.uniforms, u);
+        shader.fragmentShader = '#define MAT_KIND ' + kind + '\n' + shader.fragmentShader;
         shader.vertexShader = 'varying vec3 vZoneWorld;\n' + shader.vertexShader.replace('#include <worldpos_vertex>',
           '#include <worldpos_vertex>\n vec4 zoneP=vec4(transformed,1.0);\n #ifdef USE_INSTANCING\n zoneP=instanceMatrix*zoneP;\n #endif\n vZoneWorld=(modelMatrix*zoneP).xyz;');
-        shader.fragmentShader = 'varying vec3 vZoneWorld; uniform vec2 uZoneC[5]; uniform float uZoneS[5]; uniform float uZoneG[5]; uniform float uZoneFloor; uniform float uPastel; uniform vec3 uShadowTint;\n' +
+        shader.fragmentShader = 'varying vec3 vZoneWorld; uniform vec2 uZoneC[5]; uniform float uZoneS[5]; uniform float uZoneG[5]; uniform float uZoneFloor; uniform float uPastel; uniform vec3 uShadowTint; uniform vec3 uRoofC[5]; uniform vec3 uWallC; uniform vec3 uMilkC; uniform float uTimber;\n' +
           shader.fragmentShader.replace('#include <dithering_fragment>', frag);
       };
-      mt.customProgramCacheKey = () => 'zone-tint-v5';
+      mt.customProgramCacheKey = () => 'zone-tint-v6-k' + kind;
       mt.needsUpdate = true;
     }
     this.tintedMaterials = mats.size;
@@ -166,10 +207,11 @@ export class TownFx {
     this.u.uZoneFloor.value += (this.target.floor - this.u.uZoneFloor.value) * k;
     const mm = this._m, sc = this._s;
     const K = this.K, T = this._T, Rm = this._R;
+    let bunnyTouched = false;
     for (const r of this.residents) {
       const t = this.t;
-      if (r.isRewardNpc && this.reward?.busy) { if (r.carrot) this._placeCarrot(r, r.mesh.matrixWorld, 1, 1, 0, true); continue; } // 獎勵位移中由 reward.js 控制
-      const base = r.isRewardNpc && this.reward ? (this.reward.state.atPool ? this.reward.end : this.reward.rest) : r.mesh.userData.restMatrix;
+      if (r.isRewardNpc && this.reward?.busy) { if (this.carrots) this._placeCarrot(r, r.mesh.matrixWorld, 1, 1, 0, true); continue; } // 獎勵位移中由 reward.js 控制
+      const base = r.isRewardNpc && this.reward ? this._face(r, this.reward.state.atPool ? this.reward.end : this.reward.rest) : r.restFace;
       const hopH = r.hop ? (() => { const h = (t - r.hop.t0) / r.hop.dur; if (h >= 1) { r.hop = null; return 0; } return h > 0 ? Math.sin(h * Math.PI) * r.hop.h : 0; })() : 0;
       if (r.kind === 'capy') {
         // 慢速果凍呼吸
@@ -181,7 +223,7 @@ export class TownFx {
         if (hopH > 0) { sy *= 1.06; sx *= 0.97; }
         mm.copy(base).multiply(sc.makeScale(K * sx, K * sy, K * sx)); mm.elements[13] += hopH;
         r.mesh.matrix.copy(mm); r.mesh.matrixWorld.copy(mm);
-        if (r.carrot) this._placeCarrot(r, base, sx, sy, hopH);
+        if (this.carrots) this._placeCarrot(r, base, sx, sy, hopH);
       } else {
         // 小兔兔：原地輕跳＋耳朵擺動；點擊高跳翻一圈
         const beat = Math.abs(Math.sin(t * 4.5 + r.phase));
@@ -190,13 +232,19 @@ export class TownFx {
           const h = (t - r.tap.t0) / 0.75;
           if (h >= 1) r.tap = null; else if (h > 0) { y += Math.sin(h * Math.PI) * 0.9; flip = Math.PI * 2 * ease(h); }
         }
-        mm.copy(r.bunnyBase || base).multiply(sc.makeScale(K, K, K)).multiply(T.makeTranslation(0, y + hopH / K, 0));
+        mm.copy(base).multiply(sc.makeScale(K, K, K)).multiply(T.makeTranslation(0, y + hopH / K, 0));
         if (flip) mm.multiply(T.makeTranslation(0, 0.7, 0)).multiply(Rm.makeRotationX(-flip)).multiply(T.makeTranslation(0, -0.7, 0));
-        const g = r.bunny.group; g.matrix.copy(mm); g.matrixWorldNeedsUpdate = true;
+        this.bunnyBody.setMatrixAt(r.bi, mm);
+        for (const [im, side] of [[this.bunnyEarL, -1], [this.bunnyEarR, 1]]) {
+          const e = EAR_POS(side), M2 = this._M2.copy(mm).multiply(T.makeTranslation(e[0], e[1], e[2])).multiply(Rm.makeRotationZ(-side * (0.12 + 0.22 * beat)));
+          M2.multiply(Rm.makeRotationX(-0.1 * beat)); im.setMatrixAt(r.bi, M2);
+        }
+        r.bunnyPos = (r.bunnyPos || new THREE.Vector3()).setFromMatrixPosition(mm); bunnyTouched = true;
         r.mesh.matrix.copy(base); r.mesh.matrixWorld.copy(base);
-        r.bunny.ears.forEach(e => { e.rotation.z = -e.userData.side * (0.12 + 0.22 * beat); e.rotation.x = -0.1 * beat; });
       }
     }
+    if (bunnyTouched) for (const im of [this.bunnyBody, this.bunnyEarL, this.bunnyEarR]) im.instanceMatrix.needsUpdate = true;
+    if (this.carrots) this.carrots.instanceMatrix.needsUpdate = true;
     const touched = new Set();
     for (const p of this.props) {
       if (!p.anim) continue;
@@ -208,21 +256,37 @@ export class TownFx {
     }
     for (const mesh of touched) mesh.instanceMatrix.needsUpdate = true;
     const moving = touched.size > 0 || !!this.reward?.busy || this.residents.some(r => r.hop || r.tap); // 呼吸、兔子輕跳不算（陰影沿用）
-    if (moving || this._wasMoving) { this.shadowMap.needsUpdate = true; this.shadowUpdates++; } // 動完再補一張，停在最終姿勢
+    // v6：動作中陰影隔一幀才重畫（30 Hz），動完再補一張停在最終姿勢；閒置時完全不重畫
+    this._frameNo = (this._frameNo || 0) + 1;
+    if ((moving && this._frameNo % 2 === 0) || (!moving && this._wasMoving)) { this.shadowMap.needsUpdate = true; this.shadowUpdates++; }
     this._wasMoving = moving;
   }
 
+  /** v6：角色朝向——位置取自 base（加契約偏移），旋轉改成面向鏡頭的 r.yaw */
+  _face(r, base) {
+    const p = this._v.setFromMatrixPosition(base).add(r.offset || new THREE.Vector3());
+    return new THREE.Matrix4().makeRotationY(r.yaw ?? 0).setPosition(p);
+  }
   /** 胡蘿蔔插在水豚頭頂（跟著呼吸與跳） */
   _placeCarrot(r, base, sx = 1, sy = 1, dy = 0, preScaled = false) {
-    const K = preScaled ? 1 : this.K, m = r.carrot.matrix;
+    const K = preScaled ? 1 : this.K, m = this._M2;
     m.copy(base).multiply(this._S.makeScale(K, K, K)).multiply(this._T.makeTranslation(0, 1.42 * sy, 0.05)).multiply(this._R.makeRotationZ(0.35));
-    m.elements[13] += dy; r.carrot.matrixWorld.copy(m);
+    m.elements[13] += dy; this.carrots.setMatrixAt(r.ci, m);
   }
-  /** 圖鑑近拍用：這隻角色要拍哪些物件 */
-  figureFor(object) { const r = this.residents.find(x => x.name === object); if (!r) return []; return r.kind === 'bunny' ? [r.bunny.group] : [r.mesh, r.carrot].filter(Boolean); }
+  /** 圖鑑近拍用：要拍的物件與取景框（實例化物件不能用整體包圍盒） */
+  figureFor(object) {
+    const r = this.residents.find(x => x.name === object); if (!r) return null;
+    const K = this.K, c = this._center(r), box = new THREE.Box3().setFromCenterAndSize(c, new THREE.Vector3(1.1 * K, (r.kind === 'bunny' ? 2.0 : 2.2) * K, 1.1 * K));
+    const inst = r.kind === 'bunny' ? [[this.bunnyBody, r.bi], [this.bunnyEarL, r.bi], [this.bunnyEarR, r.bi]] : this.carrots ? [[this.carrots, r.ci]] : [];
+    const saved = [], zero = new THREE.Matrix4().makeScale(0, 0, 0);
+    // 拍照時暫時把同一個 InstancedMesh 裡的其他實例縮成 0，免得鄰居的耳朵、胡蘿蔔入鏡
+    const isolate = () => { for (const [im, keep] of inst) { const arr = im.instanceMatrix.array.slice(); saved.push([im, arr]); for (let i = 0; i < im.count; i++) if (i !== keep) im.setMatrixAt(i, zero); im.instanceMatrix.needsUpdate = true; } };
+    const restore = () => { for (const [im, arr] of saved) { im.instanceMatrix.array.set(arr); im.instanceMatrix.needsUpdate = true; } saved.length = 0; };
+    return { objects: r.kind === 'bunny' ? [this.bunnyBody, this.bunnyEarL, this.bunnyEarR] : [r.mesh, this.carrots].filter(Boolean), box, isolate, restore };
+  }
   /** 角色螢幕上的中心點（世界座標） */
   _center(r) {
-    const p = r.kind === 'bunny' ? new THREE.Vector3().setFromMatrixPosition(r.bunny.group.matrix) : new THREE.Vector3().setFromMatrixPosition(r.mesh.matrixWorld);
+    const p = r.kind === 'bunny' ? (r.bunnyPos ? r.bunnyPos.clone() : new THREE.Vector3().setFromMatrixPosition(r.restFace)) : new THREE.Vector3().setFromMatrixPosition(r.mesh.matrixWorld);
     return p.add(new THREE.Vector3(0, 0.7 * this.K, 0));
   }
 
@@ -333,14 +397,15 @@ export class TownFx {
         const p = this.toScreenHome(this.centers[i].clone().add(new THREE.Vector3(0, 3, 0)));
         const shared = Object.values(this.lessonToZone).filter(v => v === this.zoneIds[i]).length > 1;
         const n = (seen[i] = (seen[i] ?? -1) + 1);
-        const dx = sr.width < 600 ? 26 : 30; /* v5：兩顆共用一區的標記中心距 ≥ 52 px，48 px 熱區不重疊 */ x = p.x + (shared ? (n ? dx : -dx) : 0); y = p.y;
+        const dx = sr.width < 600 ? 29 : 32, dy = sr.width < 600 ? 22 : 24; /* v6：共用一區時第一顆（數）往左下、第二顆往右上，中心距 ≥ 70 px */ x = p.x + (shared ? (n ? dx : -dx) : 0); y = p.y + (shared ? (n ? -dy : dy) : 0);
       }
       b._x = x; b._y = y;
     }
     // v5：48 px 熱區不重疊——中心距小於 52 px 的兩顆互相推開（螢幕座標，只影響標記位置）
     for (let it = 0; it < 8; it++) for (let i = 0; i < this.pins.length; i++) for (let j = i + 1; j < this.pins.length; j++) {
       const a = this.pins[i], c = this.pins[j], dx = c._x - a._x, dy = c._y - a._y, d = Math.hypot(dx, dy) || 0.01;
-      if (d < 52) { const k = (52 - d) / 2 / d; a._x -= dx * k; a._y -= dy * k; c._x += dx * k; c._y += dy * k; }
+      const need = (a.dataset.lesson === '0' && c.dataset.lesson === '1') ? 70 : 52;
+      if (d < need) { const k = (need - d) / 2 / d; a._x -= dx * k; a._y -= dy * k; c._x += dx * k; c._y += dy * k; }
     }
     for (const b of this.pins) { b.style.left = Math.round(b._x) + 'px'; b.style.top = Math.round(Math.max(24, b._y)) + 'px'; }
   }

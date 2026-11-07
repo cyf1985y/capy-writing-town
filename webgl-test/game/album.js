@@ -49,8 +49,8 @@ export class Album {
   /** 用遊戲鏡頭方向近拍一隻卡比巴拉（全彩），回傳 dataURL */
   _snap(object) {
     if (this.thumbs.has(object)) return this.thumbs.get(object);
-    const figs = this.townFx.figureFor?.(object) ?? [this.town.separate.get(object)].filter(Boolean); if (!figs.length) return ''; // v5：兔子拍程序化模型，水豚連胡蘿蔔
-    const fbox = new THREE.Box3(); figs.forEach(f => { f.updateWorldMatrix?.(false, true); fbox.expandByObject(f); });
+    const fig = this.townFx.figureFor?.(object); if (!fig) return ''; // v6：{objects, box}；兔子、胡蘿蔔是全場共用的 InstancedMesh，取景框由 town-fx 算
+    const figs = fig.objects, fbox = fig.box;
     const { renderer, scene, camera } = this.town, canvas = renderer.domElement;
     const box = fbox, c = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
     const cam = camera.clone(), off = camera.position.clone().sub(this.townFx.home.target);
@@ -62,7 +62,7 @@ export class Album {
     figs.forEach(f => f.traverse(o => o.layers.enable(L))); cam.layers.set(L);
     const bg = scene.background; scene.background = new THREE.Color('#00ff00'); // v5：去背用純綠（白兔、奶油色都離它很遠）
     const u = this.townFx.u, floor0 = u.uZoneFloor.value; u.uZoneFloor.value = 1; // 圖鑑裡一律全彩
-    renderer.render(scene, cam);
+    fig.isolate?.(); renderer.render(scene, cam); fig.restore?.();
     scene.background = bg; figs.forEach(f => f.traverse(o => o.layers.disable(L))); lights.forEach(o => o.layers.disable(L));
     const side = Math.min(canvas.width, canvas.height), out = document.createElement('canvas'); out.width = out.height = 160;
     const g2 = out.getContext('2d', { willReadFrequently: true });
