@@ -1,0 +1,676 @@
+{
+  "contractVersion": "7.0",
+  "generated": "2026-11-07",
+  "content": {
+    "file": "docs/一上國語題庫.json",
+    "contentVersion": "1.1",
+    "contentSha256": "b4bb4f1663e76503a9276ead3a40a53cbb2ed87c2763426f72d60365930a1b94",
+    "onMismatch": "reject_load",
+    "migrationPolicy": "rewardKey 不含 contentVersion；題庫小改版（同 lesson、同 taskId）沿用舊進度；taskId 變動需人工遷移表"
+  },
+  "modes": {
+    "demo3": {
+      "writingTaskIds": [
+        "W0018",
+        "W0019",
+        "W0012"
+      ],
+      "questionIds": [],
+      "completionLabel": null,
+      "showLessonComplete": false
+    },
+    "lesson1_full": {
+      "writingTaskIds": [
+        "W0011",
+        "W0012",
+        "W0013",
+        "W0014",
+        "W0015",
+        "W0016",
+        "W0017",
+        "W0018",
+        "W0019"
+      ],
+      "questionIds": [
+        "Q0011",
+        "Q0012",
+        "Q0013",
+        "Q0014",
+        "Q0015",
+        "Q0016",
+        "Q0017",
+        "Q0018",
+        "Q0019"
+      ],
+      "completionRule": "all writingTaskIds status=passed AND every questionId answered correctly at least once",
+      "deferredCountsAsPassed": false,
+      "requiresGlyphReviewPass": true
+    },
+    "lesson_0": {
+      "lesson": 0,
+      "title": "數字（首冊）",
+      "chars": "一二三四五六七八九十",
+      "writingTaskIds": [
+        "W0001",
+        "W0002",
+        "W0003",
+        "W0004",
+        "W0005",
+        "W0006",
+        "W0007",
+        "W0008",
+        "W0009",
+        "W0010"
+      ],
+      "questionIds": [],
+      "completionLabel": "數字（首冊）都寫好了！",
+      "showLessonComplete": true,
+      "deferredCountsAsPassed": false,
+      "glyphReviewStatus": "pending",
+      "releaseNote": "九字核對表人工欄位仍 pending；此模式僅供親友測試，非正式發布"
+    },
+    "lesson_1": {
+      "lesson": 1,
+      "title": "拍拍手",
+      "chars": "拍手左右你他也上下",
+      "writingTaskIds": [
+        "W0011",
+        "W0012",
+        "W0013",
+        "W0014",
+        "W0015",
+        "W0016",
+        "W0017",
+        "W0018",
+        "W0019"
+      ],
+      "questionIds": [],
+      "completionLabel": "第1課「拍拍手」的字都寫好了！",
+      "showLessonComplete": true,
+      "deferredCountsAsPassed": false,
+      "glyphReviewStatus": "pending",
+      "releaseNote": "九字核對表人工欄位仍 pending；此模式僅供親友測試，非正式發布"
+    },
+    "lesson_2": {
+      "lesson": 2,
+      "title": "這是誰的",
+      "chars": "這是誰的我分好了啊多個",
+      "writingTaskIds": [
+        "W0020",
+        "W0021",
+        "W0022",
+        "W0023",
+        "W0024",
+        "W0025",
+        "W0026",
+        "W0027",
+        "W0028",
+        "W0029",
+        "W0030"
+      ],
+      "questionIds": [],
+      "completionLabel": "第2課「這是誰的」的字都寫好了！",
+      "showLessonComplete": true,
+      "deferredCountsAsPassed": false,
+      "glyphReviewStatus": "pending",
+      "releaseNote": "九字核對表人工欄位仍 pending；此模式僅供親友測試，非正式發布"
+    },
+    "lesson_3": {
+      "lesson": 3,
+      "title": "秋千",
+      "chars": "秋高朋千山友和到們玩大起陪海",
+      "writingTaskIds": [
+        "W0031",
+        "W0032",
+        "W0033",
+        "W0034",
+        "W0035",
+        "W0036",
+        "W0037",
+        "W0038",
+        "W0039",
+        "W0040",
+        "W0041",
+        "W0042",
+        "W0043",
+        "W0044"
+      ],
+      "questionIds": [],
+      "completionLabel": "第3課「秋千」的字都寫好了！",
+      "showLessonComplete": true,
+      "deferredCountsAsPassed": false,
+      "glyphReviewStatus": "pending",
+      "releaseNote": "九字核對表人工欄位仍 pending；此模式僅供親友測試，非正式發布"
+    },
+    "lesson_4": {
+      "lesson": 4,
+      "title": "大個子，小個子",
+      "chars": "子小課兩人拉看找隻青蛙開心",
+      "writingTaskIds": [
+        "W0045",
+        "W0046",
+        "W0047",
+        "W0048",
+        "W0049",
+        "W0050",
+        "W0051",
+        "W0052",
+        "W0053",
+        "W0054",
+        "W0055",
+        "W0056",
+        "W0057"
+      ],
+      "questionIds": [],
+      "completionLabel": "第4課「大個子，小個子」的字都寫好了！",
+      "showLessonComplete": true,
+      "deferredCountsAsPassed": false,
+      "glyphReviewStatus": "pending",
+      "releaseNote": "九字核對表人工欄位仍 pending；此模式僅供親友測試，非正式發布"
+    },
+    "lesson_5": {
+      "lesson": 5,
+      "title": "比一比",
+      "chars": "比門裡外有什麼不同早晚王主又",
+      "writingTaskIds": [
+        "W0058",
+        "W0059",
+        "W0060",
+        "W0061",
+        "W0062",
+        "W0063",
+        "W0064",
+        "W0065",
+        "W0066",
+        "W0067",
+        "W0068",
+        "W0069",
+        "W0070",
+        "W0071"
+      ],
+      "questionIds": [],
+      "completionLabel": "第5課「比一比」的字都寫好了！",
+      "showLessonComplete": true,
+      "deferredCountsAsPassed": false,
+      "glyphReviewStatus": "pending",
+      "releaseNote": "九字核對表人工欄位仍 pending；此模式僅供親友測試，非正式發布"
+    },
+    "lesson_6": {
+      "lesson": 6,
+      "title": "小路",
+      "chars": "路長白花紅走在向說朵從頭那",
+      "writingTaskIds": [
+        "W0072",
+        "W0073",
+        "W0074",
+        "W0075",
+        "W0076",
+        "W0077",
+        "W0078",
+        "W0079",
+        "W0080",
+        "W0081",
+        "W0082",
+        "W0083",
+        "W0084"
+      ],
+      "questionIds": [],
+      "completionLabel": "第6課「小路」的字都寫好了！",
+      "showLessonComplete": true,
+      "deferredCountsAsPassed": false,
+      "glyphReviewStatus": "pending",
+      "releaseNote": "九字核對表人工欄位仍 pending；此模式僅供親友測試，非正式發布"
+    }
+  },
+  "whitelist": {
+    "questionTypes": [
+      "write",
+      "zhuyin_to_char"
+    ],
+    "note": "未列題型不進抽題池、不列入完成條件"
+  },
+  "entry": {
+    "kind": "dom_button",
+    "label": "開始寫字",
+    "hotspot": "Onsen_inn",
+    "hotspotModule": "Onsen_inn_B102_73",
+    "cameraLocked": false,
+    "cameraPolicy": {
+      "userControl": "none（不能旋轉、平移、縮放）",
+      "auto": "寫完字或切課時，程式把鏡頭飛到該課區域（約 0.8 秒），停約 2 秒後飛回全景"
+    }
+  },
+  "reward": {
+    "rewardKey": "{profileId}:{curriculumId}:{taskId}:{rewardKind}",
+    "curriculumId": "grade1_vol1",
+    "kinds": [
+      "char_written"
+    ],
+    "effect": {
+      "npcInstance": "Resident_static_N101_160",
+      "from_uvz": [
+        15.2,
+        10.2,
+        3.6
+      ],
+      "to_uvz": [
+        15,
+        12,
+        3.6
+      ],
+      "fallback_to_uvz": [
+        15,
+        11.4,
+        3.6
+      ],
+      "forbidden_to_uvz": [
+        [
+          17,
+          9.8,
+          3.6
+        ]
+      ],
+      "steam": "enable_flag_pool_L205_147"
+    },
+    "replayPolicy": "同 rewardKey 已 committed 則不重發；重開由存檔推導固定終點"
+  },
+  "storage": {
+    "primary": "IndexedDB",
+    "db": "capy_writing",
+    "transactionScope": [
+      "progress",
+      "artifacts",
+      "rewardLedger"
+    ],
+    "cache": "localStorage summary only",
+    "progressRecord": {
+      "schemaVersion": 1,
+      "fields": [
+        "schemaVersion",
+        "contentVersion",
+        "contentSha256",
+        "profileId",
+        "mode",
+        "taskId",
+        "attemptId",
+        "status",
+        "passedAt",
+        "hintCount",
+        "mistakeCount",
+        "artifactId",
+        "artifactSaveStatus",
+        "rewardKey",
+        "rewardCommittedAt"
+      ],
+      "status": [
+        "unseen",
+        "in_progress",
+        "deferred",
+        "passed"
+      ]
+    },
+    "artifactRecord": {
+      "fields": [
+        "artifactId",
+        "profileId",
+        "taskId",
+        "attemptId",
+        "char",
+        "drawnPaths",
+        "createdAt",
+        "writerVersion",
+        "dataSha256"
+      ],
+      "note": "drawnPaths 為 Hanzi Writer quiz 回呼的原始軌跡，不存標準字"
+    },
+    "rewardLedger": {
+      "fields": [
+        "rewardKey",
+        "taskId",
+        "committedAt"
+      ]
+    },
+    "recovery": "pending→committed；重開以 rewardLedger 去重；寫入失敗要顯示並可重試"
+  },
+  "zones": {
+    "ids": [
+      "lower_right_entry",
+      "west_cafe",
+      "river_bridges",
+      "central_plaza",
+      "upper_right_onsen"
+    ],
+    "sharedPolicy": "L204 岩岸、L201 大橋、I023 木橋、Paving_0/1/2、河流、地形、12 片蒸氣 → shared；effectOwner 另定",
+    "lessonToZone": {
+      "0": "lower_right_entry",
+      "1": "lower_right_entry",
+      "2": "west_cafe",
+      "3": "river_bridges",
+      "4": "central_plaza",
+      "5": "upper_right_onsen",
+      "6": "global_sakura"
+    },
+    "entryTwoLayerRule": "任一完成即彩色，不灰回去，兩個徽章區分",
+    "color": {
+      "rule": "各區彩度＝該區對應課次的已通過字數比例（由 progress.passedTaskIds 推導，重開一致，不另存）",
+      "floor": 0.72,
+      "globalLesson": 6,
+      "globalRule": "第 6 課進度把全鎮最低彩度由 0.22 拉到 1（全鎮綻放）",
+      "blend": "以區域中心做高斯權重平滑混合（σ≈7 m），避免地形上出現硬邊",
+      "exclude": [
+        "Blockout_water",
+        "Waterfall",
+        "River_foam",
+        "Steam"
+      ],
+      "pulse": "寫完字時該區亮度脈衝約 1.2 秒",
+      "note_v5": "保底彩度由 0.22 提升到 0.72（使用者要求 0.68~0.75），未寫的區域不再灰暗；寫越多仍越飽和、會發亮。"
+    },
+    "centersFromBuildings": {
+      "lower_right_entry": [
+        "Entry_cafe",
+        "East_shop",
+        "Market_stall"
+      ],
+      "west_cafe": [
+        "Cafe_main",
+        "Shops_west"
+      ],
+      "river_bridges": [
+        "West_bridge",
+        "Central_bridge",
+        "East_bridge"
+      ],
+      "central_plaza": [
+        "Clock_tower",
+        "Small_shop",
+        "Fountain_basin",
+        "Fountain_capybara"
+      ],
+      "upper_right_onsen": [
+        "Onsen_inn",
+        "Onsen_annex",
+        "Hot_pool"
+      ]
+    },
+    "membershipNote": "manifest 沒有正式 zone_index；物件與卡比巴拉依最近區域中心歸屬，屬於暫定，需設計確認"
+  },
+  "render": {
+    "drawCallBudget": {
+      "baseline": 221,
+      "afterZoneSplitEstimate": [
+        320,
+        340
+      ],
+      "note": "Codex 複審靜態推估，須同機實測",
+      "v3Note": "8 隻卡比巴拉改為獨立 Mesh（原 1 隻），預估 +7 calls",
+      "v6": "lobby_idle drawCalls < 145、triangles < 450,000；量測另記 avgDrawCalls、maxDrawCalls、shadowFrames"
+    },
+    "panelOpen": "pause_or_throttle_raf; invalidate_running_benchmark; controls stay locked"
+  },
+  "basedOn": "game/contract_v6.json（v6 未動）。使用者 2026-11-07：馬卡龍放大 1.8 倍並在右下入口步道加一顆；平板橫向時整個操作區收在一頁內。",
+  "chapters": {
+    "order": [
+      "lesson_0",
+      "lesson_1",
+      "lesson_2",
+      "lesson_3",
+      "lesson_4",
+      "lesson_5",
+      "lesson_6"
+    ],
+    "defaultMode": "lesson_1",
+    "switchWithoutReload": true,
+    "note": "progressKey／rewardKey 不含 mode，切換章節共用同一份進度與帳本；每字只發一次獎",
+    "map": "小鎮畫面上每課一個圓形標記（位於該課區域中心，第 6 課置於畫面上方），點標記即選課；章節列保留作備援",
+    "pinSpacing": "共用一區的「數」與「1」：數往左下、1 往右上，螢幕中心距 ≥ 70 px；其他標記 ≥ 52 px；熱區 48×48 px"
+  },
+  "feedback": {
+    "stroke": {
+      "correct": "音效（五聲音階，隨筆序升高）＋筆畫閃光",
+      "mistake": "柔和低音，不用刺耳音"
+    },
+    "charComplete": {
+      "panel": "星星爆開＋「好棒！」＋上行琶音",
+      "town": "每次完成都播（不受帳本限制、不寫入存檔）：鏡頭飛到該課區域、區域亮一下、區內卡比巴拉依序跳、擺設彈一下、畫面冒星星"
+    },
+    "idle": "8 隻卡比巴拉輕微呼吸起伏；點（或點到附近）會跳一下並出聲",
+    "sound": {
+      "engine": "WebAudio 即時合成，無音檔",
+      "unlock": "第一次按「開始寫字」時啟動（iOS 規定需使用者手勢）",
+      "mute": "頁首喇叭鈕切換，記在 localStorage",
+      "note": "iPhone 側邊靜音開關打開時 WebAudio 不出聲"
+    },
+    "ledgerReward": "沿用 v1：同 rewardKey 首次 committed 才發獎；N101_160 首次移到池邊、147 池蒸氣，之後只小跳",
+    "writing": {
+      "speech": {
+        "engine": "Web Speech API (speechSynthesis)",
+        "langPreference": [
+          "zh-TW",
+          "zh-CN",
+          "zh*（排除 hk/yue）"
+        ],
+        "intro": "一般：{char}，{word}的{char}；詞尾是助詞（的了嗎呢吧啊呀）、詞裡同字重複、或動詞結尾（這是、和我玩）時改停頓句：{char}，{word}，{char}",
+        "onComplete": "{char}",
+        "mutedWith": "capy_muted",
+        "status": "pending：破音字讀音未人工核對"
+      },
+      "startDot": "每一筆起點顯示閃動橘點（medians[n][0]）",
+      "earlyHint": {
+        "afterMissesOnStroke": 2,
+        "action": "highlightStroke＋沿 median 畫方向箭頭",
+        "countsAsHint": true,
+        "note": "QUIZ_CONFIG.showHintAfterMisses 維持 3，與九字核對表一致"
+      },
+      "trail": "pointermove 每 28ms 一顆星光，純裝飾",
+      "squash": "寫對一筆字格縮放 240ms",
+      "fatFinger": {
+        "leniencyBase": 1,
+        "leniencyBoost": 1.35,
+        "boostWhen": "總筆畫 >= 12，或下一筆標準筆畫長度 < 200（1024 字身單位）",
+        "note": "QUIZ_CONFIG.leniency 仍為 1（與九字核對表一致；九字都 < 12 畫），放寬只在執行時套用並記錄在作品 meta.leniencyByStroke",
+        "singleFinger": "鎖定第一根手指 identifier，第二指以上的 touch 事件在捕獲階段攔下",
+        "startMarker": "🥕 胡蘿蔔光點"
+      }
+    }
+  },
+  "album": {
+    "rule": "完成某一課全部的字 → 解鎖對應的卡比巴拉；N101_160（獎勵 NPC）一開始就解鎖。解鎖由 passedTaskIds 推導，不新增存檔欄位。",
+    "namesStatus": "pending：名字是暫定佔位，待設計／家長確認",
+    "thumbnail": "執行時用遊戲鏡頭方向近拍該 Mesh、全彩渲染後裁成方形；未解鎖顯示剪影",
+    "onPick": "鏡頭飛到該卡比巴拉、跳一下、唸名字、飛回",
+    "residents": [
+      {
+        "object": "Resident_static_N101_160",
+        "name": "泡泡",
+        "unlockLesson": null,
+        "note": "溫泉導遊，一開始就在"
+      },
+      {
+        "object": "Resident_static_N102_157",
+        "name": "湯圓",
+        "unlockLesson": 0
+      },
+      {
+        "object": "Resident_static_N101_154",
+        "name": "麻糬",
+        "unlockLesson": 1
+      },
+      {
+        "object": "Resident_static_N101_155",
+        "name": "豆花",
+        "unlockLesson": 2
+      },
+      {
+        "object": "Resident_static_N101_156",
+        "name": "芋圓",
+        "unlockLesson": 3
+      },
+      {
+        "object": "Resident_static_N101_158",
+        "name": "布丁",
+        "unlockLesson": 4
+      },
+      {
+        "object": "Resident_static_N102_159",
+        "name": "仙草",
+        "unlockLesson": 5
+      },
+      {
+        "object": "Resident_static_N102_153",
+        "name": "紅豆",
+        "unlockLesson": 6
+      }
+    ],
+    "title": "水豚×兔兔圖鑑"
+  },
+  "theme": {
+    "title": "卡比巴拉×小兔兔 · 甜點寫字樂園",
+    "ui": {
+      "primary": "#FF8A80",
+      "primaryDark": "#E8665C",
+      "accent": "#FFA94D",
+      "bg": "#FFF4EC",
+      "ink": "#5B3A4A"
+    },
+    "palette": {
+      "strawberry": "#FFB7B2",
+      "cream": "#FFF5BA",
+      "mint": "#B5EAD7",
+      "soda": "#C7CEEA"
+    },
+    "pastelRemap": {
+      "where": "town-fx 片段著色器，依色相把原色混到最近的馬卡龍色，越暗混越多",
+      "strength": 0.85,
+      "shadowTint": [
+        0.05,
+        0.02,
+        0.07
+      ]
+    },
+    "water": {
+      "Blockout_water": "#9FE6F6"
+    },
+    "lighting": {
+      "hemisphere": [
+        "#fff5e4",
+        "#b8e8fc",
+        1.25
+      ],
+      "ambient": [
+        "#ffd8ef",
+        0.3
+      ],
+      "sun": [
+        "#fff1dc",
+        2.7
+      ],
+      "toneMapping": "NeutralToneMapping",
+      "exposure": 1.15,
+      "background": "#FFF0F5"
+    },
+    "materialKinds": {
+      "note": "依材質名稱分類；kind 1＝屋頂（依區域換糖霜色），kind 2＝木牆／紙窗／山牆／陽台（換餅乾奶黃與牛奶白，保留原貼圖的明暗）；其他照 v5 色相偏移；Blockout_roofs 實際用在入口道路（Entry_road），不當屋頂",
+      "roof": [
+        "B103_Atlas"
+      ],
+      "wall": [
+        "B101_Atlas",
+        "B107_Atlas",
+        "B104_Atlas"
+      ],
+      "roughness": 0.95
+    },
+    "roofByZone": {
+      "lower_right_entry": "#FF9AA2",
+      "west_cafe": "#FFE599",
+      "river_bridges": "#FFE599",
+      "central_plaza": "#D5AAFF",
+      "upper_right_onsen": "#B5EAD7"
+    },
+    "wall": {
+      "biscuit": "#FFF0D4",
+      "milk": "#FFFDF9",
+      "timberShade": 0.8
+    }
+  },
+  "characters": {
+    "scale": 2.3,
+    "pivot": "幾何底部（local bbox min.y），放大後腳仍貼地",
+    "N101": {
+      "role": "呆萌水豚",
+      "prop": "頭頂程序化低面數胡蘿蔔",
+      "idle": "scale.y 隨 sin(t*2) 果凍呼吸",
+      "tap": "0.4s 布丁壓扁回彈＋愛心/胡蘿蔔粒子＋低頻「噗嚕」",
+      "frontYaw": 0
+    },
+    "N102": {
+      "role": "長耳小兔兔",
+      "build": "Three.js Sphere/Capsule 組合，取代 N102 原模型（原 Mesh 隱藏，座標與朝向沿用）",
+      "idle": "position.y 與耳朵 rotation.z 隨 |sin(t*4.5)| 律動",
+      "tap": "原地高跳翻一圈＋星星＋高頻「Boing」"
+    },
+    "facing": "所有水豚與兔子面向鏡頭水平方向，左右交錯 ±facingSpread 弧度（約 31°），正臉朝畫面左下或右下",
+    "facingSpread": 0.55,
+    "offsets": {
+      "Resident_static_N102_159": [
+        1.4,
+        -1.2
+      ]
+    },
+    "offsetsNote": "N102_159（高台兔子）放大後與樓梯、欄杆穿模，往平台中央移；數值為 three.js 世界座標 x/z 公尺",
+    "instancing": "兔子身體／左耳／右耳、胡蘿蔔各一個 InstancedMesh（全場共用幾何與材質），段數 radial ≤ 10、height ≤ 8"
+  },
+  "props": {
+    "note": "甜點道具：每種一個 InstancedMesh；位置為 three.js 世界座標 [x, y, z]，y 為地面高",
+    "pudding": {
+      "scale": 1.6,
+      "at": [
+        [
+          1.1,
+          1.2,
+          1.9
+        ],
+        [
+          -14.4,
+          1.2,
+          11.2
+        ]
+      ]
+    },
+    "macaron": {
+      "scale": 3.06,
+      "at": [
+        [
+          0.9,
+          1.2,
+          5.6
+        ],
+        [
+          -5.7,
+          1.2,
+          10.9
+        ],
+        [
+          -10.9,
+          1.2,
+          12.3
+        ],
+        [
+          12.7,
+          1.2,
+          2.6
+        ]
+      ],
+      "colors": [
+        "#FFFFFF",
+        "#FFE6F0",
+        "#FFF6D6",
+        "#FFFFFF"
+      ]
+    }
+  },
+  "layout": {
+    "fitToViewport": "寬度 ≥ 600 px 時，小鎮高度不超過「螢幕高度 − 小鎮上方 − 下方按鈕／狀態列／字卡列」，寬度依 1672:941 等比縮小並置中；算出寬度 < 520 px 就不縮（改捲動）。手機直向不受影響。"
+  }
+}

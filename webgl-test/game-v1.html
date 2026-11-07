@@ -9,8 +9,8 @@ h1{font-size:20px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
 #albumBtn{margin-left:auto;font:inherit;font-size:17px;background:#fff;border:2px solid #F7C9C0;border-radius:12px;padding:4px 10px;cursor:pointer;touch-action:manipulation;color:var(--ui-ink,#5B3A4A)}
 #albumBtn[data-new]::after{content:attr(data-new);display:inline-block;margin-left:4px;min-width:18px;border-radius:9px;background:var(--ui-accent,#FFA94D);color:#fff;font-size:12px;line-height:18px;text-align:center}
 #muteBtn{font-size:22px;background:none;border:2px solid #F7C9C0;border-radius:12px;padding:2px 8px;cursor:pointer;touch-action:manipulation}
-#stage{position:relative;border-radius:16px;overflow:hidden;background:#dce4dd;max-width:1600px}
-#stage canvas{display:block;max-width:100%}
+#stage{position:relative;border-radius:16px;overflow:hidden;background:#FFF0F5;max-width:1600px}
+#stage canvas{display:block;max-width:100%;margin:0 auto}
 #startBtn{display:block;margin:12px auto 0;font:inherit;font-size:28px;padding:16px 44px;border-radius:999px;border:4px solid #fff;background:var(--ui-primaryDark,#E8665C);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3);cursor:pointer;touch-action:manipulation;user-select:none}
 #startBtn:focus-visible{outline:4px solid #f08c00}
 #startBtn:disabled{opacity:.6;cursor:default}
@@ -37,16 +37,16 @@ details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;b
 <details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
 <script type="importmap">{"imports":{"three":"./vendor-v2/build/three.module.js","three/addons/":"./vendor-v2/examples/jsm/"}}</script>
 <script type="module">
-import { loadContract, describeLoadError } from './game/content.js?v=23';
-import { WritingPanel, renderArtifactCard } from './game/writing-panel.js?v=23';
-import { loadTown } from './game/town-loader.js?v=23';
-import { Lobby } from './game/lobby.js?v=23';
-import { Store, clearProfile } from './game/store.js?v=23';
-import { Reward } from './game/reward.js?v=23';
-import { Sound, Voice } from './game/fx.js?v=23';
-import { TownFx, residentNames } from './game/town-fx.js?v=23';
-import { Album } from './game/album.js?v=23';
-import { applyTheme, applyUiColors } from './game/theme.js?v=23';
+import { loadContract, describeLoadError } from './game/content.js?v=24';
+import { WritingPanel, renderArtifactCard } from './game/writing-panel.js?v=24';
+import { loadTown } from './game/town-loader.js?v=24';
+import { Lobby } from './game/lobby.js?v=24';
+import { Store, clearProfile } from './game/store.js?v=24';
+import { Reward } from './game/reward.js?v=24';
+import { Sound, Voice } from './game/fx.js?v=24';
+import { TownFx, residentNames } from './game/town-fx.js?v=24';
+import { Album } from './game/album.js?v=24';
+import { applyTheme, applyUiColors } from './game/theme.js?v=24';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 const PROFILE_ID = qs.get('profile') || 'local-child-1'; // 第一版單一本機 profile，無選擇 UI
@@ -60,7 +60,7 @@ const log = m => { diag.events.push({ t: Math.round(performance.now()), m }); $(
 
 // 1) 契約與題庫（SHA 不符即拒載，按鈕不啟用）
 let loaded;
-try { loaded = await loadContract('../', 'game/contract_v6.json'); diag.loadMs.contract = Math.round(performance.now() - t0); }
+try { loaded = await loadContract('../', 'game/contract_v7.json'); diag.loadMs.contract = Math.round(performance.now() - t0); }
 catch (err) { setStatus(describeLoadError(err), true); $('#startBtn').textContent = '無法開始'; throw err; }
 const { contract } = loaded;
 { const want = qs.get('lesson') != null ? 'lesson_' + qs.get('lesson') : (localStorage.getItem('capy_lesson') || contract.chapters.defaultMode); MODE = contract.modes[want] ? want : contract.chapters.defaultMode; }
@@ -78,7 +78,16 @@ const MODEL = qs.get('model') === 'orig' ? null : (qs.get('test') === '1' && /^[
 applyUiColors(contract.theme.ui); document.title = contract.theme.title; $('#gameTitle').textContent = contract.theme.title;
 diag.theme = applyTheme(town, contract.theme); // v5：甜點樂園燈光／色調映射／水色
 const lobby = new Lobby(town); lobby.start();
-const fitStage = () => town.resize(Math.min(1600, $('#stage').clientWidth)); // v3：寬度貼齊版面（手機不再多留 40px）
+// v3：寬度貼齊版面；v7：平板／桌機（寬 ≥ 600）再依螢幕高度限制，讓開始鈕、狀態列、字卡列都在同一頁
+const fitStage = () => {
+  const st = $('#stage'); let w = Math.min(1600, st.clientWidth);
+  if (innerWidth >= 600) {
+    const top = st.getBoundingClientRect().top, below = $('#done').getBoundingClientRect().bottom - st.getBoundingClientRect().bottom + 14;
+    const wByH = Math.floor((innerHeight - top - below) * 1672 / 941);
+    if (wByH >= 520) w = Math.min(w, wByH);
+  }
+  town.resize(w); diag.stageFit = { width: w, height: Math.round(w * 941 / 1672), viewport: [innerWidth, innerHeight] };
+};
 fitStage();
 window.addEventListener('resize', () => { fitStage(); lobby.requestFrame(); townFx?.placePins(); });
 let townFx = null;
@@ -166,7 +175,7 @@ const panel = new WritingPanel({
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
-if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=23'); installTestDriver(panel); window.__game = { town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=24'); installTestDriver(panel); window.__game = { town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
@@ -196,7 +205,8 @@ $('#startBtn').addEventListener('dblclick', e => e.preventDefault());
 // 暖機：等第一幀真的畫出來（shader 編譯完成）再亮按鈕，避免孩子一按就卡
 await new Promise(res => { const r0 = lobby.renderCount; const tick = () => (lobby.renderCount > r0 ? res() : requestAnimationFrame(tick)); tick(); });
 diag.loadMs.firstFrame = Math.round(performance.now() - t0);
-$('#startBtn').textContent = contract.entry.label; $('#startBtn').disabled = false; $('#albumBtn').disabled = false; updateAlbumBtn();
+$('#startBtn').textContent = contract.entry.label; $('#startBtn').disabled = false;
+fitStage(); townFx.placePins(); // v7：章節列、按鈕文字都就位後再量一次版面 $('#albumBtn').disabled = false; updateAlbumBtn();
 setStatus(nextLabel());
 diag.loadMs.ready = Math.round(performance.now() - t0);
 // 測試自動跑（?test=1&autoplay=1）：用合成筆跡依序寫完 demo3 三字，供 headless 截圖與煙霧測試；不是真人操作
