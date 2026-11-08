@@ -4,9 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=26';
-import { bravo, flash, spark } from './fx.js?v=26';
-import { starsOf } from './stars.js?v=26'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=27';
+import { bravo, flash, spark } from './fx.js?v=27';
+import { starsOf } from './stars.js?v=27'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -112,8 +112,9 @@ export async function loadCharData(char, dataBase) {
 }
 
 /** 作品卡：用孩子的 drawnPaths（character 座標）渲染，不用標準字。 */
-export function renderArtifactCard(artifact, { size = 160, color = '#2f3e46', width = 10, grid = true } = {}) {
-  const pad = Math.round(size * 0.06);
+export function renderArtifactCard(artifact, { size = 160, color = '#2f3e46', width, grid = true } = {}) {
+  const pad = Math.round(size * 0.06), n = artifact.drawnPaths.length;
+  width ??= Math.max(2, size * (n > 10 ? 0.05 : n > 6 ? 0.07 : 0.09)); // v10：筆畫多的字線條變細，卡片才不會糊成一團
   const t = HanziWriter.getScalingTransform(size, size, pad);
   const lines = grid ? `<line x1="${size / 2}" y1="0" x2="${size / 2}" y2="${size}" stroke="#e8e1d2" stroke-dasharray="4 4"/><line x1="0" y1="${size / 2}" x2="${size}" y2="${size / 2}" stroke="#e8e1d2" stroke-dasharray="4 4"/>` : '';
   const paths = artifact.drawnPaths.map(pts => `<polyline points="${pts.map(p => `${p.x},${p.y}`).join(' ')}" fill="none" stroke="${color}" stroke-width="${width / t.scale}" stroke-linecap="round" stroke-linejoin="round"/>`).join('');

@@ -4,7 +4,7 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=26';
+import { Album } from './album.js?v=27';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -20,6 +20,12 @@ const CSS = `
 .t2-char.hidden{display:none}
 .t2-char.shadow img{filter:brightness(0) opacity(.55) drop-shadow(0 0 2px #fff) drop-shadow(0 0 1px #fff);animation:none}
 .t2-char.shadow.near img{animation:t2-wiggle 1.3s ease-in-out infinite}
+.t2-char.shadow::before{border:3px dashed #FF7FA8;outline:2px solid rgba(255,255,255,.8);outline-offset:-5px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,.15) 70%,transparent);animation:t2-halo 2.4s ease-in-out infinite}
+@keyframes t2-halo{0%,100%{opacity:.75}50%{opacity:1}}
+.t2-hint{display:none}
+.t2-char.shadow .t2-hint{display:block;position:absolute;z-index:2;left:78%;top:-22%;font:800 clamp(10px,1vw,14px)/1.3 system-ui,"Noto Sans TC",sans-serif;color:#5B3A4A;background:#fff;border:2px solid #F7C9C0;border-radius:10px;padding:3px 7px;white-space:nowrap;box-shadow:0 2px 5px rgba(91,58,74,.3);pointer-events:none}
+.t2-char.shadow .t2-hint::before{content:'';position:absolute;left:-7px;top:60%;border:5px solid transparent;border-right-color:#F7C9C0;border-left:0}
+.t2-hint em{font-style:normal;color:#E8665C;font-size:1.2em}
 .t2-char.shadow::after{content:'?';position:absolute;left:50%;top:-4%;transform:translate(-50%,-100%);font:900 clamp(12px,1.6vw,22px)/1 system-ui;color:#fff;background:rgba(91,58,74,.55);border-radius:50%;width:1.4em;height:1.4em;display:flex;align-items:center;justify-content:center}
 @keyframes t2-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
 .t2-char.pop img{animation:t2-pop .7s cubic-bezier(.3,1.6,.5,1)}
@@ -37,21 +43,28 @@ const CSS = `
 @keyframes t2-steam{0%{transform:translate(-50%,0) scale(.5);opacity:0}25%{opacity:.9}100%{transform:translate(-50%,-260%) scale(1.5);opacity:0}}
 .t2-fx{position:absolute;z-index:200;pointer-events:none;width:4.2%;transform:translate(-50%,-50%);animation:t2-fx var(--d,1s) cubic-bezier(.2,.7,.3,1) forwards}
 @keyframes t2-fx{0%{transform:translate(-50%,-50%) scale(.2) rotate(0);opacity:1}70%{opacity:1}100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1) rotate(var(--r));opacity:0}}
-.t2-pin{position:absolute;z-index:150;transform:translate(-50%,-50%);width:clamp(48px,7.2%,92px);aspect-ratio:1;border:0;padding:0;background:none;cursor:pointer;touch-action:manipulation;transition:transform .15s,opacity .25s;-webkit-tap-highlight-color:transparent}
-.t2-pin img{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 4px rgba(91,58,74,.3))}
-.t2-pin b{position:absolute;left:-6%;top:-6%;min-width:42%;aspect-ratio:1;border-radius:50%;background:#fff;border:2px solid #F7C9C0;font:800 clamp(11px,1.15vw,16px)/1 system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);display:flex;align-items:center;justify-content:center;box-sizing:border-box}
-.t2-pin small{position:absolute;z-index:1;top:96%;left:50%;transform:translateX(-50%);font:700 clamp(9px,.9vw,12px) system-ui;color:#fff;background:rgba(91,58,74,.85);border-radius:6px;padding:0 4px;white-space:nowrap}
+.t2-pin{position:absolute;z-index:150;transform:translate(-50%,-50%);width:clamp(48px,8.5%,108px);aspect-ratio:1;border:0;padding:0;background:none;cursor:pointer;touch-action:manipulation;transition:transform .15s,opacity .25s;-webkit-tap-highlight-color:transparent}
+.t2-pin img{width:100%;height:100%;display:block;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 3px 4px rgba(91,58,74,.35))}
+.t2-pin b{position:absolute;left:-8%;top:-8%;min-width:46%;aspect-ratio:1;border-radius:50%;background:var(--pc,#FF8FA3);border:3px solid #fff;box-shadow:0 2px 5px rgba(91,58,74,.45);font:900 clamp(13px,1.35vw,19px)/1 system-ui,"Noto Sans TC",sans-serif;color:#fff;text-shadow:0 1px 2px rgba(91,58,74,.6);display:flex;align-items:center;justify-content:center;box-sizing:border-box}
+.t2-pin small{position:absolute;z-index:1;top:94%;left:50%;transform:translateX(-50%);font:800 clamp(11px,1.05vw,14px)/1.25 system-ui;color:#fff;background:#5B3A4A;border:2px solid #fff;border-radius:999px;padding:1px 7px;white-space:nowrap;box-shadow:0 2px 4px rgba(91,58,74,.35)}
+.t2-pin small:empty{display:none}
 .t2-pin small i{font-style:normal;color:#FFD54A}
-.t2-pin.done b{background:var(--ui-accent,#FFA94D);border-color:#fff;color:#fff}
-.t2-pin.active{transform:translate(-50%,-50%) scale(1.18);z-index:160}
-.t2-pin.active b{background:var(--ui-primaryDark,#E8665C);border-color:#fff;color:#fff}
-.t2-pin.active img{animation:t2-bob 1.6s ease-in-out infinite}
+.t2-pin.done b{border-color:#FFE08A}
+.t2-pin u{display:none;position:absolute;left:50%;bottom:100%;transform:translateX(-50%);text-decoration:none;font:900 clamp(16px,1.8vw,26px)/1 system-ui;color:var(--pc,#E8665C);text-shadow:0 0 3px #fff,0 0 3px #fff,0 2px 3px rgba(91,58,74,.4);pointer-events:none}
+.t2-pin.active{z-index:160;animation:t2-breathe 1.6s ease-in-out infinite}
+.t2-pin.active b{animation:t2-ring 1.6s ease-out infinite}
+.t2-pin.active img{filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px var(--pc,#E8665C)) drop-shadow(0 3px 4px rgba(91,58,74,.35))}
+.t2-pin.active u{display:block;animation:t2-arrow .9s ease-in-out infinite}
+@keyframes t2-breathe{0%,100%{transform:translate(-50%,-50%) scale(1.12)}50%{transform:translate(-50%,-50%) scale(1.24)}}
+@keyframes t2-ring{0%{box-shadow:0 2px 5px rgba(91,58,74,.45),0 0 0 0 var(--pc,#E8665C)}100%{box-shadow:0 2px 5px rgba(91,58,74,.45),0 0 0 14px transparent}}
+@keyframes t2-arrow{0%,100%{transform:translate(-50%,-10%)}50%{transform:translate(-50%,-45%)}}
 .t2-pins-hidden .t2-pin{opacity:0;pointer-events:none}
 .t2-paused *,.t2-paused *::before{animation-play-state:paused!important}
 `;
 
 const loadImg = src => new Promise((ok, bad) => { const i = new Image(); i.decoding = 'async'; i.onload = () => ok(i); i.onerror = () => bad(new Error('IMG_LOAD_FAILED:' + src)); i.src = src; });
 const POSES = ['idle', 'happy', 'surprised', 'wave'];
+export const PIN_COLORS = ['#FF7FA8', '#FF9F43', '#3CC8A0', '#4FA8F0', '#A07CF0', '#F06CB8', '#F5B800', '#5CC05C'];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 export class Town2D {
@@ -183,6 +196,10 @@ export class TownFx2D {
     for (const c of this.town.chars.values()) {
       const was = this._visible(c), now = on.has(c.name), pre = this.preview[c.name], wasShadow = c.el.classList.contains('shadow');
       c.el.classList.toggle('hidden', !now && !pre); c.el.classList.toggle('shadow', !now && !!pre); c.el.classList.toggle('near', !now && !!pre?.near);
+      if (!now && pre) { /* v10：影子旁直接顯示還差幾個字 */
+        const h = c.el.querySelector('.t2-hint') ?? c.el.appendChild(Object.assign(document.createElement('span'), { className: 't2-hint' }));
+        h.innerHTML = `再寫 <em>${pre.remaining}</em> 個字<br>新朋友就來了！`;
+      }
       if (!instant && ((now && !was) || (pre && !wasShadow))) this._anim(c, 'pop', 700);
     }
     this.colorState = { saturation: sat.map(v => +v.toFixed(2)), outside: +outside.toFixed(2), visibleFriends: [...on], shadows: this.preview };
@@ -295,7 +312,8 @@ export class TownFx2D {
     this.onPick = onPick;
     this.pins = Object.keys(this.lessonToZone).map(l => {
       const p = this.art.pins[l], b = document.createElement('button'); b.type = 'button'; b.className = 't2-pin'; b.dataset.lesson = l;
-      b.innerHTML = `<img alt="" draggable="false" src="${this.town.url(p.icon)}"><b>${l === '0' ? '數' : l}</b><small></small>`;
+      b.innerHTML = `<u aria-hidden="true">▼</u><img alt="" draggable="false" src="${this.town.url(p.icon)}"><b>${l === '0' ? '數' : l}</b><small></small>`;
+      b.style.setProperty('--pc', PIN_COLORS[+l % PIN_COLORS.length]); /* v10：題號改馬卡龍色塊＋白粗邊 */
       b.style.left = (p.at[0] / this.town.W * 100) + '%'; b.style.top = (p.at[1] / this.town.H * 100) + '%';
       b.addEventListener('pointerdown', e => e.stopPropagation());
       b.addEventListener('click', e => { e.stopPropagation(); this.sound?.unlock(); this.onPick?.(+l); });
