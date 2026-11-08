@@ -1,0 +1,296 @@
+{
+ "_meta": {
+  "version": "1.1",
+  "date": "2026-11-08",
+  "source": "教育部《國字標準字體筆順學習網》 https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=<Unicode 十進位>",
+  "method": "抓取教育部頁面每一筆外框的中心與大小，與 hanzi-writer-data@2.0.1 的筆畫中線做最小成本配對；順序不同就重排，教育部多一畫就把一筆依中線切成兩筆（外框依投影位置切開）。只重排／切開原資料，不含教育部字形。 v1.1：再以教育部頁面的 Track（每筆行筆軌跡）比對起筆方向，比／花的匕首筆改成由左往右，說的上方兩筆左右鏡射成「八」形。",
+  "license": "衍生自 hanzi-writer-data（Arphic Public License，見 ARPHICPL.TXT）"
+ },
+ "chars": {
+  "來": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=20358",
+   "moeStrokes": 8,
+   "originalStrokes": 8,
+   "newOrderFromOriginal": [
+    0,
+    5,
+    1,
+    2,
+    3,
+    4,
+    6,
+    7
+   ],
+   "split": null,
+   "originalSha256": "d5e4aba4c3d6a4cac89a54ace08d7e5d0bf3e5f7d9833e8a5fae9f4164a042c9",
+   "sha256": "f6615246782ca2a82f834e6184530f1d2e3aa5883614104fba0e0b46b1eb7016",
+   "humanCheck": "pending"
+  },
+  "找": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=25214",
+   "moeStrokes": 7,
+   "originalStrokes": 7,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    5
+   ],
+   "split": null,
+   "originalSha256": "b7c89c6071338aa348a62a1051dbbb0a1ef2b97477ae531db4825ea1b764d098",
+   "sha256": "bfadd34d5e8ffd01636926149848b6024810bd349b203528b3ee65d42551eae4",
+   "humanCheck": "pending"
+  },
+  "長": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=38263",
+   "moeStrokes": 8,
+   "originalStrokes": 8,
+   "newOrderFromOriginal": [
+    1,
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "split": null,
+   "originalSha256": "dbf64387d05f2038c747cafc76cb2edd6296c89662e8bbb70d4397dee8ce5de4",
+   "sha256": "e33e59467cf84dae2369781cef46390815c85e00842dee54df6e1070dd41b33e",
+   "humanCheck": "pending"
+  },
+  "我": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=25105",
+   "moeStrokes": 7,
+   "originalStrokes": 7,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6,
+    5
+   ],
+   "split": null,
+   "originalSha256": "08616462fc64b4c18c76a3f68a992305e98946f468bf42ec76ca9be1cd6c5ac8",
+   "sha256": "5fa54bb1f12e4b2e22832d8f8e0a61a6d9467ee6219ba325ecaf06c83dbef848",
+   "humanCheck": "pending"
+  },
+  "海": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=28023",
+   "moeStrokes": 10,
+   "originalStrokes": 10,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    9,
+    8
+   ],
+   "split": null,
+   "originalSha256": "bcebc11480cb837dd2b2a8fd64dd742c46959d43a828a76c7a04464395274562",
+   "sha256": "bcf9e4bb1c33d5e492dad4dfe6cdfc4fb92e0d3a904b04ca9f2d5de71710d2cf",
+   "humanCheck": "pending"
+  },
+  "裡": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=35041",
+   "moeStrokes": 12,
+   "originalStrokes": 12,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    10,
+    9,
+    11
+   ],
+   "split": null,
+   "originalSha256": "c9ae7c02ca1fd9efd34401173f912846462717c999ca3e587ace9b6cd62c0d87",
+   "sha256": "0f63164d1b149d4c980fb5d6a120fcea8f821610a81cb5ca70f7f46b111613e0",
+   "humanCheck": "pending"
+  },
+  "這": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=36889",
+   "moeStrokes": 11,
+   "originalStrokes": 10,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    8,
+    9
+   ],
+   "split": "split hw stroke 8 at s=0.64 (runs=2)",
+   "originalSha256": "f8ff266ff4af62b01bceb0187e0bc6cc0d1bedc24fbb2ee89e32647acc9b648b",
+   "sha256": "838be2b3ee1ecee77c9c25943c84f736ca37c39cf8fd8786ca47d3ebd774acb9",
+   "humanCheck": "pending"
+  },
+  "花": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=33457",
+   "moeStrokes": 8,
+   "originalStrokes": 7,
+   "newOrderFromOriginal": [
+    1,
+    0,
+    0,
+    2,
+    3,
+    4,
+    5,
+    6
+   ],
+   "split": "split hw stroke 0 at s=0.48 (runs=2)",
+   "originalSha256": "62f0b92426131b634b393c90e1de91d8f5b321fcd6fc1d7e77a0bf8be5b90e18",
+   "sha256": "84310a8655b4eb81e91f98e00979d0cb850df7fb2188ab8180f3b7c07372be3c",
+   "humanCheck": "pending",
+   "directionFix": "stroke 7 reversed"
+  },
+  "草": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=33609",
+   "moeStrokes": 10,
+   "originalStrokes": 9,
+   "newOrderFromOriginal": [
+    1,
+    0,
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "split": "split hw stroke 0 at s=0.5 (runs=2)",
+   "originalSha256": "f9e8c120c5db52608a3a4c03b564c577f54230659c0dae5de4e8d7ad7de82f57",
+   "sha256": "ff8e8f261a4ffd6a0f00595428fc504be9ab5964e6f7e6419faecc4e3b399b77",
+   "humanCheck": "pending"
+  },
+  "啊": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=21834",
+   "moeStrokes": 11,
+   "originalStrokes": 10,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "split": "split hw stroke 3 at s=0.48 (runs=2)",
+   "originalSha256": "cb3a1732ccec5b6dcf939ebe269e1cb749925df9e3dc1ae7f5b3469a740e5624",
+   "sha256": "6c0fb8f4713bc95088f809eb3178785195a7fc126867f1a445b6c909d92134a4",
+   "humanCheck": "pending"
+  },
+  "陪": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=38506",
+   "moeStrokes": 11,
+   "originalStrokes": 10,
+   "newOrderFromOriginal": [
+    0,
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "split": "split hw stroke 0 at s=0.48 (runs=2)",
+   "originalSha256": "b6359e1bf9256fea1e96fcdaa12dfc65d17d0f653dadd2bea224c9e8a91c7d08",
+   "sha256": "eae01f783073394bc7901dd122d78d844af43eee0318e5c257197a604256f54e",
+   "humanCheck": "pending"
+  },
+  "那": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=37027",
+   "moeStrokes": 7,
+   "originalStrokes": 6,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    4,
+    5
+   ],
+   "split": "split hw stroke 4 at s=0.46 (runs=2)",
+   "originalSha256": "a2c276669b5820897a8e20bd10fcede3062f99460bc9a733c65f7875d3197ea5",
+   "sha256": "6cb668162a8ca55dd2e1d8afe1cc9e55cac72f08115c9cebff168fc54e5fa7a7",
+   "humanCheck": "pending"
+  },
+  "比": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=27604",
+   "moeStrokes": 4,
+   "originalStrokes": 4,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "split": null,
+   "originalSha256": "4dc980796f5251417cd1a2ebf706e94bfcabb05d1b275cff28721aeb190fd12e",
+   "humanCheck": "pending",
+   "directionFix": "stroke 3 reversed",
+   "sha256": "d8ac9a7f831870f0aeefdbf463e532f4657e9af3da30473082692348b4eb7aeb"
+  },
+  "說": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=35498",
+   "moeStrokes": 14,
+   "originalStrokes": 14,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+   ],
+   "split": null,
+   "originalSha256": "d1e1609e49de2e5e5760d2f8f8ca31eb45cffe515d4a5e9d1ca4ef1dfb3b5a8d",
+   "humanCheck": "pending",
+   "directionFix": "stroke 8 mirrored; stroke 9 mirrored",
+   "sha256": "56534550886d0dc39b77b9b309e9f98a49cbf7e041325852a68977fb43e6d69c"
+  }
+ }
+}

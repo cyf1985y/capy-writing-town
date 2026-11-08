@@ -13,6 +13,13 @@ h1{font-size:20px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
 #stage canvas{display:block;max-width:100%;margin:0 auto}
 #startBtn{display:block;margin:12px auto 0;font:inherit;font-size:28px;padding:16px 44px;border-radius:999px;border:4px solid #fff;background:var(--ui-primaryDark,#E8665C);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3);cursor:pointer;touch-action:manipulation;user-select:none}
 #startBtn:focus-visible{outline:4px solid #f08c00}
+#extraBtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 0}
+@media (min-width:600px){#actionRow{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px}#actionRow #startBtn{margin:0}#actionRow #extraBtns{margin:0}} /* v12：寬螢幕三顆鈕排一列，小鎮不被擠小 */
+#extraBtns button{margin:0}
+#partsBtn[hidden]{display:none}
+#reviewBtn,#partsBtn{display:block;margin:10px auto 0;font:inherit;font-size:19px;font-weight:700;padding:10px 22px;border-radius:999px;border:3px solid #fff;background:#FFF8E7;color:#6E473B;box-shadow:0 6px 16px rgba(0,0,0,.18);cursor:pointer;touch-action:manipulation}
+#reviewBtn[hidden]{display:none}
+#reviewBtn small,#partsBtn small{display:block;font-size:13px;font-weight:400;opacity:.8}
 #startBtn:disabled{opacity:.6;cursor:default}
 #status{margin:8px 0;min-height:1.4em}
 #status.err{color:#c92a2a;font-weight:600}
@@ -36,29 +43,33 @@ body.lobby2d #stage{background:none}
 body.lobby2d .pinDot{display:inline-flex;align-items:center;justify-content:center;width:1.5em;height:1.5em;margin:-4px 4px -4px 0;border-radius:50%;background:var(--pc);border:2px solid #fff;box-shadow:0 1px 3px rgba(91,58,74,.4);color:#fff;font-weight:900;font-size:13px;vertical-align:1px}
 body.lobby2d #chapters button.active{box-shadow:0 0 0 3px #fff,0 0 0 6px var(--pc,#E8665C);animation:chapterPulse 1.6s ease-in-out infinite}
 @keyframes chapterPulse{50%{transform:scale(1.05)}}
+#parentBtn{font:inherit;font-size:18px;line-height:1;padding:6px 8px;border-radius:999px;border:2px solid #F7C9C0;background:#fff;color:var(--ui-ink,#5B3A4A);cursor:pointer;touch-action:manipulation}
 details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;border-radius:8px;padding:8px;max-height:220px;overflow:auto}
 </style>
-<h1><span id="gameTitle">卡比巴拉×小兔兔 · 甜點寫字樂園</span><button id="albumBtn" type="button" disabled>📖 圖鑑</button><button id="muteBtn" type="button" aria-label="聲音開關">🔊</button></h1>
+<h1><span id="gameTitle">卡比巴拉×小兔兔 · 甜點寫字樂園</span><button id="albumBtn" type="button" disabled>📖 圖鑑</button><button id="muteBtn" type="button" aria-label="聲音開關">🔊</button><button id="parentBtn" type="button" aria-label="家長面板" title="家長面板">👪</button></h1>
 <div id="chapters" aria-label="選課"></div>
 <div id="stage"></div>
-<button id="startBtn" type="button" disabled>載入中…</button>
+<div id="actionRow"><button id="startBtn" type="button" disabled>載入中…</button>
+<div id="extraBtns"><button id="reviewBtn" type="button" hidden></button><button id="partsBtn" type="button" hidden>🧩 部件小偵探<small>找一找字裡的小積木</small></button></div></div>
 <p id="status">載入契約與題庫…</p>
 <div id="done"></div>
 <details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
 <script type="importmap">{"imports":{"three":"./vendor-v2/build/three.module.js","three/addons/":"./vendor-v2/examples/jsm/"}}</script>
 <script type="module">
-import { loadContract, describeLoadError } from './game/content.js?v=28';
-import { WritingPanel, renderArtifactCard } from './game/writing-panel.js?v=28';
-import { loadTown } from './game/town-loader.js?v=28';
-import { Lobby } from './game/lobby.js?v=28';
-import { Store, clearProfile } from './game/store.js?v=28';
-import { Reward } from './game/reward.js?v=28';
-import { Sound, Voice } from './game/fx.js?v=28';
-import { TownFx, residentNames } from './game/town-fx.js?v=28';
-import { Album } from './game/album.js?v=28';
-import { applyTheme, applyUiColors } from './game/theme.js?v=28';
-import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=28';
-import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=28';
+import { loadContract, describeLoadError } from './game/content.js?v=29';
+import { WritingPanel, renderArtifactCard, levelIcon } from './game/writing-panel.js?v=29';
+import { loadTown } from './game/town-loader.js?v=29';
+import { Lobby } from './game/lobby.js?v=29';
+import { Store, clearProfile } from './game/store.js?v=29';
+import { Reward } from './game/reward.js?v=29';
+import { Sound, Voice } from './game/fx.js?v=29';
+import { TownFx, residentNames } from './game/town-fx.js?v=29';
+import { Album } from './game/album.js?v=29';
+import { applyTheme, applyUiColors } from './game/theme.js?v=29';
+import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=29';
+import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=29';
+import { PartsGame } from './game/minigame.js?v=29';
+import { ParentPanel, loadSettings } from './game/parent.js?v=29';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 const PROFILE_ID = qs.get('profile') || 'local-child-1'; // 第一版單一本機 profile，無選擇 UI
@@ -134,7 +145,7 @@ function updateAlbumBtn() { const n = album.unseenCount(saved.passedTaskIds); if
 album.onClose = updateAlbumBtn;
 $('#albumBtn').addEventListener('click', () => { if (panel.isOpen()) return; sound.unlock(); album.open(saved.passedTaskIds); updateAlbumBtn(); });
 /** v9：字卡下方顯示這一次寫的星星 */
-function starCard(a) { const c = renderArtifactCard(a, { size: 72 }), n = starsOf(a), t = document.createElement('span'); t.className = 'cardStars'; t.textContent = starText(n); t.setAttribute('aria-label', n + ' 顆星'); c.append(t); return c; }
+function starCard(a) { const c = renderArtifactCard(a, { size: 72 }), n = starsOf(a), t = document.createElement('span'); t.className = 'cardStars'; t.textContent = starText(n) + ((a.meta?.level ?? 1) > 1 ? levelIcon(a.meta.level) : ''); /* v12：提示／聽寫關寫的卡加關卡圖示 */ t.setAttribute('aria-label', n + ' 顆星'); c.append(t); return c; }
 function renderCards() { $('#done').replaceChildren(); for (const a of saved.artifacts.filter(a => demoIds.includes(a.taskId)).sort((x, y) => x.createdAt.localeCompare(y.createdAt))) $('#done').append(starCard(a)); $('#done').scrollLeft = $('#done').scrollWidth; }
 function renderChapters() {
   const best = bestStars(saved.artifacts), counts = {}; for (const id of contract.chapters.order) { const m = contract.modes[id]; counts[m.lesson] = [m.writingTaskIds.filter(t => saved.passedTaskIds.includes(t)).length, m.writingTaskIds.length, (m.lesson ? '第' + m.lesson + '課 ' : '') + m.title, ...lessonStars(m.writingTaskIds, best)]; }
@@ -169,11 +180,24 @@ function friendGoal(extraTaskId) {
 }
 const friendNote = g => g && g.left <= Math.ceil(g.total / 2) ? `再寫 ${g.left} 個字，新朋友就來了！` : '';
 // v11 漢字積木資料（獨立檔，不動已鎖 SHA 的題庫）：載入失敗就照舊只唸「字，詞的字」
-let ENRICH = {}; try { const r = await fetch('./game/char_enrichment.json?v=28', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
+let ENRICH = {}; try { const r = await fetch('./game/char_enrichment.json?v=29', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
 log('enrichment ' + Object.keys(ENRICH).length + ' chars');
+// v12 台灣標準筆順：和教育部筆順網不同的字改讀 data-tw（只重排／切開原資料）；索引載入失敗就照舊用原資料
+let TW_CHARS = new Set(); try { const r = await fetch('./vendor-v2/hanzi-writer/data-tw/index.json?v=29', { cache: 'no-cache' }); if (r.ok) TW_CHARS = new Set(Object.keys((await r.json()).chars ?? {})); } catch (e) { log('data-tw index load failed: ' + e); }
+log('data-tw ' + TW_CHARS.size + ' chars');
+// v12 筆畫名稱（台灣用語，人工核對 pending）：載入失敗就不唸名稱
+let SNAMES = {}; try { const r = await fetch('./game/stroke_names.json?v=29', { cache: 'no-cache' }); if (r.ok) SNAMES = (await r.json()).chars ?? {}; } catch (e) { log('stroke names load failed: ' + e); }
 const panel = new WritingPanel({
   dataBase: './vendor-v2/hanzi-writer/data/',
+  dataBaseFor: ch => TW_CHARS.has(ch) ? './vendor-v2/hanzi-writer/data-tw/' : null,
   enrich: ch => ENRICH[ch] ?? null,
+  strokeNames: ch => SNAMES[ch] ?? null,
+  settings: () => SETTINGS, // v12 家長設定（示範速度、口訣長短、筆畫名稱語音）
+  // v12 關卡：過了描紅解鎖提示、過了提示解鎖聽寫；預設挑還沒過的最低一關（舊作品沒有 level 視為描紅）
+  levels: id => {
+    const done = new Set(saved.artifacts.filter(a => a.taskId === id).map(a => a.meta?.level ?? 1)), unlocked = done.has(2) ? 3 : done.has(1) ? 2 : 1;
+    return { unlocked, suggested: [1, 2, 3].find(l => l <= unlocked && !done.has(l)) ?? 3, done: [...done] };
+  },
   isFirstMeet: id => !saved.artifacts.some(a => a.taskId === id),
   starUrl: LOBBY2D ? town.url('fx_star') : null,
   bestStars: id => bestStars(saved.artifacts).get(id) ?? 0,
@@ -185,7 +209,7 @@ const panel = new WritingPanel({
   sound,
   voice,
   log,
-  onOpen: () => { lobby.pause('panel'); $('#startBtn').disabled = true; },
+  onOpen: () => { lobby.pause('panel'); $('#startBtn').disabled = true; $('#reviewBtn').disabled = true; },
   onClose: async info => {
     lobby.resume('panel'); log('panel closed ' + JSON.stringify(info));
     const effect = pendingEffect; pendingEffect = null;
@@ -199,12 +223,16 @@ const panel = new WritingPanel({
     } diag.saved = { passed: saved.passedTaskIds, rewards: saved.ledger.length, artifacts: saved.artifacts.length };
     renderChapters(); updateAlbumBtn();
     if (newFriends.length) { const b = $('#albumBtn'); b.classList.remove('al-ping'); void b.offsetWidth; b.classList.add('al-ping'); voice.say(`新朋友${newFriends[0].name}來了！`); diag.newFriends = newFriends.map(r => r.name); }
-    $('#startBtn').disabled = false; $('#startBtn').focus(); // 慶祝動畫播完才能開下一個字
+    $('#startBtn').disabled = false; $('#reviewBtn').disabled = false; $('#startBtn').focus(); // 慶祝動畫播完才能開下一個字
+    if (review?.active) { store.mode = MODE; review.active = false; if (info.reason === 'done') review.i += 1; }
     if (info.reason === 'done') pickNext();
+    const reviewDoneNow = review && review.i >= review.ids.length;
+    if (reviewDoneNow) { try { localStorage.setItem(REVIEW_KEY, today()); } catch { /* 私密模式 */ } review = null; voice.say('甜點店補貨完成！謝謝你！'); }
+    updateReviewBtn(); updatePartsBtn();
     // 已領過獎的字再寫一次：只保存作品、沒有動畫，要在狀態列講清楚，孩子才不會以為壞了
     const note = effect && !effect.rewardNew ? `「${effect.char}」又寫了一次，很棒！（這個字的獎勵之前領過了）` : '';
     const friendNote = newFriends.length ? `新朋友「${newFriends.map(r => r.name).join('、')}」加入圖鑑！點「📖 圖鑑」看看。` : '';
-    setStatus(friendNote + note + nextLabel(!!note));
+    setStatus(reviewDoneNow ? '🍰 甜點店補貨完成！今天的複習做完了，明天再來喔。' : friendNote + note + nextLabel(!!note));
   },
   onCancel: i => { session.cancels.push(i); },
   onAttempt: async i => { log(`new attempt ${i.reason} ${i.attemptId}`); await store.markInProgress(loaded.writingTasks.get(i.taskId), i.attemptId); },
@@ -218,7 +246,7 @@ const panel = new WritingPanel({
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
-if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=28'); installTestDriver(panel); window.__game = { LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=29'); installTestDriver(panel); window.__game = { get parent() { return parent; }, get settings() { return SETTINGS; }, get partsGame() { return partsGame; }, reviewPicks: (...a) => reviewPicks(...a), get review() { return review; }, LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
@@ -227,6 +255,61 @@ function nextLabel(skipAllDone = false) {
 townFx.voice = voice; // v9：點影子朋友會說話
 townFx.mountPins({ onPick: l => switchChapter('lesson_' + l) });
 pickNext(); renderChapters();
+
+// v12 每日複習「甜點店補貨」：間隔重複（3 星乾淨寫完一次就升一格：當天、1、2、4、7、14 天；寫錯或用提示就回到 0），到期的、常錯的優先
+const REVIEW_KEY = 'capy_review_' + PROFILE_ID, REVIEW_N = 3, INTERVALS = [0, 1, 2, 4, 7, 14];
+const today = (d = new Date()) => d.toLocaleDateString('sv'); // YYYY-MM-DD（本機時區）
+const dayDiff = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
+let review = null; // { ids, i, active }
+function reviewPicks(n = REVIEW_N) {
+  const recs = new Map(), passed = new Set(saved.passedTaskIds);
+  for (const a of [...saved.artifacts].sort((x, y) => x.createdAt.localeCompare(y.createdAt))) {
+    if (!passed.has(a.taskId)) continue;
+    const r = recs.get(a.taskId) ?? { taskId: a.taskId, box: 0, last: null, misses: 0 }, day = today(new Date(a.createdAt)), clean = starsOf(a) === 3;
+    if (!clean) { r.box = 0; r.misses += 1; } else if (day !== r.last) r.box = Math.min(r.box + 1, INTERVALS.length - 1); // 同一天重寫不升格
+    r.last = day; recs.set(a.taskId, r);
+  }
+  const t = today(); for (const r of recs.values()) { r.age = dayDiff(r.last, t); r.due = r.age >= INTERVALS[r.box]; }
+  return [...recs.values()].sort((a, b) => (b.due - a.due) || (a.box - b.box) || (b.misses - a.misses) || (b.age - a.age)).slice(0, n);
+}
+const lessonModeOf = id => Object.keys(contract.modes).find(k => k.startsWith('lesson_') && contract.modes[k].writingTaskIds.includes(id));
+function updateReviewBtn() {
+  const b = $('#reviewBtn'); let doneToday = false; try { doneToday = localStorage.getItem(REVIEW_KEY) === today(); } catch { /* ignore */ }
+  if (!review && (doneToday || saved.passedTaskIds.length < REVIEW_N)) { b.hidden = true; return; }
+  const left = review ? review.ids.length - review.i : REVIEW_N;
+  b.hidden = false; b.innerHTML = review ? `🍰 繼續補貨（還有 ${left} 個字）` : `🍰 甜點店補貨<small>複習學過的 ${REVIEW_N} 個字</small>`;
+}
+async function startReview() {
+  if (opening || panel.isOpen()) return;
+  if (!review) { review = { ids: reviewPicks().map(r => r.taskId), i: 0 }; log('review ' + review.ids.join(',')); diag.review = { ids: review.ids, picks: reviewPicks() }; }
+  const id = review.ids[review.i], task = loaded.writingTasks.get(id), mode = lessonModeOf(id); if (!task || !mode) { review = null; updateReviewBtn(); return; }
+  opening = true;
+  try {
+    store.mode = mode; review.active = true; // 契約白名單以課為單位：複習哪一課的字就用哪一課的 mode 保存
+    const attemptId = crypto.randomUUID(), ok = await panel.start(task, { attemptId, index: review.i, total: review.ids.length });
+    if (ok) await store.markInProgress(task, attemptId); else { review.active = false; store.mode = MODE; }
+    log(`review start ${task.id} -> ${ok}`);
+  } finally { opening = false; }
+}
+$('#reviewBtn').addEventListener('click', () => { sound.unlock(); startReview(); });
+// v12 家長面板（統計＋設定）
+let SETTINGS = loadSettings();
+const parent = new ParentPanel({ log, onSettings: s => { SETTINGS = s; },
+  getData: () => ({ artifacts: saved.artifacts, passedTaskIds: saved.passedTaskIds, tasks: loaded.writingTasks, names: SNAMES,
+    totalChars: new Set(Object.keys(contract.modes).filter(k => k.startsWith('lesson_')).flatMap(k => contract.modes[k].writingTaskIds).map(id => loaded.writingTasks.get(id)?.char)).size }) });
+$('#parentBtn').addEventListener('click', () => { if (!panel.isOpen() && !partsGame?.isOpen()) parent.open(); });
+// v12 部件小偵探：學過 4 個字以上才出現；字庫＝學過的字＋目前這一課的字
+let PARTS = null; try { const r = await fetch('./game/parts_game.json?v=29', { cache: 'no-cache' }); if (r.ok) PARTS = await r.json(); } catch (e) { log('parts game load failed: ' + e); }
+const partsGame = PARTS && new PartsGame({ data: PARTS, voice, sound, log,
+  onOpen: () => { lobby.pause('parts'); $('#startBtn').disabled = true; },
+  onClose: r => { lobby.resume('parts'); $('#startBtn').disabled = false; diag.partsGame = r; setStatus(`🧩 部件小偵探完成 ${r.rounds}／${r.total} 題！` + nextLabel()); } });
+const charsOf = ids => ids.map(id => loaded.writingTasks.get(id)?.char).filter(Boolean);
+function updatePartsBtn() { $('#partsBtn').hidden = !partsGame || new Set(charsOf(saved.passedTaskIds)).size < 4; }
+$('#partsBtn').addEventListener('click', () => {
+  if (panel.isOpen() || partsGame?.isOpen()) return; sound.unlock();
+  const pool = [...new Set([...charsOf(saved.passedTaskIds), ...charsOf(demoIds)])], words = Object.fromEntries([...loaded.writingTasks.values()].map(t => [t.char, t.hint_word]));
+  if (!partsGame.open(pool, words)) setStatus('再多學幾個字，就能玩部件小偵探囉！');
+});
 
 // 4) 入口：DOM 大按鈕。滑鼠／觸控／鍵盤（Enter、Space 由 button 原生處理）都走同一個 click；panel.start() 已開啟時直接忽略。
 let opening = false;
@@ -251,13 +334,15 @@ await new Promise(res => { const r0 = lobby.renderCount; const tick = () => (lob
 diag.loadMs.firstFrame = Math.round(performance.now() - t0);
 $('#startBtn').textContent = contract.entry.label; $('#startBtn').disabled = false;
 fitStage(); townFx.placePins(); /* v7：章節列、按鈕文字都就位後再量一次版面 */
-$('#albumBtn').disabled = false; updateAlbumBtn(); // v8 修正：v7 這行被上一行的 // 註解吃掉，圖鑑鈕一直是停用
+$('#albumBtn').disabled = false; updateAlbumBtn(); updateReviewBtn(); updatePartsBtn(); // v8 修正：v7 這行被上一行的 // 註解吃掉，圖鑑鈕一直是停用
 setStatus(nextLabel());
 diag.loadMs.ready = Math.round(performance.now() - t0);
 // 測試自動跑（?test=1&autoplay=1）：用合成筆跡依序寫完 demo3 三字，供 headless 截圖與煙霧測試；不是真人操作
 if (qs.get('test') === '1' && qs.get('autoplay') === '1') {
   const sleep = ms => new Promise(r => setTimeout(r, ms));
-  (async () => { for (let i = 0; i < demoIds.length; i++) { $('#startBtn').click(); await sleep(900); await window.__wpDrawAll({ jitter: 6 }); await sleep(1500); document.querySelector('button[data-act="next"]')?.click(); await sleep(1500); } log('autoplay done'); })();
+  // v12：等慶祝動畫播完（開始鈕恢復）、面板字形載好再寫；v11 以前固定等 900ms，第 1 課第一個字的獎勵動畫比較長，第二個字就會撲空
+  const until = async (f, ms = 30000) => { const t = performance.now(); while (!f()) { if (performance.now() - t > ms) throw new Error('autoplay timeout'); await sleep(100); } };
+  (async () => { for (let i = 0; i < demoIds.length; i++) { await until(() => !$('#startBtn').disabled && !panel.isOpen()); $('#startBtn').click(); await until(() => panel.state?.writer); await sleep(400); await window.__wpDrawAll({ jitter: 6 }); await until(() => document.querySelector('button[data-act="next"]:not([hidden])')); document.querySelector('button[data-act="next"]').click(); } log('autoplay done'); })().catch(e => log('autoplay failed: ' + e));
 }
 // 載入後靜置 2 秒量一次 draw calls 與 RAF／render 頻率
 setTimeout(async () => { diag.measures.push({ when: 'lobby_idle', ...(await lobby.measure(2000)) }); log('measured lobby_idle'); }, 500);

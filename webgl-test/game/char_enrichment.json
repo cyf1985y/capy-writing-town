@@ -1,7 +1,7 @@
 {
  "_meta": {
-  "version": "1.0",
-  "note": "首冊（數字＋第1～6課）漢字積木資料。50 字來自使用者規格書；標 source=claude 的 39 字由 Claude 依同風格補齊，口訣內容待人工審核。四 的 componentStrokes [2,3] 已移除：字形資料 radStrokes=[0,1,4]（口的封口橫最後寫），前後切分會塗錯色。componentStrokes 加總皆已對過 vendor-v2/hanzi-writer/data 的筆畫數。"
+  "version": "1.1",
+  "note": "首冊（數字＋第1～6課）漢字積木資料。50 字來自使用者規格書；標 source=claude 的 39 字由 Claude 依同風格補齊，口訣內容待人工審核。四 的 componentStrokes [2,3] 已移除：字形資料 radStrokes=[0,1,4]（口的封口橫最後寫），前後切分會塗錯色。componentStrokes 加總皆已對過 vendor-v2/hanzi-writer/data 的筆畫數。；v12：依教育部筆順，艹 4 畫、阝 3 畫、辶 4 畫，更新這／花／草／啊／陪／那的 componentStrokes，「我」口訣不再說那一點是最後一筆"
  },
  "chars": {
   "一": {
@@ -143,7 +143,7 @@
    "doneSay": "這個甜點看起來最美味！",
    "componentStrokes": [
     7,
-    3
+    4
    ],
    "source": "spec"
   },
@@ -438,7 +438,7 @@
    "introSay": "花，花朵的花！頭上長著小草「艹」，下面「化」成一朵香噴噴的漂亮小花！",
    "doneSay": "花園裡開滿了草莓花！",
    "componentStrokes": [
-    3,
+    4,
     4
    ],
    "source": "spec"
@@ -449,7 +449,7 @@
    "introSay": "草，小草的草！頭上是草字頭「艹」，「早」上太陽出來了，小草長得綠油油！",
    "doneSay": "青草地野餐派對開始囉！",
    "componentStrokes": [
-    3,
+    4,
     6
    ],
    "source": "spec"
@@ -504,7 +504,7 @@
   "我": {
    "char": "我",
    "formula": "手 ＋ 戈（長叉子） ＝ 我",
-   "introSay": "我，我的我！左邊像一隻手，右邊像一把長長的叉子，最後別忘了右上角那一點喔！",
+   "introSay": "我，我的我！左邊像一隻手，右邊像一把長長的叉子，右上角那一點別忘了喔！",
    "doneSay": "我做到了！獎勵一塊巧克力！",
    "source": "claude"
   },
@@ -533,7 +533,7 @@
    "doneSay": "啊！好大的蛋糕送給你！",
    "componentStrokes": [
     3,
-    7
+    8
    ],
    "source": "claude"
   },
@@ -612,7 +612,7 @@
    "introSay": "陪，陪我的陪！左邊是耳朵旁，右邊是「立」加「口」，好朋友站在旁邊陪你說話！",
    "doneSay": "卡比巴拉一直陪著你！",
    "componentStrokes": [
-    2,
+    3,
     8
    ],
    "source": "claude"
@@ -858,7 +858,7 @@
    "doneSay": "那邊有好多好吃的！",
    "componentStrokes": [
     4,
-    2
+    3
    ],
    "source": "claude"
   }

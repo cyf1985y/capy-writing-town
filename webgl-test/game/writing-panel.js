@@ -4,9 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=28';
-import { bravo, flash, spark } from './fx.js?v=28';
-import { starsOf } from './stars.js?v=28'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=29';
+import { bravo, flash, spark } from './fx.js?v=29';
+import { starsOf } from './stars.js?v=29'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -42,6 +42,13 @@ export function introText(char, word) {
     || ([...word].length >= 3 && word.at(-1) !== char); // 三字以上的短句（走在小路上、他也拍）不接「的字」
   return pause ? `${char}，${word}，${char}` : `${char}，${word}的${char}`;
 }
+/** v12 漸進褪除：描紅（完整底圖）→ 提示（只剩起筆點）→ 聽寫（什麼都不給，只聽詞語）。過一關解鎖下一關。 */
+export const LEVELS = Object.freeze([{ n: 1, icon: '🖍️', label: '描紅' }, { n: 2, icon: '💡', label: '提示' }, { n: 3, icon: '👂', label: '聽寫' }]);
+export const levelIcon = n => LEVELS[(n ?? 1) - 1]?.icon ?? '';
+/** 聽寫時詞語裡的目標字換成○（「你拍手」→「○拍手」） */
+export const maskWord = (word, char) => (word ?? '').split(char).join('○');
+/** v12 家長設定：示範動畫速度 */
+export const DEMO_SPEED = Object.freeze({ slow: { strokeAnimationSpeed: 0.55, delayBetweenStrokes: 650 }, mid: { strokeAnimationSpeed: 1, delayBetweenStrokes: 350 }, fast: { strokeAnimationSpeed: 1.6, delayBetweenStrokes: 180 } });
 export const PART_COLORS = ['rgba(235, 110, 100, 0.38)', 'rgba(85, 165, 230, 0.38)', 'rgba(90, 190, 135, 0.38)'];
 const medianLen = m => m.reduce((a, p, i) => i ? a + Math.hypot(p[0] - m[i - 1][0], p[1] - m[i - 1][1]) : 0, 0);
 
@@ -91,6 +98,14 @@ const CSS = `
 .wp-stars span{font-size:40px;line-height:46px;text-align:center;color:#FFB800}
 .wp-stars .off{filter:grayscale(1) opacity(.3)}
 @keyframes wp-star{0%{transform:scale(0) rotate(-40deg)}100%{transform:none}}
+.wp-formula[hidden],.wp-story[hidden],.wp-stars[hidden]{display:none} /* v12：class 的 display 會蓋過 hidden（重試後舊星星還在也是這個原因） */
+.wp-levels{display:flex;gap:6px;justify-content:center;margin:0 0 8px}
+.wp-levels button{font:inherit;font-size:14px;font-weight:700;padding:5px 10px;border-radius:999px;border:2px solid #F5CBA7;background:#fff;color:#6E473B;cursor:pointer;touch-action:manipulation}
+.wp-levels button[aria-pressed=true]{background:#FFA94D;border-color:#FFA94D;color:#fff}
+.wp-levels button:disabled{opacity:.4;cursor:default}
+.wp-levels button.wp-cleared::after{content:' ✓'}
+.wp-sname{position:absolute;left:8px;top:8px;z-index:3;pointer-events:none;background:rgba(255,248,231,.94);border:2px solid #F5CBA7;border-radius:999px;padding:2px 10px;font-size:15px;font-weight:700;color:#6E473B}
+.wp-sname b{color:#E8665C;font-size:17px}
 `;
 
 function injectCss() {
@@ -151,9 +166,10 @@ export class WritingPanel {
   /** v4：唸「字，詞的字」。在 start() 內同步呼叫（仍在按鈕手勢內），iOS 才肯出聲。 */
   _say(kind = 'intro') {
     const s = this.state; if (!s || !this.voice) return false;
+    const cfg = this.o.settings?.() ?? {};
     // v11：第一次遇到這個字唸完整口訣，複習時唸短句；「聽故事」一定唸口訣；寫完唸甜點台詞
-    const e = s.enrich, text = kind === 'done' ? (e?.doneSay ?? s.char) : e?.introSay && (kind === 'story' || s.firstMeet) ? e.introSay : introText(s.char, s.task.hint_word);
-    const ok = this.voice.say(text); this.log(`say(${kind}) ${text} -> ${ok}`); return ok;
+    const e = s.enrich, text = kind === 'done' ? `一共${s.totalStrokes}畫！${e?.doneSay ?? s.char}` : e?.introSay && s.level !== 3 && (kind === 'story' || (s.firstMeet && cfg.intro !== 'short')) ? e.introSay : introText(s.char, s.task.hint_word);
+    const ok = this.voice.say(text); this.log(`say(${kind}) ${text} -> ${ok}`); s.introPlaying = ok && kind !== 'done'; return ok;
   }
 
   isOpen() { return this.open; }
@@ -161,19 +177,22 @@ export class WritingPanel {
   /** 開啟面板寫一個任務。已開啟時忽略（滑鼠／觸控／鍵盤都只能開一次）。 */
   async start(task, { attemptId = uuid(), index = 0, total = 1 } = {}) {
     if (this.open) { this.log('ignored: panel already open'); return false; }
-    this.open = true;
+    this.open = true; this._saving = false;
     this.state = { task, char: task.char, attemptId, index, total, drawnPaths: [], mistakes: 0, hints: 0, demoViews: 0, writer: null, done: false, startedAt: performance.now() };
     this.state.enrich = this.o.enrich?.(task.char) ?? null; // v11 漢字積木：公式、口訣、寫完台詞、部件筆畫數
     this.state.firstMeet = this.o.isFirstMeet?.(task.id) ?? true;
+    { const lv = this.o.levels?.(task.id) ?? { unlocked: 1, suggested: 1, done: [] }; Object.assign(this.state, { level: lv.suggested, unlocked: lv.unlocked, cleared: new Set(lv.done) }); } // v12 關卡
     this._build();
     this._say('intro');
     this.o.onOpen?.();
     try {
-      const { data, sha256 } = await loadCharData(task.char, this.dataBase);
+      const base = this.o.dataBaseFor?.(task.char) ?? this.dataBase; // v12：教育部筆順不同的字改讀台灣版 data-tw
+      const { data, sha256 } = await loadCharData(task.char, base);
+      this.state.glyphSource = base === this.dataBase ? 'hanzi-writer-data' : 'data-tw';
       if (!this.open) return false; // 載入中被取消
       this.state.dataSha256 = sha256;
       this._mountWriter(data);
-      this._setMsg(this.state.enrich?.introSay ?? `請照筆順寫「${task.char}」`);
+      this._applyLevel();
       this._startQuiz();
     } catch (err) {
       if (!this.open) return false;
@@ -203,12 +222,14 @@ export class WritingPanel {
     el.innerHTML = `
       <div class="wp-dialog" tabindex="-1">
         <div class="wp-head"><h2>${s.char}</h2><span class="wp-zhuyin">${s.task.zhuyin ?? ''}　${s.task.hint_word ?? ''}</span><button type="button" class="wp-say" aria-label="再唸一次">🔈</button><span class="wp-hint">第 ${s.index + 1} / ${s.total} 字</span></div>
+        <div class="wp-levels" role="group" aria-label="關卡">${LEVELS.map(l => `<button type="button" data-level="${l.n}">${l.icon} ${l.label}</button>`).join('')}</div>
         <div class="wp-progress"></div>
         ${s.enrich?.formula ? `<div class="wp-formula">🧩 漢字積木：${s.enrich.formula}</div>` : ''}
         <div class="wp-grid">
           <svg class="wp-lines" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="0" x2="50" y2="100" stroke="#e8c9a8" stroke-width=".6" stroke-dasharray="2 2"/><line x1="0" y1="50" x2="100" y2="50" stroke="#e8c9a8" stroke-width=".6" stroke-dasharray="2 2"/></svg>
           <div class="wp-target"></div>
           <svg class="wp-guide" aria-hidden="true"></svg>
+          <div class="wp-sname" hidden></div>
         </div>
         <div class="wp-talk"><div class="wp-buddy" hidden><img alt=""><small></small></div><div class="wp-msg">載入字形…</div>${s.enrich?.introSay ? '<button type="button" class="wp-story">🔊 聽故事</button>' : ''}</div>
         <div class="wp-stars" hidden></div>
@@ -226,10 +247,11 @@ export class WritingPanel {
       el.addEventListener(type, e => { e.stopPropagation(); if (type === 'wheel' || type === 'contextmenu') e.preventDefault(); }, { passive: type !== 'wheel' && type !== 'contextmenu' });
     }
     el.querySelector('.wp-say').addEventListener('click', () => this._say('intro'));
+    el.querySelector('.wp-levels').addEventListener('click', e => { const b = e.target.closest('button[data-level]'); if (b && !b.disabled) this._pickLevel(+b.dataset.level); });
     el.querySelector('.wp-story')?.addEventListener('click', () => { this._say('story'); this._setMsg(s.enrich.introSay); });
     // v4：手指／滑鼠寫字時留下星光尾巴（純裝飾，不影響判定）
     const grid = el.querySelector('.wp-grid'); let drawing = false, lastSpark = 0;
-    grid.addEventListener('pointerdown', e => { if (e.isPrimary !== false) drawing = true; });
+    grid.addEventListener('pointerdown', e => { if (e.isPrimary !== false) drawing = true; if (this.state?.introPlaying) { this.voice?.stop(); this.state.introPlaying = false; this.log('intro skipped'); } }); // v12：一下筆就停口訣，不用等唸完
     el.addEventListener('pointerup', () => { drawing = false; }); el.addEventListener('pointercancel', () => { drawing = false; });
     grid.addEventListener('pointermove', e => {
       if (!drawing || e.isPrimary === false || !this.state || this.state.done) return; const now = performance.now(); if (now - lastSpark < 28) return; lastSpark = now;
@@ -305,15 +327,16 @@ export class WritingPanel {
     s.writer = HanziWriter.create(target, s.char, {
       width: size, height: size, padding: QUIZ_CONFIG.padding,
       renderer: QUIZ_CONFIG.renderer,
-      showOutline: true, showCharacter: false,
+      showOutline: s.level === 1, showCharacter: false,
       strokeColor: '#2f3e46', outlineColor: '#dcd5c6', drawingColor: '#1c5d99', highlightColor: '#f08c00', highlightCompleteColor: '#2b8a3e',
       drawingWidth: QUIZ_CONFIG.drawingWidth, strokeWidth: QUIZ_CONFIG.strokeWidth,
-      strokeAnimationSpeed: 1, delayBetweenStrokes: 350,
+      ...(DEMO_SPEED[this.o.settings?.().speed] ?? DEMO_SPEED.mid), // v12 家長設定
       // 只讀本機、已載入的資料；絕不走預設 CDN loader
       charDataLoader: (char, onLoad, onError) => { if (char === s.char) onLoad(data); else onError(new Error('UNEXPECTED_CHAR:' + char)); },
       onLoadCharDataError: err => this._deferred(err),
     });
     s.totalStrokes = data.strokes.length;
+    const names = this.o.strokeNames?.(s.char); s.strokeNames = names?.length === s.totalStrokes ? names : null; // v12 筆畫名稱（台灣用語）
     this._colorParts(s.writer, s.enrich?.componentStrokes, s.totalStrokes);
     s.medians = data.medians; s.guideSize = size;
     s.guideXf = HanziWriter.getScalingTransform(size, size, QUIZ_CONFIG.padding);
@@ -330,11 +353,38 @@ export class WritingPanel {
     if (this.state?.writer === writer) this.state.partColors = parts;
   }
 
+  /** v12：依關卡更新標題、詞語、積木徽章、底圖與按鈕狀態 */
+  _applyLevel() {
+    const s = this.state, el = this.el; if (!s || !el) return;
+    const listen = s.level === 3;
+    el.querySelector('.wp-head h2').textContent = listen ? '？' : s.char;
+    el.querySelector('.wp-zhuyin').textContent = `${s.task.zhuyin ?? ''}　${listen ? maskWord(s.task.hint_word, s.char) : s.task.hint_word ?? ''}`;
+    for (const sel of ['.wp-formula', '.wp-story']) { const x = el.querySelector(sel); if (x) x.hidden = listen; }
+    for (const b of el.querySelectorAll('.wp-levels button')) { const n = +b.dataset.level; b.disabled = n > s.unlocked; b.setAttribute('aria-pressed', String(n === s.level)); b.classList.toggle('wp-cleared', s.cleared.has(n)); }
+    try { if (s.writer) (s.level === 1 ? s.writer.showOutline() : s.writer.hideOutline()); } catch { /* ignore */ }
+    this._setMsg(listen ? `聽寫：聽一聽「${maskWord(s.task.hint_word, s.char) || '○'}」，把○寫出來！` : s.level === 2 ? `提示關：沒有底圖了，跟著🥕寫「${s.char}」` : s.enrich?.introSay ?? `請照筆順寫「${s.char}」`);
+  }
+  _applyLevelButtons() { const s = this.state; for (const b of this.el?.querySelectorAll('.wp-levels button') ?? []) { const n = +b.dataset.level; b.disabled = n > s.unlocked; b.classList.toggle('wp-cleared', s.cleared.has(n)); } }
+  /** v12：換關卡＝重新開始一個 attempt */
+  _pickLevel(n) {
+    const s = this.state; if (!s?.writer || n > s.unlocked || (n === s.level && !s.done) || this._saving) return;
+    try { s.writer.cancelQuiz(); } catch { /* ignore */ }
+    s.level = n; s.nextAttemptReason = 'level'; this._applyLevel(); this._startQuiz(); this._say('intro'); this.log(`level ${n}`);
+  }
+
+  /** v12：格子左上角顯示「第 n 筆：橫」；n 超出範圍就收起來 */
+  _sname(n) {
+    const s = this.state, el = this.el?.querySelector('.wp-sname'); if (!el) return;
+    if (n < 0 || n >= s.totalStrokes) { el.hidden = true; return; }
+    const name = s.level === 3 ? null : s.strokeNames?.[n]; el.hidden = false; el.innerHTML = `第 ${n + 1} 筆${name ? `：<b>${name}</b>` : ''}`;
+  }
+  _nameOf(n) { return this.state?.strokeNames?.[n] ?? null; }
+
   /** v4：畫第 n 筆的起筆點；arrow=true 時再沿筆畫中線畫方向箭頭。n 超出範圍就清掉。 */
   _guide(n, { arrow = false } = {}) {
     const s = this.state, g = this.el?.querySelector('.wp-guide'); if (!g) return;
     const med = s?.medians?.[n];
-    if (!med || s.done) { g.innerHTML = ''; s && (s.guide = null); return; }
+    if (!med || s.done || (s.level === 3 && !arrow)) { g.innerHTML = ''; s && (s.guide = null); return; } // v12 聽寫關不給起筆點（錯兩次的箭頭仍會出現）
     const t = s.guideXf, sz = s.guideSize, k = 1 / t.scale, [x0, y0] = med[0];
     let h = `<g transform="${t.transform}">`;
     if (arrow && med.length > 1) {
@@ -356,10 +406,10 @@ export class WritingPanel {
     // 每次 quiz 開始＝一個 attempt：重試、看示範後都換新 attemptId、計數歸零（契約 progressRecord 以 attempt 為單位）
     if (s.quizRuns) { s.previousAttemptIds.push(s.attemptId); s.attemptId = uuid(); this.o.onAttempt?.({ taskId: s.task.id, char: s.char, attemptId: s.attemptId, reason: s.nextAttemptReason ?? 'retry' }); }
     s.previousAttemptIds ??= []; s.nextAttemptReason = null;
-    s.drawnPaths = []; s.mistakes = 0; s.hints = 0; s.demoViews = 0; s.done = false; s.quizStartedAt = performance.now(); s.quizRuns = (s.quizRuns ?? 0) + 1;
+    s.drawnPaths = []; s.mistakesByStroke = []; s.mistakes = 0; s.hints = 0; s.demoViews = 0; s.done = false; s.quizStartedAt = performance.now(); s.quizRuns = (s.quizRuns ?? 0) + 1;
     this._progress(s.totalStrokes, 0);
     this._setButtons({ demo: true, retry: true, cancel: true, next: false });
-    s.earlyHints = 0; this._guide(0);
+    s.earlyHints = 0; this._guide(0); this._sname(0);
     { const st = this.el?.querySelector('.wp-stars'); if (st) st.hidden = true; } // v9：重寫時先收起星星
     s.leniencyByStroke = []; s.leniencyBoostAll = s.totalStrokes >= FAT_FINGER.minStrokes;
     s.writer.quiz({
@@ -373,7 +423,10 @@ export class WritingPanel {
         s.drawnPaths.push(d.drawnPath.points.map(p => ({ x: p.x, y: p.y })));
         this._setLeniency(d.strokeNum + 1);
         this._progress(s.totalStrokes, d.strokeNum + 1);
-        this._setMsg(d.strokesRemaining ? `對了！還有 ${d.strokesRemaining} 筆` : '全部寫完了！', 'wp-ok');
+        const done = this._nameOf(d.strokeNum), next = this._nameOf(d.strokeNum + 1);
+        if (done && this.voice && this.o.settings?.().strokeVoice !== false) { this.voice.say(done, { rate: 0.9 }); this.log(`say(stroke) ${done}`); } // v12：寫對一筆就唸這一筆的名稱（同時會打斷還在唸的口訣）
+        this._setMsg(d.strokesRemaining ? `對了！還有 ${d.strokesRemaining} 筆${next ? `，下一筆是「${next}」` : ''}` : '全部寫完了！', 'wp-ok');
+        this._sname(d.strokesRemaining ? d.strokeNum + 1 : -1);
         this.o.sound?.stroke(d.strokeNum); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g);
         const tg = this.el?.querySelector('.wp-target'); if (tg) flash(tg, 'fx-squash');
         this._guide(d.strokesRemaining ? d.strokeNum + 1 : -1);
@@ -381,13 +434,14 @@ export class WritingPanel {
         this.log(`correct stroke ${d.strokeNum + 1}/${s.totalStrokes}, points=${d.drawnPath.points.length}`);
       },
       onMistake: d => {
-        s.mistakes += 1;
+        s.mistakes += 1; s.mistakesByStroke[d.strokeNum] = (s.mistakesByStroke[d.strokeNum] ?? 0) + 1; // v12 家長面板：錯在第幾筆
         if (QUIZ_CONFIG.showHintAfterMisses !== false && d.mistakesOnStroke >= QUIZ_CONFIG.showHintAfterMisses) s.hints += 1; // 此次會閃示範筆
         else if (d.mistakesOnStroke === EARLY_HINT_AFTER) { // v4：錯第 2 次就示範這一筆＋方向箭頭（算一次提示）
           s.hints += 1; s.earlyHints += 1; this._guide(d.strokeNum, { arrow: true });
           try { s.writer.highlightStroke(d.strokeNum); } catch { /* ignore */ }
         }
-        this._setMsg(d.isBackwards ? '方向反了，從橘色點開始寫' : d.mistakesOnStroke >= EARLY_HINT_AFTER ? '照著橘色箭頭寫這一筆' : '再試一次，從橘色點開始', 'wp-err');
+        const nm = this._nameOf(d.strokeNum), which = nm ? `這一筆是「${nm}」，` : '';
+        this._setMsg(d.isBackwards ? '方向反了，從橘色點開始寫' : d.mistakesOnStroke >= EARLY_HINT_AFTER ? `${which}照著橘色箭頭寫` : `${which}再試一次，從橘色點開始`, 'wp-err');
         this.o.sound?.mistake(); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g, 'fx-shake');
         this._buddyPose('surprised', 900);
         this.log(`mistake on stroke ${d.strokeNum + 1} (onStroke=${d.mistakesOnStroke}, backwards=${d.isBackwards})`);
@@ -406,13 +460,13 @@ export class WritingPanel {
 
   async _complete(summary) {
     const s = this.state;
-    s.done = true; this._guide(-1);
+    s.done = true; this._guide(-1); this._sname(-1);
     const artifact = {
       artifactId: uuid(), taskId: s.task.id, attemptId: s.attemptId, char: s.char,
       drawnPaths: s.drawnPaths, mistakes: s.mistakes, hints: s.hints + s.demoViews,
       createdAt: new Date().toISOString(), writerVersion: WRITER_VERSION, dataSha256: s.dataSha256,
       // 補充欄位（不在契約最小格式內，但對驗收有用）
-      meta: { dataVersion: DATA_VERSION, pointSpace: 'hanzi-writer character coords (1024 em, y-up)', totalStrokes: s.totalStrokes, durationMs: Math.round(performance.now() - s.quizStartedAt), earlyHints: s.earlyHints ?? 0, leniencyByStroke: s.leniencyByStroke, multiTouchBlocked: s.multiTouchBlocked ?? 0, panelOpenMs: Math.round(performance.now() - s.startedAt), attemptIndex: s.quizRuns, previousAttemptIds: s.previousAttemptIds, demoViews: s.demoViews, quizConfig: QUIZ_CONFIG },
+      meta: { level: s.level ?? 1, mistakesByStroke: Array.from({ length: s.totalStrokes }, (_, i) => s.mistakesByStroke[i] ?? 0), dataVersion: DATA_VERSION, glyphSource: s.glyphSource ?? 'hanzi-writer-data', pointSpace: 'hanzi-writer character coords (1024 em, y-up)', totalStrokes: s.totalStrokes, durationMs: Math.round(performance.now() - s.quizStartedAt), earlyHints: s.earlyHints ?? 0, leniencyByStroke: s.leniencyByStroke, multiTouchBlocked: s.multiTouchBlocked ?? 0, panelOpenMs: Math.round(performance.now() - s.startedAt), attemptIndex: s.quizRuns, previousAttemptIds: s.previousAttemptIds, demoViews: s.demoViews, quizConfig: QUIZ_CONFIG },
     };
     this._setButtons({ demo: false, retry: false, cancel: false, next: false });
     this._setMsg('寫得好！正在保存…', 'wp-ok');
@@ -420,10 +474,14 @@ export class WritingPanel {
     // v9：星星（由這次的 mistakes／hints 算）＋和之前最佳比較；小夥伴跳起來
     const stars = starsOf(artifact), prevBest = this.o.bestStars?.(s.task.id) ?? 0;
     s.stars = stars; s.prevBest = prevBest; this._showStars(stars); this._buddyPose('happy', 0, true); setTimeout(() => this._buddyPose('wave', 0, true), 900);
+    s.cleared.add(s.level); const unlockedNow = s.level === s.unlocked && s.unlocked < 3; if (unlockedNow) s.unlocked += 1;
+    const levelNote = unlockedNow ? `解鎖「${LEVELS[s.unlocked - 1].icon} ${LEVELS[s.unlocked - 1].label}」關！` : s.level === 3 ? '聽寫也會了！' : '';
     const starNote = prevBest && stars > prevBest ? `比上次多 ${stars - prevBest} 顆星！` : stars === 3 ? '三顆星！' : stars === 2 ? '下次不寫錯就有三顆星喔！' : '下次自己寫，星星會更多喔！';
+    this._saving = true; // v12：保存完成前不能換關卡（保存失敗就一直鎖到重試保存成功）
     try {
-      await this.o.onArtifact?.(artifact);
-      this._setMsg(`${s.enrich?.doneSay ?? `「${s.char}」寫好了！`}${starNote}${this.o.doneNote?.(s.task.id) ?? ''}`, 'wp-ok');
+      await this.o.onArtifact?.(artifact); this._saving = false;
+      this._setMsg(`${s.enrich?.doneSay ?? `「${s.char}」寫好了！`}${starNote}${levelNote}${this.o.doneNote?.(s.task.id) ?? ''}`, 'wp-ok');
+      this._applyLevelButtons();
       this._setButtons({ demo: false, retry: true, cancel: false, next: true });
     } catch (err) {
       this.log('save failed: ' + err);
@@ -446,10 +504,10 @@ export class WritingPanel {
   async _act(act) {
     const s = this.state; if (!s) return;
     if (act === 'cancel') { this.close(s.done ? 'close' : 'cancel'); return; }
-    if (act === 'retry') { if (!s.writer) return; s.writer.cancelQuiz(); this._setMsg(`再寫一次「${s.char}」`); s.nextAttemptReason = 'retry'; this._startQuiz(); return; }
+    if (act === 'retry') { if (!s.writer) return; s.writer.cancelQuiz(); this._setMsg(`再寫一次「${s.level === 3 ? '○' : s.char}」`); s.nextAttemptReason = 'retry'; this._startQuiz(); return; }
     if (act === 'demo') {
       if (!s.writer) return;
-      s.writer.cancelQuiz(); s.nextAttemptReason = 'demo'; const demoViews = s.demoViews + 1; this._guide(-1);
+      s.writer.cancelQuiz(); s.nextAttemptReason = 'demo'; const demoViews = s.demoViews + 1; this._guide(-1); this._sname(-1);
       this._setButtons({ demo: false, retry: false, cancel: true, next: false });
       this._setMsg('看看怎麼寫…');
       await s.writer.animateCharacter();
@@ -462,7 +520,7 @@ export class WritingPanel {
     }
     if (act === 'resave') {
       const b = this._btn('resave'); b.disabled = true;
-      try { await this.o.onArtifact?.(this._pendingArtifact); this._setMsg(`「${s.char}」寫好了！`, 'wp-ok'); b.textContent = '去小鎮看看 ▶'; b.dataset.act = 'next'; b.disabled = false; this._btn('retry').disabled = false; }
+      try { await this.o.onArtifact?.(this._pendingArtifact); this._saving = false; this._setMsg(`「${s.char}」寫好了！`, 'wp-ok'); b.textContent = '去小鎮看看 ▶'; b.dataset.act = 'next'; b.disabled = false; this._btn('retry').disabled = false; }
       catch (err) { b.disabled = false; this._setMsg('保存仍失敗：' + (err?.message || err), 'wp-err'); }
       return;
     }
