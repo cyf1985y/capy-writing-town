@@ -4,9 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=27';
-import { bravo, flash, spark } from './fx.js?v=27';
-import { starsOf } from './stars.js?v=27'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=28';
+import { bravo, flash, spark } from './fx.js?v=28';
+import { starsOf } from './stars.js?v=28'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -42,6 +42,7 @@ export function introText(char, word) {
     || ([...word].length >= 3 && word.at(-1) !== char); // 三字以上的短句（走在小路上、他也拍）不接「的字」
   return pause ? `${char}，${word}，${char}` : `${char}，${word}的${char}`;
 }
+export const PART_COLORS = ['rgba(235, 110, 100, 0.38)', 'rgba(85, 165, 230, 0.38)', 'rgba(90, 190, 135, 0.38)'];
 const medianLen = m => m.reduce((a, p, i) => i ? a + Math.hypot(p[0] - m[i - 1][0], p[1] - m[i - 1][1]) : 0, 0);
 
 const CSS = `
@@ -83,6 +84,8 @@ const CSS = `
 .wp-talk .wp-msg{flex:1;margin:0}
 .wp-buddy:not([hidden])+.wp-msg{position:relative;background:#fff;border:2px solid #F7C9C0;border-radius:14px;padding:8px 10px}
 .wp-buddy:not([hidden])+.wp-msg::before{content:'';position:absolute;left:-9px;top:50%;margin-top:-7px;border:7px solid transparent;border-right-color:#F7C9C0;border-left:0}
+.wp-formula{display:block;width:fit-content;max-width:100%;box-sizing:border-box;margin:0 auto 8px;background:#FFF8E7;border:2px solid #F5CBA7;border-radius:999px;color:#6E473B;font-weight:bold;font-size:15px;line-height:1.35;padding:6px 16px;box-shadow:0 2px 6px rgba(0,0,0,.08);text-align:center}
+.wp-story{flex:0 0 auto;font:inherit;font-size:14px;font-weight:700;color:#6E473B;background:#FFF8E7;border:2px solid #F5CBA7;border-radius:999px;padding:6px 10px;cursor:pointer;touch-action:manipulation;white-space:nowrap}
 .wp-stars{display:flex;justify-content:center;gap:6px;margin:-2px 0 8px;height:46px}
 .wp-stars>*{width:46px;height:46px;object-fit:contain;animation:wp-star .5s cubic-bezier(.3,1.6,.5,1) backwards}
 .wp-stars span{font-size:40px;line-height:46px;text-align:center;color:#FFB800}
@@ -114,7 +117,7 @@ export async function loadCharData(char, dataBase) {
 /** 作品卡：用孩子的 drawnPaths（character 座標）渲染，不用標準字。 */
 export function renderArtifactCard(artifact, { size = 160, color = '#2f3e46', width, grid = true } = {}) {
   const pad = Math.round(size * 0.06), n = artifact.drawnPaths.length;
-  width ??= Math.max(2, size * (n > 10 ? 0.05 : n > 6 ? 0.07 : 0.09)); // v10：筆畫多的字線條變細，卡片才不會糊成一團
+  width ??= size * 0.09 * (n >= 12 ? 0.62 : n >= 7 ? 0.78 : 1); // v11（規格 5.4）：基準＝卡片邊長 9%（v10 簡單字的粗細），7–11 畫 ×0.78、12 畫以上 ×0.62
   const t = HanziWriter.getScalingTransform(size, size, pad);
   const lines = grid ? `<line x1="${size / 2}" y1="0" x2="${size / 2}" y2="${size}" stroke="#e8e1d2" stroke-dasharray="4 4"/><line x1="0" y1="${size / 2}" x2="${size}" y2="${size / 2}" stroke="#e8e1d2" stroke-dasharray="4 4"/>` : '';
   const paths = artifact.drawnPaths.map(pts => `<polyline points="${pts.map(p => `${p.x},${p.y}`).join(' ')}" fill="none" stroke="${color}" stroke-width="${width / t.scale}" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
@@ -148,7 +151,8 @@ export class WritingPanel {
   /** v4：唸「字，詞的字」。在 start() 內同步呼叫（仍在按鈕手勢內），iOS 才肯出聲。 */
   _say(kind = 'intro') {
     const s = this.state; if (!s || !this.voice) return false;
-    const text = kind === 'done' ? s.char : introText(s.char, s.task.hint_word);
+    // v11：第一次遇到這個字唸完整口訣，複習時唸短句；「聽故事」一定唸口訣；寫完唸甜點台詞
+    const e = s.enrich, text = kind === 'done' ? (e?.doneSay ?? s.char) : e?.introSay && (kind === 'story' || s.firstMeet) ? e.introSay : introText(s.char, s.task.hint_word);
     const ok = this.voice.say(text); this.log(`say(${kind}) ${text} -> ${ok}`); return ok;
   }
 
@@ -159,6 +163,8 @@ export class WritingPanel {
     if (this.open) { this.log('ignored: panel already open'); return false; }
     this.open = true;
     this.state = { task, char: task.char, attemptId, index, total, drawnPaths: [], mistakes: 0, hints: 0, demoViews: 0, writer: null, done: false, startedAt: performance.now() };
+    this.state.enrich = this.o.enrich?.(task.char) ?? null; // v11 漢字積木：公式、口訣、寫完台詞、部件筆畫數
+    this.state.firstMeet = this.o.isFirstMeet?.(task.id) ?? true;
     this._build();
     this._say('intro');
     this.o.onOpen?.();
@@ -167,7 +173,7 @@ export class WritingPanel {
       if (!this.open) return false; // 載入中被取消
       this.state.dataSha256 = sha256;
       this._mountWriter(data);
-      this._setMsg(`請照筆順寫「${task.char}」`);
+      this._setMsg(this.state.enrich?.introSay ?? `請照筆順寫「${task.char}」`);
       this._startQuiz();
     } catch (err) {
       if (!this.open) return false;
@@ -198,12 +204,13 @@ export class WritingPanel {
       <div class="wp-dialog" tabindex="-1">
         <div class="wp-head"><h2>${s.char}</h2><span class="wp-zhuyin">${s.task.zhuyin ?? ''}　${s.task.hint_word ?? ''}</span><button type="button" class="wp-say" aria-label="再唸一次">🔈</button><span class="wp-hint">第 ${s.index + 1} / ${s.total} 字</span></div>
         <div class="wp-progress"></div>
+        ${s.enrich?.formula ? `<div class="wp-formula">🧩 漢字積木：${s.enrich.formula}</div>` : ''}
         <div class="wp-grid">
           <svg class="wp-lines" viewBox="0 0 100 100" preserveAspectRatio="none"><line x1="50" y1="0" x2="50" y2="100" stroke="#e8c9a8" stroke-width=".6" stroke-dasharray="2 2"/><line x1="0" y1="50" x2="100" y2="50" stroke="#e8c9a8" stroke-width=".6" stroke-dasharray="2 2"/></svg>
           <div class="wp-target"></div>
           <svg class="wp-guide" aria-hidden="true"></svg>
         </div>
-        <div class="wp-talk"><div class="wp-buddy" hidden><img alt=""><small></small></div><div class="wp-msg">載入字形…</div></div>
+        <div class="wp-talk"><div class="wp-buddy" hidden><img alt=""><small></small></div><div class="wp-msg">載入字形…</div>${s.enrich?.introSay ? '<button type="button" class="wp-story">🔊 聽故事</button>' : ''}</div>
         <div class="wp-stars" hidden></div>
         <div class="wp-actions">
           <button type="button" data-act="demo">看示範</button>
@@ -219,6 +226,7 @@ export class WritingPanel {
       el.addEventListener(type, e => { e.stopPropagation(); if (type === 'wheel' || type === 'contextmenu') e.preventDefault(); }, { passive: type !== 'wheel' && type !== 'contextmenu' });
     }
     el.querySelector('.wp-say').addEventListener('click', () => this._say('intro'));
+    el.querySelector('.wp-story')?.addEventListener('click', () => { this._say('story'); this._setMsg(s.enrich.introSay); });
     // v4：手指／滑鼠寫字時留下星光尾巴（純裝飾，不影響判定）
     const grid = el.querySelector('.wp-grid'); let drawing = false, lastSpark = 0;
     grid.addEventListener('pointerdown', e => { if (e.isPrimary !== false) drawing = true; });
@@ -306,9 +314,20 @@ export class WritingPanel {
       onLoadCharDataError: err => this._deferred(err),
     });
     s.totalStrokes = data.strokes.length;
+    this._colorParts(s.writer, s.enrich?.componentStrokes, s.totalStrokes);
     s.medians = data.medians; s.guideSize = size;
     s.guideXf = HanziWriter.getScalingTransform(size, size, QUIZ_CONFIG.padding);
     this._progress(s.totalStrokes, 0);
+  }
+
+  /** v11 部件分色描紅：描紅底圖（outline 層）依 componentStrokes 分段上色。Hanzi Writer 只設 stroke 屬性，inline style 會蓋過它。
+   *  加總不等於總筆畫數就不上色（維持原本淺色底圖）。 */
+  async _colorParts(writer, parts, total) {
+    if (!parts?.length || parts.reduce((a, b) => a + b, 0) !== total) { if (parts) this.log(`componentStrokes ${parts} != ${total}, skip`); return; }
+    await writer.getCharacterData().catch(() => null);
+    const rs = writer._hanziWriterRenderer?._outlineCharRenderer?._strokeRenderers; if (!rs) return;
+    let i = 0; parts.forEach((n, k) => { for (let j = 0; j < n; j++, i++) rs[i]?._animationPath?.style.setProperty('stroke', PART_COLORS[k % PART_COLORS.length]); });
+    if (this.state?.writer === writer) this.state.partColors = parts;
   }
 
   /** v4：畫第 n 筆的起筆點；arrow=true 時再沿筆畫中線畫方向箭頭。n 超出範圍就清掉。 */
@@ -404,7 +423,7 @@ export class WritingPanel {
     const starNote = prevBest && stars > prevBest ? `比上次多 ${stars - prevBest} 顆星！` : stars === 3 ? '三顆星！' : stars === 2 ? '下次不寫錯就有三顆星喔！' : '下次自己寫，星星會更多喔！';
     try {
       await this.o.onArtifact?.(artifact);
-      this._setMsg(`「${s.char}」寫好了！${starNote}${this.o.doneNote?.(s.task.id) ?? ''}`, 'wp-ok');
+      this._setMsg(`${s.enrich?.doneSay ?? `「${s.char}」寫好了！`}${starNote}${this.o.doneNote?.(s.task.id) ?? ''}`, 'wp-ok');
       this._setButtons({ demo: false, retry: true, cancel: false, next: true });
     } catch (err) {
       this.log('save failed: ' + err);

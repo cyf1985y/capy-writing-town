@@ -47,18 +47,18 @@ details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;b
 <details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
 <script type="importmap">{"imports":{"three":"./vendor-v2/build/three.module.js","three/addons/":"./vendor-v2/examples/jsm/"}}</script>
 <script type="module">
-import { loadContract, describeLoadError } from './game/content.js?v=27';
-import { WritingPanel, renderArtifactCard } from './game/writing-panel.js?v=27';
-import { loadTown } from './game/town-loader.js?v=27';
-import { Lobby } from './game/lobby.js?v=27';
-import { Store, clearProfile } from './game/store.js?v=27';
-import { Reward } from './game/reward.js?v=27';
-import { Sound, Voice } from './game/fx.js?v=27';
-import { TownFx, residentNames } from './game/town-fx.js?v=27';
-import { Album } from './game/album.js?v=27';
-import { applyTheme, applyUiColors } from './game/theme.js?v=27';
-import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=27';
-import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=27';
+import { loadContract, describeLoadError } from './game/content.js?v=28';
+import { WritingPanel, renderArtifactCard } from './game/writing-panel.js?v=28';
+import { loadTown } from './game/town-loader.js?v=28';
+import { Lobby } from './game/lobby.js?v=28';
+import { Store, clearProfile } from './game/store.js?v=28';
+import { Reward } from './game/reward.js?v=28';
+import { Sound, Voice } from './game/fx.js?v=28';
+import { TownFx, residentNames } from './game/town-fx.js?v=28';
+import { Album } from './game/album.js?v=28';
+import { applyTheme, applyUiColors } from './game/theme.js?v=28';
+import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=28';
+import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=28';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 const PROFILE_ID = qs.get('profile') || 'local-child-1'; // 第一版單一本機 profile，無選擇 UI
@@ -168,8 +168,13 @@ function friendGoal(extraTaskId) {
   const left = ids.filter(id => !passed.has(id)).length; return left ? { name: r.name, left, total: ids.length } : null;
 }
 const friendNote = g => g && g.left <= Math.ceil(g.total / 2) ? `再寫 ${g.left} 個字，新朋友就來了！` : '';
+// v11 漢字積木資料（獨立檔，不動已鎖 SHA 的題庫）：載入失敗就照舊只唸「字，詞的字」
+let ENRICH = {}; try { const r = await fetch('./game/char_enrichment.json?v=28', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
+log('enrichment ' + Object.keys(ENRICH).length + ' chars');
 const panel = new WritingPanel({
   dataBase: './vendor-v2/hanzi-writer/data/',
+  enrich: ch => ENRICH[ch] ?? null,
+  isFirstMeet: id => !saved.artifacts.some(a => a.taskId === id),
   starUrl: LOBBY2D ? town.url('fx_star') : null,
   bestStars: id => bestStars(saved.artifacts).get(id) ?? 0,
   doneNote: id => friendNote(friendGoal(id)),
@@ -213,7 +218,7 @@ const panel = new WritingPanel({
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
-if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=27'); installTestDriver(panel); window.__game = { LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=28'); installTestDriver(panel); window.__game = { LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
