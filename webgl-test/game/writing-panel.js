@@ -4,9 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=32';
-import { bravo, flash, spark } from './fx.js?v=32';
-import { starsOf } from './stars.js?v=32'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=33';
+import { bravo, flash, spark } from './fx.js?v=33';
+import { starsOf } from './stars.js?v=33'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -313,7 +313,7 @@ export class WritingPanel {
   _buddyPose(pose, ms = 0, hop = false) {
     const b = this._buddy, box = this.el?.querySelector('.wp-buddy'), img = box?.querySelector('img'); if (!b || !img) return;
     img.src = b.urls[pose] ?? b.urls.idle;
-    if (hop) { box.classList.remove('wp-hop'); void box.offsetWidth; box.classList.add('wp-hop'); }
+    if (hop) { if (box.animate) { box.getAnimations?.().forEach(a => a.cancel()); box.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-14%)' }, { transform: 'translateY(0)' }], { duration: 450, easing: 'ease-out' }); } else { box.classList.remove('wp-hop'); void box.offsetWidth; box.classList.add('wp-hop'); } } /* v16：用 Web Animations，不再強制重排 */
     clearTimeout(this._buddyT); if (ms) this._buddyT = setTimeout(() => { if (this.el && this._buddy === b) img.src = b.urls.idle; }, ms);
   }
   /** v9：完成時的星星（依序彈出，每顆一個音） */
@@ -453,11 +453,10 @@ export class WritingPanel {
         this._setLeniency(d.strokeNum + 1);
         this._progress(s.totalStrokes, d.strokeNum + 1);
         const done = this._nameOf(d.strokeNum), next = this._nameOf(d.strokeNum + 1);
-        if (done && this.voice && this.o.settings?.().strokeVoice !== false) { this.voice.say(done, { rate: 0.9 }); this.log(`say(stroke) ${done}`); } // v12：寫對一筆就唸這一筆的名稱（同時會打斷還在唸的口訣）
+        if (done && this.voice && this.o.settings?.().strokeVoice !== false) requestAnimationFrame(() => setTimeout(() => { if (this.state === s && !s.done) { this.voice.say(done, { rate: 0.9 }); this.log(`say(stroke) ${done}`); } }, 0)); // v12：寫對一筆就唸這一筆的名稱；v16：等這一幀畫完再唸，不和筆畫結束搶同一瞬間
         this._setMsg(d.strokesRemaining ? `對了！還有 ${d.strokesRemaining} 筆${next ? `，下一筆是「${next}」` : ''}` : '全部寫完了！', 'wp-ok');
         this._sname(d.strokesRemaining ? d.strokeNum + 1 : -1);
-        this.o.sound?.stroke(d.strokeNum); const g = this.el?.querySelector('.wp-grid'); if (g) flash(g);
-        const tg = this.el?.querySelector('.wp-target'); if (tg) flash(tg, 'fx-squash');
+        this.o.sound?.stroke(d.strokeNum); // v16：拿掉格子閃光（陰影動畫每格重畫）與整個字的縮放（iPhone 每格重繪整個 SVG）；回饋留音效、綠字與小幫手
         this._guide(d.strokesRemaining ? d.strokeNum + 1 : -1);
         if (d.strokesRemaining) this._buddyPose('happy', 650, true);
         this.log(`correct stroke ${d.strokeNum + 1}/${s.totalStrokes}, points=${d.drawnPath.points.length}`);

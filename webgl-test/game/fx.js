@@ -124,7 +124,7 @@ export function bravo(container, text = '好棒！') {
   burst(container, r.width / 2, r.height * 0.42, { n: 18, spread: Math.min(r.width, r.height) * 0.45 });
 }
 
-export function flash(el, cls = 'fx-flash') { injectCss(); el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(() => el.classList.remove(cls), 450); }
+export function flash(el, cls = 'fx-flash') { injectCss(); el.classList.remove(cls); requestAnimationFrame(() => { el.classList.add(cls); setTimeout(() => el.classList.remove(cls), 450); }); } // v16：下一幀再加 class 重播動畫，不用 offsetWidth 強制重排
 
 const CANDY = ['#FF8FAB', '#FFD166', '#7EE0B5', '#8EC5FF', '#C3A6FF', '#FFA94D'];
 /** v4：手指寫字時的星光尾巴（px，相對 container）
