@@ -1,0 +1,735 @@
+{
+ "version": 1,
+ "slots": [
+  "clip",
+  "hat",
+  "side"
+ ],
+ "slotNames": {
+  "clip": "髮夾",
+  "hat": "帽子",
+  "side": "身邊小物"
+ },
+ "base": "sprites/",
+ "ui": {
+  "btn": "shop_btn.webp",
+  "coin": "shop_coin.webp",
+  "owned": "shop_owned.webp",
+  "tag": "shop_tag.webp",
+  "gift": "shop_gift.webp"
+ },
+ "items": [
+  {
+   "id": "acc_hat_party",
+   "slot": "hat",
+   "name": "派對尖帽",
+   "price": 12,
+   "file": "acc_hat_party.webp",
+   "w": 161,
+   "h": 200,
+   "size": 0.3,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  {
+   "id": "acc_hat_sun",
+   "slot": "hat",
+   "name": "黃色遮陽帽",
+   "price": 12,
+   "file": "acc_hat_sun.webp",
+   "w": 289,
+   "h": 200,
+   "size": 0.5,
+   "px": 0.5,
+   "py": 0.86,
+   "rot": 0
+  },
+  {
+   "id": "acc_hat_strawberry",
+   "slot": "hat",
+   "name": "草莓帽",
+   "price": 15,
+   "file": "acc_hat_strawberry.webp",
+   "w": 208,
+   "h": 200,
+   "size": 0.396,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  {
+   "id": "acc_hat_cupcake",
+   "slot": "hat",
+   "name": "杯子蛋糕帽",
+   "price": 16,
+   "file": "acc_hat_cupcake.webp",
+   "w": 220,
+   "h": 200,
+   "size": 0.417,
+   "px": 0.5,
+   "py": 0.92,
+   "rot": 0
+  },
+  {
+   "id": "acc_hat_chef",
+   "slot": "hat",
+   "name": "廚師帽",
+   "price": 18,
+   "file": "acc_hat_chef.webp",
+   "w": 231,
+   "h": 200,
+   "size": 0.417,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  {
+   "id": "acc_hat_pudding",
+   "slot": "hat",
+   "name": "布丁帽",
+   "price": 18,
+   "file": "acc_hat_pudding.webp",
+   "w": 209,
+   "h": 200,
+   "size": 0.417,
+   "px": 0.5,
+   "py": 0.92,
+   "rot": 0
+  },
+  {
+   "id": "acc_hat_donut",
+   "slot": "hat",
+   "name": "甜甜圈帽",
+   "price": 20,
+   "file": "acc_hat_donut.webp",
+   "w": 267,
+   "h": 200,
+   "size": 0.438,
+   "px": 0.5,
+   "py": 0.88,
+   "rot": 0
+  },
+  {
+   "id": "acc_hat_frog",
+   "slot": "hat",
+   "name": "青蛙帽",
+   "price": 22,
+   "file": "acc_hat_frog.webp",
+   "w": 251,
+   "h": 200,
+   "size": 0.438,
+   "px": 0.5,
+   "py": 0.82,
+   "rot": 0
+  },
+  {
+   "id": "acc_hat_wizard",
+   "slot": "hat",
+   "name": "魔法帽",
+   "price": 24,
+   "file": "acc_hat_wizard.webp",
+   "w": 214,
+   "h": 200,
+   "size": 0.417,
+   "px": 0.5,
+   "py": 0.88,
+   "rot": 0
+  },
+  {
+   "id": "acc_hat_crown",
+   "slot": "hat",
+   "name": "餅乾皇冠",
+   "price": 25,
+   "file": "acc_hat_crown.webp",
+   "w": 239,
+   "h": 200,
+   "size": 0.417,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_flower",
+   "slot": "clip",
+   "name": "小花",
+   "price": 5,
+   "file": "acc_clip_flower.webp",
+   "w": 124,
+   "h": 120,
+   "size": 0.173,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_heart",
+   "slot": "clip",
+   "name": "愛心",
+   "price": 6,
+   "file": "acc_clip_heart.webp",
+   "w": 138,
+   "h": 120,
+   "size": 0.182,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_star",
+   "slot": "clip",
+   "name": "星星",
+   "price": 8,
+   "file": "acc_clip_star.webp",
+   "w": 124,
+   "h": 120,
+   "size": 0.173,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_clover",
+   "slot": "clip",
+   "name": "幸運草",
+   "price": 8,
+   "file": "acc_clip_clover.webp",
+   "w": 105,
+   "h": 120,
+   "size": 0.159,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_cherry",
+   "slot": "clip",
+   "name": "櫻桃",
+   "price": 10,
+   "file": "acc_clip_cherry.webp",
+   "w": 124,
+   "h": 120,
+   "size": 0.173,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_orange",
+   "slot": "clip",
+   "name": "柳橙片",
+   "price": 10,
+   "file": "acc_clip_orange.webp",
+   "w": 118,
+   "h": 120,
+   "size": 0.169,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_candy",
+   "slot": "clip",
+   "name": "糖果",
+   "price": 12,
+   "file": "acc_clip_candy.webp",
+   "w": 195,
+   "h": 120,
+   "size": 0.217,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_bow",
+   "slot": "clip",
+   "name": "蝴蝶結",
+   "price": 12,
+   "file": "acc_clip_bow.webp",
+   "w": 145,
+   "h": 120,
+   "size": 0.187,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_butterfly",
+   "slot": "clip",
+   "name": "蝴蝶",
+   "price": 14,
+   "file": "acc_clip_butterfly.webp",
+   "w": 143,
+   "h": 120,
+   "size": 0.186,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_clip_rainbow",
+   "slot": "clip",
+   "name": "彩虹",
+   "price": 15,
+   "file": "acc_clip_rainbow.webp",
+   "w": 166,
+   "h": 120,
+   "size": 0.2,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_lollipop",
+   "slot": "side",
+   "name": "大棒棒糖",
+   "price": 15,
+   "file": "acc_side_lollipop.webp",
+   "w": 149,
+   "h": 240,
+   "size": 0.323,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_tulip",
+   "slot": "side",
+   "name": "鬱金香盆栽",
+   "price": 15,
+   "file": "acc_side_tulip.webp",
+   "w": 147,
+   "h": 240,
+   "size": 0.282,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_duck",
+   "slot": "side",
+   "name": "小鴨玩具",
+   "price": 18,
+   "file": "acc_side_duck.webp",
+   "w": 212,
+   "h": 240,
+   "size": 0.318,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_pinwheel",
+   "slot": "side",
+   "name": "彩色風車",
+   "price": 20,
+   "file": "acc_side_pinwheel.webp",
+   "w": 158,
+   "h": 240,
+   "size": 0.342,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_macaron",
+   "slot": "side",
+   "name": "馬卡龍塔",
+   "price": 20,
+   "file": "acc_side_macaron.webp",
+   "w": 141,
+   "h": 240,
+   "size": 0.259,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_teapot",
+   "slot": "side",
+   "name": "茶壺",
+   "price": 22,
+   "file": "acc_side_teapot.webp",
+   "w": 261,
+   "h": 240,
+   "size": 0.37,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_balloon",
+   "slot": "side",
+   "name": "愛心氣球",
+   "price": 25,
+   "file": "acc_side_balloon.webp",
+   "w": 141,
+   "h": 240,
+   "size": 0.364,
+   "px": 0.5,
+   "py": 0.98,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_sundae",
+   "slot": "side",
+   "name": "聖代",
+   "price": 28,
+   "file": "acc_side_sundae.webp",
+   "w": 147,
+   "h": 240,
+   "size": 0.282,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_cake",
+   "slot": "side",
+   "name": "生日蛋糕",
+   "price": 30,
+   "file": "acc_side_cake.webp",
+   "w": 189,
+   "h": 240,
+   "size": 0.315,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  {
+   "id": "acc_side_shortcake",
+   "slot": "side",
+   "name": "草莓蛋糕",
+   "price": 35,
+   "file": "acc_side_shortcake.webp",
+   "w": 188,
+   "h": 240,
+   "size": 0.313,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  }
+ ],
+ "anchors": {
+  "capy_cocoa_idle": {
+   "hat": {
+    "x": 0.5,
+    "y": 0.17,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.25,
+    "y": 0.25,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_cocoa_happy": {
+   "hat": {
+    "x": 0.6,
+    "y": 0.19,
+    "s": 1,
+    "rot": 12
+   },
+   "clip": {
+    "x": 0.36,
+    "y": 0.22,
+    "s": 1,
+    "rot": -8
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_cocoa_surprised": {
+   "hat": {
+    "x": 0.47,
+    "y": 0.17,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.23,
+    "y": 0.26,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_cocoa_wave": {
+   "hat": {
+    "x": 0.45,
+    "y": 0.18,
+    "s": 1,
+    "rot": -10
+   },
+   "clip": {
+    "x": 0.76,
+    "y": 0.23,
+    "s": 1,
+    "rot": 12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_orange_idle": {
+   "hat": {
+    "x": 0.49,
+    "y": 0.17,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.26,
+    "y": 0.27,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_orange_happy": {
+   "hat": {
+    "x": 0.48,
+    "y": 0.17,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.27,
+    "y": 0.27,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_orange_surprised": {
+   "hat": {
+    "x": 0.5,
+    "y": 0.17,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.26,
+    "y": 0.27,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_orange_wave": {
+   "hat": {
+    "x": 0.4,
+    "y": 0.17,
+    "s": 1,
+    "rot": -5
+   },
+   "clip": {
+    "x": 0.7,
+    "y": 0.25,
+    "s": 1,
+    "rot": 12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_a_idle": {
+   "hat": {
+    "x": 0.52,
+    "y": 0.3,
+    "s": 0.83,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.7,
+    "y": 0.3,
+    "s": 0.9,
+    "rot": 12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_a_happy": {
+   "hat": {
+    "x": 0.49,
+    "y": 0.31,
+    "s": 0.83,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.7,
+    "y": 0.31,
+    "s": 0.9,
+    "rot": 12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_a_surprised": {
+   "hat": {
+    "x": 0.5,
+    "y": 0.31,
+    "s": 0.83,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.7,
+    "y": 0.31,
+    "s": 0.9,
+    "rot": 12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_a_wave": {
+   "hat": {
+    "x": 0.5,
+    "y": 0.32,
+    "s": 0.83,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.3,
+    "y": 0.33,
+    "s": 0.9,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.14,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_b_idle": {
+   "hat": {
+    "x": 0.48,
+    "y": 0.3,
+    "s": 0.8,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.27,
+    "y": 0.31,
+    "s": 0.9,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.16,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_b_happy": {
+   "hat": {
+    "x": 0.48,
+    "y": 0.3,
+    "s": 0.8,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.27,
+    "y": 0.31,
+    "s": 0.9,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.16,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_b_surprised": {
+   "hat": {
+    "x": 0.5,
+    "y": 0.3,
+    "s": 0.8,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.27,
+    "y": 0.31,
+    "s": 0.9,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.16,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_b_wave": {
+   "hat": {
+    "x": 0.44,
+    "y": 0.3,
+    "s": 0.8,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.25,
+    "y": 0.31,
+    "s": 0.9,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.2,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  }
+ }
+}

@@ -4,7 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=38';
+import { Album } from './album.js?v=39';
+import { placeAccessory } from './shop.js?v=39';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -16,10 +17,13 @@ const CSS = `
 @keyframes t2-glow{20%{opacity:1}100%{opacity:0}}
 .t2-char{position:absolute;transform:translate(-50%,-100%);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:left 1.6s ease-in-out,top 1.6s ease-in-out}
 .t2-char::before{content:'';position:absolute;inset:-12px}
-.t2-char img{display:block;height:100%;width:auto;transform-origin:50% 100%;animation:t2-bob 2.6s ease-in-out infinite;filter:drop-shadow(0 3px 2px rgba(91,58,74,.22))}
+.t2-fig{position:relative;display:block;height:100%;width:auto;transform-origin:50% 100%;animation:t2-bob 2.6s ease-in-out infinite;filter:drop-shadow(0 3px 2px rgba(91,58,74,.22))} /* v18：角色圖＋配件包在同一層，跳動、壓扁、陰影一起 */
+.t2-fig>img{display:block;height:100%;width:100%}
+.t2-fig>img.t2-acc{position:absolute;height:auto;max-width:none;pointer-events:none}
+.t2-char.shadow .t2-acc{display:none}
 .t2-char.hidden{display:none}
-.t2-char.shadow img{filter:brightness(0) opacity(.55) drop-shadow(0 0 4px rgba(255,255,255,.9)) drop-shadow(0 0 2px #fff);animation:none}
-.t2-char.shadow.near img{animation:t2-wiggle 1.3s ease-in-out infinite}
+.t2-char.shadow .t2-fig{filter:brightness(0) opacity(.55) drop-shadow(0 0 4px rgba(255,255,255,.9)) drop-shadow(0 0 2px #fff);animation:none}
+.t2-char.shadow.near .t2-fig{animation:t2-wiggle 1.3s ease-in-out infinite}
 .t2-hint{display:none}
 .t2-char.shadow .t2-hint{display:block;position:absolute;z-index:2;left:50%;bottom:100%;transform:translate(-50%,-2px);font:800 clamp(10px,1vw,13px)/1.3 system-ui,"Noto Sans TC",sans-serif;color:#fff;background:rgba(45,35,30,.85);border:1.5px solid rgba(255,255,255,.8);border-radius:999px;padding:1px 8px;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.25);pointer-events:none}
 .t2-hint em{font-style:normal;color:#FFD54A}
@@ -27,9 +31,9 @@ const CSS = `
 .t2-char.shadow:has(.t2-hint)::after{display:none}
 .t2-char.shadow::after{content:'?';position:absolute;left:50%;top:-4%;transform:translate(-50%,-100%);font:900 clamp(12px,1.6vw,22px)/1 system-ui;color:#fff;background:rgba(91,58,74,.55);border-radius:50%;width:1.4em;height:1.4em;display:flex;align-items:center;justify-content:center}
 @keyframes t2-wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
-.t2-char.pop img{animation:t2-pop .7s cubic-bezier(.3,1.6,.5,1)}
-.t2-char.hop img{animation:t2-hop .55s ease-out}
-.t2-char.squash img{animation:t2-squash .5s ease-out}
+.t2-char.pop .t2-fig{animation:t2-pop .7s cubic-bezier(.3,1.6,.5,1)}
+.t2-char.hop .t2-fig{animation:t2-hop .55s ease-out}
+.t2-char.squash .t2-fig{animation:t2-squash .5s ease-out}
 @keyframes t2-bob{0%,100%{transform:translateY(0) scale(1,1)}50%{transform:translateY(-3%) scale(1.02,.98)}}
 @keyframes t2-pop{0%{transform:scale(0)}100%{transform:scale(1)}}
 @keyframes t2-hop{0%{transform:translateY(0) scale(1.08,.9)}35%{transform:translateY(-38%) scale(.95,1.06)}70%{transform:translateY(0) scale(1.1,.88)}100%{transform:translateY(0) scale(1,1)}}
@@ -118,9 +122,11 @@ export class Town2D {
       const el = document.createElement('div'); el.className = 't2-char hidden'; el.dataset.name = name;
       const meta = this.sprites[r.sprite + '_idle'];
       el.style.height = (this.cfg.characterHeight * 100) + '%'; el.style.aspectRatio = (meta.w / meta.h).toFixed(3);
-      const img = document.createElement('img'); img.alt = ''; img.draggable = false; img.src = this.url(r.sprite + '_idle'); img.style.animationDelay = (-Math.random() * 2.6).toFixed(2) + 's';
-      el.append(img); world.append(el);
-      this.chars.set(name, { name, el, img, sprite: r.sprite, home: r.at, zone: r.zone, pose: 'idle' });
+      const fig = document.createElement('span'); fig.className = 't2-fig'; fig.style.animationDelay = (-Math.random() * 2.6).toFixed(2) + 's';
+      const img = document.createElement('img'); img.alt = ''; img.draggable = false; img.src = this.url(r.sprite + '_idle');
+      fig.style.aspectRatio = (meta.w / meta.h).toFixed(4); /* 外框＝這個姿勢角色圖的大小（各姿勢寬度不同，換姿勢時跟著改） */
+      fig.append(img); el.append(fig); world.append(el);
+      this.chars.set(name, { name, el, fig, img, sprite: r.sprite, home: r.at, zone: r.zone, pose: 'idle', outfit: null });
       this.place(name, r.at);
     }
     const st = this.cfg.reward.steamAt; this.steam = document.createElement('div'); this.steam.className = 't2-steam'; this.steam.innerHTML = '<i></i><i></i><i></i>';
@@ -130,7 +136,25 @@ export class Town2D {
     return this;
   }
   place(name, [x, y]) { const c = this.chars.get(name); c.at = [x, y]; c.el.style.left = (x / this.W * 100) + '%'; c.el.style.top = (y / this.H * 100) + '%'; c.el.style.zIndex = 2 + Math.round(y / 10); }
-  pose(name, p) { const c = this.chars.get(name); if (c.pose === p) return; c.img.src = this.url(c.sprite + '_' + p); c.pose = p; }
+  pose(name, p) { const c = this.chars.get(name); if (c.pose === p) return; c.img.src = this.url(c.sprite + '_' + p); c.pose = p; const m = this.sprites[c.sprite + '_' + p]; c.fig.style.aspectRatio = (m.w / m.h).toFixed(4); this._placeAcc(c); }
+  /** v18 配件：catalog＝art2d/accessories.json，base＝配件圖所在的網址前綴 */
+  setAccessories(catalog, base) { this.acc = { catalog, base, byId: new Map(catalog.items.map(i => [i.id, i])) }; }
+  /** outfit＝{ clip, hat, side }（itemId 或 null）；null＝全部拿掉 */
+  setOutfit(name, outfit) {
+    const c = this.chars.get(name); if (!c || !this.acc) return;
+    for (const s of this.acc.catalog.slots) {
+      const id = outfit?.[s] ?? null, item = id && this.acc.byId.get(id); let im = c.fig.querySelector(`.t2-acc[data-slot="${s}"]`);
+      if (!item) { im?.remove(); continue; }
+      if (!im) { im = document.createElement('img'); im.className = 't2-acc'; im.alt = ''; im.draggable = false; im.dataset.slot = s; c.fig.append(im); }
+      if (im.dataset.id !== id) { im.src = this.acc.base + item.file; im.dataset.id = id; }
+    }
+    c.outfit = outfit; this._placeAcc(c);
+  }
+  _placeAcc(c) {
+    if (!this.acc) return;
+    const an = this.acc.catalog.anchors[c.sprite + '_' + c.pose], m = this.sprites[c.sprite + '_' + c.pose];
+    for (const im of c.fig.querySelectorAll('.t2-acc')) { const item = this.acc.byId.get(im.dataset.id), a = an?.[im.dataset.slot]; if (item && a) placeAccessory(im, item, a, m.w / m.h); }
+  }
   /** 頁面版面寬度（px） */
   resize(w) { this.width = w; this.view.style.width = w + 'px'; this.view.style.height = Math.round(w * this.aspect) + 'px'; }
 }

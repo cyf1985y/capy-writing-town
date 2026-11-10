@@ -15,6 +15,8 @@
 body{font:16px system-ui,"Noto Sans TC",sans-serif;background:var(--ui-bg,#FFF4EC);color:var(--ui-ink,#5B3A4A);margin:0;padding:16px 20px}
 h1{font-size:20px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
 #albumBtn{margin-left:auto;font:inherit;font-size:17px;background:#fff;border:2px solid #F7C9C0;border-radius:12px;padding:4px 10px;cursor:pointer;touch-action:manipulation;color:var(--ui-ink,#5B3A4A)}
+#shopBtn{font:inherit;font-size:17px;background:#fff;border:2px solid #F7C9C0;border-radius:12px;padding:4px 10px;cursor:pointer;touch-action:manipulation;color:var(--ui-ink,#5B3A4A)}
+#shopBtn[hidden]{display:none!important}
 #albumBtn[data-new]::after{content:attr(data-new);display:inline-block;margin-left:4px;min-width:18px;border-radius:9px;background:var(--ui-accent,#FFA94D);color:#fff;font-size:12px;line-height:18px;text-align:center}
 #muteBtn{font-size:22px;background:none;border:2px solid #F7C9C0;border-radius:12px;padding:2px 8px;cursor:pointer;touch-action:manipulation}
 #stage{position:relative;border-radius:16px;overflow:hidden;background:#FFF0F5;max-width:1600px}
@@ -41,9 +43,9 @@ h1{color:var(--ui-primaryDark,#E8665C)}
 #chapters button:disabled{opacity:.5;cursor:default}
 #chapters small{display:block;font-size:12px;opacity:.8}
 @media (max-width:600px){#chapters{display:none}body{padding:10px 8px}h1{font-size:15px;gap:6px}#albumBtn{font-size:14px;padding:4px 7px;white-space:nowrap}#muteBtn{font-size:18px}} /* 手機用地圖上的數字標記選課 */
-body.lobby2d #albumBtn,body.lobby2d #muteBtn{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:0;font-weight:700}
-body.lobby2d #albumBtn img,body.lobby2d #muteBtn img{width:44px;height:44px;display:block;filter:drop-shadow(0 2px 3px rgba(91,58,74,.25))}
-@media (max-width:600px){body.lobby2d #albumBtn img,body.lobby2d #muteBtn img{width:36px;height:36px}}
+body.lobby2d #albumBtn,body.lobby2d #shopBtn,body.lobby2d #muteBtn{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:0;font-weight:700}
+body.lobby2d #albumBtn img,body.lobby2d #shopBtn img,body.lobby2d #muteBtn img{width:44px;height:44px;display:block;filter:drop-shadow(0 2px 3px rgba(91,58,74,.25))}
+@media (max-width:600px){body.lobby2d #albumBtn img,body.lobby2d #shopBtn img,body.lobby2d #muteBtn img{width:36px;height:36px}body.lobby2d #shopBtn .lbl{display:none}} /* 手機：商店只放圖示，標題不被擠成好幾行 */
 body.lobby2d #stage{background:none}
 .cardStars{display:block;text-align:center;color:#FFB800;font-size:13px;line-height:1;margin-top:2px;letter-spacing:1px}
 #chapters small i{font-style:normal;color:#E8A000}
@@ -61,7 +63,7 @@ body.lobby2d #totalChip{display:inline-block}
 #rewardLine[hidden]{display:none}
 details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;border-radius:8px;padding:8px;max-height:220px;overflow:auto}
 </style>
-<h1><span id="gameTitle">卡比巴拉×小兔兔 · 甜點寫字樂園</span><span id="totalChip" aria-label="總進度"></span><button id="albumBtn" type="button" disabled>📖 圖鑑</button><button id="muteBtn" type="button" aria-label="聲音開關">🔊</button><button id="parentBtn" type="button" aria-label="家長面板" title="家長面板">👪</button></h1>
+<h1><span id="gameTitle">卡比巴拉×小兔兔 · 甜點寫字樂園</span><span id="totalChip" aria-label="總進度"></span><button id="albumBtn" type="button" disabled>📖 圖鑑</button><button id="shopBtn" type="button" hidden>🏪 商店</button><button id="muteBtn" type="button" aria-label="聲音開關">🔊</button><button id="parentBtn" type="button" aria-label="家長面板" title="家長面板">👪</button></h1>
 <p id="rewardLine" aria-live="polite" hidden></p>
 <div id="chapters" aria-label="選課"></div>
 <div id="stage"></div>
@@ -72,23 +74,25 @@ details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;b
 <details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
 <script type="importmap">{"imports":{"three":"./vendor-v2/build/three.module.js","three/addons/":"./vendor-v2/examples/jsm/"}}</script>
 <script type="module">
-import { loadContract, describeLoadError } from './game/content.js?v=38';
-import { WritingPanel, renderArtifactCard, levelIcon } from './game/writing-panel.js?v=38';
-import { loadTown } from './game/town-loader.js?v=38';
-import { Lobby } from './game/lobby.js?v=38';
-import { Store, clearProfile } from './game/store.js?v=38';
-import { Reward } from './game/reward.js?v=38';
-import { Sound, Voice } from './game/fx.js?v=38';
-import { TownFx, residentNames } from './game/town-fx.js?v=38';
-import { Album } from './game/album.js?v=38';
-import { applyTheme, applyUiColors } from './game/theme.js?v=38';
-import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=38';
-import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=38';
-import { PartsGame } from './game/minigame.js?v=38';
-import { ParentPanel, loadSettings, SETTINGS_KEY } from './game/parent.js?v=38';
-import { requestPersist, exportBackup, importBackup, saveBackupFile } from './game/backup.js?v=38';
-import { CardReplay } from './game/card-replay.js?v=38';
-import { rewardsKey, loadRewards, rewardState, childStatus, mergeRewardsJSON } from './game/rewards.js?v=38';
+import { loadContract, describeLoadError } from './game/content.js?v=39';
+import { WritingPanel, renderArtifactCard, levelIcon } from './game/writing-panel.js?v=39';
+import { loadTown } from './game/town-loader.js?v=39';
+import { Lobby } from './game/lobby.js?v=39';
+import { Store, clearProfile } from './game/store.js?v=39';
+import { Reward } from './game/reward.js?v=39';
+import { Sound, Voice } from './game/fx.js?v=39';
+import { TownFx, residentNames } from './game/town-fx.js?v=39';
+import { Album } from './game/album.js?v=39';
+import { applyTheme, applyUiColors } from './game/theme.js?v=39';
+import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=39';
+import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=39';
+import { PartsGame } from './game/minigame.js?v=39';
+import { ParentPanel, loadSettings, SETTINGS_KEY } from './game/parent.js?v=39';
+import { requestPersist, exportBackup, importBackup, saveBackupFile } from './game/backup.js?v=39';
+import { CardReplay } from './game/card-replay.js?v=39';
+import { rewardsKey, loadRewards, rewardState, childStatus, mergeRewardsJSON } from './game/rewards.js?v=39';
+import { shopKey, loadShop, shopState, outfitOf, mergeShopJSON, loadCatalog } from './game/shop.js?v=39';
+import { ShopPanel } from './game/shop-ui.js?v=39';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 const PROFILE_ID = qs.get('profile') || 'local-child-1'; // 第一版單一本機 profile，無選擇 UI
@@ -159,10 +163,14 @@ const reward = LOBBY2D ? new Reward2D({ town, lobby, contract, log }) : new Rewa
 reward.applyState({ rewardCount: saved.ledger.length });
 townFx = new (LOBBY2D ? TownFx2D : TownFx)({ town, lobby, contract, reward, sound, stage: $('#stage'), log });
 diag.townFx = { tintedMaterials: townFx.tintedMaterials, residents: townFx.residents.map(r => r.name + '@' + townFx.zoneIds[r.zone]), props: townFx.props.length, color: townFx.setProgress(saved.passedTaskIds, { instant: true }) };
+// v18 配件商店（只有 2D 大廳）：目錄讀不到就不出現商店，遊戲照常
+const SHOP_KEY = shopKey(PROFILE_ID), CATALOG = LOBBY2D ? await loadCatalog('./game/art2d/accessories.json?v=39') : null;
+if (CATALOG) { town.setAccessories(CATALOG, './game/art2d/' + CATALOG.base); const d = loadShop(SHOP_KEY); for (const name of town.chars.keys()) town.setOutfit(name, outfitOf(d, name)); }
+log('accessories ' + (CATALOG ? CATALOG.items.length : 'off'));
 const album = new (LOBBY2D ? Album2D : Album)({ town, lobby, townFx, contract, voice, sound, log }); // v4：卡比巴拉圖鑑（完成一課解鎖一隻）
 function updateAlbumBtn() { const n = album.unseenCount(saved.passedTaskIds); if (n) $('#albumBtn').dataset.new = n; else delete $('#albumBtn').dataset.new; }
 album.onClose = updateAlbumBtn;
-$('#albumBtn').addEventListener('click', () => { if (panel.isOpen()) return; sound.unlock(); album.open(saved.passedTaskIds); updateAlbumBtn(); });
+$('#albumBtn').addEventListener('click', () => { if (panel.isOpen() || shop?.isOpen()) return; sound.unlock(); album.open(saved.passedTaskIds); updateAlbumBtn(); });
 /** v9：字卡下方顯示這一次寫的星星 */
 function starCard(a) { const c = renderArtifactCard(a, { size: 72 }), n = starsOf(a), t = document.createElement('span'); t.className = 'cardStars'; t.textContent = starText(n) + ((a.meta?.level ?? 1) > 1 ? levelIcon(a.meta.level) : ''); /* v12：提示／聽寫關寫的卡加關卡圖示 */ t.setAttribute('aria-label', n + ' 顆星'); c.append(t);
   /* v17-C：點字卡重播自己的筆跡 */ c.setAttribute('role', 'button'); c.tabIndex = 0; c.setAttribute('aria-label', `看我寫的「${a.char}」`);
@@ -210,15 +218,15 @@ function friendGoal(extraTaskId) {
 }
 const friendNote = g => g && g.left <= Math.ceil(g.total / 2) ? `再寫 ${g.left} 個字，新朋友就來了！` : '';
 // v11 漢字積木資料（獨立檔，不動已鎖 SHA 的題庫）：載入失敗就照舊只唸「字，詞的字」
-let ENRICH = {}; try { const r = await fetch('./game/char_enrichment.json?v=38', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
+let ENRICH = {}; try { const r = await fetch('./game/char_enrichment.json?v=39', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
 log('enrichment ' + Object.keys(ENRICH).length + ' chars');
 // v12 台灣標準筆順：和教育部筆順網不同的字改讀 data-tw（只重排／切開原資料）；索引載入失敗就照舊用原資料
-let TW_CHARS = new Set(); try { const r = await fetch('./vendor-v2/hanzi-writer/data-tw/index.json?v=38', { cache: 'no-cache' }); if (r.ok) TW_CHARS = new Set(Object.keys((await r.json()).chars ?? {})); } catch (e) { log('data-tw index load failed: ' + e); }
+let TW_CHARS = new Set(); try { const r = await fetch('./vendor-v2/hanzi-writer/data-tw/index.json?v=39', { cache: 'no-cache' }); if (r.ok) TW_CHARS = new Set(Object.keys((await r.json()).chars ?? {})); } catch (e) { log('data-tw index load failed: ' + e); }
 log('data-tw ' + TW_CHARS.size + ' chars');
 // v12 筆畫名稱（台灣用語，人工核對 pending）：載入失敗就不唸名稱
-let SNAMES = {}; try { const r = await fetch('./game/stroke_names.json?v=38', { cache: 'no-cache' }); if (r.ok) SNAMES = (await r.json()).chars ?? {}; } catch (e) { log('stroke names load failed: ' + e); }
+let SNAMES = {}; try { const r = await fetch('./game/stroke_names.json?v=39', { cache: 'no-cache' }); if (r.ok) SNAMES = (await r.json()).chars ?? {}; } catch (e) { log('stroke names load failed: ' + e); }
 // v14 詞語注音（教育部辭典，人工核對 pending）：載入失敗就只顯示單字注音
-let ZY = {}; try { const r = await fetch('./game/zhuyin.json?v=38', { cache: 'no-cache' }); if (r.ok) ZY = (await r.json()).words ?? {}; } catch (e) { log('zhuyin load failed: ' + e); }
+let ZY = {}; try { const r = await fetch('./game/zhuyin.json?v=39', { cache: 'no-cache' }); if (r.ok) ZY = (await r.json()).words ?? {}; } catch (e) { log('zhuyin load failed: ' + e); }
 // v17-C 字卡重播：詞只用題庫 characters[].words（沒有就用任務的提示詞），部首只顯示題庫的文字
 const CHAR_INFO = new Map((loaded.content.characters ?? []).map(c => [c.char, c]));
 const TASK_BY_CHAR = new Map([...loaded.writingTasks.values()].map(t => [t.char, t]));
@@ -284,7 +292,7 @@ const panel = new WritingPanel({
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
-if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=38'); installTestDriver(panel); window.__game = { get parent() { return parent; }, get settings() { return SETTINGS; }, get partsGame() { return partsGame; }, reviewPicks: (...a) => reviewPicks(...a), get review() { return review; }, LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, cardReplay, switchChapter, rewards: { key: REWARDS_KEY, totals: starTotals, update: updateRewardLine }, backupIO: { exportObj: () => exportObj(), importObj: o => importObj(o) }, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=39'); installTestDriver(panel); window.__game = { get parent() { return parent; }, get settings() { return SETTINGS; }, get partsGame() { return partsGame; }, reviewPicks: (...a) => reviewPicks(...a), get shop() { return shop; }, shopKey: SHOP_KEY, catalog: CATALOG, get review() { return review; }, LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, cardReplay, switchChapter, rewards: { key: REWARDS_KEY, totals: starTotals, update: updateRewardLine }, backupIO: { exportObj: () => exportObj(), importObj: o => importObj(o) }, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
@@ -335,9 +343,9 @@ $('#reviewBtn').addEventListener('click', () => { sound.unlock(); startReview();
 let SETTINGS = loadSettings();
 // v14 存檔保護：請瀏覽器長期保存；家長面板可備份／還原（合併，不刪現有資料）
 let STORAGE = null; requestPersist().then(i => { STORAGE = i; diag.storage = i; log('storage ' + JSON.stringify(i)); });
-const BACKUP_LOCAL = [REVIEW_KEY, SETTINGS_KEY, 'capy_lesson', REWARDS_KEY];
+const BACKUP_LOCAL = [REVIEW_KEY, SETTINGS_KEY, 'capy_lesson', REWARDS_KEY, SHOP_KEY];
 const exportObj = () => exportBackup(store.db, { profileId: PROFILE_ID, localKeys: BACKUP_LOCAL });
-const importObj = obj => importBackup(store.db, obj, { profileId: PROFILE_ID, localKeys: BACKUP_LOCAL, localMerge: { [REWARDS_KEY]: mergeRewardsJSON } });
+const importObj = obj => importBackup(store.db, obj, { profileId: PROFILE_ID, localKeys: BACKUP_LOCAL, localMerge: { [REWARDS_KEY]: mergeRewardsJSON, [SHOP_KEY]: mergeShopJSON } });
 const backup = {
   info: () => STORAGE,
   onExport: async () => { const obj = await exportObj(); const r = await saveBackupFile(obj); log(`backup ${r.via} ${r.bytes}B`); return r; },
@@ -350,12 +358,23 @@ const backup = {
     return { ...r, message: `還原完成：補回 ${r.added.artifacts} 張字卡、${r.added.progress} 個字的進度。馬上重新整理…` };
   },
 };
-const parent = new ParentPanel({ log, backup, rewards: { key: REWARDS_KEY, totals: starTotals, onChange: updateRewardLine }, onSettings: s => { SETTINGS = s; updateReviewBtn(); },
+const shopSummary = () => { if (!CATALOG) return null; const d = loadShop(SHOP_KEY), st = shopState({ total: starTotals().total, catalog: CATALOG, data: d }); return { count: st.ownedCount, all: CATALOG.items.length, spent: st.spent, balance: st.balance, names: d.purchases.map(p => CATALOG.items.find(i => i.id === p.itemId)?.name ?? p.itemId) }; };
+const parent = new ParentPanel({ log, backup, rewards: { key: REWARDS_KEY, totals: starTotals, onChange: updateRewardLine }, shop: CATALOG ? { summary: shopSummary } : null, onSettings: s => { SETTINGS = s; updateReviewBtn(); updateShopBtn(); },
   getData: () => ({ artifacts: saved.artifacts, passedTaskIds: saved.passedTaskIds, tasks: loaded.writingTasks, names: SNAMES,
     totalChars: new Set(Object.keys(contract.modes).filter(k => k.startsWith('lesson_')).flatMap(k => contract.modes[k].writingTaskIds).map(id => loaded.writingTasks.get(id)?.char)).size }) });
-$('#parentBtn').addEventListener('click', () => { if (!panel.isOpen() && !partsGame?.isOpen()) parent.open(); });
+$('#parentBtn').addEventListener('click', () => { if (!panel.isOpen() && !partsGame?.isOpen() && !shop?.isOpen()) parent.open(); });
+// v18 配件商店：孩子自己用星星買配件、幫已解鎖的朋友換裝（星星和家長獎勵分開算）；家長面板可關掉商店按鈕
+const shop = CATALOG && new ShopPanel({ key: SHOP_KEY, catalog: CATALOG, base: './game/art2d/' + CATALOG.base, town, voice, sound, log, totals: starTotals,
+  friends: () => townFx.unlockedNames(saved.passedTaskIds).map(o => ({ object: o, name: contract.album.residents.find(r => r.object === o)?.name ?? '', sprite: town.chars.get(o)?.sprite })).filter(f => f.sprite),
+  onOutfit: (name, outfit) => town.setOutfit(name, outfit),
+  onPractice: () => { if (!$('#startBtn').disabled) startWriting(); },
+  onOpen: () => { lobby.pause('shop'); $('#startBtn').disabled = true; },
+  onClose: () => { lobby.resume('shop'); $('#startBtn').disabled = false; } });
+function updateShopBtn() { $('#shopBtn').hidden = !shop || SETTINGS.shop === false; }
+if (shop) $('#shopBtn').innerHTML = `<img alt="" src="./game/art2d/${CATALOG.base}${CATALOG.ui.btn}"><span class="lbl">商店</span>`; $('#shopBtn').setAttribute('aria-label', '配件商店');
+$('#shopBtn').addEventListener('click', () => { if (!shop || panel.isOpen() || partsGame?.isOpen() || parent.isOpen() || opening) return; sound.unlock(); shop.open(); });
 // v12 部件小偵探：學過 4 個字以上才出現；字庫＝學過的字＋目前這一課的字
-let PARTS = null; try { const r = await fetch('./game/parts_game.json?v=38', { cache: 'no-cache' }); if (r.ok) PARTS = await r.json(); } catch (e) { log('parts game load failed: ' + e); }
+let PARTS = null; try { const r = await fetch('./game/parts_game.json?v=39', { cache: 'no-cache' }); if (r.ok) PARTS = await r.json(); } catch (e) { log('parts game load failed: ' + e); }
 const partsGame = PARTS && new PartsGame({ data: PARTS, voice, sound, log,
   onOpen: () => { lobby.pause('parts'); $('#startBtn').disabled = true; },
   onClose: r => { lobby.resume('parts'); $('#startBtn').disabled = false; diag.partsGame = r; setStatus(`🧩 部件小偵探完成 ${r.rounds}／${r.total} 題！` + nextLabel()); } });
@@ -390,7 +409,7 @@ await new Promise(res => { const r0 = lobby.renderCount; const tick = () => (lob
 diag.loadMs.firstFrame = Math.round(performance.now() - t0);
 $('#startBtn').textContent = contract.entry.label; $('#startBtn').disabled = false;
 fitStage(); townFx.placePins(); /* v7：章節列、按鈕文字都就位後再量一次版面 */
-$('#albumBtn').disabled = false; updateAlbumBtn(); updateReviewBtn(); updatePartsBtn(); // v8 修正：v7 這行被上一行的 // 註解吃掉，圖鑑鈕一直是停用
+$('#albumBtn').disabled = false; updateAlbumBtn(); updateReviewBtn(); updatePartsBtn(); updateShopBtn(); // v8 修正：v7 這行被上一行的 // 註解吃掉，圖鑑鈕一直是停用
 setStatus(nextLabel());
 diag.loadMs.ready = Math.round(performance.now() - t0);
 // 測試自動跑（?test=1&autoplay=1）：用合成筆跡依序寫完 demo3 三字，供 headless 截圖與煙霧測試；不是真人操作

@@ -1,11 +1,11 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=38';
-import { LEVELS } from './writing-panel.js?v=38';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=38';
+import { starsOf } from './stars.js?v=39';
+import { LEVELS } from './writing-panel.js?v=39';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=39';
 
 export const SETTINGS_KEY = 'capy_settings';
-export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true });
+export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
 export function loadSettings() {
   try { return { ...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') }; } catch { return { ...DEFAULT_SETTINGS }; }
 }
@@ -81,8 +81,8 @@ const CSS = `
 `;
 
 export class ParentPanel {
-  /** rewards（可省略）：{ key, totals: () => ({ total, maxTotal }), onChange }，見 rewards.js */
-  constructor({ getData, onSettings, backup = null, rewards = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, log }); this.el = null; }
+  /** rewards（可省略）：{ key, totals: () => ({ total, maxTotal }), onChange }，見 rewards.js；shop（可省略）：{ summary: () => ({ count, all, spent, balance, names }) }，見 shop.js */
+  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, log }); this.el = null; }
   isOpen() { return !!this.el; }
   open() {
     if (this.el) return;
@@ -100,6 +100,10 @@ export class ParentPanel {
       <h3>常錯的字</h3>
       ${st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${w.char}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${w.worstStroke.name}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${w.char.codePointAt(0)}" target="_blank" rel="noopener">教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>'}
       ${this.rewards ? '<h3>🎁 獎勵（用星星換）</h3><div class="pp-rw"></div>' : ''}
+      ${this.shop ? (() => { const s = this.shop.summary(); return s ? `<h3>🏪 配件商店</h3>
+      <div class="pp-save pp-shop"><p>孩子自己用星星買配件，幫小鎮的朋友換裝。已買 <b>${s.count}</b>／${s.all} 件，花了 ★${s.spent}，還能用 ★${Math.max(0, s.balance)}。</p>
+        <p class="pp-note" style="margin:0">配件的星星和上面的獎勵<b>分開算</b>：買配件不會讓獎勵變遠，兌換獎勵也不會讓配件星星變少。買了不能退。</p>
+        ${s.names.length ? `<details><summary>已買的配件（${s.names.length} 件）</summary><p style="margin:4px 0 0">${s.names.map(esc).join('、')}</p></details>` : ''}</div>` : ''; })() : ''}
       ${this.backup ? (() => { const i = this.backup.info() ?? {}; return `<h3>📱 存檔保護</h3>
       <div class="pp-save">
         <p>${i.standalone ? '<span class="ok">✔ 已從主畫面開啟</span>，資料比較不會被系統清掉。' : '<span class="warn">建議加到主畫面</span>：在 Safari 按分享鈕 ⬆️ →「加入主畫面」，以後從主畫面的圖示打開。'}${i.persisted ? '（瀏覽器已同意長期保存）' : ''}</p>
@@ -113,6 +117,7 @@ export class ParentPanel {
         <span>開始時</span>${seg('intro', [['full', '唸完整口訣'], ['short', '只唸短句']])}
         <span>筆畫名稱</span>${seg('strokeVoice', [[true, '唸出來'], [false, '不唸']])}
         <span>複習方式</span>${seg('reviewDictation', [[true, '聽寫'], [false, '照進度']])}
+        ${this.shop ? `<span>配件商店</span>${seg('shop', [[true, '開'], [false, '關']])}` : ''}
       </div>
       <p class="pp-note">設定只存在這台裝置。筆畫名稱與口訣由 AI 撰寫，若和課本不同請以課本為準。</p>
       <p class="pp-note">🔍 <a href="./game/check.html" target="_blank" rel="noopener">家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
