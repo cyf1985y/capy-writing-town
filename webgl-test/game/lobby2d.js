@@ -4,7 +4,7 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=29';
+import { Album } from './album.js?v=30';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -57,6 +57,29 @@ const CSS = `
 @keyframes nodePulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(229,90,78,.6),0 4px 10px rgba(0,0,0,.3)}50%{transform:scale(1.12);box-shadow:0 0 0 8px rgba(229,90,78,0),0 6px 14px rgba(0,0,0,.35)}}
 @keyframes t2-arrow{0%,100%{transform:translate(-50%,-10%)}50%{transform:translate(-50%,-45%)}}
 .t2-pins-hidden .t2-pin{opacity:0;pointer-events:none}
+/* v13：選中課次的標記加呼吸光圈；標記旁的課名膠囊靠邊時往內收 */
+.t2-pin.active::before{content:'';position:absolute;inset:-16%;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 4px rgba(229,90,78,.75),0 0 24px 10px rgba(255,214,90,.85);animation:t2-ring 1.6s ease-out infinite;pointer-events:none}
+.t2-pin.active img{animation:t2-breathe 1.6s ease-in-out infinite}
+@keyframes t2-ring{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.45);opacity:0}}
+@keyframes t2-breathe{50%{transform:scale(1.08)}}
+.t2-pin.active small{background:#E55A4E;font-size:clamp(12px,1.2vw,16px);padding:2px 9px}
+.t2-pin.edge-r small{left:auto;right:-10%;transform:none}
+.t2-pin.edge-l small{left:-10%;transform:none}
+/* v13：每課一團雲，寫一個字吹散一朵 */
+.t2-cloud{position:absolute;z-index:1;transform:translate(-50%,-50%);aspect-ratio:1.6;pointer-events:none;opacity:.92;transition:transform 1.4s cubic-bezier(.3,.7,.3,1),opacity 1.4s ease;
+  background:radial-gradient(circle at 28% 62%,#fff 0 25%,transparent 26%),radial-gradient(circle at 50% 42%,#fff 0 31%,transparent 32%),radial-gradient(circle at 73% 60%,#fff 0 24%,transparent 25%),radial-gradient(ellipse 46% 26% at 50% 70%,#fff 0 99%,transparent 100%);
+  filter:drop-shadow(0 4px 4px rgba(150,120,150,.35));animation:t2-drift var(--dd,7s) ease-in-out infinite alternate}
+.t2-cloud.gone{opacity:0;transform:translate(calc(-50% + var(--gx,0px)),-90%) scale(1.6);animation:none}
+@keyframes t2-drift{to{margin-left:1.2%}}
+/* v13：下一個字的對話氣泡（點它＝開始寫字） */
+.t2-say{position:absolute;z-index:3;left:50%;bottom:104%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;font:900 clamp(13px,1.5vw,20px)/1.2 system-ui,"Noto Sans TC",sans-serif;color:#5B3A4A;background:#fff;border:3px solid #FFA94D;border-radius:16px;padding:4px 12px 5px;white-space:nowrap;box-shadow:0 4px 10px rgba(91,58,74,.3);cursor:pointer;animation:t2-sayBob 1.8s ease-in-out infinite;touch-action:manipulation}
+.t2-say::after{content:'';position:absolute;left:50%;top:100%;transform:translateX(-50%);border:9px solid transparent;border-top-color:#FFA94D}
+.t2-say em{font-style:normal;font-size:1.7em;line-height:1;color:#E55A4E;font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif}
+.t2-say small{font:700 .7em/1.2 system-ui,"Noto Sans TC",sans-serif;color:#E8665C}
+@keyframes t2-sayBob{50%{transform:translateX(-50%) translateY(-6%)}}
+.t2-pins-hidden .t2-say{opacity:0;pointer-events:none}
+.t2-say.below{bottom:auto;top:96%;left:12%;transform:none;animation:none} /* 角色在畫面頂端（例如走到溫泉後）：氣泡改到腳下偏右，不被切掉、不擋第 5 課標記 */
+.t2-say.below::after{top:auto;bottom:100%;left:18%;border-top-color:transparent;border-bottom-color:#FFA94D}
 .t2-paused *,.t2-paused *::before{animation-play-state:paused!important}
 `;
 
@@ -148,7 +171,7 @@ export class TownFx2D {
     this.zoneIds = contract.zones.ids; this.lessonToZone = contract.zones.lessonToZone; this.colorCfg = contract.zones.color;
     this.art = contract.art2d; this.tintedMaterials = 0; this.props = []; this.camToken = 0; this.fogFront = 0; this.busy = false;
     this.residents = [...town.chars.values()].map(c => ({ name: c.name, kind: c.sprite.startsWith('capy') ? 'capy' : 'bunny', zone: this.zoneIds.indexOf(c.zone), el: c.el }));
-    this._makeGray();
+    this._makeGray(); this._mountClouds();
     town.view.addEventListener('pointerdown', e => this._tap(e));
     this._waveTimer = setInterval(() => this._idleWave(), 3800);
   }
@@ -162,6 +185,43 @@ export class TownFx2D {
       d[i] = l + (d[i] - l) * 0.22 + 18; d[i + 1] = l + (d[i + 1] - l) * 0.22 + 14; d[i + 2] = l + (d[i + 2] - l) * 0.22 + 16; /* 奶油灰，不是死灰 */
     }
     g.putImageData(img, 0, 0); this.gray = c;
+  }
+  /** v13：每課一團雲（雲朵數＝字數，黃金角螺旋排列，中心先散） */
+  _mountClouds() {
+    this.clouds = {};
+    for (const [l, c] of Object.entries(this.art.clouds?.lessons ?? {})) {
+      const n = this.contract.modes['lesson_' + l]?.writingTaskIds.length ?? 0; if (!n) continue;
+      this.clouds[l] = Array.from({ length: n }, (_, i) => {
+        const a = i * 2.39996, d = c.r * 0.82 * Math.sqrt((i + 0.5) / n), x = c.center[0] + Math.cos(a) * d, y = c.center[1] + Math.sin(a) * d * 0.75;
+        const el = document.createElement('div'); el.className = 't2-cloud';
+        el.style.left = (x / this.town.W * 100) + '%'; el.style.top = (y / this.town.H * 100) + '%'; el.style.width = (c.r * (0.72 - 0.25 * i / n) / this.town.W * 100) + '%';
+        el.style.setProperty('--dd', (5 + (i % 4)) + 's'); el.style.animationDelay = (-i * 1.3) + 's'; el.style.setProperty('--gx', (Math.cos(a) * 60).toFixed(0) + 'px');
+        this.town.world.append(el); return el;
+      });
+    }
+  }
+  _updateClouds(passed, instant) {
+    const left = {};
+    for (const [l, els] of Object.entries(this.clouds ?? {})) {
+      const done = (this.contract.modes['lesson_' + l]?.writingTaskIds || []).filter(id => passed.has(id)).length;
+      els.forEach((el, i) => { if (instant) el.style.transition = 'none'; el.classList.toggle('gone', i < done); if (instant) requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = ''; })); });
+      left[l] = Math.max(0, els.length - done);
+    }
+    return left;
+  }
+  /** v13：下一個字的對話氣泡，掛在引導角色（泡泡）頭上；text=null 隱藏 */
+  setNextHint(char, { onTap } = {}) {
+    const c = this.town.chars.get(this.art.nextHint?.resident); if (!c) return;
+    let b = c.el.querySelector('.t2-say');
+    if (!char) { b?.remove(); return; }
+    if (!b) {
+      b = document.createElement('span'); b.className = 't2-say'; b.setAttribute('role', 'button');
+      b.addEventListener('pointerdown', e => e.stopPropagation());
+      b.addEventListener('click', e => { e.stopPropagation(); this.sound?.unlock(); this._sayTap?.(); });
+      c.el.append(b);
+    }
+    b.classList.toggle('below', c.at[1] - this.town.H * this.art.characterHeight < 260);
+    this._sayTap = onTap; b.innerHTML = `<small>下一個字</small><em>${char}</em><small>點我寫字！</small>`; b.setAttribute('aria-label', `下一個字「${char}」，點我開始寫字`);
   }
   zoneOfLesson(l) { return this.zoneIds.indexOf(this.lessonToZone[String(l)]); }
   /** 已解鎖（出現在小鎮上）的朋友：規則同圖鑑 */
@@ -200,7 +260,8 @@ export class TownFx2D {
       }
       if (!instant && ((now && !was) || (pre && !wasShadow))) this._anim(c, 'pop', 700);
     }
-    this.colorState = { saturation: sat.map(v => +v.toFixed(2)), outside: +outside.toFixed(2), visibleFriends: [...on], shadows: this.preview };
+    const clouds = this._updateClouds(passed, instant);
+    this.colorState = { saturation: sat.map(v => +v.toFixed(2)), outside: +outside.toFixed(2), visibleFriends: [...on], shadows: this.preview, cloudsLeft: clouds };
     return this.colorState;
   }
   _drawFog(sat, outside, instant) {
@@ -306,15 +367,16 @@ export class TownFx2D {
     return token === this.camToken ? this.flyHome() : false;
   }
   // ======== 地圖上的課次標記 ========
-  mountPins({ onPick }) {
-    this.onPick = onPick;
+  mountPins({ onPick, onStart }) {
+    this.onPick = onPick; this.onStart = onStart;
     this.pins = Object.keys(this.lessonToZone).map(l => {
       const p = this.art.pins[l], b = document.createElement('button'); b.type = 'button'; b.className = 't2-pin'; b.dataset.lesson = l;
       b.innerHTML = `<u aria-hidden="true">▼</u><img alt="" draggable="false" src="${this.town.url(p.icon)}"><b>${l === '0' ? '數' : l}</b><small></small>`;
       b.style.setProperty('--pc', PIN_COLORS[+l % PIN_COLORS.length]); /* v10：題號改馬卡龍色塊＋白粗邊 */
       b.style.left = (p.at[0] / this.town.W * 100) + '%'; b.style.top = (p.at[1] / this.town.H * 100) + '%';
+      if (p.at[0] > this.town.W * 0.8) b.classList.add('edge-r'); else if (p.at[0] < this.town.W * 0.2) b.classList.add('edge-l'); /* v13：課名膠囊不被畫面邊緣切掉 */
       b.addEventListener('pointerdown', e => e.stopPropagation());
-      b.addEventListener('click', e => { e.stopPropagation(); this.sound?.unlock(); this.onPick?.(+l); });
+      b.addEventListener('click', e => { e.stopPropagation(); this.sound?.unlock(); if (b.classList.contains('active') && this.onStart) this.onStart(+l); else this.onPick?.(+l); }); /* v13：點目前這課的標記＝開始寫字 */
       this.town.world.append(b); return b;
     });
   }
@@ -323,7 +385,7 @@ export class TownFx2D {
     for (const b of this.pins ?? []) {
       const l = +b.dataset.lesson, c = counts[l];
       b.classList.toggle('active', l === activeLesson); b.classList.toggle('done', !!c && c[0] === c[1]);
-      b.querySelector('small').innerHTML = c ? `${c[0]}/${c[1]}` + (c[3] ? ` <i>★${c[3]}</i>` : '') : ''; /* v9：c[3]＝星星合計 */
+      b.querySelector('small').innerHTML = c ? (l === activeLesson ? c[2] + ' ' : '') + `${c[0]}/${c[1]}` + (c[3] ? ` <i>★${c[3]}</i>` : '') : ''; /* v9：c[3]＝星星合計；v13：選中的課加課名（頂部章節列已收起） */
       b.title = c ? `${c[2]}（${c[0]}/${c[1]} 字${c[3] != null ? `，★${c[3]}/${c[4]}` : ''}）` : ''; b.setAttribute('aria-label', b.title);
     }
   }
