@@ -59,7 +59,7 @@ export class Sound {
 export class Voice {
   constructor(sound) {
     this.sound = sound; this.ok = typeof window !== 'undefined' && 'speechSynthesis' in window && typeof SpeechSynthesisUtterance === 'function';
-    this.voice = null; this.spoken = [];
+    this.voice = null; this.spoken = []; this._saidAt = -1e9; this._u = null;
     if (this.ok) { this._pick(); try { speechSynthesis.addEventListener('voiceschanged', () => this._pick()); } catch { /* 舊版 Safari */ } }
   }
   _pick() {
@@ -67,15 +67,19 @@ export class Voice {
     this.voice = vs.find(v => L(v) === 'zh-tw') || vs.find(v => L(v) === 'zh-cn') || vs.find(v => L(v).startsWith('zh') && !/hk|yue/.test(L(v))) || null;
   }
   /** 必須至少一次在使用者手勢內呼叫（iOS 規定）；開始寫字按鈕的 click 會同步呼叫到這裡。 */
-  say(text, { rate = 0.75 } = {}) {
+  say(text, { rate = 0.75, onEnd = null } = {}) {
     if (!this.ok || !text || this.sound?.muted) return false;
     try {
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text); u.lang = this.voice?.lang || 'zh-TW'; if (this.voice) u.voice = this.voice; u.rate = rate; u.pitch = 1.1;
-      speechSynthesis.speak(u); this.spoken.push(text); return true;
+      if (onEnd) { let fired = false; u.onend = u.onerror = () => { if (!fired) { fired = true; onEnd(); } }; } // v17：唸完或被切掉都通知一次
+      this._u = u; // 留著參考，Chrome 才不會在唸完前把 utterance 回收而漏發 end
+      speechSynthesis.speak(u); this.spoken.push(text); this._saidAt = performance.now(); return true;
     } catch { return false; }
   }
-  stop() { try { if (this.ok) speechSynthesis.cancel(); } catch { /* ignore */ } }
+  /** v17：語音引擎忙碌中（正在唸，或已排入還沒出聲）。speak() 後 1 秒內一律算忙，有些瀏覽器旗標會慢一拍。 */
+  get busy() { try { return this.ok && (speechSynthesis.speaking || speechSynthesis.pending || performance.now() - this._saidAt < 1000); } catch { return false; } }
+  stop() { try { if (this.ok) speechSynthesis.cancel(); } catch { /* ignore */ } this._saidAt = -1e9; }
 }
 
 const FX_CSS = `

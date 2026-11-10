@@ -4,9 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=33';
-import { bravo, flash, spark } from './fx.js?v=33';
-import { starsOf } from './stars.js?v=33'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=38';
+import { bravo, flash, spark } from './fx.js?v=38';
+import { starsOf } from './stars.js?v=38'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -33,6 +33,8 @@ export const EARLY_HINT_AFTER = 2;
 // v5 手指寫字（契約 v5 feedback.writing.fatFinger）：QUIZ_CONFIG.leniency 不動（與九字核對表一致，九字都 < 12 畫），
 // 執行時對「總筆畫 >= 12 的字」整字放寬，或對「下一筆標準筆畫很短」的那一筆放寬 1.35 倍。
 export const FAT_FINGER = Object.freeze({ boost: 1.35, minStrokes: 12, shortStroke: 200 });
+/** v17：口訣語音的卡死保險。語音引擎偶爾會卡在「忙碌」不放，自開始唸起超過這個時間就當作講完（要大於最長口訣在 0.75 倍速下的時間）。 */
+export const INTRO_STUCK_MS = 30000;
 /** v5 唸字句型：一般「字，詞的字」；詞尾是助詞、詞裡同字重複（看看、比一比）、或動詞結尾（這是、和我玩）改停頓句「字，詞，字」，
  *  三字以上且不以該字結尾的短句、詞尾是標點也改停頓句。避免「是，這是的是」「誰，誰的的誰」「的，我的的的」這種繞口令。 */
 const PARTICLES = new Set([...'的了嗎呢吧啊呀喔']), PUNCT = new Set([...'！？。，!?']), VERB_END = new Set(['這是', '和我玩']);
@@ -43,6 +45,8 @@ export function introText(char, word) {
   return pause ? `${char}，${word}，${char}` : `${char}，${word}的${char}`;
 }
 /** v12 漸進褪除：描紅（完整底圖）→ 提示（只剩起筆點）→ 聽寫（什麼都不給，只聽詞語）。過一關解鎖下一關。 */
+/** v17：複習聽寫的點餐句。沒有提示詞的字（數字課）只說字。 */
+export const orderText = (char, word) => word ? `我要一個「${word}」的「${char}」！` : `我要一個「${char}」！`;
 export const LEVELS = Object.freeze([{ n: 1, icon: '🖍️', label: '描紅' }, { n: 2, icon: '💡', label: '提示' }, { n: 3, icon: '👂', label: '聽寫' }]);
 export const levelIcon = n => LEVELS[(n ?? 1) - 1]?.icon ?? '';
 /** 聽寫時詞語裡的目標字換成○（「你拍手」→「○拍手」） */
@@ -197,20 +201,32 @@ export class WritingPanel {
     const s = this.state; if (!s || !this.voice) return false;
     const cfg = this.o.settings?.() ?? {};
     // v11：第一次遇到這個字唸完整口訣，複習時唸短句；「聽故事」一定唸口訣；寫完唸甜點台詞
-    const e = s.enrich, text = kind === 'done' ? `一共${s.totalStrokes}畫！${e?.doneSay ?? s.char}` : e?.introSay && s.level !== 3 && (kind === 'story' || (s.firstMeet && cfg.intro !== 'short')) ? e.introSay : introText(s.char, s.task.hint_word);
-    const ok = this.voice.say(text); this.log(`say(${kind}) ${text} -> ${ok}`); s.introPlaying = ok && kind !== 'done'; return ok;
+    const e = s.enrich, text = kind === 'done' ? `一共${s.totalStrokes}畫！${e?.doneSay ?? s.char}` : s.order && s.level === 3 ? orderText(s.char, s.task.hint_word) : e?.introSay && s.level !== 3 && (kind === 'story' || (s.firstMeet && cfg.intro !== 'short')) ? e.introSay : introText(s.char, s.task.hint_word);
+    // v17：每次播放一個身分（token）；舊 utterance 被 cancel 觸發的 end/error 不會解除新口訣的保護
+    const tok = s.sayToken = (s.sayToken || 0) + 1;
+    const ok = this.voice.say(text, { onEnd: () => { if (this.state === s && s.sayToken === tok && s.introPlaying) { s.introPlaying = false; this.log('intro ended'); } } });
+    this.log(`say(${kind}) ${text} -> ${ok}`); s.introPlaying = ok && kind !== 'done'; s.introAt = performance.now(); return ok;
+  }
+
+  /** v17：口訣還在講嗎？旗標為真且語音引擎忙碌才算；忙碌卡死超過 INTRO_STUCK_MS 就當作講完。 */
+  _introActive(s) {
+    if (!s?.introPlaying) return false;
+    if (this.voice?.busy && performance.now() - s.introAt < INTRO_STUCK_MS) return true;
+    s.introPlaying = false; this.log('intro ended (idle)'); return false;
   }
 
   isOpen() { return this.open; }
 
   /** 開啟面板寫一個任務。已開啟時忽略（滑鼠／觸控／鍵盤都只能開一次）。 */
-  async start(task, { attemptId = uuid(), index = 0, total = 1 } = {}) {
+  async start(task, { attemptId = uuid(), index = 0, total = 1, level = null, order = false } = {}) {
     if (this.open) { this.log('ignored: panel already open'); return false; }
     this.open = true; this._saving = false;
     this.state = { task, char: task.char, attemptId, index, total, drawnPaths: [], mistakes: 0, hints: 0, demoViews: 0, writer: null, done: false, startedAt: performance.now() };
     this.state.enrich = this.o.enrich?.(task.char) ?? null; // v11 漢字積木：公式、口訣、寫完台詞、部件筆畫數
     this.state.firstMeet = this.o.isFirstMeet?.(task.id) ?? true;
     { const lv = this.o.levels?.(task.id) ?? { unlocked: 1, suggested: 1, done: [] }; Object.assign(this.state, { level: lv.suggested, unlocked: lv.unlocked, cleared: new Set(lv.done) }); } // v12 關卡
+    if (LEVELS[level - 1]) { this.state.level = level; this.state.unlocked = Math.max(this.state.unlocked, level); } // v17：呼叫端指定起始關卡（複習＝聽寫）；只影響這一次面板，不寫存檔
+    this.state.order = !!order; // v17：複習的聽寫關用客人點餐句型
     this._build();
     this._say('intro');
     this.o.onOpen?.();
@@ -280,7 +296,7 @@ export class WritingPanel {
     el.querySelector('.wp-story')?.addEventListener('click', () => { this._say('story'); this._setMsg(s.enrich.introSay); });
     // v4：手指／滑鼠寫字時留下星光尾巴（純裝飾，不影響判定）
     const grid = el.querySelector('.wp-grid'); let drawing = false, lastSpark = 0, gridRect = null;
-    grid.addEventListener('pointerdown', e => { if (e.isPrimary !== false) { drawing = true; gridRect = grid.getBoundingClientRect(); } /* v15：一筆只量一次格子位置，移動中不再強制排版 */ if (this.state?.introPlaying) { this.voice?.stop(); this.state.introPlaying = false; this.log('intro skipped'); } }); // v12：一下筆就停口訣，不用等唸完
+    grid.addEventListener('pointerdown', e => { if (e.isPrimary !== false) { drawing = true; gridRect = grid.getBoundingClientRect(); } /* v15：一筆只量一次格子位置，移動中不再強制排版 */ }); // v17：落筆不再切斷口訣（v12 是一下筆就停）
     el.addEventListener('pointerup', () => { drawing = false; }); el.addEventListener('pointercancel', () => { drawing = false; });
     grid.addEventListener('pointermove', e => {
       if (!drawing || e.isPrimary === false || !this.state || this.state.done) return; const now = performance.now(); if (now - lastSpark < 28) return; lastSpark = now;
@@ -453,7 +469,7 @@ export class WritingPanel {
         this._setLeniency(d.strokeNum + 1);
         this._progress(s.totalStrokes, d.strokeNum + 1);
         const done = this._nameOf(d.strokeNum), next = this._nameOf(d.strokeNum + 1);
-        if (done && this.voice && this.o.settings?.().strokeVoice !== false) requestAnimationFrame(() => setTimeout(() => { if (this.state === s && !s.done) { this.voice.say(done, { rate: 0.9 }); this.log(`say(stroke) ${done}`); } }, 0)); // v12：寫對一筆就唸這一筆的名稱；v16：等這一幀畫完再唸，不和筆畫結束搶同一瞬間
+        if (done && this.voice && this.o.settings?.().strokeVoice !== false) requestAnimationFrame(() => setTimeout(() => { if (this.state === s && !s.done) { if (this._introActive(s)) { this.log(`stroke voice held ${done}`); return; } this.voice.say(done, { rate: 0.9 }); this.log(`say(stroke) ${done}`); } }, 0)); // v17：口訣還在講就不唸這一筆（不插隊、不排隊） // v12：寫對一筆就唸這一筆的名稱；v16：等這一幀畫完再唸，不和筆畫結束搶同一瞬間
         this._setMsg(d.strokesRemaining ? `對了！還有 ${d.strokesRemaining} 筆${next ? `，下一筆是「${next}」` : ''}` : '全部寫完了！', 'wp-ok');
         this._sname(d.strokesRemaining ? d.strokeNum + 1 : -1);
         this.o.sound?.stroke(d.strokeNum); // v16：拿掉格子閃光（陰影動畫每格重畫）與整個字的縮放（iPhone 每格重繪整個 SVG）；回饋留音效、綠字與小幫手

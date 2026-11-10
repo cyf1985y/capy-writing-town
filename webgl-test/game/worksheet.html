@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>列印練習單 · 甜點寫字樂園</title>
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<style>
+/* v17-D 列印練習單：把還沒拿滿三顆星、常寫錯的字排成 A4 練習單，用系統列印（可存成 PDF）。
+   要孩子照著寫的字（範字、描紅）只用 Hanzi Writer 的筆畫資料畫，不用字型。 */
+:root{--ink:#5B3A4A;--bg:#FFF4EC;--line:#F7C9C0;--pri:#E8665C;--muted:#8a6f7c}
+*{box-sizing:border-box}
+body{margin:0;padding:12px 14px 40px;font:15px/1.5 system-ui,"Noto Sans TC",sans-serif;background:var(--bg);color:var(--ink)}
+h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
+.lead{margin:0 0 10px;font-size:13px;color:var(--muted)}
+.tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.tools button{font:inherit;font-size:14px;padding:6px 12px;border-radius:999px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;touch-action:manipulation}
+.tools button.pri{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:700}
+.tools button:disabled{opacity:.5;cursor:default}
+#msg{font-size:13px;min-height:1.3em;margin:4px 0}
+.pick{background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 10px;margin:0 0 12px}
+.pick h2{font-size:14px;margin:6px 0 4px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips label{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border:2px solid var(--line);border-radius:10px;background:#fffdf7;font-size:17px;cursor:pointer;touch-action:manipulation}
+.chips label:has(input:checked){border-color:var(--pri);background:#FFE9E4}
+.chips small{font-size:11px;color:var(--muted)}
+.chips .new{opacity:.6}
+.preview{overflow-x:auto;padding-bottom:8px}
+/* 練習單本體：全部用 mm，螢幕預覽與列印同一份版面 */
+.sheet{width:210mm;min-height:297mm;padding:12mm;background:#fff;color:#222;margin:0 auto 12px;box-shadow:0 4px 18px rgba(0,0,0,.15)}
+.sheet header{display:flex;align-items:flex-end;gap:6mm;height:16mm;padding-bottom:3mm;font-size:4.2mm}
+.sheet header b{font-size:5.5mm;margin-right:auto}
+.sheet header span i{display:inline-block;width:34mm;border-bottom:.3mm solid #444}
+.row{display:flex;height:20mm;break-inside:avoid;page-break-inside:avoid}
+.lab{width:26mm;height:20mm;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:5.4mm;line-height:1.1;overflow:hidden}
+.lab .wd{white-space:nowrap}.lab .wd.w3{font-size:4.3mm}
+.lab .st{font-size:2.8mm;color:#666;margin-top:1mm}
+.cell{width:20mm;height:20mm;border:.3mm solid #999;margin-left:-.3mm;position:relative;background:
+  linear-gradient(#ccc,#ccc) 50% 0/.2mm 100% no-repeat,linear-gradient(#ccc,#ccc) 0 50%/100% .2mm no-repeat}
+.row + .row .cell{margin-top:-.3mm;height:20.3mm}
+.cell svg{position:absolute;inset:1mm;width:18mm;height:18mm}
+.cell.model path{fill:#222}.cell.trace path{fill:#cfcfcf}
+.zy{display:inline-flex;align-items:flex-end;line-height:1;font-family:system-ui,"Noto Sans TC",sans-serif}
+.zy-s{display:inline-flex;flex-direction:column;align-items:center}.zy-s b{font-weight:inherit}.zy-dot{font-style:normal;line-height:.6}.zy-t{font-size:.85em;width:.7em;margin-bottom:.15em}
+.wz{display:inline-flex;align-items:center}.wz .zy{font-size:.45em;margin-left:.2mm}.wz-c{font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif}
+/* 螢幕預覽縮小到看得到整張；列印不受影響 */
+@media screen and (max-width:840px){.sheet{zoom:.75}}
+@media screen and (max-width:640px){.sheet{zoom:.5}}
+@media screen and (max-width:440px){.sheet{zoom:.45}}
+@page{size:A4 portrait;margin:0}
+@media print{
+  body{padding:0;background:#fff}
+  .noprint{display:none!important}
+  .preview{overflow:visible;padding:0}
+  .sheet{margin:0;box-shadow:none;break-after:page;page-break-after:always;height:297mm;min-height:0;overflow:hidden}
+  .sheet:last-child{break-after:auto;page-break-after:auto}
+  .cell{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+<div class="noprint">
+  <h1>🖨️ 列印練習單</h1>
+  <p class="lead">預設選「還沒拿到三顆星的字」和「常錯的字」，最多 12 個（一張 A4）。可以自己勾選增減，再按列印；在列印畫面可以選「儲存為 PDF」。資料只從這台裝置讀取，不會更動遊戲紀錄。</p>
+  <div class="tools"><button type="button" class="pri" id="printBtn" disabled>🖨️ 列印</button><button type="button" id="defBtn">恢復預設選字</button><button type="button" id="noneBtn">全部取消</button><a href="../game-v1.html">← 回遊戲</a></div>
+  <p id="msg" role="status">載入中…</p>
+  <div class="pick" id="pick"></div>
+</div>
+<div class="preview" id="preview"></div>
+<script type="module">
+import { loadContract } from './content.js?v=38';
+import { openDB } from './store.js?v=38';
+import { starsOf, bestStars, starText } from './stars.js?v=38';
+import { wordHTML } from './writing-panel.js?v=38';
+
+const MAX_DEFAULT = 12, ROWS_PER_PAGE = 12, WEAK_N = 5, CELLS = { model: 1, trace: 3, blank: 4 };
+const $ = s => document.querySelector(s), qs = new URLSearchParams(location.search);
+const PROFILE_ID = qs.get('profile') || 'local-child-1';
+const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const get = async u => { const r = await fetch(u, { cache: 'no-cache' }); if (!r.ok) throw new Error(u + ' HTTP ' + r.status); return r.json(); };
+
+/** 預設選字：常錯的字（錯＋提示次數多的前 5 個，和家長面板相同）在前，再接最佳星數低於 3 的字（星數少的在前）；去重、最多 12 個 */
+function defaultPicks(artifacts, max = MAX_DEFAULT) {
+  const byChar = new Map();
+  for (const a of artifacts) { const r = byChar.get(a.char) ?? { char: a.char, bad: 0, best: 0, last: '' }; r.bad += (a.mistakes ?? 0) + (a.hints ?? 0); r.best = Math.max(r.best, starsOf(a)); if (a.createdAt > r.last) r.last = a.createdAt; byChar.set(a.char, r); }
+  const all = [...byChar.values()];
+  const weak = all.filter(r => r.bad > 0).sort((a, b) => b.bad - a.bad).slice(0, WEAK_N);
+  const low = all.filter(r => r.best < 3).sort((a, b) => a.best - b.best || b.bad - a.bad);
+  return [...new Set([...weak, ...low].map(r => r.char))].slice(0, max);
+}
+
+let loaded, ZY = {}, TW = {}, artifacts = [], tasks = [], selected = [];
+const glyphs = new Map();
+const dataUrl = ch => '../vendor-v2/hanzi-writer/' + (TW[ch] ? 'data-tw/' : 'data/') + encodeURIComponent(ch) + '.json'; // 和遊戲相同：修正字讀 data-tw
+const loadGlyph = ch => glyphs.get(ch) ?? glyphs.set(ch, get(dataUrl(ch)).catch(() => null)).get(ch);
+
+// Hanzi Writer 字形座標：1024 見方、y 軸朝上、基線 900
+const glyphSVG = g => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" aria-hidden="true"><g transform="scale(1,-1) translate(0,-900)">${g.strokes.map(d => `<path d="${esc(d)}"/>`).join('')}</g></svg>`;
+function rowHTML(task, g) {
+  const cell = (cls, n) => `<div class="cell ${cls}">${cls === 'blank' ? '' : glyphSVG(g)}</div>`.repeat(n);
+  const word = task.hint_word || loaded.content.characters.find(c => c.char === task.char)?.words?.[0] || '';
+  return `<div class="row" data-char="${esc(task.char)}"><div class="lab"><span class="wd${[...word].length >= 3 ? ' w3' : ''}">${word ? wordHTML(word, ZY[word]?.zhuyin) : ''}</span><span class="st">共 ${g.strokes.length} 畫</span></div>${cell('model', CELLS.model)}${cell('trace', CELLS.trace)}${cell('blank', CELLS.blank)}</div>`;
+}
+async function renderSheet() {
+  const list = selected.map(ch => tasks.find(t => t.char === ch)).filter(Boolean);
+  const gs = await Promise.all(list.map(t => loadGlyph(t.char)));
+  const rows = list.map((t, i) => gs[i] ? rowHTML(t, gs[i]) : '').filter(Boolean), missing = list.filter((t, i) => !gs[i]).map(t => t.char);
+  const pages = []; for (let i = 0; i < rows.length; i += ROWS_PER_PAGE) pages.push(rows.slice(i, i + ROWS_PER_PAGE));
+  $('#preview').innerHTML = pages.map(p => `<section class="sheet"><header><b>寫字練習單</b><span>姓名：<i></i></span><span>日期：<i></i></span></header>${p.join('')}</section>`).join('');
+  $('#printBtn').disabled = !rows.length;
+  $('#msg').textContent = rows.length ? `已選 ${rows.length} 個字，共 ${pages.length} 頁（每頁 ${ROWS_PER_PAGE} 個字）。${missing.length ? '字形載入失敗：' + missing.join('、') : ''}` : '還沒有選字。請在下面勾選要練習的字。';
+}
+function renderPick() {
+  const best = bestStars(artifacts), lessons = Object.entries(loaded.contract.modes).filter(([k]) => k.startsWith('lesson_'));
+  const seen = new Set(), chip = t => { if (seen.has(t.char)) return ''; seen.add(t.char); const n = best.get(t.id) ?? 0;
+    return `<label class="${n ? '' : 'new'}"><input type="checkbox" value="${esc(t.char)}"${selected.includes(t.char) ? ' checked' : ''}>${esc(t.char)}<small>${n ? starText(n) : '未寫'}</small></label>`; };
+  $('#pick').innerHTML = lessons.map(([k, m]) => `<h2>${esc(m.lesson ? `第 ${m.lesson} 課　${m.title ?? ''}` : m.title ?? k)}</h2><div class="chips">${m.writingTaskIds.map(id => loaded.writingTasks.get(id)).filter(Boolean).map(chip).join('')}</div>`).join('');
+}
+$('#pick').addEventListener('change', e => {
+  const ch = e.target.value; if (!ch) return;
+  selected = e.target.checked ? [...selected, ch] : selected.filter(c => c !== ch); renderSheet();
+});
+$('#defBtn').addEventListener('click', () => { selected = defaultPicks(artifacts); renderPick(); renderSheet(); });
+$('#noneBtn').addEventListener('click', () => { selected = []; renderPick(); renderSheet(); });
+$('#printBtn').addEventListener('click', () => window.print());
+
+try {
+  loaded = await loadContract('../../', 'game/contract_v12.json');
+  tasks = [...loaded.writingTasks.values()];
+  try { ZY = (await get('./zhuyin.json?v=38')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
+  try { TW = (await get('../vendor-v2/hanzi-writer/data-tw/index.json?v=38')).chars ?? {}; } catch { /* 沒有索引就全用原資料 */ }
+  try { // 唯讀：只開 readonly 交易讀作品
+    const db = await openDB(), tx = db.transaction('artifacts', 'readonly');
+    artifacts = await new Promise((res, rej) => { const r = tx.objectStore('artifacts').index('profileId').getAll(PROFILE_ID); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+    db.close();
+  } catch (e) { $('#msg').textContent = '讀不到遊戲紀錄（' + e + '），可以手動選字。'; }
+  selected = defaultPicks(artifacts);
+  renderPick(); await renderSheet();
+  if (!artifacts.length) $('#msg').textContent = '這台裝置還沒有寫字紀錄。可以在下面自己勾選要練習的字。';
+} catch (e) { $('#msg').textContent = '載入失敗：' + e; }
+if (qs.get('test') === '1') window.__ws = { defaultPicks, loadGlyph, dataUrl, renderSheet, get selected() { return selected; }, set selected(v) { selected = v; }, get artifacts() { return artifacts; }, get TW() { return TW; }, renderPick };
+</script>

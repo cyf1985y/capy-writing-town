@@ -2,6 +2,7 @@
 // - requestPersist()：請瀏覽器把本站資料標成「持久保存」（Safari 一般網頁 7 天沒開可能清掉資料；加到主畫面的 App 不受此限）。
 // - exportBackup() / importBackup()：把 IndexedDB 三個 store（本 profile）＋複習紀錄、家長設定打包成 JSON 檔；
 //   還原採「合併」：作品、獎勵帳本只補沒有的；進度同一字以「已通過」優先，其次較新的。不會刪掉現有資料。
+//   v17：家長自訂獎勵（localStorage）由呼叫端給 localMerge 合併函式，備份格式 version 仍是 1。
 // 注意：iPhone「加入主畫面」後的 App 和 Safari 是兩份分開的存檔，搬家要用備份檔。
 const STORES = ['progress', 'artifacts', 'rewardLedger'];
 export const BACKUP_FORMAT = 'capy-writing-backup';
@@ -27,7 +28,7 @@ const rank = r => (r.status === 'passed' ? 2 : 1);
 const stamp = r => r.updatedAt || r.completedAt || r.startedAt || '';
 
 /** 回傳 { added: {progress, artifacts, rewardLedger}, kept, local }；格式不對就丟錯（不寫入任何東西） */
-export async function importBackup(db, obj, { profileId, localKeys = [] }) {
+export async function importBackup(db, obj, { profileId, localKeys = [], localMerge = {} }) {
   if (obj?.format !== BACKUP_FORMAT || obj.version !== 1 || !obj.data) throw new Error('BACKUP_FORMAT');
   if (obj.profileId !== profileId) throw new Error('BACKUP_PROFILE:' + obj.profileId);
   for (const n of STORES) if (!Array.isArray(obj.data[n]) || obj.data[n].some(r => r?.profileId !== profileId)) throw new Error('BACKUP_ROWS:' + n);
@@ -41,7 +42,11 @@ export async function importBackup(db, obj, { profileId, localKeys = [] }) {
     }
   }
   await done(tx);
-  let local = 0; for (const k of localKeys) if (obj.local?.[k] != null) { try { if (localStorage.getItem(k) == null) { localStorage.setItem(k, obj.local[k]); local += 1; } } catch { /* ignore */ } }
+  // localStorage 的鍵：預設「本機已有就不覆蓋」；localMerge[k](本機字串|null, 備份字串) 有給就用它合併（v17 獎勵與兌換紀錄）。舊備份沒有的鍵就跳過。
+  let local = 0; for (const k of localKeys) if (obj.local?.[k] != null) { try {
+    const cur = localStorage.getItem(k), next = localMerge[k] ? localMerge[k](cur, obj.local[k]) : cur ?? obj.local[k];
+    if (next != null && next !== cur) { localStorage.setItem(k, next); local += 1; }
+  } catch { /* ignore */ } }
   return { added, kept, local };
 }
 
