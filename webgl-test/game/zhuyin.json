@@ -1,0 +1,2468 @@
+{
+ "version": "1.0",
+ "generated": "2026-11-10",
+ "source": "單字：題庫 docs/一上國語題庫.json（課本注音）；詞：萌典 API https://www.moedict.tw/a/<詞>.json（資料來自教育部《重編國語辭典修訂本》），整詞查不到時最長比對切詞",
+ "note": "一、不 等變調依辭典原調標示（辭典不標變調）；輕聲以「˙」開頭",
+ "chars": {
+  "一": {
+   "zhuyin": "ㄧ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄧ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "二": {
+   "zhuyin": "ㄦˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄦˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "三": {
+   "zhuyin": "ㄙㄢ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄙㄢ",
+    "ㄙㄚ",
+    "ㄙㄢˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "四": {
+   "zhuyin": "ㄙˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄙˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "五": {
+   "zhuyin": "ㄨˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄨˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "六": {
+   "zhuyin": "ㄌㄧㄡˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄌㄧㄡˋ",
+    "ㄌㄨˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "七": {
+   "zhuyin": "ㄑㄧ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄑㄧ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "八": {
+   "zhuyin": "ㄅㄚ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄅㄚ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "九": {
+   "zhuyin": "ㄐㄧㄡˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄐㄧㄡˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "十": {
+   "zhuyin": "ㄕˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄕˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "拍": {
+   "zhuyin": "ㄆㄞ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄆㄞ",
+    "ㄆㄛˋ",
+    "ㄆㄚ",
+    "ㄅㄛˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "手": {
+   "zhuyin": "ㄕㄡˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄕㄡˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "左": {
+   "zhuyin": "ㄗㄨㄛˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄗㄨㄛˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "右": {
+   "zhuyin": "ㄧㄡˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄧㄡˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "你": {
+   "zhuyin": "ㄋㄧˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄋㄧˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "他": {
+   "zhuyin": "ㄊㄚ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄊㄚ",
+    "ㄊㄨㄛ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "也": {
+   "zhuyin": "ㄧㄝˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄧㄝˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "上": {
+   "zhuyin": "ㄕㄤˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄕㄤˋ",
+    "ㄕㄤˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "下": {
+   "zhuyin": "ㄒㄧㄚˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄒㄧㄚˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "這": {
+   "zhuyin": "ㄓㄜˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄓㄜˋ",
+    "ㄓㄟˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "是": {
+   "zhuyin": "ㄕˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄕˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "誰": {
+   "zhuyin": "ㄕㄟˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄕㄟˊ",
+    "ㄕㄨㄟˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "的": {
+   "zhuyin": "˙ㄉㄜ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄉㄧˋ",
+    "ㄉㄧˊ",
+    "˙ㄉㄜ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "我": {
+   "zhuyin": "ㄨㄛˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄨㄛˇ",
+    "ㄜˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "分": {
+   "zhuyin": "ㄈㄣ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄈㄣ",
+    "ㄈㄣˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "好": {
+   "zhuyin": "ㄏㄠˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄏㄠˇ",
+    "ㄏㄠˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "了": {
+   "zhuyin": "˙ㄌㄜ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄌㄧㄠˇ",
+    "˙ㄌㄜ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "啊": {
+   "zhuyin": "ㄚ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄚ",
+    "ㄛ",
+    "˙ㄚ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "多": {
+   "zhuyin": "ㄉㄨㄛ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄉㄨㄛ",
+    "ㄉㄨㄛˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "個": {
+   "zhuyin": "˙ㄍㄜ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄍㄜˋ",
+    "˙ㄍㄜ",
+    "ㄍㄜˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "秋": {
+   "zhuyin": "ㄑㄧㄡ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄑㄧㄡ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "高": {
+   "zhuyin": "ㄍㄠ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄍㄠ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "朋": {
+   "zhuyin": "ㄆㄥˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄆㄥˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "千": {
+   "zhuyin": "ㄑㄧㄢ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄑㄧㄢ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "山": {
+   "zhuyin": "ㄕㄢ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄕㄢ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "友": {
+   "zhuyin": "ㄧㄡˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄧㄡˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "和": {
+   "zhuyin": "ㄏㄢˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄏㄜˊ",
+    "˙ㄏㄨㄛ",
+    "ㄏㄜˋ",
+    "ㄏㄨㄛˋ",
+    "ㄏㄢˋ",
+    "ㄏㄨˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "到": {
+   "zhuyin": "ㄉㄠˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄉㄠˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "們": {
+   "zhuyin": "˙ㄇㄣ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄇㄣˊ",
+    "˙ㄇㄣ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "玩": {
+   "zhuyin": "ㄨㄢˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄨㄢˋ",
+    "ㄨㄢˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "大": {
+   "zhuyin": "ㄉㄚˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄉㄚˋ",
+    "ㄉㄞˋ",
+    "ㄊㄞˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "起": {
+   "zhuyin": "ㄑㄧˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄑㄧˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "陪": {
+   "zhuyin": "ㄆㄟˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄆㄟˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "海": {
+   "zhuyin": "ㄏㄞˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄏㄞˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "子": {
+   "zhuyin": "˙ㄗ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄗˇ",
+    "˙ㄗ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "小": {
+   "zhuyin": "ㄒㄧㄠˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄒㄧㄠˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "課": {
+   "zhuyin": "ㄎㄜˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄎㄜˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "兩": {
+   "zhuyin": "ㄌㄧㄤˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄌㄧㄤˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "人": {
+   "zhuyin": "ㄖㄣˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄖㄣˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "拉": {
+   "zhuyin": "ㄌㄚ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄌㄚ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "看": {
+   "zhuyin": "ㄎㄢˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄎㄢˋ",
+    "ㄎㄢ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "找": {
+   "zhuyin": "ㄓㄠˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄓㄠˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "隻": {
+   "zhuyin": "ㄓ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄓ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "青": {
+   "zhuyin": "ㄑㄧㄥ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄑㄧㄥ",
+    "ㄐㄧㄥ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "蛙": {
+   "zhuyin": "ㄨㄚ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄨㄚ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "開": {
+   "zhuyin": "ㄎㄞ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄎㄞ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "心": {
+   "zhuyin": "ㄒㄧㄣ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄒㄧㄣ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "比": {
+   "zhuyin": "ㄅㄧˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄅㄧˇ",
+    "ㄅㄧˋ",
+    "ㄆㄧˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "門": {
+   "zhuyin": "ㄇㄣˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄇㄣˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "裡": {
+   "zhuyin": "ㄌㄧˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄌㄧˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "外": {
+   "zhuyin": "ㄨㄞˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄨㄞˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "有": {
+   "zhuyin": "ㄧㄡˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄧㄡˇ",
+    "ㄧㄡˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "什": {
+   "zhuyin": "ㄕㄣˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄕˊ",
+    "ㄕㄣˊ",
+    "ㄕㄜˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "麼": {
+   "zhuyin": "˙ㄇㄜ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄇㄛˊ",
+    "˙ㄇㄚ",
+    "ㄇㄚˊ",
+    "˙ㄇㄜ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "不": {
+   "zhuyin": "ㄅㄨˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄅㄨˋ",
+    "ㄈㄡˇ",
+    "ㄈㄡ",
+    "ㄈㄨ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "同": {
+   "zhuyin": "ㄊㄨㄥˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄊㄨㄥˊ",
+    "ㄊㄨㄥˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "早": {
+   "zhuyin": "ㄗㄠˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄗㄠˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "晚": {
+   "zhuyin": "ㄨㄢˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄨㄢˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "王": {
+   "zhuyin": "ㄨㄤˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄨㄤˊ",
+    "ㄨㄤˋ",
+    "ㄩˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "主": {
+   "zhuyin": "ㄓㄨˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄓㄨˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "又": {
+   "zhuyin": "ㄧㄡˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄧㄡˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "路": {
+   "zhuyin": "ㄌㄨˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄌㄨˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "長": {
+   "zhuyin": "ㄔㄤˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄔㄤˊ",
+    "ㄓㄤˇ",
+    "ㄓㄤˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "白": {
+   "zhuyin": "ㄅㄞˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄅㄞˊ",
+    "ㄅㄛˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "花": {
+   "zhuyin": "ㄏㄨㄚ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄏㄨㄚ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "紅": {
+   "zhuyin": "ㄏㄨㄥˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄏㄨㄥˊ",
+    "ㄍㄨㄥ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "走": {
+   "zhuyin": "ㄗㄡˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄗㄡˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "在": {
+   "zhuyin": "ㄗㄞˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄗㄞˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "向": {
+   "zhuyin": "ㄒㄧㄤˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄒㄧㄤˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "說": {
+   "zhuyin": "ㄕㄨㄛ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄕㄨㄛ",
+    "ㄕㄨㄟˋ",
+    "ㄩㄝˋ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "朵": {
+   "zhuyin": "ㄉㄨㄛˇ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄉㄨㄛˇ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "從": {
+   "zhuyin": "ㄘㄨㄥˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄘㄨㄥˊ",
+    "ㄗㄨㄥˋ",
+    "ㄘㄨㄥ",
+    "ㄗㄨㄥ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "頭": {
+   "zhuyin": "ㄊㄡˊ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄊㄡˊ",
+    "˙ㄊㄡ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  },
+  "那": {
+   "zhuyin": "ㄋㄚˋ",
+   "source": "題庫（課本）",
+   "moeReadings": [
+    "ㄋㄚˋ",
+    "ㄋㄟˋ",
+    "ㄋㄚˇ",
+    "ㄋㄟˇ",
+    "ㄋㄚ",
+    "ㄋㄨㄛˊ"
+   ],
+   "moeAgrees": true,
+   "humanCheck": "pending"
+  }
+ },
+ "words": {
+  "一個": {
+   "chars": [
+    "一",
+    "個"
+   ],
+   "zhuyin": [
+    "ㄧ",
+    "˙ㄍㄜ"
+   ],
+   "segments": [
+    {
+     "text": "一個",
+     "zhuyin": [
+      "ㄧ",
+      "˙ㄍㄜ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "一朵": {
+   "chars": [
+    "一",
+    "朵"
+   ],
+   "zhuyin": [
+    "ㄧ",
+    "ㄉㄨㄛˇ"
+   ],
+   "segments": [
+    {
+     "text": "一",
+     "zhuyin": [
+      "ㄧ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "朵",
+     "zhuyin": [
+      "ㄉㄨㄛˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "一起": {
+   "chars": [
+    "一",
+    "起"
+   ],
+   "zhuyin": [
+    "ㄧ",
+    "ㄑㄧˇ"
+   ],
+   "segments": [
+    {
+     "text": "一起",
+     "zhuyin": [
+      "ㄧ",
+      "ㄑㄧˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "一隻": {
+   "chars": [
+    "一",
+    "隻"
+   ],
+   "zhuyin": [
+    "ㄧ",
+    "ㄓ"
+   ],
+   "segments": [
+    {
+     "text": "一",
+     "zhuyin": [
+      "ㄧ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "隻",
+     "zhuyin": [
+      "ㄓ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "上課": {
+   "chars": [
+    "上",
+    "課"
+   ],
+   "zhuyin": [
+    "ㄕㄤˋ",
+    "ㄎㄜˋ"
+   ],
+   "segments": [
+    {
+     "text": "上課",
+     "zhuyin": [
+      "ㄕㄤˋ",
+      "ㄎㄜˋ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "上面": {
+   "chars": [
+    "上",
+    "面"
+   ],
+   "zhuyin": [
+    "ㄕㄤˋ",
+    "˙ㄇㄧㄢ"
+   ],
+   "segments": [
+    {
+     "text": "上面",
+     "zhuyin": [
+      "ㄕㄤˋ",
+      "˙ㄇㄧㄢ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "下面": {
+   "chars": [
+    "下",
+    "面"
+   ],
+   "zhuyin": [
+    "ㄒㄧㄚˋ",
+    "ㄇㄧㄢˋ"
+   ],
+   "segments": [
+    {
+     "text": "下面",
+     "zhuyin": [
+      "ㄒㄧㄚˋ",
+      "ㄇㄧㄢˋ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "不同": {
+   "chars": [
+    "不",
+    "同"
+   ],
+   "zhuyin": [
+    "ㄅㄨˋ",
+    "ㄊㄨㄥˊ"
+   ],
+   "segments": [
+    {
+     "text": "不同",
+     "zhuyin": [
+      "ㄅㄨˋ",
+      "ㄊㄨㄥˊ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "主人": {
+   "chars": [
+    "主",
+    "人"
+   ],
+   "zhuyin": [
+    "ㄓㄨˇ",
+    "ㄖㄣˊ"
+   ],
+   "segments": [
+    {
+     "text": "主人",
+     "zhuyin": [
+      "ㄓㄨˇ",
+      "ㄖㄣˊ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "什麼": {
+   "chars": [
+    "什",
+    "麼"
+   ],
+   "zhuyin": [
+    "ㄕㄣˊ",
+    "˙ㄇㄜ"
+   ],
+   "segments": [
+    {
+     "text": "什麼",
+     "zhuyin": [
+      "ㄕㄣˊ",
+      "˙ㄇㄜ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "他也拍": {
+   "chars": [
+    "他",
+    "也",
+    "拍"
+   ],
+   "zhuyin": [
+    "ㄊㄚ",
+    "ㄧㄝˇ",
+    "ㄆㄞ"
+   ],
+   "segments": [
+    {
+     "text": "他",
+     "zhuyin": [
+      "ㄊㄚ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "也",
+     "zhuyin": [
+      "ㄧㄝˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "拍",
+     "zhuyin": [
+      "ㄆㄞ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "你拍手": {
+   "chars": [
+    "你",
+    "拍",
+    "手"
+   ],
+   "zhuyin": [
+    "ㄋㄧˇ",
+    "ㄆㄞ",
+    "ㄕㄡˇ"
+   ],
+   "segments": [
+    {
+     "text": "你",
+     "zhuyin": [
+      "ㄋㄧˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "拍手",
+     "zhuyin": [
+      "ㄆㄞ",
+      "ㄕㄡˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "兩個人": {
+   "chars": [
+    "兩",
+    "個",
+    "人"
+   ],
+   "zhuyin": [
+    "ㄌㄧㄤˇ",
+    "˙ㄍㄜ",
+    "ㄖㄣˊ"
+   ],
+   "segments": [
+    {
+     "text": "兩",
+     "zhuyin": [
+      "ㄌㄧㄤˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false,
+     "manualSeg": true
+    },
+    {
+     "text": "個",
+     "zhuyin": [
+      "˙ㄍㄜ"
+     ],
+     "source": "題庫",
+     "polyphonic": true,
+     "manualSeg": true
+    },
+    {
+     "text": "人",
+     "zhuyin": [
+      "ㄖㄣˊ"
+     ],
+     "source": "題庫",
+     "polyphonic": false,
+     "manualSeg": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "分好了": {
+   "chars": [
+    "分",
+    "好",
+    "了"
+   ],
+   "zhuyin": [
+    "ㄈㄣ",
+    "ㄏㄠˇ",
+    "˙ㄌㄜ"
+   ],
+   "segments": [
+    {
+     "text": "分",
+     "zhuyin": [
+      "ㄈㄣ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "好",
+     "zhuyin": [
+      "ㄏㄠˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "了",
+     "zhuyin": [
+      "˙ㄌㄜ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "到大海": {
+   "chars": [
+    "到",
+    "大",
+    "海"
+   ],
+   "zhuyin": [
+    "ㄉㄠˋ",
+    "ㄉㄚˋ",
+    "ㄏㄞˇ"
+   ],
+   "segments": [
+    {
+     "text": "到",
+     "zhuyin": [
+      "ㄉㄠˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "大海",
+     "zhuyin": [
+      "ㄉㄚˋ",
+      "ㄏㄞˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "又有": {
+   "chars": [
+    "又",
+    "有"
+   ],
+   "zhuyin": [
+    "ㄧㄡˋ",
+    "ㄧㄡˇ"
+   ],
+   "segments": [
+    {
+     "text": "又",
+     "zhuyin": [
+      "ㄧㄡˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "有",
+     "zhuyin": [
+      "ㄧㄡˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "右手": {
+   "chars": [
+    "右",
+    "手"
+   ],
+   "zhuyin": [
+    "ㄧㄡˋ",
+    "ㄕㄡˇ"
+   ],
+   "segments": [
+    {
+     "text": "右手",
+     "zhuyin": [
+      "ㄧㄡˋ",
+      "ㄕㄡˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "向小紅花說": {
+   "chars": [
+    "向",
+    "小",
+    "紅",
+    "花",
+    "說"
+   ],
+   "zhuyin": [
+    "ㄒㄧㄤˋ",
+    "ㄒㄧㄠˇ",
+    "ㄏㄨㄥˊ",
+    "ㄏㄨㄚ",
+    "ㄕㄨㄛ"
+   ],
+   "segments": [
+    {
+     "text": "向",
+     "zhuyin": [
+      "ㄒㄧㄤˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": false,
+     "manualSeg": true
+    },
+    {
+     "text": "小",
+     "zhuyin": [
+      "ㄒㄧㄠˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false,
+     "manualSeg": true
+    },
+    {
+     "text": "紅花",
+     "zhuyin": [
+      "ㄏㄨㄥˊ",
+      "ㄏㄨㄚ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false,
+     "manualSeg": true
+    },
+    {
+     "text": "說",
+     "zhuyin": [
+      "ㄕㄨㄛ"
+     ],
+     "source": "題庫",
+     "polyphonic": true,
+     "manualSeg": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "和我玩": {
+   "chars": [
+    "和",
+    "我",
+    "玩"
+   ],
+   "zhuyin": [
+    "ㄏㄢˋ",
+    "ㄨㄛˇ",
+    "ㄨㄢˊ"
+   ],
+   "segments": [
+    {
+     "text": "和",
+     "zhuyin": [
+      "ㄏㄢˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "我",
+     "zhuyin": [
+      "ㄨㄛˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "玩",
+     "zhuyin": [
+      "ㄨㄢˊ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "啊！": {
+   "chars": [
+    "啊"
+   ],
+   "zhuyin": [
+    "ㄚ"
+   ],
+   "segments": [
+    {
+     "text": "啊",
+     "zhuyin": [
+      "ㄚ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "多了一個": {
+   "chars": [
+    "多",
+    "了",
+    "一",
+    "個"
+   ],
+   "zhuyin": [
+    "ㄉㄨㄛ",
+    "˙ㄌㄜ",
+    "ㄧ",
+    "˙ㄍㄜ"
+   ],
+   "segments": [
+    {
+     "text": "多",
+     "zhuyin": [
+      "ㄉㄨㄛ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "了",
+     "zhuyin": [
+      "˙ㄌㄜ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "一個",
+     "zhuyin": [
+      "ㄧ",
+      "˙ㄍㄜ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "大個子": {
+   "chars": [
+    "大",
+    "個",
+    "子"
+   ],
+   "zhuyin": [
+    "ㄉㄚˋ",
+    "ㄍㄜˋ",
+    "˙ㄗ"
+   ],
+   "segments": [
+    {
+     "text": "大個子",
+     "zhuyin": [
+      "ㄉㄚˋ",
+      "ㄍㄜˋ",
+      "˙ㄗ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "大海": {
+   "chars": [
+    "大",
+    "海"
+   ],
+   "zhuyin": [
+    "ㄉㄚˋ",
+    "ㄏㄞˇ"
+   ],
+   "segments": [
+    {
+     "text": "大海",
+     "zhuyin": [
+      "ㄉㄚˋ",
+      "ㄏㄞˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "小個子": {
+   "chars": [
+    "小",
+    "個",
+    "子"
+   ],
+   "zhuyin": [
+    "ㄒㄧㄠˇ",
+    "ㄍㄜˋ",
+    "˙ㄗ"
+   ],
+   "segments": [
+    {
+     "text": "小",
+     "zhuyin": [
+      "ㄒㄧㄠˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "個子",
+     "zhuyin": [
+      "ㄍㄜˋ",
+      "˙ㄗ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "小花": {
+   "chars": [
+    "小",
+    "花"
+   ],
+   "zhuyin": [
+    "ㄒㄧㄠˇ",
+    "ㄏㄨㄚ"
+   ],
+   "segments": [
+    {
+     "text": "小",
+     "zhuyin": [
+      "ㄒㄧㄠˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "花",
+     "zhuyin": [
+      "ㄏㄨㄚ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "小路": {
+   "chars": [
+    "小",
+    "路"
+   ],
+   "zhuyin": [
+    "ㄒㄧㄠˇ",
+    "ㄌㄨˋ"
+   ],
+   "segments": [
+    {
+     "text": "小路",
+     "zhuyin": [
+      "ㄒㄧㄠˇ",
+      "ㄌㄨˋ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "左手": {
+   "chars": [
+    "左",
+    "手"
+   ],
+   "zhuyin": [
+    "ㄗㄨㄛˇ",
+    "ㄕㄡˇ"
+   ],
+   "segments": [
+    {
+     "text": "左手",
+     "zhuyin": [
+      "ㄗㄨㄛˇ",
+      "ㄕㄡˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "從這一頭": {
+   "chars": [
+    "從",
+    "這",
+    "一",
+    "頭"
+   ],
+   "zhuyin": [
+    "ㄘㄨㄥˊ",
+    "ㄓㄜˋ",
+    "ㄧ",
+    "ㄊㄡˊ"
+   ],
+   "segments": [
+    {
+     "text": "從",
+     "zhuyin": [
+      "ㄘㄨㄥˊ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "這",
+     "zhuyin": [
+      "ㄓㄜˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "一頭",
+     "zhuyin": [
+      "ㄧ",
+      "ㄊㄡˊ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "我們": {
+   "chars": [
+    "我",
+    "們"
+   ],
+   "zhuyin": [
+    "ㄨㄛˇ",
+    "˙ㄇㄣ"
+   ],
+   "segments": [
+    {
+     "text": "我們",
+     "zhuyin": [
+      "ㄨㄛˇ",
+      "˙ㄇㄣ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "我的": {
+   "chars": [
+    "我",
+    "的"
+   ],
+   "zhuyin": [
+    "ㄨㄛˇ",
+    "˙ㄉㄜ"
+   ],
+   "segments": [
+    {
+     "text": "我",
+     "zhuyin": [
+      "ㄨㄛˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "的",
+     "zhuyin": [
+      "˙ㄉㄜ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "手拉手": {
+   "chars": [
+    "手",
+    "拉",
+    "手"
+   ],
+   "zhuyin": [
+    "ㄕㄡˇ",
+    "ㄌㄚ",
+    "ㄕㄡˇ"
+   ],
+   "segments": [
+    {
+     "text": "手",
+     "zhuyin": [
+      "ㄕㄡˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "拉手",
+     "zhuyin": [
+      "ㄌㄚ",
+      "ㄕㄡˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "找找": {
+   "chars": [
+    "找",
+    "找"
+   ],
+   "zhuyin": [
+    "ㄓㄠˇ",
+    "ㄓㄠˇ"
+   ],
+   "segments": [
+    {
+     "text": "找",
+     "zhuyin": [
+      "ㄓㄠˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "找",
+     "zhuyin": [
+      "ㄓㄠˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "拍手": {
+   "chars": [
+    "拍",
+    "手"
+   ],
+   "zhuyin": [
+    "ㄆㄞ",
+    "ㄕㄡˇ"
+   ],
+   "segments": [
+    {
+     "text": "拍手",
+     "zhuyin": [
+      "ㄆㄞ",
+      "ㄕㄡˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "早上": {
+   "chars": [
+    "早",
+    "上"
+   ],
+   "zhuyin": [
+    "ㄗㄠˇ",
+    "˙ㄕㄤ"
+   ],
+   "segments": [
+    {
+     "text": "早上",
+     "zhuyin": [
+      "ㄗㄠˇ",
+      "˙ㄕㄤ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "晚上": {
+   "chars": [
+    "晚",
+    "上"
+   ],
+   "zhuyin": [
+    "ㄨㄢˇ",
+    "˙ㄕㄤ"
+   ],
+   "segments": [
+    {
+     "text": "晚上",
+     "zhuyin": [
+      "ㄨㄢˇ",
+      "˙ㄕㄤ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "有什麼不同": {
+   "chars": [
+    "有",
+    "什",
+    "麼",
+    "不",
+    "同"
+   ],
+   "zhuyin": [
+    "ㄧㄡˇ",
+    "ㄕㄣˊ",
+    "˙ㄇㄜ",
+    "ㄅㄨˋ",
+    "ㄊㄨㄥˊ"
+   ],
+   "segments": [
+    {
+     "text": "有",
+     "zhuyin": [
+      "ㄧㄡˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "什麼",
+     "zhuyin": [
+      "ㄕㄣˊ",
+      "˙ㄇㄜ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    },
+    {
+     "text": "不同",
+     "zhuyin": [
+      "ㄅㄨˋ",
+      "ㄊㄨㄥˊ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "朋友": {
+   "chars": [
+    "朋",
+    "友"
+   ],
+   "zhuyin": [
+    "ㄆㄥˊ",
+    "ㄧㄡˇ"
+   ],
+   "segments": [
+    {
+     "text": "朋友",
+     "zhuyin": [
+      "ㄆㄥˊ",
+      "ㄧㄡˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "比一比": {
+   "chars": [
+    "比",
+    "一",
+    "比"
+   ],
+   "zhuyin": [
+    "ㄅㄧˇ",
+    "ㄧ",
+    "ㄅㄧˇ"
+   ],
+   "segments": [
+    {
+     "text": "比",
+     "zhuyin": [
+      "ㄅㄧˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "一",
+     "zhuyin": [
+      "ㄧ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "比",
+     "zhuyin": [
+      "ㄅㄧˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "王子": {
+   "chars": [
+    "王",
+    "子"
+   ],
+   "zhuyin": [
+    "ㄨㄤˊ",
+    "ㄗˇ"
+   ],
+   "segments": [
+    {
+     "text": "王子",
+     "zhuyin": [
+      "ㄨㄤˊ",
+      "ㄗˇ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "白花": {
+   "chars": [
+    "白",
+    "花"
+   ],
+   "zhuyin": [
+    "ㄅㄞˊ",
+    "ㄏㄨㄚ"
+   ],
+   "segments": [
+    {
+     "text": "白花",
+     "zhuyin": [
+      "ㄅㄞˊ",
+      "ㄏㄨㄚ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "看看": {
+   "chars": [
+    "看",
+    "看"
+   ],
+   "zhuyin": [
+    "ㄎㄢˋ",
+    "˙ㄎㄢ"
+   ],
+   "segments": [
+    {
+     "text": "看看",
+     "zhuyin": [
+      "ㄎㄢˋ",
+      "˙ㄎㄢ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "秋千": {
+   "chars": [
+    "秋",
+    "千"
+   ],
+   "zhuyin": [
+    "ㄑㄧㄡ",
+    "ㄑㄧㄢ"
+   ],
+   "segments": [
+    {
+     "text": "秋千",
+     "zhuyin": [
+      "ㄑㄧㄡ",
+      "ㄑㄧㄢ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "紅花": {
+   "chars": [
+    "紅",
+    "花"
+   ],
+   "zhuyin": [
+    "ㄏㄨㄥˊ",
+    "ㄏㄨㄚ"
+   ],
+   "segments": [
+    {
+     "text": "紅花",
+     "zhuyin": [
+      "ㄏㄨㄥˊ",
+      "ㄏㄨㄚ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "說你早": {
+   "chars": [
+    "說",
+    "你",
+    "早"
+   ],
+   "zhuyin": [
+    "ㄕㄨㄛ",
+    "ㄋㄧˇ",
+    "ㄗㄠˇ"
+   ],
+   "segments": [
+    {
+     "text": "說",
+     "zhuyin": [
+      "ㄕㄨㄛ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "你",
+     "zhuyin": [
+      "ㄋㄧˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "早",
+     "zhuyin": [
+      "ㄗㄠˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "誰的": {
+   "chars": [
+    "誰",
+    "的"
+   ],
+   "zhuyin": [
+    "ㄕㄟˊ",
+    "˙ㄉㄜ"
+   ],
+   "segments": [
+    {
+     "text": "誰",
+     "zhuyin": [
+      "ㄕㄟˊ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "的",
+     "zhuyin": [
+      "˙ㄉㄜ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "走在": {
+   "chars": [
+    "走",
+    "在"
+   ],
+   "zhuyin": [
+    "ㄗㄡˇ",
+    "ㄗㄞˋ"
+   ],
+   "segments": [
+    {
+     "text": "走",
+     "zhuyin": [
+      "ㄗㄡˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "在",
+     "zhuyin": [
+      "ㄗㄞˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "走在小路上": {
+   "chars": [
+    "走",
+    "在",
+    "小",
+    "路",
+    "上"
+   ],
+   "zhuyin": [
+    "ㄗㄡˇ",
+    "ㄗㄞˋ",
+    "ㄒㄧㄠˇ",
+    "ㄌㄨˋ",
+    "ㄕㄤˋ"
+   ],
+   "segments": [
+    {
+     "text": "走",
+     "zhuyin": [
+      "ㄗㄡˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "在",
+     "zhuyin": [
+      "ㄗㄞˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "小路",
+     "zhuyin": [
+      "ㄒㄧㄠˇ",
+      "ㄌㄨˋ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    },
+    {
+     "text": "上",
+     "zhuyin": [
+      "ㄕㄤˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "這一頭": {
+   "chars": [
+    "這",
+    "一",
+    "頭"
+   ],
+   "zhuyin": [
+    "ㄓㄜˋ",
+    "ㄧ",
+    "ㄊㄡˊ"
+   ],
+   "segments": [
+    {
+     "text": "這",
+     "zhuyin": [
+      "ㄓㄜˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "一頭",
+     "zhuyin": [
+      "ㄧ",
+      "ㄊㄡˊ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "這是": {
+   "chars": [
+    "這",
+    "是"
+   ],
+   "zhuyin": [
+    "ㄓㄜˋ",
+    "ㄕˋ"
+   ],
+   "segments": [
+    {
+     "text": "這",
+     "zhuyin": [
+      "ㄓㄜˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "是",
+     "zhuyin": [
+      "ㄕˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "那一頭": {
+   "chars": [
+    "那",
+    "一",
+    "頭"
+   ],
+   "zhuyin": [
+    "ㄋㄚˋ",
+    "ㄧ",
+    "ㄊㄡˊ"
+   ],
+   "segments": [
+    {
+     "text": "那",
+     "zhuyin": [
+      "ㄋㄚˋ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "一頭",
+     "zhuyin": [
+      "ㄧ",
+      "ㄊㄡˊ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "長長的": {
+   "chars": [
+    "長",
+    "長",
+    "的"
+   ],
+   "zhuyin": [
+    "ㄔㄤˊ",
+    "ㄔㄤˊ",
+    "˙ㄉㄜ"
+   ],
+   "segments": [
+    {
+     "text": "長",
+     "zhuyin": [
+      "ㄔㄤˊ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "長",
+     "zhuyin": [
+      "ㄔㄤˊ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    },
+    {
+     "text": "的",
+     "zhuyin": [
+      "˙ㄉㄜ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "門外": {
+   "chars": [
+    "門",
+    "外"
+   ],
+   "zhuyin": [
+    "ㄇㄣˊ",
+    "ㄨㄞˋ"
+   ],
+   "segments": [
+    {
+     "text": "門外",
+     "zhuyin": [
+      "ㄇㄣˊ",
+      "ㄨㄞˋ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "門裡": {
+   "chars": [
+    "門",
+    "裡"
+   ],
+   "zhuyin": [
+    "ㄇㄣˊ",
+    "ㄌㄧˇ"
+   ],
+   "segments": [
+    {
+     "text": "門",
+     "zhuyin": [
+      "ㄇㄣˊ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "裡",
+     "zhuyin": [
+      "ㄌㄧˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "開心": {
+   "chars": [
+    "開",
+    "心"
+   ],
+   "zhuyin": [
+    "ㄎㄞ",
+    "ㄒㄧㄣ"
+   ],
+   "segments": [
+    {
+     "text": "開心",
+     "zhuyin": [
+      "ㄎㄞ",
+      "ㄒㄧㄣ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "陪我": {
+   "chars": [
+    "陪",
+    "我"
+   ],
+   "zhuyin": [
+    "ㄆㄟˊ",
+    "ㄨㄛˇ"
+   ],
+   "segments": [
+    {
+     "text": "陪",
+     "zhuyin": [
+      "ㄆㄟˊ"
+     ],
+     "source": "題庫",
+     "polyphonic": false
+    },
+    {
+     "text": "我",
+     "zhuyin": [
+      "ㄨㄛˇ"
+     ],
+     "source": "題庫",
+     "polyphonic": true
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "青蛙": {
+   "chars": [
+    "青",
+    "蛙"
+   ],
+   "zhuyin": [
+    "ㄑㄧㄥ",
+    "ㄨㄚ"
+   ],
+   "segments": [
+    {
+     "text": "青蛙",
+     "zhuyin": [
+      "ㄑㄧㄥ",
+      "ㄨㄚ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  },
+  "高山": {
+   "chars": [
+    "高",
+    "山"
+   ],
+   "zhuyin": [
+    "ㄍㄠ",
+    "ㄕㄢ"
+   ],
+   "segments": [
+    {
+     "text": "高山",
+     "zhuyin": [
+      "ㄍㄠ",
+      "ㄕㄢ"
+     ],
+     "source": "辭典整詞",
+     "polyphonic": false
+    }
+   ],
+   "humanCheck": "pending"
+  }
+ }
+}

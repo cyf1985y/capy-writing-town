@@ -4,9 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=30';
-import { bravo, flash, spark } from './fx.js?v=30';
-import { starsOf } from './stars.js?v=30'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=32';
+import { bravo, flash, spark } from './fx.js?v=32';
+import { starsOf } from './stars.js?v=32'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -47,6 +47,21 @@ export const LEVELS = Object.freeze([{ n: 1, icon: '🖍️', label: '描紅' },
 export const levelIcon = n => LEVELS[(n ?? 1) - 1]?.icon ?? '';
 /** 聽寫時詞語裡的目標字換成○（「你拍手」→「○拍手」） */
 export const maskWord = (word, char) => (word ?? '').split(char).join('○');
+/** v14 直排注音（課本樣式）：符號由上往下，聲調在最後一個符號右邊，輕聲「˙」在最上面 */
+export function zhuyinHTML(zy) {
+  if (!zy) return '';
+  const light = zy.startsWith('˙'), body = zy.replace(/^˙/, ''), tone = /[ˊˇˋ]$/.test(body) ? body.slice(-1) : '', syms = [...(tone ? body.slice(0, -1) : body)];
+  return `<span class="zy" aria-hidden="true"><span class="zy-s">${light ? '<i class="zy-dot">˙</i>' : ''}${syms.map(c => `<b>${c}</b>`).join('')}</span><span class="zy-t">${tone}</span></span>`;
+}
+/** v14 詞語逐字加注音；mask＝要藏起來的字（聽寫關：字換成○，注音保留＝看注音寫國字） */
+export function wordHTML(word, zys, mask = null) {
+  const chars = [...(word ?? '')]; let k = 0;
+  return chars.map(c => {
+    if (/[！!？?，。]/.test(c)) return `<span class="wz-p">${c}</span>`;
+    const z = zys?.[k++], hide = mask && c === mask;
+    return `<span class="wz${hide ? ' wz-mask' : ''}"><span class="wz-c">${hide ? '○' : c}</span>${zhuyinHTML(z)}</span>`;
+  }).join('');
+}
 /** v12 家長設定：示範動畫速度 */
 export const DEMO_SPEED = Object.freeze({ slow: { strokeAnimationSpeed: 0.55, delayBetweenStrokes: 650 }, mid: { strokeAnimationSpeed: 1, delayBetweenStrokes: 350 }, fast: { strokeAnimationSpeed: 1.6, delayBetweenStrokes: 180 } });
 export const PART_COLORS = ['rgba(235, 110, 100, 0.38)', 'rgba(85, 165, 230, 0.38)', 'rgba(90, 190, 135, 0.38)'];
@@ -58,6 +73,20 @@ const CSS = `
 .wp-head{display:flex;align-items:baseline;gap:12px;margin-bottom:8px}
 .wp-head h2{margin:0;font-size:22px}
 .wp-head .wp-zhuyin{font-size:16px;color:#6c7d77}
+.wp-head{align-items:center}
+.wp-head .wp-big{display:inline-flex;align-items:center;gap:2px}
+.wp-head .wp-big .zy{font-size:19px;color:#2f3e46}
+.wp-head .wp-word{display:inline-flex;align-items:center;gap:2px;font-size:24px;color:#2f3e46}
+.wp-word .wz{display:inline-flex;align-items:center}
+.wp-word .wz-c{font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif}
+.wp-word .wz .zy{font-size:13px;color:#5B3A4A;margin-left:1px}
+.wp-word .wz-mask .wz-c{color:#E55A4E;font-weight:700}
+.wp-word .wz-mask .zy{color:#E55A4E;font-weight:700}
+.zy{display:inline-flex;align-items:flex-end;line-height:1;font-family:system-ui,"Noto Sans TC",sans-serif;font-style:normal}
+.zy-s{display:inline-flex;flex-direction:column;align-items:center}
+.zy-s b{font-weight:inherit}
+.zy-dot{font-style:normal;line-height:.6}
+.zy-t{font-size:.85em;width:.7em;margin-bottom:.15em}
 .wp-head .wp-hint{margin-left:auto;font-size:14px;color:#6c7d77}
 .wp-grid{position:relative;width:min(80vw,360px);aspect-ratio:1;margin:6px auto 10px;background:#fff;border:3px solid #F4B6A8;border-radius:12px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .wp-grid .wp-target,.wp-grid .wp-target *{touch-action:none;user-select:none;-webkit-user-select:none}
@@ -221,7 +250,7 @@ export class WritingPanel {
     const el = document.createElement('div'); el.className = 'wp-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', `寫字：${s.char}`);
     el.innerHTML = `
       <div class="wp-dialog" tabindex="-1">
-        <div class="wp-head"><h2>${s.char}</h2><span class="wp-zhuyin">${s.task.zhuyin ?? ''}　${s.task.hint_word ?? ''}</span><button type="button" class="wp-say" aria-label="再唸一次">🔈</button><span class="wp-hint">第 ${s.index + 1} / ${s.total} 字</span></div>
+        <div class="wp-head"><span class="wp-big"><h2>${s.char}</h2>${zhuyinHTML(s.task.zhuyin)}</span><span class="wp-zhuyin wp-word">${wordHTML(s.task.hint_word, this.o.wordZhuyin?.(s.task.hint_word))}</span><button type="button" class="wp-say" aria-label="再唸一次">🔈</button><span class="wp-hint">第 ${s.index + 1} / ${s.total} 字</span></div>
         <div class="wp-levels" role="group" aria-label="關卡">${LEVELS.map(l => `<button type="button" data-level="${l.n}">${l.icon} ${l.label}</button>`).join('')}</div>
         <div class="wp-progress"></div>
         ${s.enrich?.formula ? `<div class="wp-formula">🧩 漢字積木：${s.enrich.formula}</div>` : ''}
@@ -250,12 +279,12 @@ export class WritingPanel {
     el.querySelector('.wp-levels').addEventListener('click', e => { const b = e.target.closest('button[data-level]'); if (b && !b.disabled) this._pickLevel(+b.dataset.level); });
     el.querySelector('.wp-story')?.addEventListener('click', () => { this._say('story'); this._setMsg(s.enrich.introSay); });
     // v4：手指／滑鼠寫字時留下星光尾巴（純裝飾，不影響判定）
-    const grid = el.querySelector('.wp-grid'); let drawing = false, lastSpark = 0;
-    grid.addEventListener('pointerdown', e => { if (e.isPrimary !== false) drawing = true; if (this.state?.introPlaying) { this.voice?.stop(); this.state.introPlaying = false; this.log('intro skipped'); } }); // v12：一下筆就停口訣，不用等唸完
+    const grid = el.querySelector('.wp-grid'); let drawing = false, lastSpark = 0, gridRect = null;
+    grid.addEventListener('pointerdown', e => { if (e.isPrimary !== false) { drawing = true; gridRect = grid.getBoundingClientRect(); } /* v15：一筆只量一次格子位置，移動中不再強制排版 */ if (this.state?.introPlaying) { this.voice?.stop(); this.state.introPlaying = false; this.log('intro skipped'); } }); // v12：一下筆就停口訣，不用等唸完
     el.addEventListener('pointerup', () => { drawing = false; }); el.addEventListener('pointercancel', () => { drawing = false; });
     grid.addEventListener('pointermove', e => {
       if (!drawing || e.isPrimary === false || !this.state || this.state.done) return; const now = performance.now(); if (now - lastSpark < 28) return; lastSpark = now;
-      const r = grid.getBoundingClientRect(); spark(grid, e.clientX - r.left, e.clientY - r.top); this.state.sparks = (this.state.sparks ?? 0) + 1;
+      const r = gridRect ?? (gridRect = grid.getBoundingClientRect()); spark(grid, e.clientX - r.left, e.clientY - r.top); this.state.sparks = (this.state.sparks ?? 0) + 1;
     });
     // v5 防手掌誤觸：鎖定第一根手指，第二指以上的 touch 事件在捕獲階段攔下（Hanzi Writer 讀 touches[0]、筆畫結束聽 document 的 touchend）
     const target = el.querySelector('.wp-target'); this._lockId = null;
@@ -358,7 +387,7 @@ export class WritingPanel {
     const s = this.state, el = this.el; if (!s || !el) return;
     const listen = s.level === 3;
     el.querySelector('.wp-head h2').textContent = listen ? '？' : s.char;
-    el.querySelector('.wp-zhuyin').textContent = `${s.task.zhuyin ?? ''}　${listen ? maskWord(s.task.hint_word, s.char) : s.task.hint_word ?? ''}`;
+    el.querySelector('.wp-zhuyin').innerHTML = s.task.hint_word ? wordHTML(s.task.hint_word, this.o.wordZhuyin?.(s.task.hint_word), listen ? s.char : null) : ''; /* v14：詞語逐字注音；聽寫關字換○、注音留著（看注音寫國字） */
     for (const sel of ['.wp-formula', '.wp-story']) { const x = el.querySelector(sel); if (x) x.hidden = listen; }
     for (const b of el.querySelectorAll('.wp-levels button')) { const n = +b.dataset.level; b.disabled = n > s.unlocked; b.setAttribute('aria-pressed', String(n === s.level)); b.classList.toggle('wp-cleared', s.cleared.has(n)); }
     try { if (s.writer) (s.level === 1 ? s.writer.showOutline() : s.writer.hideOutline()); } catch { /* ignore */ }

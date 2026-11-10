@@ -1,7 +1,15 @@
 <!doctype html>
 <html lang="zh-Hant">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="./game/icons/app.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="./game/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="./game/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="甜點寫字">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#E8665C">
 <title>卡比巴拉×小兔兔 · 甜點寫字樂園</title>
 <style>
 body{font:16px system-ui,"Noto Sans TC",sans-serif;background:var(--ui-bg,#FFF4EC);color:var(--ui-ink,#5B3A4A);margin:0;padding:16px 20px}
@@ -61,20 +69,21 @@ details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;b
 <details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
 <script type="importmap">{"imports":{"three":"./vendor-v2/build/three.module.js","three/addons/":"./vendor-v2/examples/jsm/"}}</script>
 <script type="module">
-import { loadContract, describeLoadError } from './game/content.js?v=30';
-import { WritingPanel, renderArtifactCard, levelIcon } from './game/writing-panel.js?v=30';
-import { loadTown } from './game/town-loader.js?v=30';
-import { Lobby } from './game/lobby.js?v=30';
-import { Store, clearProfile } from './game/store.js?v=30';
-import { Reward } from './game/reward.js?v=30';
-import { Sound, Voice } from './game/fx.js?v=30';
-import { TownFx, residentNames } from './game/town-fx.js?v=30';
-import { Album } from './game/album.js?v=30';
-import { applyTheme, applyUiColors } from './game/theme.js?v=30';
-import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=30';
-import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=30';
-import { PartsGame } from './game/minigame.js?v=30';
-import { ParentPanel, loadSettings } from './game/parent.js?v=30';
+import { loadContract, describeLoadError } from './game/content.js?v=32';
+import { WritingPanel, renderArtifactCard, levelIcon } from './game/writing-panel.js?v=32';
+import { loadTown } from './game/town-loader.js?v=32';
+import { Lobby } from './game/lobby.js?v=32';
+import { Store, clearProfile } from './game/store.js?v=32';
+import { Reward } from './game/reward.js?v=32';
+import { Sound, Voice } from './game/fx.js?v=32';
+import { TownFx, residentNames } from './game/town-fx.js?v=32';
+import { Album } from './game/album.js?v=32';
+import { applyTheme, applyUiColors } from './game/theme.js?v=32';
+import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=32';
+import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=32';
+import { PartsGame } from './game/minigame.js?v=32';
+import { ParentPanel, loadSettings, SETTINGS_KEY } from './game/parent.js?v=32';
+import { requestPersist, exportBackup, importBackup, saveBackupFile } from './game/backup.js?v=32';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 const PROFILE_ID = qs.get('profile') || 'local-child-1'; // 第一版單一本機 profile，無選擇 UI
@@ -187,14 +196,17 @@ function friendGoal(extraTaskId) {
 }
 const friendNote = g => g && g.left <= Math.ceil(g.total / 2) ? `再寫 ${g.left} 個字，新朋友就來了！` : '';
 // v11 漢字積木資料（獨立檔，不動已鎖 SHA 的題庫）：載入失敗就照舊只唸「字，詞的字」
-let ENRICH = {}; try { const r = await fetch('./game/char_enrichment.json?v=30', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
+let ENRICH = {}; try { const r = await fetch('./game/char_enrichment.json?v=32', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
 log('enrichment ' + Object.keys(ENRICH).length + ' chars');
 // v12 台灣標準筆順：和教育部筆順網不同的字改讀 data-tw（只重排／切開原資料）；索引載入失敗就照舊用原資料
-let TW_CHARS = new Set(); try { const r = await fetch('./vendor-v2/hanzi-writer/data-tw/index.json?v=30', { cache: 'no-cache' }); if (r.ok) TW_CHARS = new Set(Object.keys((await r.json()).chars ?? {})); } catch (e) { log('data-tw index load failed: ' + e); }
+let TW_CHARS = new Set(); try { const r = await fetch('./vendor-v2/hanzi-writer/data-tw/index.json?v=32', { cache: 'no-cache' }); if (r.ok) TW_CHARS = new Set(Object.keys((await r.json()).chars ?? {})); } catch (e) { log('data-tw index load failed: ' + e); }
 log('data-tw ' + TW_CHARS.size + ' chars');
 // v12 筆畫名稱（台灣用語，人工核對 pending）：載入失敗就不唸名稱
-let SNAMES = {}; try { const r = await fetch('./game/stroke_names.json?v=30', { cache: 'no-cache' }); if (r.ok) SNAMES = (await r.json()).chars ?? {}; } catch (e) { log('stroke names load failed: ' + e); }
+let SNAMES = {}; try { const r = await fetch('./game/stroke_names.json?v=32', { cache: 'no-cache' }); if (r.ok) SNAMES = (await r.json()).chars ?? {}; } catch (e) { log('stroke names load failed: ' + e); }
+// v14 詞語注音（教育部辭典，人工核對 pending）：載入失敗就只顯示單字注音
+let ZY = {}; try { const r = await fetch('./game/zhuyin.json?v=32', { cache: 'no-cache' }); if (r.ok) ZY = (await r.json()).words ?? {}; } catch (e) { log('zhuyin load failed: ' + e); }
 const panel = new WritingPanel({
+  wordZhuyin: w => ZY[w]?.zhuyin ?? null,
   dataBase: './vendor-v2/hanzi-writer/data/',
   dataBaseFor: ch => TW_CHARS.has(ch) ? './vendor-v2/hanzi-writer/data-tw/' : null,
   enrich: ch => ENRICH[ch] ?? null,
@@ -253,7 +265,7 @@ const panel = new WritingPanel({
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
-if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=30'); installTestDriver(panel); window.__game = { get parent() { return parent; }, get settings() { return SETTINGS; }, get partsGame() { return partsGame; }, reviewPicks: (...a) => reviewPicks(...a), get review() { return review; }, LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=32'); installTestDriver(panel); window.__game = { get parent() { return parent; }, get settings() { return SETTINGS; }, get partsGame() { return partsGame; }, reviewPicks: (...a) => reviewPicks(...a), get review() { return review; }, LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, switchChapter, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
@@ -302,12 +314,27 @@ async function startReview() {
 $('#reviewBtn').addEventListener('click', () => { sound.unlock(); startReview(); });
 // v12 家長面板（統計＋設定）
 let SETTINGS = loadSettings();
-const parent = new ParentPanel({ log, onSettings: s => { SETTINGS = s; },
+// v14 存檔保護：請瀏覽器長期保存；家長面板可備份／還原（合併，不刪現有資料）
+let STORAGE = null; requestPersist().then(i => { STORAGE = i; diag.storage = i; log('storage ' + JSON.stringify(i)); });
+const BACKUP_LOCAL = [REVIEW_KEY, SETTINGS_KEY, 'capy_lesson'];
+const backup = {
+  info: () => STORAGE,
+  onExport: async () => { const obj = await exportBackup(store.db, { profileId: PROFILE_ID, localKeys: BACKUP_LOCAL }); const r = await saveBackupFile(obj); log(`backup ${r.via} ${r.bytes}B`); return r; },
+  onImport: async file => {
+    let obj; try { obj = JSON.parse(await file.text()); } catch { throw new Error('這不是備份檔'); }
+    let r; try { r = await importBackup(store.db, obj, { profileId: PROFILE_ID, localKeys: BACKUP_LOCAL }); }
+    catch (e) { const m = String(e?.message || e); throw new Error(m.startsWith('BACKUP_FORMAT') ? '這不是甜點寫字的備份檔' : m.startsWith('BACKUP_PROFILE') ? '這份備份是別的孩子的存檔' : m.startsWith('BACKUP_ROWS') ? '備份檔內容不完整' : m); }
+    log('restore ' + JSON.stringify(r));
+    setTimeout(() => location.reload(), 1800);
+    return { ...r, message: `還原完成：補回 ${r.added.artifacts} 張字卡、${r.added.progress} 個字的進度。馬上重新整理…` };
+  },
+};
+const parent = new ParentPanel({ log, backup, onSettings: s => { SETTINGS = s; },
   getData: () => ({ artifacts: saved.artifacts, passedTaskIds: saved.passedTaskIds, tasks: loaded.writingTasks, names: SNAMES,
     totalChars: new Set(Object.keys(contract.modes).filter(k => k.startsWith('lesson_')).flatMap(k => contract.modes[k].writingTaskIds).map(id => loaded.writingTasks.get(id)?.char)).size }) });
 $('#parentBtn').addEventListener('click', () => { if (!panel.isOpen() && !partsGame?.isOpen()) parent.open(); });
 // v12 部件小偵探：學過 4 個字以上才出現；字庫＝學過的字＋目前這一課的字
-let PARTS = null; try { const r = await fetch('./game/parts_game.json?v=30', { cache: 'no-cache' }); if (r.ok) PARTS = await r.json(); } catch (e) { log('parts game load failed: ' + e); }
+let PARTS = null; try { const r = await fetch('./game/parts_game.json?v=32', { cache: 'no-cache' }); if (r.ok) PARTS = await r.json(); } catch (e) { log('parts game load failed: ' + e); }
 const partsGame = PARTS && new PartsGame({ data: PARTS, voice, sound, log,
   onOpen: () => { lobby.pause('parts'); $('#startBtn').disabled = true; },
   onClose: r => { lobby.resume('parts'); $('#startBtn').disabled = false; diag.partsGame = r; setStatus(`🧩 部件小偵探完成 ${r.rounds}／${r.total} 題！` + nextLabel()); } });

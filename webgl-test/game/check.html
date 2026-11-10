@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>家長核對頁 · 甜點寫字樂園</title>
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
+<style>
+/* v14 家長核對頁：把 AI 產生、報告標 pending 的資料一項一項給家長確認，結果存在這台裝置並可匯出 */
+:root{--ink:#5B3A4A;--bg:#FFF4EC;--card:#fff;--line:#F7C9C0;--pri:#E8665C;--ok:#2b8a3e;--ng:#c92a2a;--muted:#8a6f7c}
+*{box-sizing:border-box}
+body{margin:0;padding:12px 14px 40px;font:15px/1.5 system-ui,"Noto Sans TC",sans-serif;background:var(--bg);color:var(--ink)}
+h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
+.lead{margin:0 0 10px;font-size:13px;color:var(--muted)}
+.bar{position:sticky;top:0;z-index:5;background:var(--bg);padding:6px 0 8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-bottom:2px solid var(--line)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button,.tools button{font:inherit;font-size:14px;padding:6px 11px;border-radius:999px;border:2px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;touch-action:manipulation}
+.tabs button[aria-selected=true]{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:700}
+.tabs small{opacity:.85;font-size:12px}
+.tools{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.filter{font-size:13px;display:flex;gap:4px;align-items:center}
+#msg{font-size:13px;min-height:1.3em;color:var(--ok);margin:6px 0 0}
+.list{display:grid;gap:10px;margin-top:10px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.card{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 12px}
+.card.ok{border-color:#9bd3a8;background:#f6fcf7}.card.ng{border-color:#f0a3a3;background:#fff6f6}
+.card h3{margin:0 0 4px;font-size:15px;display:flex;align-items:center;gap:8px}
+.card h3 .big{font-size:34px;font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif;color:#2f3e46;line-height:1}
+.card h3 a{margin-left:auto;font-size:13px;font-weight:400;color:#1c5d99;white-space:nowrap}
+.card p{margin:2px 0;font-size:13px;color:var(--muted)}
+.verdict{display:flex;gap:6px;margin-top:8px;align-items:center;flex-wrap:wrap}
+.verdict button{font:inherit;font-size:14px;padding:5px 14px;border-radius:10px;border:2px solid var(--line);background:#fff;cursor:pointer;touch-action:manipulation}
+.verdict button[data-v=ok][aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}
+.verdict button[data-v=ng][aria-pressed=true]{background:var(--ng);border-color:var(--ng);color:#fff}
+.verdict input{flex:1;min-width:140px;font:inherit;font-size:13px;padding:4px 8px;border:2px solid var(--line);border-radius:8px}
+.hw{width:150px;height:150px;border:2px dashed #F5CBA7;border-radius:10px;background:#fffdf7}
+.order{display:flex;gap:10px;align-items:flex-start}
+.order .side{flex:1;font-size:13px}
+.strokes{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.stroke{width:62px;text-align:center;font-size:12px;cursor:pointer;border-radius:8px;padding:2px;border:2px solid transparent;touch-action:manipulation}
+.stroke svg{width:58px;height:58px;display:block;background:#fffdf7;border:1px solid #f0dcd0;border-radius:6px}
+.stroke b{display:block;font-weight:700;color:#2f3e46}
+.stroke.bad{border-color:var(--ng);background:#fff0f0}
+.stroke.bad b{color:var(--ng)}
+.stroke em{font-style:normal;color:var(--muted)}
+.zyrow{display:flex;align-items:center;gap:10px}
+.zyrow .wp-word{font-size:28px}
+.seg{font-size:12px;color:var(--muted)}
+.pill{display:inline-block;font-size:12px;border-radius:999px;padding:0 7px;background:#FFF8E7;border:1px solid #F5CBA7;margin-right:4px}
+.pill.warn{background:#fff0e6;border-color:#f3a46b;color:#a8440e}
+.parts{font-size:26px;font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif;letter-spacing:4px;color:#2f3e46}
+.zy{display:inline-flex;align-items:flex-end;line-height:1;font-family:system-ui,"Noto Sans TC",sans-serif}
+.zy-s{display:inline-flex;flex-direction:column;align-items:center}.zy-s b{font-weight:inherit}.zy-dot{font-style:normal;line-height:.6}.zy-t{font-size:.85em;width:.7em;margin-bottom:.15em}
+.wp-word{display:inline-flex;align-items:center;gap:2px}.wz{display:inline-flex;align-items:center}.wz .zy{font-size:.5em;margin-left:1px}.wz-c{font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif}
+.big-zy .zy{font-size:18px}
+</style>
+<h1>🔍 家長核對頁</h1>
+<p class="lead">這些資料是 AI 整理的，請對照課本或教育部網站逐項確認。按「✔ 對」或「✘ 不對」（不對的請寫一下哪裡不對）。結果只存在這台裝置，核對完請按「匯出結果」把檔案傳給開發者。</p>
+<div class="bar">
+  <div class="tabs" role="tablist"></div>
+  <label class="filter"><input type="checkbox" id="onlyTodo"> 只看還沒核對的</label>
+  <div class="tools"><button type="button" id="exportBtn">📤 匯出結果</button><a href="../game-v1.html" style="font-size:14px;align-self:center">回遊戲</a></div>
+</div>
+<p id="msg" role="status"></p>
+<div class="list" id="list"></div>
+<script type="module">
+import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=32';
+const KEY = 'capy_check_v1', $ = s => document.querySelector(s);
+const get = async u => { const r = await fetch(u, { cache: 'no-cache' }); if (!r.ok) throw new Error(u + ' HTTP ' + r.status); return r.json(); };
+const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=32'), get('./stroke_names.json?v=32'), get('./zhuyin.json?v=32'), get('./parts_game.json?v=32')]);
+let state = {}; try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { state = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { $('#msg').textContent = '無法儲存（私密瀏覽？）'; } };
+const dataUrl = ch => (TW.chars[ch] ? '../vendor-v2/hanzi-writer/data-tw/' : '../vendor-v2/hanzi-writer/data/') + encodeURIComponent(ch) + '.json';
+const glyph = new Map(); const loadGlyph = ch => glyph.get(ch) ?? glyph.set(ch, get(dataUrl(ch))).get(ch);
+const moe = ch => `https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${ch.codePointAt(0)}`;
+const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// 各分頁的項目：id、標題 HTML、內容 HTML、掛載後的初始化
+const TABS = [
+  { key: 'order', label: '筆順修正', items: Object.entries(TW.chars).map(([ch, m]) => ({ id: 'order:' + ch, ch, m })) },
+  { key: 'sname', label: '筆畫名稱', items: Object.keys(SN.chars).map(ch => ({ id: 'sname:' + ch, ch })) },
+  { key: 'zy', label: '注音', items: [...Object.entries(ZY.chars).map(([ch, v]) => ({ id: 'zy:char:' + ch, ch, v })), ...Object.entries(ZY.words).map(([w, v]) => ({ id: 'zy:word:' + w, w, v }))] },
+  { key: 'part', label: '部件表', items: [...PARTS.parts.map(p => ({ id: 'part:' + p.part, p })), ...PARTS.lookalike.map((g, i) => ({ id: 'alike:' + g.join(''), g }))] },
+];
+let tab = TABS[0].key;
+const counts = t => { const n = t.items.length, done = t.items.filter(i => state[i.id]?.v).length; return { n, done }; };
+function renderTabs() {
+  $('.tabs').innerHTML = TABS.map(t => { const c = counts(t); return `<button type="button" role="tab" data-tab="${t.key}" aria-selected="${t.key === tab}">${t.label} <small>${c.done}/${c.n}</small></button>`; }).join('');
+}
+function verdictHTML(id) {
+  const s = state[id] ?? {};
+  return `<div class="verdict" data-id="${esc(id)}"><button type="button" data-v="ok" aria-pressed="${s.v === 'ok'}">✔ 對</button><button type="button" data-v="ng" aria-pressed="${s.v === 'ng'}">✘ 不對</button>${s.v === 'ng' ? `<input type="text" placeholder="哪裡不對？" value="${esc(s.note)}">` : ''}</div>`;
+}
+function cardHTML(t, it) {
+  if (t.key === 'order') {
+    const m = it.m, notes = [m.newOrderFromOriginal && '調整筆順', m.split && '拆開一筆（台灣多一畫）', m.directionFix && '修正行筆方向'].filter(Boolean);
+    return `<h3><span class="big">${it.ch}</span>${m.moeStrokes} 畫<a href="${moe(it.ch)}" target="_blank" rel="noopener">教育部筆順 ↗</a></h3>
+      <div class="order"><div class="hw" data-hw="${it.ch}"></div><div class="side"><p>${notes.map(n => `<span class="pill">${n}</span>`).join('')}</p><p>左邊會照遊戲裡的筆順一筆一筆示範，請和教育部網站的動畫對照。</p><button type="button" data-play="${it.ch}">▶ 再播一次</button></div></div>`;
+  }
+  if (t.key === 'sname') {
+    const names = SN.chars[it.ch];
+    return `<h3><span class="big">${it.ch}</span>${names.length} 畫${TW.chars[it.ch] ? '<span class="pill">台灣版字形</span>' : ''}<a href="${moe(it.ch)}" target="_blank" rel="noopener">教育部筆順 ↗</a></h3>
+      <p>紅色是這一筆，圓點是起筆。名稱不對的那一筆請點一下（變紅框），再按「✘ 不對」。</p><div class="strokes" data-sn="${it.ch}">${names.map((n, i) => `<div class="stroke${state[it.id]?.bad?.includes(i) ? ' bad' : ''}" data-i="${i}"><svg viewBox="0 0 1024 1024"></svg><b>${n ?? '—'}</b><em>第 ${i + 1} 筆</em></div>`).join('')}</div>`;
+  }
+  if (t.key === 'zy' && it.ch) {
+    const v = it.v, others = v.moeReadings.filter(r => r !== v.zhuyin);
+    return `<h3><span class="big">${it.ch}</span><span class="big-zy">${zhuyinHTML(v.zhuyin)}</span><span style="font-size:14px">${esc(v.zhuyin)}</span><a href="https://dict.revised.moe.edu.tw/search.jsp?md=1&word=${encodeURIComponent(it.ch)}" target="_blank" rel="noopener">教育部辭典 ↗</a></h3>
+      <p>來源：${esc(v.source)}${v.moeAgrees ? '；辭典有這個讀音' : ''}</p>${others.length ? `<p><span class="pill warn">多音字</span>辭典其他讀音：${others.map(esc).join('、')}</p>` : ''}`;
+  }
+  if (t.key === 'zy') {
+    const v = it.v, poly = v.segments.some(s => s.polyphonic);
+    return `<h3><span class="zyrow"><span class="wp-word">${wordHTML(it.w, v.zhuyin)}</span></span><a href="https://dict.revised.moe.edu.tw/search.jsp?md=1&word=${encodeURIComponent(it.w.replace(/[！!]/g, ''))}" target="_blank" rel="noopener">教育部辭典 ↗</a></h3>
+      <p style="font-size:14px;color:var(--ink)">${v.zhuyin.map(esc).join('　')}</p>
+      <p class="seg">${v.segments.map(s => `${esc(s.text)}（${esc(s.source)}${s.manualSeg ? '・人工切詞' : ''}）`).join(' + ')}${poly ? ' <span class="pill warn">含多音字</span>' : ''}</p>
+      <p>課本若標「一」「不」的變調或輕聲和這裡不同，請按不對並寫課本的寫法。</p>`;
+  }
+  if (it.p) return `<h3><span class="big">${esc(it.p.part)}</span>${esc(it.p.say)}</h3><p>遊戲會問「哪些字有${esc(it.p.say)}？」，答案是：</p><div class="parts">${it.p.chars.join('')}</div>`;
+  return `<h3>形近字一組</h3><p>「聽音找字」會從這幾個字裡挑一個念給孩子聽，請確認它們真的長得像、讀音不同：</p><div class="parts">${it.g.join('')}</div>`;
+}
+const writers = new Map();
+async function mount(t) {
+  const list = $('#list'), only = $('#onlyTodo').checked;
+  const items = t.items.filter(i => !only || !state[i.id]?.v);
+  list.innerHTML = items.length ? items.map(it => `<div class="card ${state[it.id]?.v ?? ''}" id="c-${esc(it.id)}">${cardHTML(t, it)}${verdictHTML(it.id)}</div>`).join('') : '<p>這一頁都核對完了 🎉</p>';
+  writers.clear();
+  if (t.key === 'order') for (const el of list.querySelectorAll('[data-hw]')) {
+    const ch = el.dataset.hw, w = HanziWriter.create(el, ch, { width: 150, height: 150, padding: 8, showOutline: true, strokeAnimationSpeed: 0.8, delayBetweenStrokes: 450, charDataLoader: (c, ok, bad) => loadGlyph(c).then(ok, bad) });
+    writers.set(ch, w); w.animateCharacter();
+  }
+  if (t.key === 'sname') for (const box of list.querySelectorAll('[data-sn]')) {
+    const ch = box.dataset.sn, d = await loadGlyph(ch);
+    box.querySelectorAll('.stroke').forEach((s, i) => {
+      const m = d.medians[i]?.[0];
+      s.querySelector('svg').innerHTML = `<g transform="translate(0,900) scale(1,-1)">${d.strokes.map((p, k) => `<path d="${p}" fill="${k === i ? '#E55A4E' : k < i ? '#9aa5a1' : '#e3e0da'}"/>`).join('')}${m ? `<circle cx="${m[0]}" cy="${m[1]}" r="46" fill="#1c5d99"/>` : ''}</g>`;
+    });
+  }
+}
+function render() { renderTabs(); mount(TABS.find(t => t.key === tab)); }
+$('.tabs').addEventListener('click', e => { const b = e.target.closest('[data-tab]'); if (b) { tab = b.dataset.tab; render(); scrollTo(0, 0); } });
+$('#onlyTodo').addEventListener('change', render);
+$('#list').addEventListener('click', e => {
+  const play = e.target.closest('[data-play]'); if (play) { writers.get(play.dataset.play)?.animateCharacter(); return; }
+  const st = e.target.closest('.stroke');
+  if (st) { const id = 'sname:' + st.closest('[data-sn]').dataset.sn, s = state[id] ??= {}, i = +st.dataset.i; s.bad = s.bad ?? []; s.bad = s.bad.includes(i) ? s.bad.filter(x => x !== i) : [...s.bad, i]; st.classList.toggle('bad'); save(); return; }
+  const b = e.target.closest('.verdict button'); if (!b) return;
+  const box = b.closest('.verdict'), id = box.dataset.id, s = state[id] ??= {};
+  s.v = s.v === b.dataset.v ? undefined : b.dataset.v; s.at = new Date().toISOString(); save();
+  const card = box.closest('.card'); card.className = 'card ' + (s.v ?? ''); box.outerHTML = verdictHTML(id); renderTabs();
+  if (s.v === 'ng') card.querySelector('.verdict input')?.focus();
+});
+$('#list').addEventListener('input', e => { const box = e.target.closest('.verdict'); if (box) { (state[box.dataset.id] ??= {}).note = e.target.value; save(); } });
+$('#exportBtn').addEventListener('click', async () => {
+  const summary = Object.fromEntries(TABS.map(t => { const c = counts(t), ng = t.items.filter(i => state[i.id]?.v === 'ng').length; return [t.key, { total: c.n, checked: c.done, ng }]; }));
+  const obj = { format: 'capy-check', version: 1, exportedAt: new Date().toISOString(), summary, results: state };
+  const name = `甜點寫字核對結果_${obj.exportedAt.slice(0, 10)}.json`, blob = new Blob([JSON.stringify(obj, null, 1)], { type: 'application/json' }), file = new File([blob], name, { type: 'application/json' });
+  if (navigator.canShare?.({ files: [file] })) { try { await navigator.share({ files: [file], title: name }); $('#msg').textContent = '已分享 ' + name; return; } catch (err) { if (err?.name === 'AbortError') return; } }
+  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
+  $('#msg').textContent = `已下載 ${name}（${Object.values(summary).map(s => s.checked).reduce((a, b) => a + b, 0)} 項已核對）`;
+});
+render();
+window.__check = { TABS, get state() { return state; } };
+</script>

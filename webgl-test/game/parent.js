@@ -1,7 +1,7 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=30';
-import { LEVELS } from './writing-panel.js?v=30';
+import { starsOf } from './stars.js?v=32';
+import { LEVELS } from './writing-panel.js?v=32';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true });
@@ -55,10 +55,16 @@ const CSS = `
 .pp-set button,.pp-dialog h2 button{font:inherit;font-size:14px;padding:6px 12px;border-radius:999px;border:2px solid #F5CBA7;background:#fff;color:#6E473B;cursor:pointer;touch-action:manipulation}
 .pp-set button[aria-pressed=true]{background:#FFA94D;border-color:#FFA94D;color:#fff;font-weight:700}
 .pp-note{font-size:12px;color:#8a6f7c;margin:10px 0 0}
+.pp-save{background:#fff;border:2px solid #F7C9C0;border-radius:12px;padding:8px 10px}
+.pp-save p{margin:0 0 6px;font-size:14px}
+.pp-save .ok{color:#2b8a3e;font-weight:700}.pp-save .warn{color:#c2410c;font-weight:700}
+.pp-save .row{display:flex;gap:8px;flex-wrap:wrap}
+.pp-save button{font:inherit;font-size:14px;padding:6px 12px;border-radius:999px;border:2px solid #F5CBA7;background:#FFF8E7;color:#6E473B;cursor:pointer;touch-action:manipulation}
+.pp-save output{display:block;font-size:13px;margin-top:6px;min-height:1.2em}
 `;
 
 export class ParentPanel {
-  constructor({ getData, onSettings, log = () => {} }) { Object.assign(this, { getData, onSettings, log }); this.el = null; }
+  constructor({ getData, onSettings, backup = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, log }); this.el = null; }
   isOpen() { return !!this.el; }
   open() {
     if (this.el) return;
@@ -75,6 +81,13 @@ export class ParentPanel {
       <div class="pp-kpis">${LEVELS.map((l, i) => `<div>${l.icon} ${l.label}<b>${st.levelCount[i]}</b>字</div>`).join('')}</div>
       <h3>常錯的字</h3>
       ${st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${w.char}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${w.worstStroke.name}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${w.char.codePointAt(0)}" target="_blank" rel="noopener">教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>'}
+      ${this.backup ? (() => { const i = this.backup.info() ?? {}; return `<h3>📱 存檔保護</h3>
+      <div class="pp-save">
+        <p>${i.standalone ? '<span class="ok">✔ 已從主畫面開啟</span>，資料比較不會被系統清掉。' : '<span class="warn">建議加到主畫面</span>：在 Safari 按分享鈕 ⬆️ →「加入主畫面」，以後從主畫面的圖示打開。'}${i.persisted ? '（瀏覽器已同意長期保存）' : ''}</p>
+        <p>iPhone 上「主畫面 App」和「Safari」是兩份分開的存檔。換手機或改用主畫面 App 前，先在原本的地方按「備份」，再到新的地方按「還原」。</p>
+        <div class="row"><button type="button" data-act="export">💾 備份進度</button><button type="button" data-act="import">📂 從備份還原</button><input type="file" accept="application/json,.json" hidden></div>
+        <output></output>
+      </div>`; })() : ''}
       <h3>設定</h3>
       <div class="pp-set">
         <span>示範速度</span>${seg('speed', [['slow', '慢'], ['mid', '中'], ['fast', '快']])}
@@ -82,11 +95,13 @@ export class ParentPanel {
         <span>筆畫名稱</span>${seg('strokeVoice', [[true, '唸出來'], [false, '不唸']])}
       </div>
       <p class="pp-note">設定只存在這台裝置。筆畫名稱與口訣由 AI 撰寫，若和課本不同請以課本為準。</p>
+      <p class="pp-note">🔍 <a href="./game/check.html" target="_blank" rel="noopener">家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
     </div>`;
     for (const t of ['pointerdown', 'pointermove', 'mousedown', 'mousemove', 'wheel', 'touchstart', 'touchmove']) el.addEventListener(t, e => e.stopPropagation(), { passive: true });
     el.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) { if (e.target === el) this.close(); return; }
       if (b.dataset.act === 'close') return this.close();
+      if (b.dataset.act === 'export' || b.dataset.act === 'import') return this._backupAct(b.dataset.act);
       if (b.dataset.k) {
         const s = loadSettings(), v = b.dataset.v; s[b.dataset.k] = v === 'true' ? true : v === 'false' ? false : v; saveSettings(s);
         for (const x of el.querySelectorAll(`button[data-k="${b.dataset.k}"]`)) x.setAttribute('aria-pressed', String(x === b));
@@ -94,7 +109,17 @@ export class ParentPanel {
       }
     });
     this._onKey = e => { e.stopPropagation(); if (e.key === 'Escape') this.close(); }; document.addEventListener('keydown', this._onKey, true);
+    el.querySelector('.pp-save input')?.addEventListener('change', async e => {
+      const f = e.target.files?.[0], out = el.querySelector('.pp-save output'); e.target.value = ''; if (!f) return;
+      try { const r = await this.backup.onImport(f); out.textContent = r.message; } catch (err) { out.textContent = '還原失敗：' + (err?.message || err); this.log('restore failed ' + err); }
+    });
     document.body.append(el); this.el = el; this.stats = st;
+  }
+  async _backupAct(act) {
+    const out = this.el.querySelector('.pp-save output');
+    if (act === 'import') { this.el.querySelector('.pp-save input').click(); return; }
+    try { out.textContent = '準備備份檔…'; const r = await this.backup.onExport(); out.textContent = r.via === 'cancel' ? '已取消。' : `已產生備份檔「${r.name}」（${Math.max(1, Math.round(r.bytes / 1024))} KB）。請存到「檔案」或傳給自己。`; }
+    catch (err) { out.textContent = '備份失敗：' + (err?.message || err); this.log('backup failed ' + err); }
   }
   close() { if (!this.el) return; document.removeEventListener('keydown', this._onKey, true); this.el.remove(); this.el = null; }
 }

@@ -4,7 +4,7 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=30';
+import { Album } from './album.js?v=32';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -81,6 +81,8 @@ const CSS = `
 .t2-say.below{bottom:auto;top:96%;left:12%;transform:none;animation:none} /* 角色在畫面頂端（例如走到溫泉後）：氣泡改到腳下偏右，不被切掉、不擋第 5 課標記 */
 .t2-say.below::after{top:auto;bottom:100%;left:18%;border-top-color:transparent;border-bottom-color:#FFA94D}
 .t2-paused *,.t2-paused *::before{animation-play-state:paused!important}
+/* v15：寫字／小遊戲全螢幕蓋住地圖時，只留底圖，雲、角色、標記先藏起來（瀏覽器不必每格整理這些圖層，寫字較順）；關掉就恢復 */
+.t2-paused .t2-world>:not(.t2-bg){visibility:hidden}
 `;
 
 const loadImg = src => new Promise((ok, bad) => { const i = new Image(); i.decoding = 'async'; i.onload = () => ok(i); i.onerror = () => bad(new Error('IMG_LOAD_FAILED:' + src)); i.src = src; });

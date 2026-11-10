@@ -89,6 +89,7 @@ const FX_CSS = `
 .fx-shake{animation:fx-shake 300ms}
 @keyframes fx-squash{0%{transform:scale(1)}35%{transform:scale(1.035,.965)}70%{transform:scale(.985,1.015)}100%{transform:scale(1)}}
 .fx-squash{animation:fx-squash 240ms ease-out}
+.fx-spark-cv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .fx-spark{position:absolute;left:0;top:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fff 0,var(--c,#ffd43b) 45%,transparent 72%);animation:fx-spark 560ms ease-out forwards}
 @keyframes fx-spark{0%{transform:translate(var(--x),var(--y)) scale(1.3);opacity:1}100%{transform:translate(calc(var(--x) + var(--dx)),calc(var(--y) + var(--dy))) scale(.2);opacity:0}}
 @keyframes fx-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
@@ -126,11 +127,32 @@ export function bravo(container, text = '好棒！') {
 export function flash(el, cls = 'fx-flash') { injectCss(); el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(() => el.classList.remove(cls), 450); }
 
 const CANDY = ['#FF8FAB', '#FFD166', '#7EE0B5', '#8EC5FF', '#C3A6FF', '#FFA94D'];
-/** v4：手指寫字時的星光尾巴（px，相對 container） */
+/** v4：手指寫字時的星光尾巴（px，相對 container）
+ *  v15：改畫在同一張 canvas（一個 RAF 迴圈），不再每 28ms 新增／刪除 DOM 元素——
+ *  舊做法每顆星光都觸發樣式重算＋版面重排，加上 Hanzi Writer 每次移動都讀 getScreenCTM（強制排版），寫字會頓。外觀照舊。 */
+const SPARK_MS = 560, sparkLayers = new WeakMap();
 export function spark(container, x, y) {
-  const l = layerIn(container), d = document.createElement('i'); d.className = 'fx-spark';
-  d.style.setProperty('--c', CANDY[(Math.random() * CANDY.length) | 0]); // v5：彩色糖果
-  d.style.setProperty('--x', x + 'px'); d.style.setProperty('--y', y + 'px');
-  d.style.setProperty('--dx', (Math.random() - 0.5) * 18 + 'px'); d.style.setProperty('--dy', (Math.random() * 14 + 4) + 'px');
-  l.append(d); setTimeout(() => d.remove(), 560);
+  let L = sparkLayers.get(container);
+  if (!L || !L.cv.isConnected) {
+    const cv = document.createElement('canvas'); cv.className = 'fx-spark-cv'; layerIn(container).append(cv);
+    L = { cv, ctx: cv.getContext('2d'), ps: [], raf: 0, w: 0, h: 0 }; sparkLayers.set(container, L);
+  }
+  if (!L.ps.length) { // 每一串星光開始時才量一次尺寸
+    const dpr = Math.min(2, devicePixelRatio || 1); L.w = container.clientWidth; L.h = container.clientHeight;
+    if (L.cv.width !== Math.round(L.w * dpr)) { L.cv.width = Math.round(L.w * dpr); L.cv.height = Math.round(L.h * dpr); }
+    L.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  L.ps.push({ x, y, dx: (Math.random() - 0.5) * 18, dy: Math.random() * 14 + 4, c: CANDY[(Math.random() * CANDY.length) | 0], t0: performance.now() }); // v5：彩色糖果
+  if (!L.raf) L.raf = requestAnimationFrame(t => drawSparks(L, t));
+}
+function drawSparks(L, now) {
+  const g = L.ctx; g.clearRect(0, 0, L.w, L.h);
+  L.ps = L.ps.filter(p => now - p.t0 < SPARK_MS);
+  for (const p of L.ps) {
+    const k = Math.max(0, (now - p.t0) / SPARK_MS), e = 1 - (1 - k) * (1 - k), r = 6 * (1.3 - 1.1 * e), cx = p.x + p.dx * e, cy = p.y + p.dy * e;
+    const grd = g.createRadialGradient(cx, cy, 0, cx, cy, r); grd.addColorStop(0, '#fff'); grd.addColorStop(0.45 / 0.72, p.c); grd.addColorStop(1, 'rgba(255,255,255,0)');
+    g.globalAlpha = 1 - k; g.fillStyle = grd; g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); g.fill();
+  }
+  g.globalAlpha = 1;
+  L.raf = L.ps.length ? requestAnimationFrame(t => drawSparks(L, t)) : 0;
 }
