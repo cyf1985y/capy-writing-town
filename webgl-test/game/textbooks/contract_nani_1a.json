@@ -4,7 +4,7 @@
  "content": {
   "file": "webgl-test/game/textbooks/nani_1a_bank.json",
   "contentVersion": "1.0",
-  "contentSha256": "978d4925edce3b766b9cd23f157ce056a12c4ab087ed4fb3f0359fd55a843d8b",
+  "contentSha256": "2c2f121d723e7f4af5a74c9d152e4ee267bc99defef66ae4a790fd8719899782",
   "onMismatch": "reject_load",
   "migrationPolicy": "rewardKey 不含 contentVersion；題庫小改版（同 lesson、同 taskId）沿用舊進度；taskId 變動需人工遷移表"
  },
