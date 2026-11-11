@@ -2,8 +2,8 @@
 // - 找部件：「哪些字有『亻』？」把字卡裡有這個部件的都點出來；
 // - 聽音找字：唸「上，上下的上」，從長得很像的字（上／下）裡點出對的那一個。
 // 資料 game/parts_game.json（Claude 撰寫，人工核對 pending）；字庫＝孩子學過的字（＋目前這一課的字）。
-import { bravo, flash } from './fx.js?v=39';
-import { introText } from './writing-panel.js?v=39';
+import { bravo, flash } from './fx.js?v=40';
+import { introText } from './writing-panel.js?v=40';
 
 const CSS = `
 .pg-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}

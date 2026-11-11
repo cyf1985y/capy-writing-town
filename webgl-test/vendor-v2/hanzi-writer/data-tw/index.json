@@ -1,10 +1,11 @@
 {
  "_meta": {
-  "version": "1.1",
+  "version": "1.2",
   "date": "2026-11-08",
   "source": "教育部《國字標準字體筆順學習網》 https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=<Unicode 十進位>",
   "method": "抓取教育部頁面每一筆外框的中心與大小，與 hanzi-writer-data@2.0.1 的筆畫中線做最小成本配對；順序不同就重排，教育部多一畫就把一筆依中線切成兩筆（外框依投影位置切開）。只重排／切開原資料，不含教育部字形。 v1.1：再以教育部頁面的 Track（每筆行筆軌跡）比對起筆方向，比／花的匕首筆改成由左往右，說的上方兩筆左右鏡射成「八」形。",
-  "license": "衍生自 hanzi-writer-data（Arphic Public License，見 ARPHICPL.TXT）"
+  "license": "衍生自 hanzi-writer-data（Arphic Public License，見 ARPHICPL.TXT）",
+  "v1.2": "加入南一一上新字的修正：出都悄呢房（tw_check.py／tw_fix.py，做法同 v1.1）"
  },
  "chars": {
   "來": {
@@ -291,6 +292,110 @@
    "humanCheck": "pending",
    "directionFix": "stroke 8 mirrored; stroke 9 mirrored",
    "sha256": "56534550886d0dc39b77b9b309e9f98a49cbf7e041325852a68977fb43e6d69c"
+  },
+  "出": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=20986",
+   "moeStrokes": 5,
+   "originalStrokes": 5,
+   "newOrderFromOriginal": [
+    2,
+    0,
+    1,
+    3,
+    4
+   ],
+   "split": null,
+   "originalSha256": "1b7e7176d1c5ca47f340e9ce28937f33929b6768ee20ea79f9129118b87f00a2",
+   "sha256": "9617a8b1b5298c2017242cd885e52f91bb20296fb79e251c1a7bc0ecab21c3c1",
+   "humanCheck": "pending",
+   "addedFor": "nani_1a"
+  },
+  "都": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=37117",
+   "moeStrokes": 11,
+   "originalStrokes": 10,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    8,
+    9
+   ],
+   "split": "split hw stroke 8 at s=0.42 (runs=2)",
+   "originalSha256": "5fa17c32858a0d8183096756b3789d96e5dcfcf612e4bc60e14b403d772748e1",
+   "sha256": "94bb2e58d338fabc2a86a79262f657fcd83a5421ca2510bd5ab01bc46e653bdf",
+   "humanCheck": "pending",
+   "addedFor": "nani_1a"
+  },
+  "悄": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=24708",
+   "moeStrokes": 10,
+   "originalStrokes": 10,
+   "newOrderFromOriginal": [
+    0,
+    2,
+    1,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "split": null,
+   "originalSha256": "95a1b4f757ca5e973de967ea94889f950e5fea21411d1bf5e4a23c00c9e61f5c",
+   "sha256": "91fd35bbe937eb5e6c5cb322b94718b987f25bd2aec6cb68a450ec157d7ea6c7",
+   "humanCheck": "pending",
+   "addedFor": "nani_1a"
+  },
+  "呢": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=21602",
+   "moeStrokes": 8,
+   "originalStrokes": 8,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "split": null,
+   "originalSha256": "258288d04eca768919eaa16a095a3ea2407139fefeda74772efcf408d3f92fa6",
+   "sha256": "9943f6dbae1b52688198f58afe33be3e7baf330c4df47942d1cf2f4598a33ba5",
+   "humanCheck": "pending",
+   "addedFor": "nani_1a",
+   "directionFix": "stroke 7 reversed"
+  },
+  "房": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=25151",
+   "moeStrokes": 8,
+   "originalStrokes": 8,
+   "newOrderFromOriginal": [
+    0,
+    3,
+    1,
+    2,
+    4,
+    5,
+    6,
+    7
+   ],
+   "split": null,
+   "originalSha256": "8f595e59111f1bd1044fb117f7d26485885367982c49ed044c9536bc42633718",
+   "sha256": "e09758e0abfe8ce64b02bfac5b9599f8df2f0e3956cd7e1515634e1f89fd9b1f",
+   "humanCheck": "pending",
+   "addedFor": "nani_1a",
+   "directionFix": "stroke 1 mirrored"
   }
  }
 }

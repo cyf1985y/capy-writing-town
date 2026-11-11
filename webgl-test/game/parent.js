@@ -1,8 +1,8 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=39';
-import { LEVELS } from './writing-panel.js?v=39';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=39';
+import { starsOf } from './stars.js?v=40';
+import { LEVELS } from './writing-panel.js?v=40';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=40';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -82,7 +82,8 @@ const CSS = `
 
 export class ParentPanel {
   /** rewards（可省略）：{ key, totals: () => ({ total, maxTotal }), onChange }，見 rewards.js；shop（可省略）：{ summary: () => ({ count, all, spent, balance, names }) }，見 shop.js */
-  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, log }); this.el = null; }
+  /** books（可省略）：{ list: [{ id, label }], current, onPick(id) }，見 books.js */
+  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, log }); this.el = null; }
   isOpen() { return !!this.el; }
   open() {
     if (this.el) return;
@@ -92,6 +93,7 @@ export class ParentPanel {
     const el = document.createElement('div'); el.className = 'pp-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', '家長面板');
     el.innerHTML = `<div class="pp-dialog">
       <h2>👪 家長面板<button type="button" data-act="close">關閉</button></h2>
+      ${this.books ? `<p class="pp-note" style="margin:0 0 8px">📚 目前課本：<b>${esc(this.books.list.find(b => b.id === this.books.current)?.label ?? '')}</b>（可在下方「設定」切換）</p>` : ''}
       <div class="pp-kpis"><div>學會的字<b>${st.learned}</b>／${st.totalChars}</div><div>今天寫了<b>${st.today.n}</b>次</div><div>今天練習<b>${mins(st.today.ms)}</b>分鐘</div></div>
       <h3>最近 7 天（分鐘）</h3>
       <div class="pp-week">${st.week.map(w => `<div title="${w.d}：${w.n} 次"><span>${mins(w.ms)}</span><i style="height:${Math.round(70 * w.ms / maxMs)}%"></i>${w.d.slice(5).replace('-', '/')}</div>`).join('')}</div>
@@ -118,7 +120,9 @@ export class ParentPanel {
         <span>筆畫名稱</span>${seg('strokeVoice', [[true, '唸出來'], [false, '不唸']])}
         <span>複習方式</span>${seg('reviewDictation', [[true, '聽寫'], [false, '照進度']])}
         ${this.shop ? `<span>配件商店</span>${seg('shop', [[true, '開'], [false, '關']])}` : ''}
+        ${this.books ? `<span>課本版本</span><div class="seg">${this.books.list.map(b => `<button type="button" data-book="${esc(b.id)}" aria-pressed="${b.id === this.books.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
       </div>
+      ${this.books ? '<p class="pp-note">換課本版本會重新載入。每個版本的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各版本分別做。</p>' : ''}
       <p class="pp-note">設定只存在這台裝置。筆畫名稱與口訣由 AI 撰寫，若和課本不同請以課本為準。</p>
       <p class="pp-note">🔍 <a href="./game/check.html" target="_blank" rel="noopener">家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
       <p class="pp-note">🖨️ <a href="./game/worksheet.html" target="_blank" rel="noopener">列印練習單</a>：把還沒三顆星、常錯的字印成 A4 練習單（可存成 PDF）。</p>
@@ -129,6 +133,7 @@ export class ParentPanel {
       if (b.dataset.act === 'close') return this.close();
       if (b.dataset.act === 'export' || b.dataset.act === 'import') return this._backupAct(b.dataset.act);
       if (b.dataset.rw) return this._rewardAct(b);
+      if (b.dataset.book) { this.log('book ' + b.dataset.book); return this.books.onPick(b.dataset.book); }
       if (b.dataset.k) {
         const s = loadSettings(), v = b.dataset.v; s[b.dataset.k] = v === 'true' ? true : v === 'false' ? false : v; saveSettings(s);
         for (const x of el.querySelectorAll(`button[data-k="${b.dataset.k}"]`)) x.setAttribute('aria-pressed', String(x === b));

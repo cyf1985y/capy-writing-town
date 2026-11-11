@@ -21,11 +21,11 @@ const CSS = `
 `;
 
 export class Album {
-  constructor({ town, lobby, townFx, contract, voice, sound, log = () => {} }) {
-    Object.assign(this, { town, lobby, townFx, contract, voice, sound, log });
+  constructor({ town, lobby, townFx, contract, voice, sound, log = () => {}, seenKey = 'capy_album_seen' }) {
+    Object.assign(this, { town, lobby, townFx, contract, voice, sound, log, seenKey });
     this.cfg = contract.album;
     this.thumbs = new Map();
-    this.seen = new Set(); try { JSON.parse(localStorage.getItem('capy_album_seen') || '[]').forEach(n => this.seen.add(n)); } catch { /* ignore */ }
+    this.seen = new Set(); try { JSON.parse(localStorage.getItem(this.seenKey) || '[]').forEach(n => this.seen.add(n)); } catch { /* ignore */ }
     if (!document.getElementById('al-style')) { const s = document.createElement('style'); s.id = 'al-style'; s.textContent = CSS; document.head.append(s); }
   }
 
@@ -91,7 +91,7 @@ export class Album {
       grid.append(b);
     }
     for (const r of list) if (r.unlocked) this.seen.add(r.object);
-    try { localStorage.setItem('capy_album_seen', JSON.stringify([...this.seen])); } catch { /* ignore */ }
+    try { localStorage.setItem(this.seenKey, JSON.stringify([...this.seen])); } catch { /* ignore */ }
     el.addEventListener('click', e => { if (e.target === el || e.target.closest('[data-close]')) this.close(); });
     el.addEventListener('pointerdown', e => e.stopPropagation());
     this._onKey = e => { if (e.key === 'Escape') this.close(); }; document.addEventListener('keydown', this._onKey);

@@ -1,0 +1,842 @@
+{
+ "_meta": {
+  "version": "1.0",
+  "book": "nani_1a",
+  "note": "這一冊用的漢字積木與語音口訣（遊戲載入時蓋過 char_enrichment.json 的同一字）。新字由 Claude 撰寫；康軒已有的字沿用原內容，只把開頭的「X，○○的X！」換成這一冊的提示詞。人工核對 pending。",
+  "introRewritten": [
+   "木:樹木→木頭",
+   "人:兩個人→大人",
+   "門:門裡→開門",
+   "小:小個子→小船",
+   "上:上下→上面",
+   "左:左邊→左手",
+   "右:右邊→右手",
+   "向:向小紅花說→向前",
+   "也:他也拍→也是",
+   "來:一起來→回來",
+   "開:開心→張開",
+   "朵:一朵→花朵",
+   "在:走在小路上→在家",
+   "笑:笑哈哈→笑臉",
+   "玩:和我玩→好玩",
+   "大:大個子→大家",
+   "好:好朋友→好多",
+   "多:多了一個→好多",
+   "我:我→我們",
+   "你:你拍手→你好",
+   "到:到大海→看到",
+   "青:青蛙→青草",
+   "下:上下→一下子",
+   "那:那一頭→那裡",
+   "和:和我玩→你和我",
+   "他:他也拍→他們",
+   "外:門外→外星人",
+   "個:大個子→哪個",
+   "這:這個→這裡",
+   "裡:門裡→這裡",
+   "有:有什麼→沒有",
+   "是:是不是→不是",
+   "說:說你早→說話",
+   "兩:兩個人→兩個",
+   "了:分好了→好了",
+   "不:不同→好不好"
+  ]
+ },
+ "chars": {
+  "日": {
+   "char": "日",
+   "formula": "像一扇方方的窗 ＝ 日",
+   "introSay": "日，生日的日！方方的框框中間加一橫，像太陽照進窗戶裡！",
+   "doneSay": "太陽暖暖的，像剛出爐的鬆餅！",
+   "source": "claude"
+  },
+  "月": {
+   "char": "月",
+   "formula": "彎彎的月亮 ＝ 月",
+   "introSay": "月，月亮的月！先寫彎彎的一撇，裡面兩橫像月亮上的小雲朵！",
+   "doneSay": "月亮升起來了，晚安小鎮！",
+   "source": "claude"
+  },
+  "山": {
+   "char": "山",
+   "formula": "三座小山峰 ＝ 山",
+   "introSay": "山，高山的山！中間的山峰最高，左右兩邊矮矮的，像一座抹茶山！",
+   "doneSay": "爬上抹茶山頂囉！",
+   "source": "claude"
+  },
+  "木": {
+   "char": "木",
+   "formula": "十 ＋ 八（樹根） ＝ 木",
+   "introSay": "木，木頭的木！上面是樹枝，中間是樹幹，下面是抓緊泥土的樹根一撇一捺！",
+   "doneSay": "種下一棵巧克力大樹！",
+   "source": "spec"
+  },
+  "水": {
+   "char": "水",
+   "formula": "中間一條河 ＋ 兩邊的浪花 ＝ 水",
+   "introSay": "水，喝水的水！中間的豎鉤是一條小河，兩邊是濺起來的浪花！",
+   "doneSay": "咕嚕咕嚕，喝一口甜甜的水！",
+   "source": "claude"
+  },
+  "人": {
+   "char": "人",
+   "formula": "丿 ＋ 捺 ＝ 人",
+   "introSay": "人，大人的人！左邊一撇、右邊一捺，兩隻腳站得穩穩的，互相幫忙才是人！",
+   "doneSay": "站得好穩喔！歡迎來到甜點小鎮！",
+   "source": "spec"
+  },
+  "手": {
+   "char": "手",
+   "formula": "五根手指 ＋ 手掌心 ＝ 手",
+   "introSay": "手，小手的手！第一筆是彎彎的平撇，最後一筆在中間直直勾起來喔！",
+   "doneSay": "你的小手真靈巧！",
+   "source": "spec"
+  },
+  "門": {
+   "char": "門",
+   "formula": "左門板 ＋ 右門板 ＝ 門",
+   "introSay": "門，開門的門！左邊一扇、右邊一扇，像兩片門板，右邊最後要勾一下喔！",
+   "doneSay": "芝麻開門！門打開囉！",
+   "componentStrokes": [
+    4,
+    4
+   ],
+   "source": "claude"
+  },
+  "小": {
+   "char": "小",
+   "formula": "亅 ＋ 八（兩顆水珠） ＝ 小",
+   "introSay": "小，小船的小！中間站直直，左右兩顆小水珠，先寫左邊再寫右邊喔！",
+   "doneSay": "小巧可愛的迷你馬卡龍完成！",
+   "source": "spec"
+  },
+  "上": {
+   "char": "上",
+   "formula": "丨 ＋ 一（站在地面上） ＝ 上",
+   "introSay": "上，上面的上！小樹苗從地面「一」往上長高高！",
+   "doneSay": "更上一層樓！獲得雙層塔！",
+   "source": "spec"
+  },
+  "走": {
+   "char": "走",
+   "formula": "土 ＋ 龰（腳步） ＝ 走",
+   "introSay": "走，走路的走！在泥「土」上面邁開大步往前進，最後一捺要寫得長長的喔！",
+   "doneSay": "一步一步走遍甜點小鎮！",
+   "componentStrokes": [
+    3,
+    4
+   ],
+   "source": "spec"
+  },
+  "左": {
+   "char": "左",
+   "formula": "𠂇（左手） ＋ 工 ＝ 左",
+   "introSay": "左，左手的左！左手拿著工具的「工」，做蛋糕真厲害！",
+   "doneSay": "左邊的草莓奶昔做好囉！",
+   "componentStrokes": [
+    2,
+    3
+   ],
+   "source": "spec"
+  },
+  "右": {
+   "char": "右",
+   "formula": "𠂇（右手） ＋ 口 ＝ 右",
+   "introSay": "右，右手的右！右手拿著點心放進嘴巴「口」裡面，一口吃掉！",
+   "doneSay": "右邊的布丁也被吃光光啦！",
+   "componentStrokes": [
+    2,
+    3
+   ],
+   "source": "spec"
+  },
+  "向": {
+   "char": "向",
+   "formula": "丿 ＋ 冂 ＋ 口 ＝ 向",
+   "introSay": "向，向前的向！頭上一小撇，下面像一扇窗，窗裡有個「口」在說話！",
+   "doneSay": "向大家揮揮手！",
+   "componentStrokes": [
+    1,
+    2,
+    3
+   ],
+   "source": "claude"
+  },
+  "魚": {
+   "char": "魚",
+   "formula": "魚頭 ＋ 田（魚身） ＋ 四點（魚尾） ＝ 魚",
+   "introSay": "魚，小魚的魚！上面是魚頭，中間像田的是魚身，下面四點是擺來擺去的尾巴！",
+   "doneSay": "小魚游進溫泉池囉！",
+   "source": "claude"
+  },
+  "也": {
+   "char": "也",
+   "formula": "橫折鉤 ＋ 豎 ＋ 豎彎鉤 ＝ 也",
+   "introSay": "也，也是的也！只有三筆，最後一筆彎彎地勾上去，像蝸牛的小尾巴！",
+   "doneSay": "三筆就完成，也太快了吧！",
+   "source": "claude"
+  },
+  "來": {
+   "char": "來",
+   "formula": "木 ＋ 人 ＋ 人 ＝ 來",
+   "introSay": "來，回來的來！一棵大果樹旁邊，有兩個小人跑過來摘果子！",
+   "doneSay": "大家都來甜點樂園玩囉！",
+   "source": "spec"
+  },
+  "加": {
+   "char": "加",
+   "formula": "力 ＋ 口 ＝ 加",
+   "introSay": "加，加油的加！左邊是有力氣的「力」，右邊張開「口」大聲喊加油！",
+   "doneSay": "加油加油，你最棒！",
+   "source": "claude",
+   "componentStrokes": [
+    2,
+    3
+   ]
+  },
+  "開": {
+   "char": "開",
+   "formula": "門 ＋ 井（門栓） ＝ 開",
+   "introSay": "開，張開的開！大「門」裡面藏著一口「井」，雙手把門栓拉開，門就打開囉！",
+   "doneSay": "大門打開了！獲得開心果馬卡龍！",
+   "componentStrokes": [
+    8,
+    4
+   ],
+   "source": "spec"
+  },
+  "出": {
+   "char": "出",
+   "formula": "兩座山疊起來 ＝ 出",
+   "introSay": "出，出去的出！先寫中間長長的一豎，再把兩座小山疊起來！",
+   "doneSay": "出發去甜點小鎮玩！",
+   "source": "claude"
+  },
+  "招": {
+   "char": "招",
+   "formula": "扌（提手旁） ＋ 召 ＝ 招",
+   "introSay": "招，招手的招！左邊是小手「扌」，右邊是「召」，揮揮手叫朋友過來！",
+   "doneSay": "揮揮手，朋友都來了！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    5
+   ]
+  },
+  "車": {
+   "char": "車",
+   "formula": "車身 ＋ 輪子 ＝ 車",
+   "introSay": "車，車子的車！中間的方框是車廂，最後一豎穿過去，像車子的輪軸！",
+   "doneSay": "叭叭！甜點小火車出發！",
+   "source": "claude"
+  },
+  "子": {
+   "char": "子",
+   "formula": "了 ＋ 一 ＝ 子",
+   "introSay": "子，小孩子把雙手張開一橫，開心地在樂園裡跑跳！",
+   "doneSay": "好有精神的子！",
+   "source": "spec"
+  },
+  "地": {
+   "char": "地",
+   "formula": "土 ＋ 也 ＝ 地",
+   "introSay": "地，地上的地！左邊是泥土的「土」，右邊是「也」，腳踩在地上穩穩的！",
+   "doneSay": "踩在軟綿綿的草地上！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    3
+   ]
+  },
+  "花": {
+   "char": "花",
+   "formula": "艹（小草頭） ＋ 化 ＝ 花",
+   "introSay": "花，花朵的花！頭上長著小草「艹」，下面「化」成一朵香噴噴的漂亮小花！",
+   "doneSay": "花園裡開滿了草莓花！",
+   "componentStrokes": [
+    4,
+    4
+   ],
+   "source": "spec"
+  },
+  "朵": {
+   "char": "朵",
+   "formula": "几 ＋ 木 ＝ 朵",
+   "introSay": "朵，花朵的朵！上面的「几」像花苞，下面是「木」，樹上開出一朵花！",
+   "doneSay": "一朵小花送給你！",
+   "componentStrokes": [
+    2,
+    4
+   ],
+   "source": "claude"
+  },
+  "在": {
+   "char": "在",
+   "formula": "一 ＋ 丿 ＋ 丨 ＋ 土 ＝ 在",
+   "introSay": "在，在家的在！先寫一橫一撇，再寫一豎，最後是泥「土」的土，穩穩站在地上！",
+   "doneSay": "你就在甜點小鎮裡！",
+   "source": "claude"
+  },
+  "笑": {
+   "char": "笑",
+   "formula": "竹 ＋ 夭 ＝ 笑",
+   "introSay": "笑，笑臉的笑！上面的竹字頭像兩個彎彎笑瞇瞇的眼睛！",
+   "doneSay": "笑口常開！獲得微笑鬆餅！",
+   "componentStrokes": [
+    6,
+    4
+   ],
+   "source": "spec"
+  },
+  "泡": {
+   "char": "泡",
+   "formula": "氵（三點水） ＋ 包 ＝ 泡",
+   "introSay": "泡，泡泡的泡！左邊三點水，右邊「包」，水把空氣包起來就變成泡泡！",
+   "doneSay": "吹出好多彩色泡泡！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    5
+   ]
+  },
+  "玩": {
+   "char": "玩",
+   "formula": "王（斜玉旁） ＋ 元 ＝ 玩",
+   "introSay": "玩，好玩的玩！左邊是斜玉旁，最後一筆要往上提；右邊是「元」，大家一起來玩！",
+   "doneSay": "玩得好開心！",
+   "componentStrokes": [
+    4,
+    4
+   ],
+   "source": "claude"
+  },
+  "大": {
+   "char": "大",
+   "formula": "一 ＋ 人 ＝ 大",
+   "introSay": "大，大家的大！「人」把雙手張得開開的，就變成「大」囉！",
+   "doneSay": "哇！變成超級大個子了！",
+   "source": "spec"
+  },
+  "起": {
+   "char": "起",
+   "formula": "走 ＋ 己 ＝ 起",
+   "introSay": "起，一起的起！左邊是「走」，右邊是自「己」，走字旁的長捺要最後寫，托住「己」喔！",
+   "doneSay": "一起去小鎮玩吧！",
+   "source": "claude"
+  },
+  "好": {
+   "char": "好",
+   "formula": "女 ＋ 子 ＝ 好",
+   "introSay": "好，好多的好！左邊是「女」、右邊是「子」，相親相愛就是好！",
+   "doneSay": "好棒好棒！給你一顆大星星！",
+   "componentStrokes": [
+    3,
+    3
+   ],
+   "source": "spec"
+  },
+  "多": {
+   "char": "多",
+   "formula": "夕 ＋ 夕 ＝ 多",
+   "introSay": "多，好多的多！兩個「夕」疊在一起，一個變兩個，越來越多！",
+   "doneSay": "點心越來越多囉！",
+   "componentStrokes": [
+    3,
+    3
+   ],
+   "source": "claude"
+  },
+  "我": {
+   "char": "我",
+   "formula": "手 ＋ 戈（長叉子） ＝ 我",
+   "introSay": "我，我們的我！左邊像一隻手，右邊像一把長長的叉子，右上角那一點別忘了喔！",
+   "doneSay": "我做到了！獎勵一塊巧克力！",
+   "source": "claude"
+  },
+  "的": {
+   "char": "的",
+   "formula": "白 ＋ 勺 ＝ 的",
+   "introSay": "的，我的的！白色的「白」加上湯匙「勺」，用白湯匙挖冰淇淋吃！",
+   "doneSay": "好吃的冰淇淋送給你！",
+   "componentStrokes": [
+    5,
+    3
+   ],
+   "source": "spec"
+  },
+  "你": {
+   "char": "你",
+   "formula": "亻（人） ＋ 尔 ＝ 你",
+   "introSay": "你，你好的你！左邊站著一個人「亻」，右邊的「尔」像小手指著對方，說的就是你！",
+   "doneSay": "你好棒！請你吃草莓大福！",
+   "componentStrokes": [
+    2,
+    5
+   ],
+   "source": "claude"
+  },
+  "抱": {
+   "char": "抱",
+   "formula": "扌（提手旁） ＋ 包 ＝ 抱",
+   "introSay": "抱，抱抱的抱！左邊是小手「扌」，右邊是「包」，用手把好朋友包起來就是抱抱！",
+   "doneSay": "給你一個大大的抱抱！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    5
+   ]
+  },
+  "爸": {
+   "char": "爸",
+   "formula": "父 ＋ 巴 ＝ 爸",
+   "introSay": "爸，爸爸的爸！上面是「父」，下面是「巴」，合起來就是爸爸！",
+   "doneSay": "爸爸說你寫得真好！",
+   "source": "claude",
+   "componentStrokes": [
+    4,
+    4
+   ]
+  },
+  "到": {
+   "char": "到",
+   "formula": "至 ＋ 刂（立刀旁） ＝ 到",
+   "introSay": "到，看到的到！左邊的「至」是到達，右邊兩筆立刀旁，終於走到了！",
+   "doneSay": "到了！一起吃海鹽冰淇淋！",
+   "componentStrokes": [
+    6,
+    2
+   ],
+   "source": "claude"
+  },
+  "青": {
+   "char": "青",
+   "formula": "生（小草） ＋ 月（圓月） ＝ 青",
+   "introSay": "青，青草的青！上面像綠色的小草長出來，下面是圓圓的月亮框！",
+   "doneSay": "青蘋果果凍做好囉！",
+   "componentStrokes": [
+    4,
+    4
+   ],
+   "source": "spec"
+  },
+  "叫": {
+   "char": "叫",
+   "formula": "口 ＋ 丩 ＝ 叫",
+   "introSay": "叫，大叫的叫！左邊張開小口，右邊兩筆像聲音傳出去！",
+   "doneSay": "大聲叫：我寫好了！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    2
+   ]
+  },
+  "下": {
+   "char": "下",
+   "formula": "一 ＋ 卜 ＝ 下",
+   "introSay": "下，一下子的下！桌巾「一」的下面掛著一顆小水滴！",
+   "doneSay": "下午茶時間到囉！",
+   "source": "spec"
+  },
+  "那": {
+   "char": "那",
+   "formula": "冄 ＋ 阝（耳朵旁） ＝ 那",
+   "introSay": "那，那裡的那！左邊先寫，右邊是耳朵旁，看看那邊有什麼？",
+   "doneSay": "那邊有好多好吃的！",
+   "componentStrokes": [
+    4,
+    3
+   ],
+   "source": "claude"
+  },
+  "和": {
+   "char": "和",
+   "formula": "禾 ＋ 口 ＝ 和",
+   "introSay": "和，你和我的和！左邊是稻「禾」，右邊是「口」，大家一起吃飯、一起玩！",
+   "doneSay": "大家和和氣氣一起玩！",
+   "componentStrokes": [
+    5,
+    3
+   ],
+   "source": "claude"
+  },
+  "要": {
+   "char": "要",
+   "formula": "襾 ＋ 女 ＝ 要",
+   "introSay": "要，想要的要！上面像一個蓋子，下面是「女」，想要的東西藏在裡面！",
+   "doneSay": "你想要吃哪一種甜點？",
+   "source": "claude",
+   "componentStrokes": [
+    6,
+    3
+   ]
+  },
+  "他": {
+   "char": "他",
+   "formula": "亻（人） ＋ 也 ＝ 他",
+   "introSay": "他，他們的他！左邊一個人「亻」，右邊是「也」，指的是旁邊那個小朋友！",
+   "doneSay": "他也來吃蛋糕囉！",
+   "componentStrokes": [
+    2,
+    3
+   ],
+   "source": "claude"
+  },
+  "朋": {
+   "char": "朋",
+   "formula": "月 ＋ 月 ＝ 朋",
+   "introSay": "朋，朋友的朋！兩個「月」亮肩並肩走在一起，就像好朋友一樣形影不離！",
+   "doneSay": "兩個月亮好朋友來找你玩囉！",
+   "componentStrokes": [
+    4,
+    4
+   ],
+   "source": "spec"
+  },
+  "友": {
+   "char": "友",
+   "formula": "𠂇（手） ＋ 又（手） ＝ 友",
+   "introSay": "友，朋友的友！兩隻小手握在一起，你幫我、我幫你，就是好朋友！",
+   "doneSay": "跟卡比巴拉和小兔兔成為好朋友！",
+   "componentStrokes": [
+    2,
+    2
+   ],
+   "source": "spec"
+  },
+  "外": {
+   "char": "外",
+   "formula": "夕 ＋ 卜 ＝ 外",
+   "introSay": "外，外星人的外！左邊是「夕」，右邊是「卜」，晚上的月亮在門外照著你！",
+   "doneSay": "外面的星星好漂亮！",
+   "componentStrokes": [
+    3,
+    2
+   ],
+   "source": "claude"
+  },
+  "住": {
+   "char": "住",
+   "formula": "亻（單人旁） ＋ 主 ＝ 住",
+   "introSay": "住，住在的住！左邊是人「亻」，右邊是主人的「主」，人在家裡當主人，就是住！",
+   "doneSay": "歡迎住進甜點小鎮！",
+   "source": "claude",
+   "componentStrokes": [
+    2,
+    5
+   ]
+  },
+  "個": {
+   "char": "個",
+   "formula": "亻（人） ＋ 固 ＝ 個",
+   "introSay": "個，哪個的個！左邊是一個人，右邊是一個方盒裝著古早味蛋糕！",
+   "doneSay": "太穩了！十畫的個也難不倒你！",
+   "componentStrokes": [
+    2,
+    8
+   ],
+   "source": "spec"
+  },
+  "們": {
+   "char": "們",
+   "formula": "亻（人） ＋ 門 ＝ 們",
+   "introSay": "們，我們的們！左邊一個人「亻」，右邊一扇大「門」，好多人一起走進門，就是我們！",
+   "doneSay": "我們一起出發吧！",
+   "componentStrokes": [
+    2,
+    8
+   ],
+   "source": "claude"
+  },
+  "這": {
+   "char": "這",
+   "formula": "言 ＋ 辶（散步車） ＝ 這",
+   "introSay": "這，這裡的這！先寫裡面的「言」，最後再寫外面的辵部滑水道喔！",
+   "doneSay": "這個甜點看起來最美味！",
+   "componentStrokes": [
+    7,
+    4
+   ],
+   "source": "spec"
+  },
+  "裡": {
+   "char": "裡",
+   "formula": "衤（衣字旁） ＋ 里 ＝ 裡",
+   "introSay": "裡，這裡的裡！左邊是衣字旁，右邊是「里」，把小手藏進衣服裡面！",
+   "doneSay": "裡面藏著一顆巧克力！",
+   "componentStrokes": [
+    5,
+    7
+   ],
+   "source": "claude"
+  },
+  "有": {
+   "char": "有",
+   "formula": "𠂇（手） ＋ 月 ＝ 有",
+   "introSay": "有，沒有的有！上面是一隻手，下面是「月」，手裡拿著好吃的東西，就是有！",
+   "doneSay": "有好多好多點心！",
+   "componentStrokes": [
+    2,
+    4
+   ],
+   "source": "claude"
+  },
+  "沒": {
+   "char": "沒",
+   "formula": "氵（三點水） ＋ 右邊 ＝ 沒",
+   "introSay": "沒，沒有的沒！左邊是三點水，右邊上面像小帽子，下面是「又」！",
+   "doneSay": "沒有問題，你都會了！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    4
+   ]
+  },
+  "是": {
+   "char": "是",
+   "formula": "日（太陽） ＋ 正 ＝ 是",
+   "introSay": "是，不是的是！太陽「日」照在正中間，就是「是」！",
+   "doneSay": "沒錯！你就是寫字小達人！",
+   "componentStrokes": [
+    4,
+    5
+   ],
+   "source": "spec"
+  },
+  "什": {
+   "char": "什",
+   "formula": "亻（人） ＋ 十 ＝ 什",
+   "introSay": "什，什麼的什！左邊一個人「亻」，右邊是數字「十」，什麼東西有十個呀？",
+   "doneSay": "什麼都難不倒你！",
+   "componentStrokes": [
+    2,
+    2
+   ],
+   "source": "claude"
+  },
+  "麼": {
+   "char": "麼",
+   "formula": "麻 ＋ 么 ＝ 麼",
+   "introSay": "麼，什麼的麼！上面是「麻」，下面是小小的「么」，筆畫很多，慢慢寫不用急！",
+   "doneSay": "14畫的麼也完成了！太厲害了！",
+   "componentStrokes": [
+    11,
+    3
+   ],
+   "source": "claude"
+  },
+  "金": {
+   "char": "金",
+   "formula": "人字頂 ＋ 王 ＋ 兩點 ＝ 金",
+   "introSay": "金，金魚的金！頭上像一頂屋頂，下面藏著亮晶晶的金子！",
+   "doneSay": "亮晶晶，像金色的蜂蜜！",
+   "source": "claude"
+  },
+  "說": {
+   "char": "說",
+   "formula": "言（說話） ＋ 兌 ＝ 說",
+   "introSay": "說，說話的說！左邊是「言」代表說話，右邊是「兌」，張開嘴巴開心地說話！",
+   "doneSay": "14畫的說，說得真好！",
+   "componentStrokes": [
+    7,
+    7
+   ],
+   "source": "claude"
+  },
+  "句": {
+   "char": "句",
+   "formula": "勹 ＋ 口 ＝ 句",
+   "introSay": "句，句子的句！外面彎彎的「勹」把「口」包起來，嘴巴說出一句話！",
+   "doneSay": "說一句好聽的話！",
+   "source": "claude"
+  },
+  "話": {
+   "char": "話",
+   "formula": "言（言字旁） ＋ 舌 ＝ 話",
+   "introSay": "話，說話的話！左邊是說話的「言」，右邊是舌頭的「舌」，舌頭動一動就會說話！",
+   "doneSay": "悄悄話說給你聽！",
+   "source": "claude",
+   "componentStrokes": [
+    7,
+    6
+   ]
+  },
+  "兩": {
+   "char": "兩",
+   "formula": "一 ＋ 冂 ＋ 兩個人 ＝ 兩",
+   "introSay": "兩，兩個的兩！上面一橫像屋頂，屋子裡住著兩個「人」，親親熱熱在一起！",
+   "doneSay": "兩個好朋友一起吃蛋糕！",
+   "source": "claude"
+  },
+  "都": {
+   "char": "都",
+   "formula": "者 ＋ 阝（耳朵旁） ＝ 都",
+   "introSay": "都，都是的都！左邊是「者」，右邊是耳朵旁，耳朵旁在右邊喔！",
+   "doneSay": "大家都喜歡你！",
+   "source": "claude",
+   "componentStrokes": [
+    8,
+    3
+   ]
+  },
+  "悄": {
+   "char": "悄",
+   "formula": "忄（豎心旁） ＋ 肖 ＝ 悄",
+   "introSay": "悄，悄悄話的悄！左邊是心「忄」，右邊是「肖」，小聲說心裡話就是悄悄！",
+   "doneSay": "噓——悄悄告訴你，你好棒！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    7
+   ]
+  },
+  "尾": {
+   "char": "尾",
+   "formula": "尸 ＋ 毛 ＝ 尾",
+   "introSay": "尾，尾巴的尾！上面是「尸」，下面是「毛」，毛毛的尾巴搖呀搖！",
+   "doneSay": "小狗搖尾巴，好開心！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    4
+   ]
+  },
+  "巴": {
+   "char": "巴",
+   "formula": "彎彎的小尾巴 ＝ 巴",
+   "introSay": "巴，尾巴的巴！只有四筆，最後一筆彎彎地勾起來，像一條小尾巴！",
+   "doneSay": "尾巴搖一搖，寫好了！",
+   "source": "claude"
+  },
+  "滿": {
+   "char": "滿",
+   "formula": "氵（三點水） ＋ 右邊 ＝ 滿",
+   "introSay": "滿，滿滿的滿！左邊是三點水，右邊筆畫很多，水裝得滿滿的！",
+   "doneSay": "杯子裡裝滿了草莓牛奶！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    11
+   ]
+  },
+  "紅": {
+   "char": "紅",
+   "formula": "糸（絞絲旁） ＋ 工 ＝ 紅",
+   "introSay": "紅，紅花的紅！左邊的絞絲旁像一束絲線，右邊是「工」，把絲線染得紅紅的！",
+   "doneSay": "紅通通的草莓果醬完成！",
+   "componentStrokes": [
+    6,
+    3
+   ],
+   "source": "claude"
+  },
+  "春": {
+   "char": "春",
+   "formula": "三橫一撇一捺 ＋ 日 ＝ 春",
+   "introSay": "春，春天的春！上面有三橫和一撇一捺，下面是太陽「日」，春天太陽暖暖的！",
+   "doneSay": "春天來了，花都開了！",
+   "source": "claude",
+   "componentStrokes": [
+    5,
+    4
+   ]
+  },
+  "貼": {
+   "char": "貼",
+   "formula": "貝 ＋ 占 ＝ 貼",
+   "introSay": "貼，貼紙的貼！左邊是寶貝的「貝」，右邊是「占」，把寶貝貼紙貼上去！",
+   "doneSay": "貼上一張閃亮亮的貼紙！",
+   "source": "claude",
+   "componentStrokes": [
+    7,
+    5
+   ]
+  },
+  "呢": {
+   "char": "呢",
+   "formula": "口 ＋ 尼 ＝ 呢",
+   "introSay": "呢，你呢的呢！左邊是小口，右邊是「尼」，問別人的時候會說「你呢？」",
+   "doneSay": "我寫好了，你呢？",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    5
+   ]
+  },
+  "了": {
+   "char": "了",
+   "formula": "橫撇 ＋ 豎鉤 ＝ 了",
+   "introSay": "了，好了的了！只有兩筆，先寫橫撇，再直直地勾一下，好了！",
+   "doneSay": "兩筆就好了！真俐落！",
+   "source": "claude"
+  },
+  "請": {
+   "char": "請",
+   "formula": "言（言字旁） ＋ 青 ＝ 請",
+   "introSay": "請，請坐的請！左邊是說話的「言」，右邊是「青」，有禮貌地說「請」！",
+   "doneSay": "請你吃一塊蛋糕！",
+   "source": "claude",
+   "componentStrokes": [
+    7,
+    8
+   ]
+  },
+  "天": {
+   "char": "天",
+   "formula": "一 ＋ 大 ＝ 天",
+   "introSay": "天，春天的天！「大」的頭上再加一橫，頭頂上就是天空！",
+   "doneSay": "天空藍藍的，好舒服！",
+   "source": "claude"
+  },
+  "家": {
+   "char": "家",
+   "formula": "宀（寶蓋頭） ＋ 豕 ＝ 家",
+   "introSay": "家，家裡的家！上面是屋頂「宀」，下面是「豕」，屋頂下面就是溫暖的家！",
+   "doneSay": "回到甜甜的家囉！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    7
+   ]
+  },
+  "把": {
+   "char": "把",
+   "formula": "扌（提手旁） ＋ 巴 ＝ 把",
+   "introSay": "把，一把的把！左邊是小手「扌」，右邊是「巴」，用手抓一把糖果！",
+   "doneSay": "抓一把糖果分給大家！",
+   "source": "claude",
+   "componentStrokes": [
+    3,
+    4
+   ]
+  },
+  "不": {
+   "char": "不",
+   "formula": "一 ＋ 丿 ＋ 丨 ＋ 丶 ＝ 不",
+   "introSay": "不，好不好的不！先寫一橫，再寫一撇、一豎，最後點一點！",
+   "doneSay": "不簡單！寫得真漂亮！",
+   "source": "claude"
+  },
+  "房": {
+   "char": "房",
+   "formula": "戶 ＋ 方 ＝ 房",
+   "introSay": "房，房子的房！上面是門戶的「戶」，下面是「方」，方方正正的房子！",
+   "doneSay": "蓋好一間餅乾房子！",
+   "source": "claude",
+   "componentStrokes": [
+    4,
+    4
+   ]
+  },
+  "福": {
+   "char": "福",
+   "formula": "礻（示字旁） ＋ 畐 ＝ 福",
+   "introSay": "福，幸福的福！左邊是「礻」，右邊是「畐」，一口田、吃得飽，就好幸福！",
+   "doneSay": "祝你天天都幸福！",
+   "source": "claude",
+   "componentStrokes": [
+    4,
+    9
+   ]
+  }
+ }
+}

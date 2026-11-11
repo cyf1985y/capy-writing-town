@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=39';
-import { placeAccessory } from './shop.js?v=39';
+import { Album } from './album.js?v=40';
+import { placeAccessory } from './shop.js?v=40';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -397,7 +397,7 @@ export class TownFx2D {
     this.onPick = onPick; this.onStart = onStart;
     this.pins = Object.keys(this.lessonToZone).map(l => {
       const p = this.art.pins[l], b = document.createElement('button'); b.type = 'button'; b.className = 't2-pin'; b.dataset.lesson = l;
-      b.innerHTML = `<u aria-hidden="true">▼</u><img alt="" draggable="false" src="${this.town.url(p.icon)}"><b>${l === '0' ? '數' : l}</b><small></small>`;
+      b.innerHTML = `<u aria-hidden="true">▼</u><img alt="" draggable="false" src="${this.town.url(p.icon)}"><b>${p.label ?? (l === '0' ? '數' : l)}</b><small></small>`;
       b.style.setProperty('--pc', PIN_COLORS[+l % PIN_COLORS.length]); /* v10：題號改馬卡龍色塊＋白粗邊 */
       b.style.left = (p.at[0] / this.town.W * 100) + '%'; b.style.top = (p.at[1] / this.town.H * 100) + '%';
       if (p.at[0] > this.town.W * 0.8) b.classList.add('edge-r'); else if (p.at[0] < this.town.W * 0.2) b.classList.add('edge-l'); /* v13：課名膠囊不被畫面邊緣切掉 */
