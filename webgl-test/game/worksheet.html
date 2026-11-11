@@ -26,9 +26,18 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 .chips .new{opacity:.6}
 .preview{overflow-x:auto;padding-bottom:8px}
 /* 練習單本體：全部用 mm，螢幕預覽與列印同一份版面 */
-.sheet{width:210mm;min-height:297mm;padding:12mm;background:#fff;color:#222;margin:0 auto 12px;box-shadow:0 4px 18px rgba(0,0,0,.15)}
+.sheet{width:210mm;min-height:297mm;padding:12mm;background:#fff;color:#222;margin:0 auto 12px;box-shadow:0 4px 18px rgba(0,0,0,.15);display:flex;flex-direction:column}
 .sheet header{display:flex;align-items:flex-end;gap:6mm;height:16mm;padding-bottom:3mm;font-size:4.2mm}
 .sheet header b{font-size:5.5mm;margin-right:auto}
+/* v44 插畫：卡比巴拉、兔子（遊戲裡的角色圖），可在上方關掉省墨水 */
+.sheet header .deco{height:14mm;width:auto;margin:0 -2mm -1mm 0;align-self:flex-end}
+.sheet header .deco.r{margin:0 0 -1mm -1mm}
+.ft{margin-top:auto;height:15mm;display:flex;align-items:flex-end;gap:2mm;font-size:3.8mm;color:#666;break-inside:avoid}
+.ft img{height:14mm;width:auto}.ft .sm{height:5mm;align-self:center;opacity:.85}
+.ft .say{flex:1;display:flex;align-items:center;justify-content:center;gap:2mm;height:11mm;border:.3mm dashed #F2A99E;border-radius:6mm;background:#FFF8F4}
+.ft .say i{font-style:normal;font-size:6mm;color:#F2A99E;letter-spacing:.6mm}
+.nodeco .deco,.nodeco .ft{display:none}
+.tools label{display:inline-flex;align-items:center;gap:4px;font-size:14px;cursor:pointer}
 .sheet header span i{display:inline-block;width:34mm;border-bottom:.3mm solid #444}
 .row{display:flex;height:20mm;break-inside:avoid;page-break-inside:avoid}
 .lab{width:26mm;height:20mm;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:5.4mm;line-height:1.1;overflow:hidden}
@@ -59,7 +68,7 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 <div class="noprint">
   <h1>🖨️ 列印練習單</h1>
   <p class="lead">預設選「還沒拿到三顆星的字」和「常錯的字」，最多 12 個（一張 A4）。可以自己勾選增減，再按列印；在列印畫面可以選「儲存為 PDF」。資料只從這台裝置讀取，不會更動遊戲紀錄。</p>
-  <div class="tools"><button type="button" class="pri" id="printBtn" disabled>🖨️ 列印</button><button type="button" id="defBtn">恢復預設選字</button><button type="button" id="noneBtn">全部取消</button><a href="../game-v1.html">← 回遊戲</a></div>
+  <div class="tools"><button type="button" class="pri" id="printBtn" disabled>🖨️ 列印</button><button type="button" id="defBtn">恢復預設選字</button><button type="button" id="noneBtn">全部取消</button><label><input type="checkbox" id="decoBox" checked>🐰 可愛插畫</label><a href="../game-v1.html">← 回遊戲</a></div>
   <p id="msg" role="status">載入中…</p>
   <div class="pick" id="pick"></div>
 </div>
@@ -89,6 +98,12 @@ function defaultPicks(artifacts, max = MAX_DEFAULT) {
 
 let loaded, ZY = {}, TW = {}, artifacts = [], tasks = [], selected = [];
 const glyphs = new Map();
+// v44 插畫（遊戲角色圖）：每頁換一組
+const SPR = './art2d/sprites/', DECO = [{ capy: 'capy_orange_wave', bunny: 'bunny_a_wave', capy2: 'capy_cocoa_happy', bunny2: 'bunny_b_happy' }, { capy: 'capy_cocoa_wave', bunny: 'bunny_b_wave', capy2: 'capy_orange_happy', bunny2: 'bunny_a_happy' }];
+const DECO_KEY = 'capy_worksheet_deco';
+const setDeco = on => { $('#preview').classList.toggle('nodeco', !on); $('#decoBox').checked = on; try { localStorage.setItem(DECO_KEY, on ? '1' : '0'); } catch { /* 私密模式 */ } };
+try { setDeco(localStorage.getItem(DECO_KEY) !== '0'); } catch { setDeco(true); }
+$('#decoBox').addEventListener('change', e => setDeco(e.target.checked));
 const dataUrl = ch => '../vendor-v2/hanzi-writer/' + (TW[ch] ? 'data-tw/' : 'data/') + encodeURIComponent(ch) + '.json'; // 和遊戲相同：修正字讀 data-tw
 const loadGlyph = ch => glyphs.get(ch) ?? glyphs.set(ch, get(dataUrl(ch)).catch(() => null)).get(ch);
 
@@ -104,7 +119,8 @@ async function renderSheet() {
   const gs = await Promise.all(list.map(t => loadGlyph(t.char)));
   const rows = list.map((t, i) => gs[i] ? rowHTML(t, gs[i]) : '').filter(Boolean), missing = list.filter((t, i) => !gs[i]).map(t => t.char);
   const pages = []; for (let i = 0; i < rows.length; i += ROWS_PER_PAGE) pages.push(rows.slice(i, i + ROWS_PER_PAGE));
-  $('#preview').innerHTML = pages.map(p => `<section class="sheet"><header><b>寫字練習單</b><span>姓名：<i></i></span><span>日期：<i></i></span></header>${p.join('')}</section>`).join('');
+  $('#preview').innerHTML = pages.map((p, i) => { const a = DECO[i % DECO.length]; return `<section class="sheet"><header><img class="deco" src="${SPR + a.capy}.webp" alt=""><b>寫字練習單</b><span>姓名：<i></i></span><span>日期：<i></i></span><img class="deco r" src="${SPR + a.bunny}.webp" alt=""></header>${p.join('')}
+    <footer class="ft"><img src="${SPR + a.capy2}.webp" alt=""><img class="sm" src="${SPR}fx_star.webp" alt=""><div class="say">寫完了！幫自己塗星星<i>☆☆☆☆☆</i></div><img class="sm" src="${SPR}fx_heart.webp" alt=""><img src="${SPR + a.bunny2}.webp" alt=""></footer></section>`; }).join('');
   $('#printBtn').disabled = !rows.length;
   $('#msg').textContent = rows.length ? `已選 ${rows.length} 個字，共 ${pages.length} 頁（每頁 ${ROWS_PER_PAGE} 個字）。${missing.length ? '字形載入失敗：' + missing.join('、') : ''}` : '還沒有選字。請在下面勾選要練習的字。';
 }
@@ -120,7 +136,7 @@ $('#pick').addEventListener('change', e => {
 });
 $('#defBtn').addEventListener('click', () => { selected = defaultPicks(artifacts); renderPick(); renderSheet(); });
 $('#noneBtn').addEventListener('click', () => { selected = []; renderPick(); renderSheet(); });
-$('#printBtn').addEventListener('click', () => window.print());
+$('#printBtn').addEventListener('click', async () => { await Promise.all([...document.querySelectorAll('.sheet img')].map(im => im.decode().catch(() => {}))); window.print(); }); // 插畫載完再印
 
 try {
   loaded = await loadContract('../../', BOOKS[BOOK].contract);
