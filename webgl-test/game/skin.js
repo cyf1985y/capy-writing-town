@@ -29,6 +29,9 @@ export function applySkin(contract, skin) {
   contract.art2d = { ...contract.art2d, base: skin.base, manifest: skin.manifest };
   // 主題可以讓每位朋友用不同的角色圖（residentSprites 的順序同 album.residents）；甜點版 8 位朋友共用 4 種外觀
   if (skin.residentSprites) contract.art2d.residents = Object.fromEntries(Object.entries(contract.art2d.residents).map(([k, r]) => { const i = contract.album.residents.findIndex(a => a.object === k), sp = skin.residentSprites[i]; return [k, sp ? { ...r, sprite: sp } : r]; }));
+  // 主題的地圖不一樣，朋友站的位置也可以換（residentAt：{朋友代號: [x, y]}）
+  if (skin.residentAt) contract.art2d.residents = Object.fromEntries(Object.entries(contract.art2d.residents).map(([k, r]) => [k, skin.residentAt[k] ? { ...r, at: skin.residentAt[k] } : r]));
+  if (skin.rewardTo && contract.art2d.reward) contract.art2d.reward = { ...contract.art2d.reward, to: skin.rewardTo };
   contract.theme = { ...contract.theme, title: skin.title ?? contract.theme.title, ui: { ...contract.theme.ui, ...skin.ui } };
   contract.album = { ...contract.album, title: skin.albumTitle ?? contract.album.title, residents: contract.album.residents.map((r, i) => ({ ...r, name: skin.names?.[i] ?? r.name })) };
   return contract;
