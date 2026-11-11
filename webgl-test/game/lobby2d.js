@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=46';
-import { placeAccessory } from './shop.js?v=46';
+import { Album } from './album.js?v=47';
+import { placeAccessory } from './shop.js?v=47';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -475,6 +475,8 @@ const ALBUM_CSS = (frame, locked) => `
 .al2 .al-card small{position:absolute;left:4%;right:4%;top:100%;margin-top:2px;text-align:center;font-size:11px;line-height:1.2}
 .al2 .al-card.new{border:0;animation:al-glow2 1.2s ease-in-out 3}
 @keyframes al-glow2{50%{filter:drop-shadow(0 0 10px rgba(240,140,0,.8))}}
+/* v47 手機橫放：圖鑑卡之間的上下距離縮小 */
+@media (orientation:landscape) and (max-height:560px){.al2 .al-grid{row-gap:14px;gap:8px}}
 `;
 
 export class Album2D extends Album {

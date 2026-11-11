@@ -2,7 +2,7 @@
 // 存檔的 drawnPaths 只有座標、沒有時間，所以是「等速」重播，不是原本的書寫速度。
 // 動畫用 Web Animations，播完即停（不用無限動畫）；prefers-reduced-motion 時直接顯示完成圖。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { zhuyinHTML, wordHTML } from './writing-panel.js?v=46';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=47';
 
 /** 重播速度：字形座標（1024 em）每毫秒走幾單位；每筆最短時間；筆與筆之間的停頓 */
 export const REPLAY = Object.freeze({ unitsPerMs: 1.1, minStrokeMs: 180, gapMs: 150, startMs: 250 });
@@ -28,6 +28,15 @@ const CSS = `
 .cr-actions.go button{background:var(--ui-primaryDark,#E8665C);border-color:var(--ui-primaryDark,#E8665C);color:#fff}
 .cr-actions button{font:inherit;font-size:16px;font-weight:700;padding:8px 14px;border-radius:999px;border:2px solid #F5CBA7;background:#fff;color:#6E473B;cursor:pointer;touch-action:manipulation}
 #done .wp-card{cursor:pointer;touch-action:manipulation}
+/* v47 手機橫放：筆跡在左、字的資料和按鈕在右，不用捲 */
+@media (orientation:landscape) and (max-height:560px){
+.cr-box{width:min(94vw,640px);max-height:calc(100vh - 10px);max-height:calc(100dvh - 10px);padding:10px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:repeat(4,auto) 1fr;column-gap:14px;align-items:center}
+.cr-head,.cr-words,.cr-note,.cr-actions{grid-column:2}
+.cr-stage{grid-column:1;grid-row:1/6}
+.cr-stage svg{width:min(calc(100vh - 50px),260px);width:min(calc(100dvh - 50px),260px)}
+.cr-words{margin:4px 0}.cr-note{margin:0 0 6px}
+.cr-actions button{font-size:15px;padding:7px 12px}
+}
 `;
 
 /** 要唸、要顯示的詞：題庫 words 前 2 個 → 沒有就用 hint_word → 都沒有就空。不自行造詞。 */

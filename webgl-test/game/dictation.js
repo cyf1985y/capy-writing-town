@@ -4,8 +4,8 @@
 // 要再練的字（注音第一次沒拼對、用了提示、或寫錯很多筆）記在 localStorage，下次優先出題；之後一次答對就會消掉。
 // 注音磚是用點的，不是手寫（沒有注音符號的筆順資料）。語音用裝置內建的語音，輕聲、多音字唸得對不對要真人聽。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { bravo, flash } from './fx.js?v=46';
-import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=46';
+import { bravo, flash } from './fx.js?v=47';
+import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=47';
 
 const CSS = `
 .dc-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}
@@ -51,6 +51,22 @@ const CSS = `
 .dc-result small{display:block;font-size:12px;line-height:1.5}
 [hidden].dc-h,.dc-dialog [hidden]{display:none!important}
 @media (min-width:700px){.dc-dialog{width:min(94vw,620px);padding:22px 22px 24px}.dc-tiles{max-width:440px;gap:10px}.dc-tiles button{height:76px;font-size:40px}.dc-tones{max-width:500px}.dc-tones button{height:72px}.dc-slots button,.dc-tslot{height:80px;width:70px;font-size:42px}.dc-tslot{width:60px;font-size:54px}.dc-grid{width:min(70vw,380px,46vh)}.dc-ask{font-size:22px}.dc-word{font-size:30px}.dc-actions button{font-size:20px;padding:12px 20px}} /* 平板：磚和格子放大 */
+/* v47 手機橫放（高度 ≤ 560）：左邊＝拼注音的格子／寫字格／成績，右邊＝題目、喇叭、訊息、按鈕；不用上下捲 */
+@media (orientation:landscape) and (max-height:560px){
+.dc-dialog{width:min(96vw,860px);max-height:calc(100vh - 10px);max-height:calc(100dvh - 10px);padding:10px 14px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:repeat(7,auto) 1fr;column-gap:16px;align-content:start;align-items:start}
+.dc-dialog>h2,.dc-dots,.dc-ask,.dc-word,.dc-speak,.dc-key,.dc-msg,.dc-actions{grid-column:2}
+.dc-zy,.dc-grid,.dc-result{grid-column:1;grid-row:1/9;align-self:center}
+.dc-dialog h2{font-size:17px}.dc-ask{font-size:16px;margin:2px 0}.dc-word{font-size:22px;margin:0 0 4px}
+.dc-speak{width:52px;height:52px;font-size:26px;justify-self:center;margin:0 0 4px}
+.dc-ans{min-height:60px;margin:0 0 6px}
+.dc-slots button,.dc-tslot{height:56px;width:50px;font-size:30px}.dc-tslot{width:44px;font-size:40px}
+.dc-tiles{max-width:none;gap:6px;margin:0 0 6px}.dc-tiles button{height:48px;font-size:28px}
+.dc-tones{max-width:none;gap:5px;margin:0}.dc-tones button{height:50px}.dc-tones button b{font-size:38px;height:22px;line-height:44px}.dc-tones button small{font-size:12px}
+.dc-dialog>.dc-grid{width:min(calc(100vh - 46px),44vw);width:min(calc(100dvh - 46px),44vw);margin:0 auto}
+.dc-key{font-size:18px}.dc-msg{font-size:15px;margin:0 0 6px}
+.dc-actions{gap:6px}.dc-actions button{font-size:15px;padding:8px 12px}
+.dc-result{margin:0}.dc-result .c{font-size:30px}
+}
 `;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 

@@ -1,6 +1,6 @@
 // v18 配件商店畫面：選朋友 → 選位置分頁 → 點配件試戴 → 用星星換（問一次）→ 戴上。買過的點一下＝戴上／拿下來。
 // 規則與存檔都在 shop.js；這裡只管畫面、語音與音效。所有字都很短，點配件會唸名稱（孩子不一定認得字）。
-import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=46';
+import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=47';
 
 const CSS = `
 .sh-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:15px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);-webkit-user-select:none;user-select:none}
@@ -49,6 +49,19 @@ const CSS = `
 .sh-bar button.go img{width:22px;height:22px;vertical-align:-4px}
 .sh-burst{position:absolute;z-index:3;width:34px;pointer-events:none;animation:sh-burst .9s ease-out forwards}
 @keyframes sh-burst{0%{transform:translate(-50%,-50%) scale(.3);opacity:1}100%{transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1) rotate(var(--r));opacity:0}}
+/* v47 手機橫放：朋友列改小、商品圖矮一點、下方按鈕列變窄，讓價錢露出來 */
+@media (orientation:landscape) and (max-height:560px){
+.sh-dialog{height:calc(100vh - 10px);height:calc(100dvh - 10px);padding:6px 10px 8px}
+.sh-head h2{font-size:17px}.sh-wallet{font-size:16px}.sh-wallet img{width:24px;height:24px}.sh-close{font-size:14px;padding:4px 10px}
+.sh-friends{padding:4px 2px}
+.sh-friends button{flex-direction:row;width:auto;gap:4px;padding:2px 8px 2px 2px;font-size:12px}
+.sh-friends button img{height:30px;width:34px}
+.sh-tabs button{font-size:14px;padding:5px 4px}
+.sh-grid{grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px;padding:6px}
+.sh-item .pic{height:44px}
+.sh-bar{min-height:38px;margin-top:6px;padding:3px 8px;font-size:14px}
+.sh-bar button{font-size:15px;padding:5px 14px}
+}
 `;
 const esc = s => String(s).replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
 

@@ -2,8 +2,8 @@
 // - 找部件：「哪些字有『亻』？」把字卡裡有這個部件的都點出來；
 // - 聽音找字：唸「上，上下的上」，從長得很像的字（上／下）裡點出對的那一個。
 // 資料 game/parts_game.json（Claude 撰寫，人工核對 pending）；字庫＝孩子學過的字（＋目前這一課的字）。
-import { bravo, flash } from './fx.js?v=46';
-import { introText } from './writing-panel.js?v=46';
+import { bravo, flash } from './fx.js?v=47';
+import { introText } from './writing-panel.js?v=47';
 
 const CSS = `
 .pg-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}
@@ -21,6 +21,16 @@ const CSS = `
 .pg-actions{display:flex;gap:10px;justify-content:center}
 .pg-actions button{font:inherit;font-size:18px;padding:10px 18px;border-radius:12px;border:2px solid #F7C9C0;background:#fff;cursor:pointer;touch-action:manipulation}
 .pg-actions button.pg-primary{background:var(--ui-primaryDark,#E8665C);border-color:var(--ui-primaryDark,#E8665C);color:#fff}
+/* v47 手機橫放：字卡排成一排、按鈕留在畫面裡 */
+@media (orientation:landscape) and (max-height:560px){
+.pg-dialog{width:min(96vw,760px);max-height:calc(100vh - 10px);max-height:calc(100dvh - 10px);padding:10px 14px 12px}
+.pg-dialog h2{font-size:17px;margin:0 0 2px}.pg-dots{margin:0 0 4px}.pg-ask{font-size:16px;margin:2px 0}
+.pg-part{font-size:32px;padding:0 10px;margin:0 0 6px}
+.pg-grid{grid-template-columns:repeat(auto-fit,minmax(70px,104px));justify-content:center;gap:8px;margin:4px 0 8px}
+.pg-grid button{font-size:clamp(30px,6vw,46px)}
+.pg-msg{margin:0 0 6px;font-size:15px}
+.pg-actions button{font-size:15px;padding:7px 14px}
+}
 `;
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 

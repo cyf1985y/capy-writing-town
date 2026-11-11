@@ -4,9 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=46';
-import { bravo, flash, spark } from './fx.js?v=46';
-import { starsOf } from './stars.js?v=46'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=47';
+import { bravo, flash, spark } from './fx.js?v=47';
+import { starsOf } from './stars.js?v=47'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -139,6 +139,20 @@ const CSS = `
 .wp-levels button.wp-cleared::after{content:' ✓'}
 .wp-sname{position:absolute;left:8px;top:8px;z-index:3;pointer-events:none;background:rgba(255,248,231,.94);border:2px solid #F5CBA7;border-radius:999px;padding:2px 10px;font-size:15px;font-weight:700;color:#6E473B}
 .wp-sname b{color:#E8665C;font-size:17px}
+/* v47 手機橫放（高度 ≤ 560）：寫字格在左邊、用滿高度；字、關卡、說明、按鈕在右邊 */
+@media (orientation:landscape) and (max-height:560px){
+.wp-dialog{width:min(96vw,900px);max-height:calc(100vh - 10px);max-height:calc(100dvh - 10px);padding:10px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:repeat(7,auto) 1fr;column-gap:16px;align-content:start}
+.wp-head,.wp-levels,.wp-progress,.wp-formula,.wp-talk,.wp-stars,.wp-actions{grid-column:2}
+.wp-dialog>.wp-grid{grid-column:1;grid-row:1/9;align-self:center;width:min(calc(100vh - 34px),50vw);width:min(calc(100dvh - 34px),50vw);margin:0}
+.wp-head{margin-bottom:4px;gap:8px;flex-wrap:wrap}
+.wp-head h2{font-size:20px}.wp-head .wp-word{font-size:20px}
+.wp-levels{margin:0 0 4px}.wp-levels button{font-size:13px;padding:4px 9px}
+.wp-progress{margin:0 0 4px}.wp-progress span{width:11px;height:11px}
+.wp-formula{font-size:13px;padding:4px 12px;margin:0 auto 6px}
+.wp-talk{margin:2px 0 6px}.wp-buddy{width:50px}.wp-msg{font-size:15px}
+.wp-stars{height:34px;margin:0 0 4px}.wp-stars>*{width:34px;height:34px}.wp-stars span{font-size:30px;line-height:34px}
+.wp-actions{gap:6px;align-self:end}.wp-actions button{font-size:15px;padding:8px 12px;min-width:0}
+}
 `;
 
 function injectCss() {

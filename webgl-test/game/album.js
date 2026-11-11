@@ -18,6 +18,11 @@ const CSS = `
 .al-card.new{border-color:#f08c00;animation:al-glow 1.2s ease-in-out 3}
 @keyframes al-glow{50%{box-shadow:0 0 0 8px rgba(240,140,0,.3)}}
 #albumBtn.al-ping{animation:al-glow 1s ease-in-out 4}
+/* v47 手機橫放：視窗變寬、全部朋友排成一排 */
+@media (orientation:landscape) and (max-height:560px){
+.al-box{width:min(96vw,900px);max-height:calc(100vh - 10px);max-height:calc(100dvh - 10px);padding:8px 14px 12px}
+.al-grid{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)} /* 8～9 位朋友排成一排，不用捲 */
+}
 `;
 
 export class Album {

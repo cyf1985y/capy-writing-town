@@ -84,12 +84,12 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 </div>
 <div class="preview" id="preview"></div>
 <script type="module">
-import { loadContract } from './content.js?v=46';
-import { openDB } from './store.js?v=46';
-import { starsOf, bestStars, starText } from './stars.js?v=46';
-import { wordHTML, zhuyinHTML } from './writing-panel.js?v=46';
-import { BOOKS, currentBook, profileFor } from './books.js?v=46';
-import { currentSkin, loadSkin } from './skin.js?v=46';
+import { loadContract } from './content.js?v=47';
+import { openDB } from './store.js?v=47';
+import { starsOf, bestStars, starText } from './stars.js?v=47';
+import { wordHTML, zhuyinHTML } from './writing-panel.js?v=47';
+import { BOOKS, currentBook, profileFor } from './books.js?v=47';
+import { currentSkin, loadSkin } from './skin.js?v=47';
 
 const MAX_DEFAULT = 12, ROWS_PER_PAGE = 12, WEAK_N = 5, CELLS = { model: 1, trace: 3, blank: 4 };
 const $ = s => document.querySelector(s), qs = new URLSearchParams(location.search);
@@ -173,8 +173,8 @@ $('#printBtn').addEventListener('click', async () => { await Promise.all([...doc
 try {
   loaded = await loadContract('../../', BOOKS[BOOK].contract);
   tasks = [...loaded.writingTasks.values()];
-  try { ZY = (await get('./zhuyin.json?v=46')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
-  try { TW = (await get('../vendor-v2/hanzi-writer/data-tw/index.json?v=46')).chars ?? {}; } catch { /* 沒有索引就全用原資料 */ }
+  try { ZY = (await get('./zhuyin.json?v=47')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
+  try { TW = (await get('../vendor-v2/hanzi-writer/data-tw/index.json?v=47')).chars ?? {}; } catch { /* 沒有索引就全用原資料 */ }
   try { // 唯讀：只開 readonly 交易讀作品
     const db = await openDB(), tx = db.transaction('artifacts', 'readonly');
     artifacts = await new Promise((res, rej) => { const r = tx.objectStore('artifacts').index('profileId').getAll(PROFILE_ID); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
