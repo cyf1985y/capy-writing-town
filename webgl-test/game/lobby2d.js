@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=45';
-import { placeAccessory } from './shop.js?v=45';
+import { Album } from './album.js?v=46';
+import { placeAccessory } from './shop.js?v=46';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -391,6 +391,19 @@ export class TownFx2D {
     await sleep(1900);
     rs.forEach(c => this.town.pose(c.name, 'idle')); this.busy = false;
     return token === this.camToken ? this.flyHome() : false;
+  }
+  /** v46 聽寫小考考完：不飛鏡頭，地圖上所有朋友一起跳、四處噴彩帶（全對多噴一些） */
+  async cheer(perfect = false) {
+    if (this.busy) return false;
+    this.busy = true; this.sound?.complete();
+    const vis = [...this.town.chars.values()].filter(c => this._visible(c)), { W, H } = this.town;
+    vis.forEach((c, k) => setTimeout(() => { this.town.pose(c.name, 'happy'); this._anim(c, 'hop', 550); setTimeout(() => this._anim(c, 'hop', 550), 620); }, k * 120));
+    const spots = [[W * .25, H * .35], [W * .5, H * .3], [W * .75, H * .35], [W * .35, H * .65], [W * .65, H * .65]];
+    spots.forEach((p, k) => setTimeout(() => this.spriteBurst(p, { n: perfect ? 14 : 9, spread: 200, d: 1.3 }), k * 220));
+    this.lastCheer = { perfect, residents: vis.map(c => c.name), bursts: spots.length };
+    await sleep(2000);
+    vis.forEach(c => this.town.pose(c.name, 'idle')); this.busy = false;
+    return true;
   }
   // ======== 地圖上的課次標記 ========
   mountPins({ onPick, onStart }) {

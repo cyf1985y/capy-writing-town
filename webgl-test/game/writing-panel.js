@@ -4,9 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=45';
-import { bravo, flash, spark } from './fx.js?v=45';
-import { starsOf } from './stars.js?v=45'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=46';
+import { bravo, flash, spark } from './fx.js?v=46';
+import { starsOf } from './stars.js?v=46'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';

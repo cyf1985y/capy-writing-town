@@ -2,7 +2,7 @@
 // 存檔的 drawnPaths 只有座標、沒有時間，所以是「等速」重播，不是原本的書寫速度。
 // 動畫用 Web Animations，播完即停（不用無限動畫）；prefers-reduced-motion 時直接顯示完成圖。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { zhuyinHTML, wordHTML } from './writing-panel.js?v=45';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=46';
 
 /** 重播速度：字形座標（1024 em）每毫秒走幾單位；每筆最短時間；筆與筆之間的停頓 */
 export const REPLAY = Object.freeze({ unitsPerMs: 1.1, minStrokeMs: 180, gapMs: 150, startMs: 250 });
@@ -23,7 +23,9 @@ const CSS = `
 .cr-words .wz-c{font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif}
 .cr-words .wz .zy{font-size:12px;margin-left:1px}
 .cr-note{margin:2px 0 10px;font-size:12px;color:#8a7a70}
-.cr-actions{display:flex;gap:8px;justify-content:center}
+.cr-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.cr-actions.go{margin-top:8px}
+.cr-actions.go button{background:var(--ui-primaryDark,#E8665C);border-color:var(--ui-primaryDark,#E8665C);color:#fff}
 .cr-actions button{font:inherit;font-size:16px;font-weight:700;padding:8px 14px;border-radius:999px;border:2px solid #F5CBA7;background:#fff;color:#6E473B;cursor:pointer;touch-action:manipulation}
 #done .wp-card{cursor:pointer;touch-action:manipulation}
 `;
@@ -53,6 +55,8 @@ export class CardReplay {
     const info = this.o.info?.(artifact.char) ?? {}, words = cardWords(info), size = 260, pad = Math.round(size * 0.06), n = artifact.drawnPaths.length;
     const t = HanziWriter.getScalingTransform(size, size, pad), width = size * 0.09 * (n >= 12 ? 0.62 : n >= 7 ? 0.78 : 1); // 粗細規則同 renderArtifactCard
     const paths = artifact.drawnPaths.map(pts => `<polyline points="${pts.map(p => `${p.x},${p.y}`).join(' ')}" fill="none" stroke="#2f3e46" stroke-width="${width / t.scale}" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
+    // v46：從字卡直接再練這個字（寫字／部件小偵探）；沒給 callback 或這個字出不了題就不顯示
+    const go = [this.o.onRewrite ? '<button type="button" data-act="rewrite">✏️ 再寫一次</button>' : '', this.o.canParts?.(artifact.char) ? '<button type="button" data-act="parts">🧩 部件小偵探</button>' : ''].filter(Boolean);
     const el = document.createElement('div'); el.className = 'cr-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', `字卡「${artifact.char}」`);
     el.innerHTML = `<div class="cr-box">
       <div class="cr-head"><h2>${artifact.char}</h2>${zhuyinHTML(info.zhuyin)}${info.radical ? `<span class="cr-rad">部首：${info.radical}</span>` : ''}<button type="button" data-act="close">關閉</button></div>
@@ -60,11 +64,13 @@ export class CardReplay {
       <div class="cr-words">${words.map(w => `<span>${wordHTML(w, this.o.wordZhuyin?.(w))}</span>`).join('')}</div>
       <p class="cr-note">這是你寫的筆跡（用固定速度重播）</p>
       <div class="cr-actions"><button type="button" data-act="replay">▶ 再看一次</button><button type="button" data-act="say">🔊 再唸一次</button></div>
+      ${go.length ? `<div class="cr-actions go">${go.join('')}</div>` : ''}
     </div>`;
     for (const ev of ['pointerdown', 'pointermove', 'mousedown', 'mousemove', 'wheel', 'touchstart', 'touchmove']) el.addEventListener(ev, e => e.stopPropagation(), { passive: true });
     el.addEventListener('click', e => {
       const act = e.target.closest('button[data-act]')?.dataset.act;
       if (e.target === el || act === 'close') this.close(); else if (act === 'replay') this.play(); else if (act === 'say') this.say();
+      else if (act === 'rewrite' || act === 'parts') { this.close(); this.log(`card ${act} ${artifact.char}`); (act === 'rewrite' ? this.o.onRewrite : this.o.onParts)?.(artifact); }
     });
     this._onKey = e => { if (e.key === 'Escape') this.close(); }; document.addEventListener('keydown', this._onKey);
     document.body.append(el); this.el = el; this.char = artifact.char; this.words = words;

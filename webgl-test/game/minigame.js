@@ -2,8 +2,8 @@
 // - 找部件：「哪些字有『亻』？」把字卡裡有這個部件的都點出來；
 // - 聽音找字：唸「上，上下的上」，從長得很像的字（上／下）裡點出對的那一個。
 // 資料 game/parts_game.json（Claude 撰寫，人工核對 pending）；字庫＝孩子學過的字（＋目前這一課的字）。
-import { bravo, flash } from './fx.js?v=45';
-import { introText } from './writing-panel.js?v=45';
+import { bravo, flash } from './fx.js?v=46';
+import { introText } from './writing-panel.js?v=46';
 
 const CSS = `
 .pg-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}
@@ -25,27 +25,31 @@ const CSS = `
 const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
 /** 依字庫出題：最多 2 題找部件＋1 題聽音找字。字庫不夠就少出幾題。 */
-export function buildRounds(data, pool, { words = {}, cards = 6 } = {}) {
+export function buildRounds(data, pool, { words = {}, cards = 6, focus = null } = {}) {
   const have = new Set(pool), rounds = [];
-  const partCands = shuffle(data.parts.map(p => ({ ...p, hits: p.chars.filter(c => have.has(c)) })).filter(p => p.hits.length >= 2 && pool.filter(c => !p.chars.includes(c) && !p.maybe?.includes(c)).length >= 2));
+  let partCands = shuffle(data.parts.map(p => ({ ...p, hits: p.chars.filter(c => have.has(c)) })).filter(p => p.hits.length >= 2 && pool.filter(c => !p.chars.includes(c) && !p.maybe?.includes(c)).length >= 2));
+  if (focus) partCands = [...partCands.filter(p => p.hits.includes(focus)), ...partCands.filter(p => !p.hits.includes(focus))]; // v46：從字卡進來的字優先出題
   for (const p of partCands.slice(0, 2)) {
-    const targets = shuffle(p.hits).slice(0, Math.min(3, cards - 2)), others = shuffle(pool.filter(c => !p.chars.includes(c) && !p.maybe?.includes(c))).slice(0, cards - targets.length); // v19：maybe＝看起來像有又不太算的字，不拿來當干擾字
+    const hits = focus && p.hits.includes(focus) ? [focus, ...shuffle(p.hits.filter(c => c !== focus))] : shuffle(p.hits), targets = hits.slice(0, Math.min(3, cards - 2)), others = shuffle(pool.filter(c => !p.chars.includes(c) && !p.maybe?.includes(c))).slice(0, cards - targets.length); // v19：maybe＝看起來像有又不太算的字，不拿來當干擾字
     rounds.push({ kind: 'part', part: p.part, say: p.say, targets, cards: shuffle([...targets, ...others]) });
   }
   const used = new Set(rounds.flatMap(r => r.targets)), overlap = g => g.filter(c => used.has(c)).length; // 優先挑和前面答案不重複的形近字組
-  const alike = shuffle(data.lookalike.map(g => g.filter(c => have.has(c))).filter(g => g.length >= 2)).sort((a, b) => overlap(a) - overlap(b))[0];
-  if (alike) { const t = alike[Math.floor(Math.random() * alike.length)]; rounds.push({ kind: 'listen', targets: [t], cards: shuffle(alike), prompt: introText(t, words[t]) }); }
+  const alike = shuffle(data.lookalike.map(g => g.filter(c => have.has(c))).filter(g => g.length >= 2)).sort((a, b) => (focus ? b.includes(focus) - a.includes(focus) : 0) || overlap(a) - overlap(b))[0];
+  if (alike) { const t = focus && alike.includes(focus) ? focus : alike[Math.floor(Math.random() * alike.length)]; rounds.push({ kind: 'listen', targets: [t], cards: shuffle(alike), prompt: introText(t, words[t]) }); }
+  if (focus) { const k = rounds.findIndex(r => r.targets.includes(focus)); if (k > 0) rounds.unshift(...rounds.splice(k, 1)); } // 有這個字的那題排第一題
   return rounds;
 }
+/** v46：這個字在字庫裡能不能出部件題或聽音找字題（字卡視窗決定要不要顯示「部件小偵探」按鈕） */
+export function canFocus(data, pool, ch) { return buildRounds(data, pool, { focus: ch }).some(r => r.targets.includes(ch)); }
 
 export class PartsGame {
   constructor({ data, voice, sound, log = () => {}, onOpen, onClose }) { Object.assign(this, { data, voice, sound, log, onOpen, onClose }); this.el = null; this.state = null; }
   isOpen() { return !!this.el; }
 
   /** pool：可出題的字；words：字→提示詞（聽音找字用） */
-  open(pool, words = {}) {
+  open(pool, words = {}, focus = null) {
     if (this.el) return false;
-    const rounds = buildRounds(this.data, pool, { words });
+    const rounds = buildRounds(this.data, pool, { words, focus });
     if (!rounds.length) { this.log('parts game: pool too small ' + pool.join('')); return false; }
     if (!document.getElementById('pg-style')) { const s = document.createElement('style'); s.id = 'pg-style'; s.textContent = CSS; document.head.append(s); }
     const el = document.createElement('div'); el.className = 'pg-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', '部件小偵探');
