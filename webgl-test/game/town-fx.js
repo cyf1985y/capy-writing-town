@@ -5,8 +5,8 @@
 // - 擺設（P/S/I 開頭的 instanced 物件）寫完字時在該區彈一下；動畫結束後還原原始矩陣。
 // 存檔不新增欄位：彩度由 passedTaskIds 推導；反應動畫不寫存檔。
 import * as THREE from 'three';
-import { burst } from './fx.js?v=43';
-import { sharedAssets, instanced, EAR_POS } from './characters.js?v=43';
+import { burst } from './fx.js?v=44';
+import { sharedAssets, instanced, EAR_POS } from './characters.js?v=44';
 
 const ease = t => (t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 const WATER = new Set(['Blockout_water', 'Waterfall', 'River_foam', 'Steam']);

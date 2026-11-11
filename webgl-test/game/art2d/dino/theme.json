@@ -1,0 +1,989 @@
+{
+ "_note": "恐龍島主題。圖片放在 sprites/，檔名和甜點版相同（見 PROMPTS_dino.md 的角色對應）。sprites/sprites.json 存在才會出現在家長頁的主題選單。names 是 8 位朋友的暫定名字（順序同契約 album.residents），可以改。",
+ "ready": true,
+ "_ready": "true＝圖片已切好放進 sprites/，家長頁會出現「恐龍島」",
+ "title": "恐龍寶寶 · 寫字恐龍島",
+ "albumTitle": "恐龍朋友圖鑑",
+ "sprites": "sprites/",
+ "manifest": "sprites.json",
+ "ui": {
+  "primary": "#4FB286",
+  "primaryDark": "#2F8F68",
+  "accent": "#FF9F43",
+  "bg": "#F1F8EC",
+  "ink": "#3B4A3F"
+ },
+ "names": [
+  "暴暴",
+  "劍劍",
+  "角角",
+  "冠冠",
+  "長長",
+  "飛飛",
+  "甲甲",
+  "帆帆"
+ ],
+ "namesStatus": "pending：暫定，等使用者或小朋友取名",
+ "anchors": {
+  "capy_cocoa_idle": {
+   "hat": {
+    "x": 0.546,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.322,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_cocoa_happy": {
+   "hat": {
+    "x": 0.556,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.315,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_cocoa_surprised": {
+   "hat": {
+    "x": 0.54,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.32,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_cocoa_wave": {
+   "hat": {
+    "x": 0.496,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.293,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_orange_idle": {
+   "hat": {
+    "x": 0.502,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.235,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_orange_happy": {
+   "hat": {
+    "x": 0.493,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.272,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_orange_surprised": {
+   "hat": {
+    "x": 0.496,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.236,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_orange_wave": {
+   "hat": {
+    "x": 0.502,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.234,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_a_idle": {
+   "hat": {
+    "x": 0.473,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.231,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_a_happy": {
+   "hat": {
+    "x": 0.464,
+    "y": 0.094,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.243,
+    "y": 0.169,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_a_surprised": {
+   "hat": {
+    "x": 0.45,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.216,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_a_wave": {
+   "hat": {
+    "x": 0.442,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.217,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_b_idle": {
+   "hat": {
+    "x": 0.493,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.238,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_b_happy": {
+   "hat": {
+    "x": 0.492,
+    "y": 0.094,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.246,
+    "y": 0.169,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_b_surprised": {
+   "hat": {
+    "x": 0.463,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.226,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_b_wave": {
+   "hat": {
+    "x": 0.513,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.238,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_d5_idle": {
+   "hat": {
+    "x": 0.454,
+    "y": 0.089,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.205,
+    "y": 0.164,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_d5_happy": {
+   "hat": {
+    "x": 0.488,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.225,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_d5_surprised": {
+   "hat": {
+    "x": 0.452,
+    "y": 0.089,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.205,
+    "y": 0.164,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_d5_wave": {
+   "hat": {
+    "x": 0.474,
+    "y": 0.089,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.214,
+    "y": 0.164,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_d6_idle": {
+   "hat": {
+    "x": 0.491,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.27,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_d6_happy": {
+   "hat": {
+    "x": 0.52,
+    "y": 0.094,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.334,
+    "y": 0.169,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_d6_surprised": {
+   "hat": {
+    "x": 0.492,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.269,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "capy_d6_wave": {
+   "hat": {
+    "x": 0.462,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.255,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_d7_idle": {
+   "hat": {
+    "x": 0.42,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.196,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_d7_happy": {
+   "hat": {
+    "x": 0.414,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.193,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_d7_surprised": {
+   "hat": {
+    "x": 0.423,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.199,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_d7_wave": {
+   "hat": {
+    "x": 0.409,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.188,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_d8_idle": {
+   "hat": {
+    "x": 0.424,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.194,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_d8_happy": {
+   "hat": {
+    "x": 0.415,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.191,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_d8_surprised": {
+   "hat": {
+    "x": 0.414,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.191,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.1,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  },
+  "bunny_d8_wave": {
+   "hat": {
+    "x": 0.4,
+    "y": 0.092,
+    "s": 1,
+    "rot": 0
+   },
+   "clip": {
+    "x": 0.182,
+    "y": 0.167,
+    "s": 1,
+    "rot": -12
+   },
+   "side": {
+    "x": 1.12,
+    "y": 0.99,
+    "s": 1,
+    "rot": 0
+   }
+  }
+ },
+ "_anchors": "配件掛點（恐龍專用，蓋過 accessories.json 的 anchors），由 build_anchors.py 產生",
+ "review": {
+  "icon": "🥚",
+  "name": "恐龍蛋孵蛋",
+  "cont": "繼續孵蛋"
+ },
+ "accessories": {
+  "acc_hat_party": {
+   "name": "葉子尖帽",
+   "file": "acc_hat_party.webp",
+   "w": 146,
+   "h": 200,
+   "size": 0.3,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  "acc_hat_sun": {
+   "name": "大葉子帽",
+   "file": "acc_hat_sun.webp",
+   "w": 305,
+   "h": 200,
+   "size": 0.5,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  "acc_hat_strawberry": {
+   "name": "蛋殼帽",
+   "file": "acc_hat_strawberry.webp",
+   "w": 285,
+   "h": 191,
+   "size": 0.5,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  "acc_hat_cupcake": {
+   "name": "火山帽",
+   "file": "acc_hat_cupcake.webp",
+   "w": 197,
+   "h": 200,
+   "size": 0.4,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  "acc_hat_chef": {
+   "name": "探險帽",
+   "file": "acc_hat_chef.webp",
+   "w": 274,
+   "h": 200,
+   "size": 0.493,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  "acc_hat_pudding": {
+   "name": "恐龍頭套",
+   "file": "acc_hat_pudding.webp",
+   "w": 194,
+   "h": 200,
+   "size": 0.5,
+   "px": 0.5,
+   "py": 0.72,
+   "rot": 0
+  },
+  "acc_hat_donut": {
+   "name": "花草頭環",
+   "file": "acc_hat_donut.webp",
+   "w": 266,
+   "h": 200,
+   "size": 0.479,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  "acc_hat_frog": {
+   "name": "三角龍帽",
+   "file": "acc_hat_frog.webp",
+   "w": 243,
+   "h": 200,
+   "size": 0.54,
+   "px": 0.5,
+   "py": 0.72,
+   "rot": 0
+  },
+  "acc_hat_wizard": {
+   "name": "骨頭頭盔",
+   "file": "acc_hat_wizard.webp",
+   "w": 226,
+   "h": 200,
+   "size": 0.46,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  "acc_hat_crown": {
+   "name": "恐龍王冠",
+   "file": "acc_hat_crown.webp",
+   "w": 249,
+   "h": 200,
+   "size": 0.448,
+   "px": 0.5,
+   "py": 0.9,
+   "rot": 0
+  },
+  "acc_clip_flower": {
+   "name": "小葉子",
+   "file": "acc_clip_flower.webp",
+   "w": 126,
+   "h": 120,
+   "size": 0.174,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_clip_star": {
+   "name": "恐龍腳印",
+   "file": "acc_clip_star.webp",
+   "w": 118,
+   "h": 120,
+   "size": 0.169,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_clip_cherry": {
+   "name": "恐龍蛋",
+   "file": "acc_clip_cherry.webp",
+   "w": 105,
+   "h": 120,
+   "size": 0.159,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_clip_candy": {
+   "name": "恐龍牙",
+   "file": "acc_clip_candy.webp",
+   "w": 114,
+   "h": 120,
+   "size": 0.166,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_clip_heart": {
+   "name": "小骨頭",
+   "file": "acc_clip_heart.webp",
+   "w": 183,
+   "h": 120,
+   "size": 0.21,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_clip_bow": {
+   "name": "葉子蝴蝶結",
+   "file": "acc_clip_bow.webp",
+   "w": 142,
+   "h": 120,
+   "size": 0.185,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_clip_rainbow": {
+   "name": "流星",
+   "file": "acc_clip_rainbow.webp",
+   "w": 180,
+   "h": 120,
+   "size": 0.208,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_clip_clover": {
+   "name": "蕨葉",
+   "file": "acc_clip_clover.webp",
+   "w": 103,
+   "h": 120,
+   "size": 0.157,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_clip_orange": {
+   "name": "菊石",
+   "file": "acc_clip_orange.webp",
+   "w": 138,
+   "h": 120,
+   "size": 0.182,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_clip_butterfly": {
+   "name": "蜻蜓",
+   "file": "acc_clip_butterfly.webp",
+   "w": 154,
+   "h": 120,
+   "size": 0.193,
+   "px": 0.5,
+   "py": 0.5,
+   "rot": 0
+  },
+  "acc_side_lollipop": {
+   "name": "大肉骨頭",
+   "file": "acc_side_lollipop.webp",
+   "w": 162,
+   "h": 240,
+   "size": 0.351,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  "acc_side_pinwheel": {
+   "name": "小椰子樹",
+   "file": "acc_side_pinwheel.webp",
+   "w": 224,
+   "h": 240,
+   "size": 0.523,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  "acc_side_balloon": {
+   "name": "恐龍氣球",
+   "file": "acc_side_balloon.webp",
+   "w": 143,
+   "h": 240,
+   "size": 0.369,
+   "px": 0.5,
+   "py": 0.98,
+   "rot": 0
+  },
+  "acc_side_shortcake": {
+   "name": "寶石寶箱",
+   "file": "acc_side_shortcake.webp",
+   "w": 238,
+   "h": 240,
+   "size": 0.416,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  "acc_side_sundae": {
+   "name": "小火山",
+   "file": "acc_side_sundae.webp",
+   "w": 214,
+   "h": 240,
+   "size": 0.446,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  "acc_side_tulip": {
+   "name": "蕨葉盆栽",
+   "file": "acc_side_tulip.webp",
+   "w": 158,
+   "h": 240,
+   "size": 0.329,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  "acc_side_macaron": {
+   "name": "恐龍蛋窩",
+   "file": "acc_side_macaron.webp",
+   "w": 279,
+   "h": 240,
+   "size": 0.465,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  "acc_side_duck": {
+   "name": "翼龍玩具",
+   "file": "acc_side_duck.webp",
+   "w": 278,
+   "h": 240,
+   "size": 0.51,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  "acc_side_cake": {
+   "name": "小營火",
+   "file": "acc_side_cake.webp",
+   "w": 238,
+   "h": 240,
+   "size": 0.436,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  },
+  "acc_side_teapot": {
+   "name": "水果石碗",
+   "file": "acc_side_teapot.webp",
+   "w": 238,
+   "h": 240,
+   "size": 0.377,
+   "px": 0.5,
+   "py": 1.0,
+   "rot": 0
+  }
+ },
+ "_accessories": "恐龍版配件（代號和甜點版相同，換圖、名字、大小），由 cut_dino_acc.py 產生",
+ "residentSprites": [
+  "capy_cocoa",
+  "bunny_a",
+  "capy_orange",
+  "bunny_b",
+  "capy_d5",
+  "capy_d6",
+  "bunny_d7",
+  "bunny_d8"
+ ],
+ "_residentSprites": "8 位朋友各用一隻恐龍（順序同契約 album.residents）：暴龍、劍龍、三角龍、副櫛龍、腕龍、翼龍、甲龍、棘龍"
+}

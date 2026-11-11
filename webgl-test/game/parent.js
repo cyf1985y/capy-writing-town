@@ -1,8 +1,8 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=43';
-import { LEVELS } from './writing-panel.js?v=43';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=43';
+import { starsOf } from './stars.js?v=44';
+import { LEVELS } from './writing-panel.js?v=44';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=44';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -86,7 +86,7 @@ const CSS = `
 export class ParentPanel {
   /** rewards（可省略）：{ key, totals: () => ({ total, maxTotal }), onChange }，見 rewards.js；shop（可省略）：{ summary: () => ({ count, all, spent, balance, names }) }，見 shop.js */
   /** books（可省略）：{ list: [{ id, label }], current, onPick(id) }，見 books.js */
-  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, dictation = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, dictation, log }); this.el = null; }
+  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, skins = null, dictation = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, skins, dictation, log }); this.el = null; }
   isOpen() { return !!this.el; }
   open() {
     if (this.el) return;
@@ -124,8 +124,10 @@ export class ParentPanel {
         <span>筆畫名稱</span>${seg('strokeVoice', [[true, '唸出來'], [false, '不唸']])}
         <span>複習方式</span>${seg('reviewDictation', [[true, '聽寫'], [false, '照進度']])}
         ${this.shop ? `<span>配件商店</span>${seg('shop', [[true, '開'], [false, '關']])}` : ''}
+        ${this.skins?.list.length > 1 ? `<span>遊戲主題</span><div class="seg">${this.skins.list.map(b => `<button type="button" data-skin="${esc(b.id)}" aria-pressed="${b.id === this.skins.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
         ${this.books ? `<span>課本版本</span><div class="seg">${this.books.list.map(b => `<button type="button" data-book="${esc(b.id)}" aria-pressed="${b.id === this.books.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
       </div>
+      ${this.skins?.list.length > 1 ? '<p class="pp-note">換遊戲主題只是換圖案和朋友的樣子，會重新載入；學會的字、星星、獎勵和配件都不變。</p>' : ''}
       ${this.books ? '<p class="pp-note">換課本版本會重新載入。每個版本的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各版本分別做。</p>' : ''}
       <p class="pp-note">設定只存在這台裝置。筆畫名稱與口訣由 AI 撰寫，若和課本不同請以課本為準。</p>
       <p class="pp-note">🔍 <a href="./game/check.html" target="_blank" rel="noopener">家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
@@ -137,6 +139,7 @@ export class ParentPanel {
       if (b.dataset.act === 'close') return this.close();
       if (b.dataset.act === 'export' || b.dataset.act === 'import') return this._backupAct(b.dataset.act);
       if (b.dataset.rw) return this._rewardAct(b);
+      if (b.dataset.skin) { this.log('skin ' + b.dataset.skin); return this.skins.onPick(b.dataset.skin); }
       if (b.dataset.book) { this.log('book ' + b.dataset.book); return this.books.onPick(b.dataset.book); }
       if (b.dataset.k) {
         const s = loadSettings(), v = b.dataset.v; s[b.dataset.k] = v === 'true' ? true : v === 'false' ? false : v; saveSettings(s);

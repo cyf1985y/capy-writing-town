@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=43';
-import { placeAccessory } from './shop.js?v=43';
+import { Album } from './album.js?v=44';
+import { placeAccessory } from './shop.js?v=44';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -456,9 +456,9 @@ const ALBUM_CSS = (frame, locked) => `
 .al2 .al-grid{gap:12px;row-gap:30px;padding-bottom:16px}
 .al2 .al-card{position:relative;border:0;background:url(${frame}) center/100% 100% no-repeat;aspect-ratio:397/600;padding:21% 14% 0;justify-content:flex-start;border-radius:0;gap:0}
 .al2 .al-card.locked{background-image:url(${locked})}
-.al2 .al-card img{width:100%;aspect-ratio:1;object-fit:contain;background:none;border-radius:0}
+.al2 .al-card img{position:absolute;left:21%;width:58%;top:31%;height:44%;aspect-ratio:auto;object-fit:contain;object-position:50% 100%;background:none;border-radius:0}
 .al2 .al-card.locked img{visibility:hidden}
-.al2 .al-card b{position:absolute;left:0;right:0;bottom:9.5%;text-align:center;font-size:clamp(13px,2.4vw,17px)}
+.al2 .al-card b{position:absolute;left:18%;right:18%;top:82.8%;bottom:auto;transform:translateY(-50%);line-height:1;white-space:nowrap;text-align:center;font-size:clamp(12px,1.9vw,16px)}
 .al2 .al-card small{position:absolute;left:4%;right:4%;top:100%;margin-top:2px;text-align:center;font-size:11px;line-height:1.2}
 .al2 .al-card.new{border:0;animation:al-glow2 1.2s ease-in-out 3}
 @keyframes al-glow2{50%{filter:drop-shadow(0 0 10px rgba(240,140,0,.8))}}
