@@ -26,10 +26,10 @@ h1{font-size:20px;margin:0 0 8px;display:flex;align-items:center;gap:8px}
 #extraBtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0 0}
 @media (min-width:600px){#actionRow{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px}#actionRow #startBtn{margin:0}#actionRow #extraBtns{margin:0}} /* v12：寬螢幕三顆鈕排一列，小鎮不被擠小 */
 #extraBtns button{margin:0}
-#partsBtn[hidden]{display:none}
-#reviewBtn,#partsBtn{display:block;margin:10px auto 0;font:inherit;font-size:19px;font-weight:700;padding:10px 22px;border-radius:999px;border:3px solid #fff;background:#FFF8E7;color:#6E473B;box-shadow:0 6px 16px rgba(0,0,0,.18);cursor:pointer;touch-action:manipulation}
+#partsBtn[hidden],#dictBtn[hidden]{display:none}
+#reviewBtn,#partsBtn,#dictBtn{display:block;margin:10px auto 0;font:inherit;font-size:19px;font-weight:700;padding:10px 22px;border-radius:999px;border:3px solid #fff;background:#FFF8E7;color:#6E473B;box-shadow:0 6px 16px rgba(0,0,0,.18);cursor:pointer;touch-action:manipulation}
 #reviewBtn[hidden]{display:none}
-#reviewBtn small,#partsBtn small{display:block;font-size:13px;font-weight:400;opacity:.8}
+#reviewBtn small,#partsBtn small,#dictBtn small{display:block;font-size:13px;font-weight:400;opacity:.8}
 #startBtn:disabled{opacity:.6;cursor:default}
 #status{margin:8px 0;min-height:1.4em}
 #status.err{color:#c92a2a;font-weight:600}
@@ -68,32 +68,33 @@ details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;b
 <div id="chapters" aria-label="選課"></div>
 <div id="stage"></div>
 <div id="actionRow"><button id="startBtn" type="button" disabled>載入中…</button>
-<div id="extraBtns"><button id="reviewBtn" type="button" hidden></button><button id="partsBtn" type="button" hidden>🧩 部件小偵探<small>找一找字裡的小積木</small></button></div></div>
+<div id="extraBtns"><button id="reviewBtn" type="button" hidden></button><button id="partsBtn" type="button" hidden>🧩 部件小偵探<small>找一找字裡的小積木</small></button><button id="dictBtn" type="button" hidden>👂 聽寫小考<small>聽一聽，拼注音、寫國字</small></button></div></div>
 <p id="status">載入契約與題庫…</p>
 <div id="done"></div>
 <details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
 <script type="importmap">{"imports":{"three":"./vendor-v2/build/three.module.js","three/addons/":"./vendor-v2/examples/jsm/"}}</script>
 <script type="module">
-import { loadContract, describeLoadError } from './game/content.js?v=41';
-import { WritingPanel, renderArtifactCard, levelIcon } from './game/writing-panel.js?v=41';
-import { loadTown } from './game/town-loader.js?v=41';
-import { Lobby } from './game/lobby.js?v=41';
-import { Store, clearProfile } from './game/store.js?v=41';
-import { Reward } from './game/reward.js?v=41';
-import { Sound, Voice } from './game/fx.js?v=41';
-import { TownFx, residentNames } from './game/town-fx.js?v=41';
-import { Album } from './game/album.js?v=41';
-import { applyTheme, applyUiColors } from './game/theme.js?v=41';
-import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=41';
-import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=41';
-import { PartsGame } from './game/minigame.js?v=41';
-import { ParentPanel, loadSettings, SETTINGS_KEY } from './game/parent.js?v=41';
-import { requestPersist, exportBackup, importBackup, saveBackupFile } from './game/backup.js?v=41';
-import { CardReplay } from './game/card-replay.js?v=41';
-import { rewardsKey, loadRewards, rewardState, childStatus, mergeRewardsJSON } from './game/rewards.js?v=41';
-import { shopKey, loadShop, shopState, outfitOf, mergeShopJSON, loadCatalog } from './game/shop.js?v=41';
-import { ShopPanel } from './game/shop-ui.js?v=41';
-import { BOOKS, currentBook, saveBook, profileFor, lessonKeyFor } from './game/books.js?v=41';
+import { loadContract, describeLoadError } from './game/content.js?v=42';
+import { WritingPanel, renderArtifactCard, levelIcon } from './game/writing-panel.js?v=42';
+import { loadTown } from './game/town-loader.js?v=42';
+import { Lobby } from './game/lobby.js?v=42';
+import { Store, clearProfile } from './game/store.js?v=42';
+import { Reward } from './game/reward.js?v=42';
+import { Sound, Voice } from './game/fx.js?v=42';
+import { TownFx, residentNames } from './game/town-fx.js?v=42';
+import { Album } from './game/album.js?v=42';
+import { applyTheme, applyUiColors } from './game/theme.js?v=42';
+import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=42';
+import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=42';
+import { PartsGame } from './game/minigame.js?v=42';
+import { Dictation, DICTATION_N } from './game/dictation.js?v=42';
+import { ParentPanel, loadSettings, SETTINGS_KEY } from './game/parent.js?v=42';
+import { requestPersist, exportBackup, importBackup, saveBackupFile } from './game/backup.js?v=42';
+import { CardReplay } from './game/card-replay.js?v=42';
+import { rewardsKey, loadRewards, rewardState, childStatus, mergeRewardsJSON } from './game/rewards.js?v=42';
+import { shopKey, loadShop, shopState, outfitOf, mergeShopJSON, loadCatalog } from './game/shop.js?v=42';
+import { ShopPanel } from './game/shop-ui.js?v=42';
+import { BOOKS, currentBook, saveBook, profileFor, lessonKeyFor } from './game/books.js?v=42';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 // v19 課本版本：每個版本一份契約；profileId 加版本後綴，進度、星星、獎勵、配件都分開（康軒沒有後綴，舊存檔照舊）
@@ -167,7 +168,7 @@ reward.applyState({ rewardCount: saved.ledger.length });
 townFx = new (LOBBY2D ? TownFx2D : TownFx)({ town, lobby, contract, reward, sound, stage: $('#stage'), log });
 diag.townFx = { tintedMaterials: townFx.tintedMaterials, residents: townFx.residents.map(r => r.name + '@' + townFx.zoneIds[r.zone]), props: townFx.props.length, color: townFx.setProgress(saved.passedTaskIds, { instant: true }) };
 // v18 配件商店（只有 2D 大廳）：目錄讀不到就不出現商店，遊戲照常
-const SHOP_KEY = shopKey(PROFILE_ID), CATALOG = LOBBY2D ? await loadCatalog('./game/art2d/accessories.json?v=41') : null;
+const SHOP_KEY = shopKey(PROFILE_ID), CATALOG = LOBBY2D ? await loadCatalog('./game/art2d/accessories.json?v=42') : null;
 if (CATALOG) { town.setAccessories(CATALOG, './game/art2d/' + CATALOG.base); const d = loadShop(SHOP_KEY); for (const name of town.chars.keys()) town.setOutfit(name, outfitOf(d, name)); }
 log('accessories ' + (CATALOG ? CATALOG.items.length : 'off'));
 const album = new (LOBBY2D ? Album2D : Album)({ town, lobby, townFx, contract, voice, sound, log, seenKey: 'capy_album_seen' + BOOKS[BOOK].suffix }); // v4：卡比巴拉圖鑑（完成一課解鎖一隻）
@@ -177,7 +178,7 @@ $('#albumBtn').addEventListener('click', () => { if (panel.isOpen() || shop?.isO
 /** v9：字卡下方顯示這一次寫的星星 */
 function starCard(a) { const c = renderArtifactCard(a, { size: 72 }), n = starsOf(a), t = document.createElement('span'); t.className = 'cardStars'; t.textContent = starText(n) + ((a.meta?.level ?? 1) > 1 ? levelIcon(a.meta.level) : ''); /* v12：提示／聽寫關寫的卡加關卡圖示 */ t.setAttribute('aria-label', n + ' 顆星'); c.append(t);
   /* v17-C：點字卡重播自己的筆跡 */ c.setAttribute('role', 'button'); c.tabIndex = 0; c.setAttribute('aria-label', `看我寫的「${a.char}」`);
-  const openCard = () => { if (panel.isOpen() || partsGame?.isOpen() || opening) return; sound.unlock(); cardReplay.open(a); };
+  const openCard = () => { if (panel.isOpen() || partsGame?.isOpen() || dictation?.isOpen() || opening) return; sound.unlock(); cardReplay.open(a); };
   c.addEventListener('click', openCard); c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(); } });
   return c; }
 function renderCards() { $('#done').replaceChildren(); for (const a of saved.artifacts.filter(a => demoIds.includes(a.taskId)).sort((x, y) => x.createdAt.localeCompare(y.createdAt))) $('#done').append(starCard(a)); $('#done').scrollLeft = $('#done').scrollWidth; }
@@ -221,17 +222,17 @@ function friendGoal(extraTaskId) {
 }
 const friendNote = g => g && g.left <= Math.ceil(g.total / 2) ? `再寫 ${g.left} 個字，新朋友就來了！` : '';
 // v11 漢字積木資料（獨立檔，不動已鎖 SHA 的題庫）：載入失敗就照舊只唸「字，詞的字」
-let ENRICH = {}; try { const r = await fetch('./game/char_enrichment.json?v=41', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
+let ENRICH = {}; try { const r = await fetch('./game/char_enrichment.json?v=42', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
 // v19：這一冊自己的口訣（提示詞不同、新字），同一字蓋過共用的
-if (BOOKS[BOOK].enrichment) try { const r = await fetch('./game/' + BOOKS[BOOK].enrichment + '?v=41', { cache: 'no-cache' }); if (r.ok) Object.assign(ENRICH, (await r.json()).chars ?? {}); } catch (e) { log('book enrichment load failed: ' + e); }
+if (BOOKS[BOOK].enrichment) try { const r = await fetch('./game/' + BOOKS[BOOK].enrichment + '?v=42', { cache: 'no-cache' }); if (r.ok) Object.assign(ENRICH, (await r.json()).chars ?? {}); } catch (e) { log('book enrichment load failed: ' + e); }
 log('enrichment ' + Object.keys(ENRICH).length + ' chars');
 // v12 台灣標準筆順：和教育部筆順網不同的字改讀 data-tw（只重排／切開原資料）；索引載入失敗就照舊用原資料
-let TW_CHARS = new Set(); try { const r = await fetch('./vendor-v2/hanzi-writer/data-tw/index.json?v=41', { cache: 'no-cache' }); if (r.ok) TW_CHARS = new Set(Object.keys((await r.json()).chars ?? {})); } catch (e) { log('data-tw index load failed: ' + e); }
+let TW_CHARS = new Set(); try { const r = await fetch('./vendor-v2/hanzi-writer/data-tw/index.json?v=42', { cache: 'no-cache' }); if (r.ok) TW_CHARS = new Set(Object.keys((await r.json()).chars ?? {})); } catch (e) { log('data-tw index load failed: ' + e); }
 log('data-tw ' + TW_CHARS.size + ' chars');
 // v12 筆畫名稱（台灣用語，人工核對 pending）：載入失敗就不唸名稱
-let SNAMES = {}; try { const r = await fetch('./game/stroke_names.json?v=41', { cache: 'no-cache' }); if (r.ok) SNAMES = (await r.json()).chars ?? {}; } catch (e) { log('stroke names load failed: ' + e); }
+let SNAMES = {}; try { const r = await fetch('./game/stroke_names.json?v=42', { cache: 'no-cache' }); if (r.ok) SNAMES = (await r.json()).chars ?? {}; } catch (e) { log('stroke names load failed: ' + e); }
 // v14 詞語注音（教育部辭典，人工核對 pending）：載入失敗就只顯示單字注音
-let ZY = {}; try { const r = await fetch('./game/zhuyin.json?v=41', { cache: 'no-cache' }); if (r.ok) ZY = (await r.json()).words ?? {}; } catch (e) { log('zhuyin load failed: ' + e); }
+let ZY = {}; try { const r = await fetch('./game/zhuyin.json?v=42', { cache: 'no-cache' }); if (r.ok) ZY = (await r.json()).words ?? {}; } catch (e) { log('zhuyin load failed: ' + e); }
 // v17-C 字卡重播：詞只用題庫 characters[].words（沒有就用任務的提示詞），部首只顯示題庫的文字
 const CHAR_INFO = new Map((loaded.content.characters ?? []).map(c => [c.char, c]));
 const TASK_BY_CHAR = new Map([...loaded.writingTasks.values()].map(t => [t.char, t]));
@@ -279,7 +280,7 @@ const panel = new WritingPanel({
     if (info.reason === 'done') pickNext();
     const reviewDoneNow = review && review.i >= review.ids.length;
     if (reviewDoneNow) { try { localStorage.setItem(REVIEW_KEY, today()); } catch { /* 私密模式 */ } review = null; voice.say('甜點店補貨完成！謝謝你！'); }
-    updateReviewBtn(); updatePartsBtn();
+    updateReviewBtn(); updatePartsBtn(); updateDictBtn();
     // 已領過獎的字再寫一次：只保存作品、沒有動畫，要在狀態列講清楚，孩子才不會以為壞了
     const note = effect && !effect.rewardNew ? `「${effect.char}」又寫了一次，很棒！（這個字的獎勵之前領過了）` : '';
     const friendNote = newFriends.length ? `新朋友「${newFriends.map(r => r.name).join('、')}」加入圖鑑！點「📖 圖鑑」看看。` : '';
@@ -297,7 +298,7 @@ const panel = new WritingPanel({
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
-if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=41'); installTestDriver(panel); window.__game = { get parent() { return parent; }, get settings() { return SETTINGS; }, get partsGame() { return partsGame; }, reviewPicks: (...a) => reviewPicks(...a), book: BOOK, profileId: PROFILE_ID, get enrich() { return ENRICH; }, get shop() { return shop; }, shopKey: SHOP_KEY, catalog: CATALOG, get review() { return review; }, LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, cardReplay, switchChapter, rewards: { key: REWARDS_KEY, totals: starTotals, update: updateRewardLine }, backupIO: { exportObj: () => exportObj(), importObj: o => importObj(o) }, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=42'); installTestDriver(panel); window.__game = { get parent() { return parent; }, get settings() { return SETTINGS; }, get partsGame() { return partsGame; }, get dictation() { return dictation; }, reviewPicks: (...a) => reviewPicks(...a), book: BOOK, profileId: PROFILE_ID, get enrich() { return ENRICH; }, get shop() { return shop; }, shopKey: SHOP_KEY, catalog: CATALOG, get review() { return review; }, LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, cardReplay, switchChapter, rewards: { key: REWARDS_KEY, totals: starTotals, update: updateRewardLine }, backupIO: { exportObj: () => exportObj(), importObj: o => importObj(o) }, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
@@ -309,6 +310,7 @@ townFx.mountPins({ onPick: l => switchChapter('lesson_' + l), onStart: l => { if
 pickNext(); renderChapters();
 
 // v12 每日複習「甜點店補貨」：間隔重複（3 星乾淨寫完一次就升一格：當天、1、2、4、7、14 天；寫錯或用提示就回到 0），到期的、常錯的優先
+const DICT_KEY = 'capy_dictation_' + PROFILE_ID; // v42 聽寫小考「要再練的字」
 const REVIEW_KEY = 'capy_review_' + PROFILE_ID, REVIEW_N = 3, INTERVALS = [0, 1, 2, 4, 7, 14];
 const today = (d = new Date()) => d.toLocaleDateString('sv'); // YYYY-MM-DD（本機時區）
 const dayDiff = (a, b) => Math.round((new Date(b) - new Date(a)) / 864e5);
@@ -348,7 +350,7 @@ $('#reviewBtn').addEventListener('click', () => { sound.unlock(); startReview();
 let SETTINGS = loadSettings();
 // v14 存檔保護：請瀏覽器長期保存；家長面板可備份／還原（合併，不刪現有資料）
 let STORAGE = null; requestPersist().then(i => { STORAGE = i; diag.storage = i; log('storage ' + JSON.stringify(i)); });
-const BACKUP_LOCAL = [REVIEW_KEY, SETTINGS_KEY, LESSON_KEY, REWARDS_KEY, SHOP_KEY];
+const BACKUP_LOCAL = [REVIEW_KEY, SETTINGS_KEY, LESSON_KEY, REWARDS_KEY, SHOP_KEY, DICT_KEY];
 const exportObj = () => exportBackup(store.db, { profileId: PROFILE_ID, localKeys: BACKUP_LOCAL });
 const importObj = obj => importBackup(store.db, obj, { profileId: PROFILE_ID, localKeys: BACKUP_LOCAL, localMerge: { [REWARDS_KEY]: mergeRewardsJSON, [SHOP_KEY]: mergeShopJSON } });
 const backup = {
@@ -367,7 +369,7 @@ const shopSummary = () => { if (!CATALOG) return null; const d = loadShop(SHOP_K
 const parent = new ParentPanel({ log, backup, rewards: { key: REWARDS_KEY, totals: starTotals, onChange: updateRewardLine }, shop: CATALOG ? { summary: shopSummary } : null, books: { list: Object.entries(BOOKS).map(([id, b]) => ({ id, label: b.label })), current: BOOK, onPick: id => { if (id === BOOK || !saveBook(id)) return; const u = new URL(location.href); u.searchParams.delete('book'); location.href = u.toString(); } }, onSettings: s => { SETTINGS = s; updateReviewBtn(); updateShopBtn(); },
   getData: () => ({ artifacts: saved.artifacts, passedTaskIds: saved.passedTaskIds, tasks: loaded.writingTasks, names: SNAMES,
     totalChars: new Set(Object.keys(contract.modes).filter(k => k.startsWith('lesson_')).flatMap(k => contract.modes[k].writingTaskIds).map(id => loaded.writingTasks.get(id)?.char)).size }) });
-$('#parentBtn').addEventListener('click', () => { if (!panel.isOpen() && !partsGame?.isOpen() && !shop?.isOpen()) parent.open(); });
+$('#parentBtn').addEventListener('click', () => { if (!panel.isOpen() && !partsGame?.isOpen() || dictation?.isOpen() && !shop?.isOpen()) parent.open(); });
 // v18 配件商店：孩子自己用星星買配件、幫已解鎖的朋友換裝（星星和家長獎勵分開算）；家長面板可關掉商店按鈕
 const shop = CATALOG && new ShopPanel({ key: SHOP_KEY, catalog: CATALOG, base: './game/art2d/' + CATALOG.base, town, voice, sound, log, totals: starTotals,
   friends: () => townFx.unlockedNames(saved.passedTaskIds).map(o => ({ object: o, name: contract.album.residents.find(r => r.object === o)?.name ?? '', sprite: town.chars.get(o)?.sprite })).filter(f => f.sprite),
@@ -377,18 +379,29 @@ const shop = CATALOG && new ShopPanel({ key: SHOP_KEY, catalog: CATALOG, base: '
   onClose: () => { lobby.resume('shop'); $('#startBtn').disabled = false; } });
 function updateShopBtn() { $('#shopBtn').hidden = !shop || SETTINGS.shop === false; }
 if (shop) $('#shopBtn').innerHTML = `<img alt="" src="./game/art2d/${CATALOG.base}${CATALOG.ui.btn}"><span class="lbl">商店</span>`; $('#shopBtn').setAttribute('aria-label', '配件商店');
-$('#shopBtn').addEventListener('click', () => { if (!shop || panel.isOpen() || partsGame?.isOpen() || parent.isOpen() || opening) return; sound.unlock(); shop.open(); });
+$('#shopBtn').addEventListener('click', () => { if (!shop || panel.isOpen() || partsGame?.isOpen() || dictation?.isOpen() || parent.isOpen() || opening) return; sound.unlock(); shop.open(); });
 // v12 部件小偵探：學過 4 個字以上才出現；字庫＝學過的字＋目前這一課的字
-let PARTS = null; try { const r = await fetch('./game/parts_game.json?v=41', { cache: 'no-cache' }); if (r.ok) PARTS = await r.json(); } catch (e) { log('parts game load failed: ' + e); }
+let PARTS = null; try { const r = await fetch('./game/parts_game.json?v=42', { cache: 'no-cache' }); if (r.ok) PARTS = await r.json(); } catch (e) { log('parts game load failed: ' + e); }
 const partsGame = PARTS && new PartsGame({ data: PARTS, voice, sound, log,
   onOpen: () => { lobby.pause('parts'); $('#startBtn').disabled = true; },
   onClose: r => { lobby.resume('parts'); $('#startBtn').disabled = false; diag.partsGame = r; setStatus(`🧩 部件小偵探完成 ${r.rounds}／${r.total} 題！` + nextLabel()); } });
 const charsOf = ids => ids.map(id => loaded.writingTasks.get(id)?.char).filter(Boolean);
 function updatePartsBtn() { $('#partsBtn').hidden = !partsGame || new Set(charsOf(saved.passedTaskIds)).size < 4; }
 $('#partsBtn').addEventListener('click', () => {
-  if (panel.isOpen() || partsGame?.isOpen()) return; sound.unlock();
+  if (panel.isOpen() || partsGame?.isOpen() || dictation?.isOpen()) return; sound.unlock();
   const pool = [...new Set([...charsOf(saved.passedTaskIds), ...charsOf(demoIds)])], words = Object.fromEntries([...loaded.writingTasks.values()].map(t => [t.char, t.hint_word]));
   if (!partsGame.open(pool, words)) setStatus('再多學幾個字，就能玩部件小偵探囉！');
+});
+// v42 聽寫小考（先做康軒一上）：學過 5 個字以上才出現；一次 5 題，先拼注音再默寫國字；不動寫字存檔，只記「要再練的字」
+const dictation = BOOK === 'kangxuan_1a' ? new Dictation({ voice, sound, log, storageKey: DICT_KEY,
+  dataBaseFor: ch => TW_CHARS.has(ch) ? './vendor-v2/hanzi-writer/data-tw/' : './vendor-v2/hanzi-writer/data/', wordZhuyin: w => ZY[w]?.zhuyin ?? null,
+  onOpen: () => { lobby.pause('dictation'); $('#startBtn').disabled = true; },
+  onClose: r => { lobby.resume('dictation'); $('#startBtn').disabled = false; diag.dictation = r; setStatus((r.finished ? `👂 聽寫小考完成！${r.weak.length ? '要再練：' + r.weak.join('、') + '。' : '全部答對！'}` : `👂 聽寫小考寫了 ${r.done}／${r.total} 題`) + nextLabel()); } }) : null;
+const dictPool = () => { const seen = new Set(); return saved.passedTaskIds.map(id => loaded.writingTasks.get(id)).filter(t => t?.char && t.zhuyin && !seen.has(t.char) && seen.add(t.char)).map(t => ({ char: t.char, zhuyin: t.zhuyin, word: t.hint_word })); };
+function updateDictBtn() { $('#dictBtn').hidden = !dictation || dictPool().length < DICTATION_N; }
+$('#dictBtn').addEventListener('click', () => {
+  if (panel.isOpen() || partsGame?.isOpen() || dictation?.isOpen() || shop?.isOpen() || parent.isOpen() || opening) return; sound.unlock();
+  if (!dictation.open(dictPool())) setStatus('再多學幾個字，就能玩聽寫小考囉！');
 });
 
 // 4) 入口：DOM 大按鈕。滑鼠／觸控／鍵盤（Enter、Space 由 button 原生處理）都走同一個 click；panel.start() 已開啟時直接忽略。
@@ -414,7 +427,7 @@ await new Promise(res => { const r0 = lobby.renderCount; const tick = () => (lob
 diag.loadMs.firstFrame = Math.round(performance.now() - t0);
 $('#startBtn').textContent = contract.entry.label; $('#startBtn').disabled = false;
 fitStage(); townFx.placePins(); /* v7：章節列、按鈕文字都就位後再量一次版面 */
-$('#albumBtn').disabled = false; updateAlbumBtn(); updateReviewBtn(); updatePartsBtn(); updateShopBtn(); // v8 修正：v7 這行被上一行的 // 註解吃掉，圖鑑鈕一直是停用
+$('#albumBtn').disabled = false; updateAlbumBtn(); updateReviewBtn(); updatePartsBtn(); updateDictBtn(); updateShopBtn(); // v8 修正：v7 這行被上一行的 // 註解吃掉，圖鑑鈕一直是停用
 setStatus(nextLabel());
 diag.loadMs.ready = Math.round(performance.now() - t0);
 // 測試自動跑（?test=1&autoplay=1）：用合成筆跡依序寫完 demo3 三字，供 headless 截圖與煙霧測試；不是真人操作
