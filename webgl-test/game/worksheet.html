@@ -44,6 +44,8 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 .zcol{width:8mm;height:20mm;border:.3mm solid #999;border-left:.2mm dashed #bbb;margin-left:-.3mm;display:flex;align-items:center;justify-content:center;font-size:4.4mm;color:#222}
 .row + .row .zcol{margin-top:-.3mm;height:20.3mm}
 .zcol .zy-s b{line-height:1.02}.zc.trace .zcol{color:#bdbdbd}
+.brow .lab{width:22mm}.brow .lab .wd.w3{font-size:3.8mm}.lab .wd.w4{white-space:normal;display:flex;flex-wrap:wrap;justify-content:center;row-gap:.6mm} /* 4 字以上的提示詞折成兩行，不被切掉 */
+.sheet header span{white-space:nowrap}.ws-both header span i{width:28mm}.zrow .lab .wd.w4{font-size:4.2mm;line-height:1.15}.sheet header b{white-space:nowrap}.zc.sep .cell{border-left:.7mm solid #777}
 .tools select{font:inherit;font-size:14px;padding:4px 8px;border-radius:10px;border:2px solid var(--line);background:#fff;color:var(--ink)}
 .tools label{display:inline-flex;align-items:center;gap:4px;font-size:14px;cursor:pointer}
 .sheet header span i{display:inline-block;width:34mm;border-bottom:.3mm solid #444}
@@ -75,7 +77,7 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 </style>
 <div class="noprint">
   <h1>🖨️ 列印練習單</h1>
-  <p class="lead">預設選「還沒拿到三顆星的字」和「常錯的字」，最多 12 個（一張 A4）。可以自己勾選增減，再按列印；在列印畫面可以選「儲存為 PDF」。「練習」可以選國字、注音（看國字寫注音），或兩種都印。資料只從這台裝置讀取，不會更動遊戲紀錄。</p>
+  <p class="lead">預設選「還沒拿到三顆星的字」和「常錯的字」，最多 12 個（一張 A4）。可以自己勾選增減，再按列印；在列印畫面可以選「儲存為 PDF」。「練習」可以選國字、注音（看國字寫注音），或國字＋注音（同一行前面寫國字、後面寫注音）。資料只從這台裝置讀取，不會更動遊戲紀錄。</p>
   <div class="tools"><button type="button" class="pri" id="printBtn" disabled>🖨️ 列印</button><button type="button" id="defBtn">恢復預設選字</button><button type="button" id="noneBtn">全部取消</button><label>練習：<select id="modeSel"><option value="char">國字</option><option value="zy">注音</option><option value="both">國字＋注音</option></select></label><label><input type="checkbox" id="decoBox" checked>🐰 可愛插畫</label><a href="../game-v1.html">← 回遊戲</a></div>
   <p id="msg" role="status">載入中…</p>
   <div class="pick" id="pick"></div>
@@ -117,18 +119,26 @@ const loadGlyph = ch => glyphs.get(ch) ?? glyphs.set(ch, get(dataUrl(ch)).catch(
 
 // Hanzi Writer 字形座標：1024 見方、y 軸朝上、基線 900
 const glyphSVG = g => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" aria-hidden="true"><g transform="scale(1,-1) translate(0,-900)">${g.strokes.map(d => `<path d="${esc(d)}"/>`).join('')}</g></svg>`;
-function rowHTML(task, g) {
-  const cell = (cls, n) => `<div class="cell ${cls}">${cls === 'blank' ? '' : glyphSVG(g)}</div>`.repeat(n);
+const gCell = (cls, g, n = 1) => `<div class="cell ${cls}">${cls === 'blank' ? '' : glyphSVG(g)}</div>`.repeat(n);
+function labHTML(task, g) {
   const word = task.hint_word || loaded.content.characters.find(c => c.char === task.char)?.words?.[0] || '';
-  return `<div class="row" data-char="${esc(task.char)}"><div class="lab"><span class="wd${[...word].length >= 3 ? ' w3' : ''}">${word ? wordHTML(word, ZY[word]?.zhuyin) : ''}</span><span class="st">共 ${g.strokes.length} 畫</span></div>${cell('model', CELLS.model)}${cell('trace', CELLS.trace)}${cell('blank', CELLS.blank)}</div>`;
+  return `<div class="lab"><span class="wd${[...word].length >= 3 ? ' w3' : ''}${[...word].length >= 4 ? ' w4' : ''}">${word ? wordHTML(word, ZY[word]?.zhuyin) : ''}</span><span class="st">共 ${g.strokes.length} 畫</span></div>`;
+}
+function rowHTML(task, g) {
+  return `<div class="row" data-char="${esc(task.char)}">${labHTML(task, g)}${gCell('model', g, CELLS.model)}${gCell('trace', g, CELLS.trace)}${gCell('blank', g, CELLS.blank)}</div>`;
+}
+/** v46 國字＋注音同一行：前半國字（示範、描 1、自己寫 2），後半注音（描 1、自己寫 2；左邊詞語的注音就是示範） */
+function bothRowHTML(task, g) {
+  const combo = (cls, z) => `<div class="zc ${cls}"><div class="cell model">${glyphSVG(g)}</div><div class="zcol">${z}</div></div>`;
+  return `<div class="row brow" data-char="${esc(task.char)}">${labHTML(task, g)}${gCell('model', g)}${gCell('trace', g)}${gCell('blank', g, 2)}${combo('trace sep', zhuyinHTML(task.zhuyin))}${combo('blank', '').repeat(2)}</div>`;
 }
 /** v45 注音練習的一行：左邊詞語（要練的字標紅）、6 組「國字＋注音格」 */
 function zyRowHTML(task, g) {
   const word = task.hint_word || task.char, zy = zhuyinHTML(task.zhuyin);
   const combo = (cls, z) => `<div class="zc ${cls}"><div class="cell model">${glyphSVG(g)}</div><div class="zcol">${z}</div></div>`;
-  return `<div class="row zrow" data-char="${esc(task.char)}"><div class="lab"><span class="wd">${[...word].map(c => c === task.char ? `<em>${esc(c)}</em>` : esc(c)).join('')}</span><span class="st">寫注音</span></div>${combo('model', zy)}${combo('trace', zy).repeat(2)}${combo('blank', '').repeat(3)}</div>`;
+  return `<div class="row zrow" data-char="${esc(task.char)}"><div class="lab"><span class="wd${[...word].length >= 4 ? ' w4' : ''}">${[...word].map(c => c === task.char ? `<em>${esc(c)}</em>` : esc(c)).join('')}</span><span class="st">寫注音</span></div>${combo('model', zy)}${combo('trace', zy).repeat(2)}${combo('blank', '').repeat(3)}</div>`;
 }
-const MODE_KEY = 'capy_worksheet_mode', TITLES = { char: ['寫字練習單', ''], zy: ['注音練習單', '看國字寫注音'] };
+const MODE_KEY = 'capy_worksheet_mode', TITLES = { char: ['寫字練習單', ''], zy: ['注音練習單', '看國字寫注音'], both: ['國字＋注音練習單', ''] };
 let mode = 'char'; try { const m = localStorage.getItem(MODE_KEY); if (['char', 'zy', 'both'].includes(m)) mode = m; } catch { /* 私密模式 */ }
 $('#modeSel').value = mode;
 $('#modeSel').addEventListener('change', e => { mode = e.target.value; try { localStorage.setItem(MODE_KEY, mode); } catch { /* 私密模式 */ } renderSheet(); });
@@ -136,8 +146,9 @@ async function renderSheet() {
   const list = selected.map(ch => tasks.find(t => t.char === ch)).filter(Boolean);
   const gs = await Promise.all(list.map(t => loadGlyph(t.char)));
   const ok = list.map((t, i) => [t, gs[i]]).filter(([, g]) => g), missing = list.filter((t, i) => !gs[i]).map(t => t.char), rows = ok;
-  const pages = []; // [{kind, rows}]；國字＋注音：國字頁全部在前、注音頁在後
-  for (const kind of mode === 'both' ? ['char', 'zy'] : [mode]) for (let i = 0; i < ok.length; i += ROWS_PER_PAGE) pages.push({ kind, rows: ok.slice(i, i + ROWS_PER_PAGE).map(([t, g]) => kind === 'zy' ? zyRowHTML(t, g) : rowHTML(t, g)) });
+  const pages = []; // [{kind, rows}]
+  const kind = mode, ROW = { char: rowHTML, zy: zyRowHTML, both: bothRowHTML }[mode] ?? rowHTML; // v46：國字＋注音改成同一行
+  for (let i = 0; i < ok.length; i += ROWS_PER_PAGE) pages.push({ kind, rows: ok.slice(i, i + ROWS_PER_PAGE).map(([t, g]) => ROW(t, g)) });
   $('#preview').innerHTML = pages.map(({ kind, rows: p }, i) => { const a = DECO[i % DECO.length], [title, sub] = TITLES[kind]; return `<section class="sheet ws-${kind}"><header><img class="deco" src="${SPR + a.capy}.webp" alt=""><b>${title}${sub ? `<small>${sub}</small>` : ''}</b><span>姓名：<i></i></span><span>日期：<i></i></span><img class="deco r" src="${SPR + a.bunny}.webp" alt=""></header>${p.join('')}
     <footer class="ft"><img src="${SPR + a.capy2}.webp" alt=""><img class="sm" src="${SPR}fx_star.webp" alt=""><div class="say">寫完了！幫自己塗星星<i>☆☆☆☆☆</i></div><img class="sm" src="${SPR}fx_heart.webp" alt=""><img src="${SPR + a.bunny2}.webp" alt=""></footer></section>`; }).join('');
   $('#printBtn').disabled = !rows.length;
