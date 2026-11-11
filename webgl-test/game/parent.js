@@ -1,8 +1,8 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=42';
-import { LEVELS } from './writing-panel.js?v=42';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=42';
+import { starsOf } from './stars.js?v=43';
+import { LEVELS } from './writing-panel.js?v=43';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=43';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -51,6 +51,9 @@ const CSS = `
 .pp-weak li{display:flex;gap:10px;align-items:center;background:#fff;border:2px solid #F7C9C0;border-radius:12px;padding:6px 10px;margin:0 0 6px}
 .pp-weak .ch{font-size:30px;font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif;color:#2f3e46}
 .pp-weak small{display:block;color:#8a6f7c}
+.pp-dhist ul{list-style:none;margin:6px 0 0;padding:0}.pp-dhist li{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 6px}
+.pp-dt{font-size:13px;color:#8a6f7c;flex-basis:100%}.pp-dq{display:inline-flex;flex-direction:column;align-items:center;min-width:40px;padding:2px 4px;border:2px solid #cfe8d4;border-radius:10px;background:#fff;font-size:22px;font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif;color:#2f3e46}
+.pp-dq.bad{border-color:#F7C9C0}.pp-dq small{font:12px system-ui,sans-serif;color:#8a6f7c}
 .pp-weak a{margin-left:auto;font-size:13px;white-space:nowrap;color:#1c5d99}
 .pp-set{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:center}
 .pp-set .seg{display:flex;gap:6px;flex-wrap:wrap}
@@ -83,7 +86,7 @@ const CSS = `
 export class ParentPanel {
   /** rewards（可省略）：{ key, totals: () => ({ total, maxTotal }), onChange }，見 rewards.js；shop（可省略）：{ summary: () => ({ count, all, spent, balance, names }) }，見 shop.js */
   /** books（可省略）：{ list: [{ id, label }], current, onPick(id) }，見 books.js */
-  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, log }); this.el = null; }
+  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, dictation = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, dictation, log }); this.el = null; }
   isOpen() { return !!this.el; }
   open() {
     if (this.el) return;
@@ -101,6 +104,7 @@ export class ParentPanel {
       <div class="pp-kpis">${LEVELS.map((l, i) => `<div>${l.icon} ${l.label}<b>${st.levelCount[i]}</b>字</div>`).join('')}</div>
       <h3>常錯的字</h3>
       ${st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${w.char}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${w.worstStroke.name}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${w.char.codePointAt(0)}" target="_blank" rel="noopener">教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>'}
+      ${this.dictation ? this._dictationHTML() : ''}
       ${this.rewards ? '<h3>🎁 獎勵（用星星換）</h3><div class="pp-rw"></div>' : ''}
       ${this.shop ? (() => { const s = this.shop.summary(); return s ? `<h3>🏪 配件商店</h3>
       <div class="pp-save pp-shop"><p>孩子自己用星星買配件，幫小鎮的朋友換裝。已買 <b>${s.count}</b>／${s.all} 件，花了 ★${s.spent}，還能用 ★${Math.max(0, s.balance)}。</p>
@@ -147,6 +151,20 @@ export class ParentPanel {
     });
     document.body.append(el); this.el = el; this.stats = st;
     this._rw = { mode: null, id: null, msg: '', quiz: null }; this._renderRewards();
+  }
+  /** 👂 聽寫小考成績（v43）：考過幾次、要再練的字、最近幾次的結果。資料由 dictation.summary() 提供（同 dictation.js 的存檔） */
+  _dictationHTML() {
+    const d = this.dictation.summary?.() ?? null, n = d?.sessions || 0, hist = Array.isArray(d?.history) ? d.history : [], tested = d?.tested ?? {}, missed = d?.missed ?? {};
+    const day = iso => { const t = new Date(iso); return isNaN(t) ? '' : `${t.getMonth() + 1}/${t.getDate()} ${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`; };
+    const W = { ok: '✓', hint: '💡', many: '△', skip: '—' }, weak = Object.entries(d?.weak ?? {}).sort((a, b) => b[1] - a[1]);
+    if (!n && !weak.length) return `<h3>👂 聽寫小考</h3><p class="pp-note" style="margin:0 0 6px">還沒考過。孩子學會 5 個字以後，大廳會出現「👂 聽寫小考」：聽語音、點注音、再自己寫出國字。</p>`;
+    const row = h => `<li><span class="pp-dt">${esc(day(h.at))}</span>${h.qs.map(q => `<span class="pp-dq${q.zy && q.w === 'ok' ? '' : ' bad'}" title="注音${q.zy ? '對' : '錯'}，國字${{ ok: '自己寫對', hint: '看了提示', many: '錯 3 筆以上', skip: '沒寫' }[q.w] ?? ''}">${esc(q.c)}<small>${q.zy ? '✓' : '✗'}${W[q.w] ?? ''}</small></span>`).join('')}</li>`;
+    return `<h3>👂 聽寫小考</h3>
+      <div class="pp-kpis"><div>考過<b>${n}</b>次</div><div>要再練的字<b>${weak.length}</b>個</div><div>最近一次<b style="font-size:18px">${esc(hist.length ? day(hist[hist.length - 1].at) : '—')}</b></div></div>
+      ${weak.length ? `<ul class="pp-weak pp-dweak">${weak.map(([c]) => `<li><span class="ch">${esc(c)}</span><span>考過 ${tested[c] ?? '?'} 次，其中 ${missed[c] ?? '?'} 次沒有全對<small>下次聽寫會先考這個字；之後全對就會從這裡移除（錯越多次，要全對越多次）</small></span></li>`).join('')}</ul>`
+        : '<p class="pp-note" style="margin:0 0 6px">目前沒有要再練的字 👍</p>'}
+      ${hist.length ? `<details class="pp-dhist"><summary>最近 ${Math.min(10, hist.length)} 次的成績</summary><ul>${hist.slice(-10).reverse().map(row).join('')}</ul>
+        <p class="pp-note" style="margin:4px 0 0">每個字下面：第一個是注音（✓ 對／✗ 拼錯過），第二個是國字（✓ 自己寫對／💡 看了提示／△ 錯 3 筆以上／— 沒寫）。</p></details>` : ''}`;
   }
   /** 🎁 獎勵區：每次操作後整區重畫（資料直接讀 localStorage） */
   _renderRewards() {

@@ -4,8 +4,8 @@
 // 要再練的字（注音第一次沒拼對、用了提示、或寫錯很多筆）記在 localStorage，下次優先出題；之後一次答對就會消掉。
 // 注音磚是用點的，不是手寫（沒有注音符號的筆順資料）。語音用裝置內建的語音，輕聲、多音字唸得對不對要真人聽。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { bravo, flash } from './fx.js?v=42';
-import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=42';
+import { bravo, flash } from './fx.js?v=43';
+import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=43';
 
 const CSS = `
 .dc-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}
@@ -80,6 +80,7 @@ export function pickQuestions(pool, weak = {}, n = DICTATION_N) {
   const ok = pool.filter(t => t.char && t.zhuyin), w = shuffle(ok.filter(t => weak[t.char])).slice(0, Math.min(3, n)), got = new Set(w.map(t => t.char));
   return shuffle([...w, ...shuffle(ok.filter(t => !got.has(t.char))).slice(0, n - w.length)]);
 }
+/** 存檔 {v, weak:{字:次數≤3}, sessions, tested:{字:考過幾次}, missed:{字:沒全對幾次}, history:[{at, qs:[{c, zy, w}]}]}；w：ok／hint（看提示）／many（錯 3 筆以上）／skip */
 export function loadWeak(key) { try { const o = JSON.parse(localStorage.getItem(key) || 'null'); return o && typeof o.weak === 'object' && o.weak ? o : { v: 1, weak: {}, sessions: 0 }; } catch { return { v: 1, weak: {}, sessions: 0 }; } }
 
 export class Dictation {
@@ -230,7 +231,9 @@ export class Dictation {
     try {
       const o = loadWeak(this.storageKey);
       if (q.weak) o.weak[q.char] = Math.min(3, (o.weak[q.char] || 0) + 1); else if (o.weak[q.char]) { o.weak[q.char] -= 1; if (o.weak[q.char] <= 0) delete o.weak[q.char]; }
-      if (last) o.sessions = (o.sessions || 0) + 1;
+      o.tested = o.tested && typeof o.tested === 'object' ? o.tested : {}; o.tested[q.char] = (o.tested[q.char] || 0) + 1;
+      o.missed = o.missed && typeof o.missed === 'object' ? o.missed : {}; if (q.weak) o.missed[q.char] = (o.missed[q.char] || 0) + 1;
+      if (last) { o.sessions = (o.sessions || 0) + 1; o.history = [...(Array.isArray(o.history) ? o.history : []), { at: new Date().toISOString(), qs: s.qs.map(x => ({ c: x.char, zy: x.zyWrong === 0, w: x.skipped ? 'skip' : x.hint ? 'hint' : x.mistakes >= 3 ? 'many' : 'ok' })) }].slice(-20); }
       localStorage.setItem(this.storageKey, JSON.stringify(o));
     } catch { /* 私密模式：不記也能玩 */ }
     this._q('.dc-actions').innerHTML = `<button type="button" data-act="next" class="dc-primary">${last ? '看成績 ▶' : '下一題 ▶'}</button>`;
