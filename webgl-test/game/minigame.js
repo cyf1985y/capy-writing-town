@@ -2,8 +2,8 @@
 // - 找部件：「哪些字有『亻』？」把字卡裡有這個部件的都點出來；
 // - 聽音找字：唸「上，上下的上」，從長得很像的字（上／下）裡點出對的那一個。
 // 資料 game/parts_game.json（Claude 撰寫，人工核對 pending）；字庫＝孩子學過的字（＋目前這一課的字）。
-import { bravo, flash } from './fx.js?v=40';
-import { introText } from './writing-panel.js?v=40';
+import { bravo, flash } from './fx.js?v=41';
+import { introText } from './writing-panel.js?v=41';
 
 const CSS = `
 .pg-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}
@@ -27,9 +27,9 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 /** 依字庫出題：最多 2 題找部件＋1 題聽音找字。字庫不夠就少出幾題。 */
 export function buildRounds(data, pool, { words = {}, cards = 6 } = {}) {
   const have = new Set(pool), rounds = [];
-  const partCands = shuffle(data.parts.map(p => ({ ...p, hits: p.chars.filter(c => have.has(c)) })).filter(p => p.hits.length >= 2 && pool.length - p.hits.length >= 2));
+  const partCands = shuffle(data.parts.map(p => ({ ...p, hits: p.chars.filter(c => have.has(c)) })).filter(p => p.hits.length >= 2 && pool.filter(c => !p.chars.includes(c) && !p.maybe?.includes(c)).length >= 2));
   for (const p of partCands.slice(0, 2)) {
-    const targets = shuffle(p.hits).slice(0, Math.min(3, cards - 2)), others = shuffle(pool.filter(c => !p.chars.includes(c))).slice(0, cards - targets.length);
+    const targets = shuffle(p.hits).slice(0, Math.min(3, cards - 2)), others = shuffle(pool.filter(c => !p.chars.includes(c) && !p.maybe?.includes(c))).slice(0, cards - targets.length); // v19：maybe＝看起來像有又不太算的字，不拿來當干擾字
     rounds.push({ kind: 'part', part: p.part, say: p.say, targets, cards: shuffle([...targets, ...others]) });
   }
   const used = new Set(rounds.flatMap(r => r.targets)), overlap = g => g.filter(c => used.has(c)).length; // 優先挑和前面答案不重複的形近字組
