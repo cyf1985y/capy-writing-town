@@ -4,8 +4,8 @@
 // 要再練的字（注音第一次沒拼對、用了提示、或寫錯很多筆）記在 localStorage，下次優先出題；之後一次答對就會消掉。
 // 注音磚是用點的，不是手寫（沒有注音符號的筆順資料）。語音用裝置內建的語音，輕聲、多音字唸得對不對要真人聽。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { bravo, flash } from './fx.js?v=50';
-import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=50';
+import { bravo, flash } from './fx.js?v=51';
+import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=51';
 
 const CSS = `
 .dc-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}
@@ -105,14 +105,17 @@ export class Dictation {
   isOpen() { return !!this.el; }
   weak() { return Object.keys(loadWeak(this.storageKey).weak); }
 
-  open(pool) {
+  // v51：抽題、標題、記成績、寫完之後，拆成可以覆寫的方法（守門員關 boss.js 重用整個流程）；聽寫小考本身的行為不變
+  _pickQs(pool) { const qs = pickQuestions(pool, loadWeak(this.storageKey).weak); return qs.length < DICTATION_N ? null : qs; }
+  _title() { return '👂 聽寫小考'; }
+  open(pool, opts = {}) {
     if (this.el) return false;
-    this._pool = pool;
-    const qs = pickQuestions(pool, loadWeak(this.storageKey).weak);
-    if (qs.length < DICTATION_N) { this.log('dictation: pool too small ' + pool.length); return false; }
+    this._pool = pool; this._opts = opts;
+    const qs = this._pickQs(pool);
+    if (!qs) { this.log('dictation: pool too small ' + pool.length); return false; }
     if (!document.getElementById('dc-style')) { const s = document.createElement('style'); s.id = 'dc-style'; s.textContent = CSS; document.head.append(s); }
-    const el = document.createElement('div'); el.className = 'dc-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', '聽寫小考');
-    el.innerHTML = `<div class="dc-dialog"><h2>👂 聽寫小考</h2><div class="dc-dots"></div><div class="dc-ask"></div><div class="dc-word"></div>
+    const el = document.createElement('div'); el.className = 'dc-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', this._title().replace(/^\S+\s/, ''));
+    el.innerHTML = `<div class="dc-dialog"><h2>${this._title()}</h2><div class="dc-dots"></div><div class="dc-ask"></div><div class="dc-word"></div>
 <button type="button" class="dc-speak" data-act="again" aria-label="再聽一次">🔈</button>
 <div class="dc-zy"><div class="dc-ans"><div class="dc-slots"></div><button type="button" class="dc-tslot" data-act="untone" aria-label="聲調"></button></div><div class="dc-tiles"></div><div class="dc-tones">${TONES.map(t => `<button type="button" data-tone="${t.id}" aria-label="${t.label}"><b>${t.mark}</b><small>${t.label}</small></button>`).join('')}</div></div>
 <div class="dc-key" hidden></div><div class="dc-grid" hidden><div class="dc-target"></div></div><div class="dc-result" hidden></div>
@@ -231,7 +234,7 @@ export class Dictation {
         s.phase = 'written'; this.sound?.complete?.(); bravo(this._q('.dc-dialog'), q.hint ? '寫好了！' : '好棒！');
         this._q('.dc-word').innerHTML = `<span class="dc-w">${q.char}${zhuyinHTML(q.zhuyin)}</span>` + (q.word && q.word !== q.char ? `<span style="font-size:18px;margin-left:8px">（${q.word}）</span>` : '');
         this._msg(q.hint ? '寫完了！這個字下次再考一次' : '自己寫出來了，好厲害！', 'ok'); this.voice?.say(q.hint ? '寫完了！' : '寫對了，好棒！');
-        this.log(`dictation written ${q.char} mistakes=${q.mistakes} hint=${q.hint}`); this._nextBtn();
+        this.log(`dictation written ${q.char} mistakes=${q.mistakes} hint=${q.hint}`); this._afterWrite();
       },
     });
   }
@@ -240,10 +243,18 @@ export class Dictation {
     q.hint = true; try { s.writer.showOutline(); } catch { /* ignore */ }
     this._msg('淡淡的字出來了，照著寫', ''); const b = this._q('.dc-actions [data-act="hint"]'); if (b) b.disabled = true; this.log(`dictation hint ${q.char}`);
   }
+  /** 寫完國字之後（守門員關會在這裡多一步「認部件」） */
+  _afterWrite() { this._nextBtn(); }
   /** 這一題結束：記成績、更新「要再練的字」 */
   _nextBtn() {
     const s = this.state, q = this._cur(), last = s.i === s.qs.length - 1;
     q.done = true; q.weak = q.zyWrong > 0 || q.hint || q.mistakes >= 3 || !!q.skipped;
+    this._record(q, last);
+    this._q('.dc-actions').innerHTML = `<button type="button" data-act="next" class="dc-primary">${last ? '看成績 ▶' : '下一題 ▶'}</button>`;
+  }
+  /** 把這一題的結果寫進聽寫小考的存檔 */
+  _record(q, last) {
+    const s = this.state;
     try {
       const o = loadWeak(this.storageKey);
       if (q.weak) o.weak[q.char] = Math.min(3, (o.weak[q.char] || 0) + 1); else if (o.weak[q.char]) { o.weak[q.char] -= 1; if (o.weak[q.char] <= 0) delete o.weak[q.char]; }
@@ -252,7 +263,6 @@ export class Dictation {
       if (last) { o.sessions = (o.sessions || 0) + 1; o.history = [...(Array.isArray(o.history) ? o.history : []), { at: new Date().toISOString(), qs: s.qs.map(x => ({ c: x.char, zy: x.zyWrong === 0, w: x.skipped ? 'skip' : x.hint ? 'hint' : x.mistakes >= 3 ? 'many' : 'ok' })) }].slice(-20); }
       localStorage.setItem(this.storageKey, JSON.stringify(o));
     } catch { /* 私密模式：不記也能玩 */ }
-    this._q('.dc-actions').innerHTML = `<button type="button" data-act="next" class="dc-primary">${last ? '看成績 ▶' : '下一題 ▶'}</button>`;
   }
   _dropWriter() { const s = this.state; if (s?.writer) { try { s.writer.cancelQuiz(); } catch { /* ignore */ } s.writer = null; } const t = this.el?.querySelector('.dc-target'); if (t) t.innerHTML = ''; }
 

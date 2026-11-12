@@ -26,7 +26,8 @@ const CSS = `
 `;
 
 export class Album {
-  constructor({ town, lobby, townFx, contract, voice, sound, log = () => {}, seenKey = 'capy_album_seen' }) {
+  constructor({ town, lobby, townFx, contract, voice, sound, log = () => {}, seenKey = 'capy_album_seen', badges = null }) {
+    this.badges = badges; // v51：() => ({ cleared, stages, title })，守門員徽章；沒給就不顯示
     Object.assign(this, { town, lobby, townFx, contract, voice, sound, log, seenKey });
     this.cfg = contract.album;
     this.thumbs = new Map();
@@ -68,6 +69,8 @@ export class Album {
       if (r.unlocked) b.addEventListener('click', () => this.visit(r));
       grid.append(b);
     }
+    const bd = this.badges?.();
+    if (bd?.stages) { const row = document.createElement('div'); row.className = 'al-badges'; row.innerHTML = `<h3>🛡️ ${bd.title ?? '守門員'}徽章 ${bd.cleared}/${bd.stages}</h3>` + Array.from({ length: bd.stages }, (_, i) => `<i class="${i < bd.cleared ? 'got' : ''}" title="第 ${i + 1} 關${i < bd.cleared ? '：已過關' : ''}">${i < bd.cleared ? '★' : i + 1}</i>`).join(''); grid.after(row); }
     for (const r of list) if (r.unlocked) this.seen.add(r.object);
     try { localStorage.setItem(this.seenKey, JSON.stringify([...this.seen])); } catch { /* ignore */ }
     el.addEventListener('click', e => { if (e.target === el || e.target.closest('[data-close]')) this.close(); });

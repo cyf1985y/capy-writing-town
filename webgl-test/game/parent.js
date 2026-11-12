@@ -1,8 +1,8 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=50';
-import { LEVELS } from './writing-panel.js?v=50';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=50';
+import { starsOf } from './stars.js?v=51';
+import { LEVELS } from './writing-panel.js?v=51';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=51';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -238,7 +238,7 @@ export class ParentPanel {
         ${ui.mode === 'redeem' && ui.id === r.id ? `<div class="rw-ask"><span>請大人回答：${ui.quiz.a} ＋ ${ui.quiz.b} ＝</span><input type="number" data-f="ans" inputmode="numeric" aria-label="答案"><button type="button" data-rw="redeemOk">確定兌換</button><button type="button" data-rw="cancel">取消</button></div>` : ''}
         ${ui.mode === 'archive' && ui.id === r.id ? '<div class="rw-ask"><span>封存後孩子就看不到這個獎勵（兌換紀錄會留著）。</span><button type="button" data-rw="archiveOk">確定封存</button><button type="button" data-rw="cancel">取消</button></div>' : ''}</li>`;
     };
-    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星${bonus ? `（含地圖上朋友送的 ${bonus} 顆）` : ''}，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
+    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星${bonus ? `（含額外獲得的 ${bonus} 顆：地圖上朋友送的、守門員獎勵）` : ''}，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
       ${n ? `<ul>${st.items.map(item).join('')}</ul>` : '<p class="pp-note" style="margin:0 0 6px">還沒有獎勵。可以設定 1～3 個實際的獎勵（例：去公園玩、選今天的晚餐），孩子存夠星星後由大人按「已兌換」。</p>'}
       <div class="rw-form" data-new>${fields(null)}<button type="button" data-rw="add" ${st.canAdd ? '' : 'disabled'}>新增</button></div>
       <small>${st.overLimit ? `<span class="warn">現在有 ${n} 個獎勵，封存到 ${MAX_ACTIVE} 個以內才能再新增</span>` : !st.canAdd ? `最多 ${MAX_ACTIVE} 個獎勵；要新增請先封存一個。` : `每個字最多 3 顆星，全部拿滿是 ★${st.maxTotal}。`}</small>

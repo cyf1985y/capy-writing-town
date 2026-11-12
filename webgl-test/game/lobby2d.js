@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=50';
-import { placeAccessory } from './shop.js?v=50';
+import { Album } from './album.js?v=51';
+import { placeAccessory } from './shop.js?v=51';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -94,6 +94,15 @@ const CSS = `
 @keyframes t2-amb{0%{transform:translateY(-20%) rotate(0);opacity:0}15%{opacity:.95}80%{opacity:.8}100%{transform:translateY(270%) rotate(150deg);opacity:0}}
 .t2-pins-hidden .t2-amb{opacity:0}
 @media (prefers-reduced-motion:reduce){.t2-amb{display:none}}
+/* v51 守門員節點：圓形底＋🛡️（不用新圖）；有 t2-pin class，鏡頭推近、全螢幕視窗時跟著課次標記一起藏起來 */
+.t2-boss{border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7d6,#f2c14e 70%,#c98f2a);box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.3)}
+.t2-boss .ico{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(22px,4vw,52px);line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.t2-boss b{background:#7B5CC4}
+.t2-boss.ready b{background:#E55A4E;animation:nodePulse 1.6s ease-in-out infinite}
+.t2-boss.ready{animation:t2-bossGlow 1.6s ease-in-out infinite}
+@keyframes t2-bossGlow{50%{box-shadow:0 0 0 3px #fff,0 0 16px 6px rgba(242,193,78,.9)}}
+.t2-boss.done{box-shadow:0 0 0 3px #FFD54A,0 0 12px 4px rgba(255,179,0,.7)}
+@media (prefers-reduced-motion:reduce){.t2-boss.ready,.t2-boss.ready b{animation:none}}
 /* v50 朋友的對話氣泡（每個字附注音；注音樣式同寫字面板的 .zy，這裡另存一份，因為面板的樣式要開過面板才有） */
 .t2-char.talking .t2-say{opacity:0;pointer-events:none}
 .t2-talk{position:absolute;z-index:180;transform:translate(-50%,-100%);margin-top:-1.4%;display:flex;align-items:center;gap:.15em;font:800 clamp(18px,2.6vw,28px)/1.2 system-ui,"Noto Sans TC",sans-serif;color:#5B3A4A;background:#fff;border:3px solid #F48FB1;border-radius:16px;padding:6px 12px;white-space:nowrap;box-shadow:0 4px 10px rgba(91,58,74,.3);pointer-events:none;animation:t2-talkIn .18s ease-out}
@@ -383,6 +392,25 @@ export class TownFx2D {
     vis.forEach((c, k) => setTimeout(() => this._anim(c, 'hop', 550), k * 100));
     this.lastMastery = { lesson, sprite, residents: vis.length }; return true;
   }
+  // ======== v51 守門員節點 ========
+  mountBoss({ at, onTap }) {
+    if (this.boss || !at) return null;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 't2-pin t2-boss'; b.dataset.boss = '1';
+    b.innerHTML = '<span class="ico" aria-hidden="true">🛡️</span><b>守</b><small></small>';
+    b.style.left = (at[0] / this.town.W * 100) + '%'; b.style.top = (at[1] / this.town.H * 100) + '%';
+    if (at[0] < this.town.W * 0.2) b.classList.add('edge-l'); else if (at[0] > this.town.W * 0.8) b.classList.add('edge-r');
+    b.addEventListener('pointerdown', e => e.stopPropagation());
+    b.addEventListener('click', e => { e.stopPropagation(); this.sound?.unlock(); onTap?.(); });
+    this.town.world.append(b); this.boss = b; this.bossAt = at; return b;
+  }
+  /** st＝extras.js 的 bossStatus() 結果 */
+  setBoss(st, title = '守門員') {
+    const b = this.boss; if (!b || !st) return;
+    b.classList.toggle('ready', st.ready); b.classList.toggle('done', st.done);
+    b.querySelector('small').textContent = st.done ? `👑 ${st.cleared}/${st.stages}` : st.ready ? `${st.cleared}/${st.stages} 挑戰！` : `再學 ${st.need} 字`;
+    b.title = st.done ? `${title}：全部 ${st.stages} 關都過了（可以再練習）` : st.ready ? `${title}：可以挑戰第 ${st.next} 關（已過 ${st.cleared}/${st.stages}）` : `${title}：再學 ${st.need} 個字就能挑戰第 ${st.next} 關（已過 ${st.cleared}/${st.stages}）`;
+    b.setAttribute('aria-label', b.title); this.bossState = st;
+  }
   /** 在朋友頭上顯示一個氣泡（一次只有一個），ms 毫秒後收起；回傳氣泡元素 */
   talk(name, html, ms = 3200) {
     const c = this.town.chars.get(name); if (!c) return null;
@@ -544,6 +572,12 @@ const ALBUM_CSS = (frame, locked) => `
 @keyframes al-glow2{50%{filter:drop-shadow(0 0 10px rgba(240,140,0,.8))}}
 /* v47 手機橫放：圖鑑卡之間的上下距離縮小 */
 @media (orientation:landscape) and (max-height:560px){.al2 .al-grid{row-gap:14px;gap:8px}}
+/* v51 守門員徽章 */
+.al-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;margin:10px 0 0;padding-top:8px;border-top:2px dashed rgba(91,58,74,.15)}
+.al-badges h3{margin:0 6px 0 0;font-size:15px}
+.al-badges i{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:900 14px/1 system-ui;font-style:normal;color:#b9aeb3;border:2px dashed #d8cfd3;background:#fff}
+.al-badges i.got{color:#7a4b00;border:2px solid #fff;background:radial-gradient(circle at 35% 30%,#fff3c4,#f2c14e 70%,#c98f2a);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+@media (orientation:landscape) and (max-height:560px){.al-badges{margin:4px 0 0;padding-top:4px}.al-badges i{width:26px;height:26px;font-size:12px}.al-badges h3{font-size:13px}}
 `;
 
 export class Album2D extends Album {

@@ -6,7 +6,9 @@
 //   { version:1, mastery:{<lesson>:{at}}, gifts:{<resident object>:{at,stars,itemId}}, bonusStars:[{id,kind,stars,at}] }
 // 不認得的頂層欄位原樣保留（之後階段向前相容）。設計文件：docs/plans/2026-11-12-phase1-area-mastery-and-friend-gifts.md
 export const extrasKey = profileId => 'capy_extras_' + profileId;
-export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [] });
+export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] } });
+export const BOSS_STAGES = 8;
+const intIn = (n, a, b) => Number.isInteger(n) && n >= a && n <= b;
 const isObj = o => !!o && typeof o === 'object' && !Array.isArray(o);
 const starOk = n => Number.isInteger(n) && n >= 1 && n <= 5;
 
@@ -29,6 +31,18 @@ export function normalizeExtras(obj) {
     if (!old || (r.at && r.at < old.at)) seen.set(r.id, r);
   }
   out.bonusStars = [...seen.values()];
+  // v51 守門員：cleared 0..8；history 依 stage 去重（留較早的）
+  const b = isObj(obj.boss) ? obj.boss : {}, hs = new Map();
+  for (const h of Array.isArray(b.history) ? b.history : []) {
+    if (!isObj(h) || !intIn(h.stage, 1, BOSS_STAGES)) continue;
+    const r = { stage: h.stage, at: String(h.at || ''), chars: (Array.isArray(h.chars) ? h.chars : []).filter(c => typeof c === 'string'), perfect: intIn(h.perfect, 0, 5) ? h.perfect : 0 }, old = hs.get(r.stage);
+    if (!old || (r.at && r.at < old.at)) hs.set(r.stage, r);
+  }
+  out.boss = { cleared: intIn(b.cleared, 0, BOSS_STAGES) ? b.cleared : 0, history: [...hs.values()].sort((x, y) => x.stage - y.stage) };
+  // 用星星紀錄補回關數：v50 的備份合併會留本機的 boss、卻把對方的 boss:k 星星併進來（關數倒退）。boss:1..k 都在就表示真的過了第 k 關
+  let k = out.boss.cleared; const ids = new Map(out.bonusStars.map(x => [x.id, x]));
+  while (k < BOSS_STAGES && ids.has('boss:' + (k + 1))) { k += 1; if (!hs.has(k)) out.boss.history.push({ stage: k, at: ids.get('boss:' + k).at, chars: [], perfect: 0 }); }
+  if (k > out.boss.cleared) { out.boss.cleared = k; out.boss.history.sort((x, y) => x.stage - y.stage); }
   return out;
 }
 export function loadExtras(key) { try { return normalizeExtras(JSON.parse(localStorage.getItem(key) || 'null')); } catch { return emptyExtras(); } }
@@ -73,7 +87,8 @@ export function claimGift(data, object, gift, now = new Date()) {
 /** 備份還原用的合併：mastery、gifts 依鍵聯集，同鍵整筆留本機的（一位朋友只算一份禮物）；bonusStars 依 id 聯集 */
 export function mergeExtras(cur, inc) {
   const a = normalizeExtras(cur), b = normalizeExtras(inc);
-  return normalizeExtras({ ...b, ...a, mastery: { ...b.mastery, ...a.mastery }, gifts: { ...b.gifts, ...a.gifts }, bonusStars: [...a.bonusStars, ...b.bonusStars.filter(x => !a.bonusStars.some(y => y.id === x.id))] });
+  return normalizeExtras({ ...b, ...a, mastery: { ...b.mastery, ...a.mastery }, gifts: { ...b.gifts, ...a.gifts }, bonusStars: [...a.bonusStars, ...b.bonusStars.filter(x => !a.bonusStars.some(y => y.id === x.id))],
+    boss: { cleared: Math.max(a.boss.cleared, b.boss.cleared), history: [...a.boss.history, ...b.boss.history.filter(x => !a.boss.history.some(y => y.stage === x.stage))] } }); // 守門員：關數取大的、紀錄依關聯集（星星 boss:k 依 id 聯集，每關只有一筆）
 }
 /** 給 backup.js 用：兩邊都是 localStorage 的字串；備份那份壞掉就維持本機的 */
 export function mergeExtrasJSON(curStr, incStr) {
@@ -89,4 +104,21 @@ export const lineOk = l => isObj(l) && typeof l.t === 'string' && Array.isArray(
 export function validLines(lines) {
   const all = Array.isArray(lines) ? lines : [], ok = all.filter(lineOk);
   return { lines: ok, dropped: all.length - ok.length };
+}
+
+// ======== v51 守門員總複習關 ========
+/** 第 k 關的門檻：學會的字數 ≥ ⌈k × n ÷ stages⌉ */
+export const bossThresholds = (n, stages = BOSS_STAGES) => Array.from({ length: stages }, (_, i) => Math.ceil(((i + 1) * n) / stages));
+/** { cleared, next, need, ready, done }：next＝下一關（全部過完是 null）；need＝還要學幾個字（0＝可以挑戰） */
+export function bossStatus({ data, passedCount, total, stages = BOSS_STAGES }) {
+  const cleared = Math.min(data.boss.cleared, stages), done = cleared >= stages, next = done ? null : cleared + 1;
+  const need = done ? 0 : Math.max(0, bossThresholds(total, stages)[next - 1] - passedCount);
+  return { cleared, stages, next, need, ready: !done && need === 0, done };
+}
+/** 過第 stage 關：只能是下一關；進度、紀錄、星星在同一個物件（呼叫端一次存檔）。不合規則回傳 null */
+export function clearBossStage(data, { stage, chars = [], perfect = 0, stars = 5, now = new Date() }) {
+  if (stage !== data.boss.cleared + 1 || !intIn(stage, 1, BOSS_STAGES) || !starOk(stars)) return null;
+  const at = now.toISOString();
+  return { ...data, boss: { cleared: stage, history: [...data.boss.history.filter(h => h.stage !== stage), { stage, at, chars: chars.slice(), perfect }] },
+    bonusStars: [...data.bonusStars.filter(b => b.id !== 'boss:' + stage), { id: 'boss:' + stage, kind: 'boss', stars, at }] };
 }
