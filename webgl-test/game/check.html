@@ -63,10 +63,13 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 <div class="list" id="list"></div>
 <script type="module">
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { zhuyinHTML, wordHTML } from './writing-panel.js?v=52';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=53';
 const KEY = 'capy_check_v1', $ = s => document.querySelector(s);
 const get = async u => { const r = await fetch(u, { cache: 'no-cache' }); if (!r.ok) throw new Error(u + ' HTTP ' + r.status); return r.json(); };
-const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=52'), get('./stroke_names.json?v=52'), get('./zhuyin.json?v=52'), get('./parts_game.json?v=52')]);
+const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=53'), get('./stroke_names.json?v=53'), get('./zhuyin.json?v=53'), get('./parts_game.json?v=53')]);
+// v53：季節小考的字、守門員的部件題、朋友台詞（讀不到就不出現那一頁，其他照常）
+const opt = u => get(u).catch(() => null);
+const [SEASONS, BPARTS, EXTRAS] = await Promise.all([opt('./seasons.json?v=53'), opt('./boss_parts.json?v=53'), opt('./extras.json?v=53')]);
 let state = {}; try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { state = {}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { $('#msg').textContent = '無法儲存（私密瀏覽？）'; } };
 const dataUrl = ch => (TW.chars[ch] ? '../vendor-v2/hanzi-writer/data-tw/' : '../vendor-v2/hanzi-writer/data/') + encodeURIComponent(ch) + '.json';
@@ -80,7 +83,15 @@ const TABS = [
   { key: 'sname', label: '筆畫名稱', items: Object.keys(SN.chars).map(ch => ({ id: 'sname:' + ch, ch })) },
   { key: 'zy', label: '注音', items: [...Object.entries(ZY.chars).map(([ch, v]) => ({ id: 'zy:char:' + ch, ch, v })), ...Object.entries(ZY.words).map(([w, v]) => ({ id: 'zy:word:' + w, w, v }))] },
   { key: 'part', label: '部件表', items: [...PARTS.parts.map(p => ({ id: 'part:' + p.part, p })), ...PARTS.lookalike.map((g, i) => ({ id: 'alike:' + g.join(''), g }))] },
-];
+  { key: 'season', label: '季節字', items: (SEASONS?.seasons ?? []).flatMap(s => (s.quest?.words ?? []).map(w => ({ id: `season:${s.id}:${w.char}`, ch: w.char, sw: w, season: s }))) },
+  { key: 'bpart', label: '守門員部件題', items: Object.entries(BPARTS?.chars ?? {}).map(([ch, q]) => ({ id: 'bpart:' + ch, ch, q })) },
+  { key: 'line', label: '朋友台詞', items: [
+    ...(EXTRAS?.lines ?? []).map((l, i) => ({ id: 'line:' + l.t, l, where: `點朋友時說的話（第 ${i + 1} 句）` })),
+    ...(EXTRAS?.giftLine ? [{ id: 'line:' + EXTRAS.giftLine.t, l: EXTRAS.giftLine, where: '第一次點朋友、送禮物時' }] : []),
+    ...(EXTRAS?.boss?.lockedLine ? [{ id: 'line:' + EXTRAS.boss.lockedLine.t, l: EXTRAS.boss.lockedLine, where: '守門員還不能挑戰時' }] : []),
+    ...(SEASONS?.seasons ?? []).filter(s => s.unlockLine).map(s => ({ id: 'line:' + s.unlockLine.t, l: s.unlockLine, where: `解鎖「${s.label}」時` })),
+  ] },
+].filter(t => t.items.length);
 let tab = TABS[0].key;
 const counts = t => { const n = t.items.length, done = t.items.filter(i => state[i.id]?.v).length; return { n, done }; };
 function renderTabs() {
@@ -113,6 +124,23 @@ function cardHTML(t, it) {
       <p class="seg">${v.segments.map(s => `${esc(s.text)}（${esc(s.source)}${s.manualSeg ? '・人工切詞' : ''}）`).join(' + ')}${poly ? ' <span class="pill warn">含多音字</span>' : ''}</p>
       <p>課本若標「一」「不」的變調或輕聲和這裡不同，請按不對並寫課本的寫法。</p>`;
   }
+  if (t.key === 'season') {
+    const w = it.sw;
+    return `<h3><span class="big">${esc(it.ch)}</span><span class="big-zy">${zhuyinHTML(w.zhuyin)}</span><span style="font-size:14px">${esc(w.zhuyin)}</span><a href="${moe(it.ch)}" target="_blank" rel="noopener">教育部筆順 ↗</a></h3>
+      <div class="order"><div class="hw" data-hw="${esc(it.ch)}"></div><div class="side"><p><span class="pill">${esc(it.season.icon)} ${esc(it.season.short)}小考</span></p>
+      <p style="font-size:14px;color:var(--ink)">詞：<span class="wp-word" style="font-size:24px">${wordHTML(w.word, w.wordZy)}</span></p>
+      <p>${(w.wordZy ?? []).map(esc).join('　')}　<a href="https://dict.revised.moe.edu.tw/search.jsp?md=1&word=${encodeURIComponent(w.word)}" target="_blank" rel="noopener">辭典 ↗</a></p>
+      <p>請確認：字的注音、詞和詞的注音、左邊示範的筆順（已用程式比對過教育部筆順網）。</p><button type="button" data-play="${esc(it.ch)}">▶ 再播一次</button></div></div>`;
+  }
+  if (t.key === 'bpart') {
+    const q = it.q;
+    return `<h3><span class="big">${esc(it.ch)}</span>守門員「認部件」<a href="${moe(it.ch)}" target="_blank" rel="noopener">教育部筆順 ↗</a></h3>
+      <p>遊戲會問：「${esc(it.ch)}」裡有哪一個部件？</p>
+      <p style="color:var(--ok)">正確答案：<span class="parts">${esc(q.part)}</span>（${esc(q.say)}）</p>
+      <p style="color:var(--ng)">錯誤選項：<span class="parts">${q.wrong.map(x => esc(x.part)).join(' ')}</span>（${q.wrong.map(x => esc(x.say)).join('、')}）</p>
+      <p>請確認：正確答案真的在這個字裡；兩個錯誤選項都<b>不在</b>這個字裡（也不會被看成在字裡）。</p>`;
+  }
+  if (t.key === 'line') return `<h3><span class="wp-word" style="font-size:24px">${wordHTML(it.l.t, it.l.zy)}</span></h3><p>${esc(it.where)}</p><p style="font-size:14px;color:var(--ink)">${it.l.zy.map(esc).join('　')}</p><p>請確認每個字的注音（輕聲、變調以課本為準）。</p>`;
   if (it.p) return `<h3><span class="big">${esc(it.p.part)}</span>${esc(it.p.say)}</h3><p>遊戲會問「哪些字有${esc(it.p.say)}？」，答案是：</p><div class="parts">${it.p.chars.join('')}</div>`;
   return `<h3>形近字一組</h3><p>「聽音找字」會從這幾個字裡挑一個念給孩子聽，請確認它們真的長得像、讀音不同：</p><div class="parts">${it.g.join('')}</div>`;
 }
@@ -122,7 +150,7 @@ async function mount(t) {
   const items = t.items.filter(i => !only || !state[i.id]?.v);
   list.innerHTML = items.length ? items.map(it => `<div class="card ${state[it.id]?.v ?? ''}" id="c-${esc(it.id)}">${cardHTML(t, it)}${verdictHTML(it.id)}</div>`).join('') : '<p>這一頁都核對完了 🎉</p>';
   writers.clear();
-  if (t.key === 'order') for (const el of list.querySelectorAll('[data-hw]')) {
+  if (t.key === 'order' || t.key === 'season') for (const el of list.querySelectorAll('[data-hw]')) {
     const ch = el.dataset.hw, w = HanziWriter.create(el, ch, { width: 150, height: 150, padding: 8, showOutline: true, strokeAnimationSpeed: 0.8, delayBetweenStrokes: 450, charDataLoader: (c, ok, bad) => loadGlyph(c).then(ok, bad) });
     writers.set(ch, w); w.animateCharacter();
   }

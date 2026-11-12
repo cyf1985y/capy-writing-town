@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=52';
-import { placeAccessory } from './shop.js?v=52';
+import { Album } from './album.js?v=53';
+import { placeAccessory } from './shop.js?v=53';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -632,11 +632,11 @@ const ALBUM_CSS = (frame, locked) => `
 /* v47 手機橫放：圖鑑卡之間的上下距離縮小 */
 @media (orientation:landscape) and (max-height:560px){.al2 .al-grid{row-gap:14px;gap:8px}}
 /* v51 守門員徽章 */
-.al-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;margin:10px 0 0;padding-top:8px;border-top:2px dashed rgba(91,58,74,.15)}
+.al-badges{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:center;margin:10px 0 0;padding-top:8px;border-top:2px dashed rgba(91,58,74,.15);position:sticky;bottom:-18px;z-index:2;background:#fffdf7;padding-bottom:8px} /* v53：圖鑑要捲時（手機直放），徽章列黏在下面，不用捲到底才看得到 */
 .al-badges h3{margin:0 6px 0 0;font-size:15px}
 .al-badges i{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:900 14px/1 system-ui;font-style:normal;color:#b9aeb3;border:2px dashed #d8cfd3;background:#fff}
 .al-badges i.got{color:#7a4b00;border:2px solid #fff;background:radial-gradient(circle at 35% 30%,#fff3c4,#f2c14e 70%,#c98f2a);box-shadow:0 2px 6px rgba(0,0,0,.25)}
-@media (orientation:landscape) and (max-height:560px){.al-badges{margin:4px 0 0;padding-top:4px}.al-badges i{width:26px;height:26px;font-size:12px}.al-badges h3{font-size:13px}}
+@media (orientation:landscape) and (max-height:560px){.al-badges{margin:4px 0 0;padding-top:4px;bottom:-12px;padding-bottom:4px}.al-badges i{width:26px;height:26px;font-size:12px}.al-badges h3{font-size:13px}}
 `;
 
 export class Album2D extends Album {
