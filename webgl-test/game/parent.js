@@ -1,8 +1,8 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=47';
-import { LEVELS } from './writing-panel.js?v=47';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=47';
+import { starsOf } from './stars.js?v=48';
+import { LEVELS } from './writing-panel.js?v=48';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=48';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -39,7 +39,8 @@ const CSS = `
 .pp-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:15px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A)}
 .pp-dialog{background:#fffdf7;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:16px 18px 18px;width:min(94vw,560px);max-height:94vh;overflow:auto;box-sizing:border-box}
 .pp-dialog h2{margin:0 0 10px;font-size:20px;display:flex;align-items:center}
-.pp-dialog h2 button{margin-left:auto}
+.pp-dialog h2>button{margin-left:auto}
+.pp-tabs{display:none}
 .pp-dialog h3{margin:14px 0 6px;font-size:16px;color:#E8665C}
 .pp-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .pp-kpis div{background:#fff;border:2px solid #F7C9C0;border-radius:12px;padding:8px;text-align:center}
@@ -54,6 +55,7 @@ const CSS = `
 .pp-dhist ul{list-style:none;margin:6px 0 0;padding:0}.pp-dhist li{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 6px}
 .pp-dt{font-size:13px;color:#8a6f7c;flex-basis:100%}.pp-dq{display:inline-flex;flex-direction:column;align-items:center;min-width:40px;padding:2px 4px;border:2px solid #cfe8d4;border-radius:10px;background:#fff;font-size:22px;font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif;color:#2f3e46}
 .pp-dq.bad{border-color:#F7C9C0}.pp-dq small{font:12px system-ui,sans-serif;color:#8a6f7c}
+.pp-dweak .dn,.pp-dnote{display:none}
 .pp-weak a{margin-left:auto;font-size:13px;white-space:nowrap;color:#1c5d99}
 .pp-set{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:center}
 .pp-set .seg{display:flex;gap:6px;flex-wrap:wrap}
@@ -81,6 +83,35 @@ const CSS = `
 .pp-rw .rw-ask{background:#FFF1DC;border-radius:10px;padding:6px 8px}
 .pp-rw output{display:block;font-size:13px;min-height:1.2em;margin-top:4px}
 .pp-rw details{margin-top:4px;font-size:13px}.pp-rw details li{border:0;padding:2px 0;margin:0;background:none}
+/* v48 手機橫放：上面分頁（學習／聽寫／星星／設定），每頁左右兩欄，少捲動 */
+@media (orientation:landscape) and (max-height:560px){
+  .pp-dialog{width:96vw;max-width:none;height:calc(100dvh - 12px);max-height:none;padding:8px 14px 10px;display:flex;flex-direction:column}
+  .pp-dialog h2{margin:0 0 6px;font-size:17px;gap:8px;flex:none}
+  .pp-tabs{display:flex;gap:6px;margin-left:10px}
+  .pp-tabs button{font:inherit;font-size:14px;font-weight:700;padding:5px 12px;border-radius:999px;border:2px solid #F5CBA7;background:#fff;color:#6E473B;cursor:pointer;touch-action:manipulation}
+  .pp-tabs button[aria-selected=true]{background:#FFA94D;border-color:#FFA94D;color:#fff}
+  .pp-sec{display:none;flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}
+  .pp-sec.on{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;align-content:start}
+  .pp-sec.one.on{grid-template-columns:1fr}
+  .pp-sec>.pp-c{min-width:0}
+  .pp-sec h3{margin:6px 0 4px;font-size:15px}
+  .pp-sec>.pp-c>h3:first-child,.pp-sec>.pp-c>.pp-note:first-child{margin-top:0}
+  .pp-kpis{gap:6px}.pp-kpis div{padding:4px 6px;font-size:13px}.pp-kpis b{font-size:20px}
+  .pp-week{height:72px}
+  .pp-weak li{padding:4px 8px;margin:0 0 4px}.pp-weak .ch{font-size:26px}
+  .pp-note{margin:6px 0 0}
+  .pp-sec[data-sec=set].on{grid-template-rows:auto 1fr}.pp-sec[data-sec=set] .pp-note{font-size:12px;margin-top:4px}.pp-sec[data-sec=set]>.pp-c:nth-child(1){grid-area:1/1}.pp-sec[data-sec=set]>.pp-c:nth-child(2){grid-area:1/2/3/3}.pp-sec[data-sec=set]>.pp-c:nth-child(3){grid-area:2/1}
+  .pp-sec[data-sec=dict].on{grid-template-rows:100%}.pp-sec[data-sec=dict]>.pp-c{overflow:auto;overscroll-behavior:contain}
+  .pp-dweak{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:4px}
+  .pp-dweak li{margin:0;padding:0 6px;gap:6px}.pp-dweak .ch{font-size:22px}.pp-dweak .dl{display:none}.pp-dweak .dn{display:block;font-size:12px;color:#8a6f7c;white-space:nowrap}
+  .pp-dnote{display:block}
+  .pp-dhist summary{font-size:14px}.pp-dhist li{gap:3px;margin:0 0 4px;flex-wrap:nowrap;flex-direction:row}.pp-dhist li .pp-dt{flex:none;width:44px;white-space:normal;line-height:1.2}.pp-dt{font-size:12px}
+  .pp-dq{flex:1 1 0;min-width:0;padding:0 1px;font-size:17px;border-radius:8px}.pp-dq small{font-size:10px}
+  .pp-set{gap:5px 8px}.pp-set .seg{gap:5px}.pp-set button{font-size:13px;padding:3px 10px}
+  .pp-save{padding:6px 8px}.pp-save p{font-size:13px;margin:0 0 4px}.pp-save button{font-size:13px;padding:4px 10px}
+  .pp-rw p{font-size:13px;margin:0 0 4px}.pp-rw li{padding:5px 8px;margin:0 0 4px}.pp-rw .rw-bar{margin:4px 0 2px}.pp-rw small{font-size:12px}
+  .pp-rw button{font-size:13px;padding:3px 10px}.pp-rw .row,.pp-rw .rw-form,.pp-rw .rw-ask{margin-top:4px}.pp-rw input{font-size:15px;padding:3px 6px}
+}
 `;
 
 export class ParentPanel {
@@ -95,21 +126,28 @@ export class ParentPanel {
     const seg = (key, opts) => `<div class="seg">${opts.map(([v, l]) => `<button type="button" data-k="${key}" data-v="${v}" aria-pressed="${String(set[key]) === String(v)}">${l}</button>`).join('')}</div>`;
     const el = document.createElement('div'); el.className = 'pp-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', '家長面板');
     el.innerHTML = `<div class="pp-dialog">
-      <h2>👪 家長面板<button type="button" data-act="close">關閉</button></h2>
-      ${this.books ? `<p class="pp-note" style="margin:0 0 8px">📚 目前課本：<b>${esc(this.books.list.find(b => b.id === this.books.current)?.label ?? '')}</b>（可在下方「設定」切換）</p>` : ''}
+      <h2>👪 家長面板${this._tabsHTML()}<button type="button" data-act="close">關閉</button></h2>
+      <section class="pp-sec" data-sec="learn"><div class="pp-c">
+      ${this.books ? `<p class="pp-note" style="margin:0 0 8px">📚 目前課本：<b>${esc(this.books.list.find(b => b.id === this.books.current)?.label ?? '')}</b>（可在「設定」切換）</p>` : ''}
       <div class="pp-kpis"><div>學會的字<b>${st.learned}</b>／${st.totalChars}</div><div>今天寫了<b>${st.today.n}</b>次</div><div>今天練習<b>${mins(st.today.ms)}</b>分鐘</div></div>
       <h3>最近 7 天（分鐘）</h3>
       <div class="pp-week">${st.week.map(w => `<div title="${w.d}：${w.n} 次"><span>${mins(w.ms)}</span><i style="height:${Math.round(70 * w.ms / maxMs)}%"></i>${w.d.slice(5).replace('-', '/')}</div>`).join('')}</div>
       <h3>關卡進度（已過關的字）</h3>
       <div class="pp-kpis">${LEVELS.map((l, i) => `<div>${l.icon} ${l.label}<b>${st.levelCount[i]}</b>字</div>`).join('')}</div>
+      </div><div class="pp-c">
       <h3>常錯的字</h3>
       ${st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${w.char}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${w.worstStroke.name}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${w.char.codePointAt(0)}" target="_blank" rel="noopener">教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>'}
-      ${this.dictation ? this._dictationHTML() : ''}
+      </div></section>
+      ${this.dictation ? `<section class="pp-sec" data-sec="dict">${this._dictationHTML()}</section>` : ''}
+      <section class="pp-sec" data-sec="star"><div class="pp-c">
       ${this.rewards ? '<h3>🎁 獎勵（用星星換）</h3><div class="pp-rw"></div>' : ''}
+      </div><div class="pp-c">
       ${this.shop ? (() => { const s = this.shop.summary(); return s ? `<h3>🏪 配件商店</h3>
       <div class="pp-save pp-shop"><p>孩子自己用星星買配件，幫小鎮的朋友換裝。已買 <b>${s.count}</b>／${s.all} 件，花了 ★${s.spent}，還能用 ★${Math.max(0, s.balance)}。</p>
         <p class="pp-note" style="margin:0">配件的星星和上面的獎勵<b>分開算</b>：買配件不會讓獎勵變遠，兌換獎勵也不會讓配件星星變少。買了不能退。</p>
         ${s.names.length ? `<details><summary>已買的配件（${s.names.length} 件）</summary><p style="margin:4px 0 0">${s.names.map(esc).join('、')}</p></details>` : ''}</div>` : ''; })() : ''}
+      </div></section>
+      <section class="pp-sec" data-sec="set"><div class="pp-c">
       ${this.backup ? (() => { const i = this.backup.info() ?? {}; return `<h3>📱 存檔保護</h3>
       <div class="pp-save">
         <p>${i.standalone ? '<span class="ok">✔ 已從主畫面開啟</span>，資料比較不會被系統清掉。' : '<span class="warn">建議加到主畫面</span>：在 Safari 按分享鈕 ⬆️ →「加入主畫面」，以後從主畫面的圖示打開。'}${i.persisted ? '（瀏覽器已同意長期保存）' : ''}</p>
@@ -117,6 +155,7 @@ export class ParentPanel {
         <div class="row"><button type="button" data-act="export">💾 備份進度</button><button type="button" data-act="import">📂 從備份還原</button><input type="file" accept="application/json,.json" hidden></div>
         <output></output>
       </div>`; })() : ''}
+      </div><div class="pp-c">
       <h3>設定</h3>
       <div class="pp-set">
         <span>示範速度</span>${seg('speed', [['slow', '慢'], ['mid', '中'], ['fast', '快']])}
@@ -127,16 +166,19 @@ export class ParentPanel {
         ${this.skins?.list.length > 1 ? `<span>遊戲主題</span><div class="seg">${this.skins.list.map(b => `<button type="button" data-skin="${esc(b.id)}" aria-pressed="${b.id === this.skins.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
         ${this.books ? `<span>課本版本</span><div class="seg">${this.books.list.map(b => `<button type="button" data-book="${esc(b.id)}" aria-pressed="${b.id === this.books.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
       </div>
+      <p class="pp-note">🔍 <a href="./game/check.html" target="_blank" rel="noopener">家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
+      <p class="pp-note">🖨️ <a href="./game/worksheet.html" target="_blank" rel="noopener">列印練習單</a>：把還沒三顆星、常錯的字印成 A4 練習單（可存成 PDF）。</p>
+      </div><div class="pp-c">
       ${this.skins?.list.length > 1 ? '<p class="pp-note">換遊戲主題只是換圖案和朋友的樣子，會重新載入；學會的字、星星、獎勵和配件都不變。</p>' : ''}
       ${this.books ? '<p class="pp-note">換課本版本會重新載入。每個版本的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各版本分別做。</p>' : ''}
       <p class="pp-note">設定只存在這台裝置。筆畫名稱與口訣由 AI 撰寫，若和課本不同請以課本為準。</p>
-      <p class="pp-note">🔍 <a href="./game/check.html" target="_blank" rel="noopener">家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
-      <p class="pp-note">🖨️ <a href="./game/worksheet.html" target="_blank" rel="noopener">列印練習單</a>：把還沒三顆星、常錯的字印成 A4 練習單（可存成 PDF）。</p>
+      </div></section>
     </div>`;
     for (const t of ['pointerdown', 'pointermove', 'mousedown', 'mousemove', 'wheel', 'touchstart', 'touchmove']) el.addEventListener(t, e => e.stopPropagation(), { passive: true });
     el.addEventListener('click', e => {
       const b = e.target.closest('button'); if (!b) { if (e.target === el) this.close(); return; }
       if (b.dataset.act === 'close') return this.close();
+      if (b.dataset.tab) return this._showTab(b.dataset.tab);
       if (b.dataset.act === 'export' || b.dataset.act === 'import') return this._backupAct(b.dataset.act);
       if (b.dataset.rw) return this._rewardAct(b);
       if (b.dataset.skin) { this.log('skin ' + b.dataset.skin); return this.skins.onPick(b.dataset.skin); }
@@ -152,22 +194,33 @@ export class ParentPanel {
       const f = e.target.files?.[0], out = el.querySelector('.pp-save output'); e.target.value = ''; if (!f) return;
       try { const r = await this.backup.onImport(f); out.textContent = r.message; } catch (err) { out.textContent = '還原失敗：' + (err?.message || err); this.log('restore failed ' + err); }
     });
-    document.body.append(el); this.el = el; this.stats = st;
+    document.body.append(el); this.el = el; this.stats = st; this._showTab(this._tab);
     this._rw = { mode: null, id: null, msg: '', quiz: null }; this._renderRewards();
+  }
+  /** v48 手機橫放用的分頁鈕（其他尺寸 CSS 藏起來，所有區塊照舊一路排下來） */
+  _tabsHTML() {
+    const t = [['learn', '📊 學習'], this.dictation && ['dict', '👂 聽寫'], (this.rewards || this.shop) && ['star', '⭐ 星星'], ['set', '⚙️ 設定']].filter(Boolean);
+    return `<nav class="pp-tabs" role="tablist">${t.map(([k, l]) => `<button type="button" role="tab" data-tab="${k}">${l}</button>`).join('')}</nav>`;
+  }
+  _showTab(k) {
+    if (!this.el?.querySelector(`.pp-sec[data-sec="${k}"]`)) k = 'learn'; this._tab = k;
+    for (const s of this.el.querySelectorAll('.pp-sec')) s.classList.toggle('on', s.dataset.sec === k);
+    for (const b of this.el.querySelectorAll('.pp-tabs button')) b.setAttribute('aria-selected', String(b.dataset.tab === k));
   }
   /** 👂 聽寫小考成績（v43）：考過幾次、要再練的字、最近幾次的結果。資料由 dictation.summary() 提供（同 dictation.js 的存檔） */
   _dictationHTML() {
     const d = this.dictation.summary?.() ?? null, n = d?.sessions || 0, hist = Array.isArray(d?.history) ? d.history : [], tested = d?.tested ?? {}, missed = d?.missed ?? {};
     const day = iso => { const t = new Date(iso); return isNaN(t) ? '' : `${t.getMonth() + 1}/${t.getDate()} ${String(t.getHours()).padStart(2, '0')}:${String(t.getMinutes()).padStart(2, '0')}`; };
     const W = { ok: '✓', hint: '💡', many: '△', skip: '—' }, weak = Object.entries(d?.weak ?? {}).sort((a, b) => b[1] - a[1]);
-    if (!n && !weak.length) return `<h3>👂 聽寫小考</h3><p class="pp-note" style="margin:0 0 6px">還沒考過。孩子學會 5 個字以後，大廳會出現「👂 聽寫小考」：聽語音、點注音、再自己寫出國字。</p>`;
+    if (!n && !weak.length) return `<div class="pp-c"><h3>👂 聽寫小考</h3><p class="pp-note" style="margin:0 0 6px">還沒考過。孩子學會 5 個字以後，大廳會出現「👂 聽寫小考」：聽語音、點注音、再自己寫出國字。</p></div>`;
     const row = h => `<li><span class="pp-dt">${esc(day(h.at))}</span>${h.qs.map(q => `<span class="pp-dq${q.zy && q.w === 'ok' ? '' : ' bad'}" title="注音${q.zy ? '對' : '錯'}，國字${{ ok: '自己寫對', hint: '看了提示', many: '錯 3 筆以上', skip: '沒寫' }[q.w] ?? ''}">${esc(q.c)}<small>${q.zy ? '✓' : '✗'}${W[q.w] ?? ''}</small></span>`).join('')}</li>`;
-    return `<h3>👂 聽寫小考</h3>
+    const land = matchMedia('(orientation:landscape) and (max-height:560px)').matches; // 手機橫放：成績直接展開放右欄
+    return `<div class="pp-c"><h3>👂 聽寫小考</h3>
       <div class="pp-kpis"><div>考過<b>${n}</b>次</div><div>要再練的字<b>${weak.length}</b>個</div><div>最近一次<b style="font-size:18px">${esc(hist.length ? day(hist[hist.length - 1].at) : '—')}</b></div></div>
-      ${weak.length ? `<ul class="pp-weak pp-dweak">${weak.map(([c]) => `<li><span class="ch">${esc(c)}</span><span>考過 ${tested[c] ?? '?'} 次，其中 ${missed[c] ?? '?'} 次沒有全對<small>下次聽寫會先考這個字；之後全對就會從這裡移除（錯越多次，要全對越多次）</small></span></li>`).join('')}</ul>`
-        : '<p class="pp-note" style="margin:0 0 6px">目前沒有要再練的字 👍</p>'}
-      ${hist.length ? `<details class="pp-dhist"><summary>最近 ${Math.min(10, hist.length)} 次的成績</summary><ul>${hist.slice(-10).reverse().map(row).join('')}</ul>
-        <p class="pp-note" style="margin:4px 0 0">每個字下面：第一個是注音（✓ 對／✗ 拼錯過），第二個是國字（✓ 自己寫對／💡 看了提示／△ 錯 3 筆以上／— 沒寫）。</p></details>` : ''}`;
+      ${weak.length ? `<ul class="pp-weak pp-dweak">${weak.map(([c]) => `<li><span class="ch">${esc(c)}</span><span class="dn">錯 ${missed[c] ?? '?'}／考 ${tested[c] ?? '?'}</span><span class="dl">考過 ${tested[c] ?? '?'} 次，其中 ${missed[c] ?? '?'} 次沒有全對<small>下次聽寫會先考這個字；之後全對就會從這裡移除（錯越多次，要全對越多次）</small></span></li>`).join('')}</ul><p class="pp-note pp-dnote">下次聽寫會先考這些字；之後全對就會移除（錯越多次，要全對越多次）。</p>`
+        : '<p class="pp-note" style="margin:0 0 6px">目前沒有要再練的字 👍</p>'}</div><div class="pp-c">
+      ${hist.length ? `<details class="pp-dhist"${land ? ' open' : ''}><summary>最近 ${Math.min(10, hist.length)} 次的成績</summary><ul>${hist.slice(-10).reverse().map(row).join('')}</ul>
+        <p class="pp-note" style="margin:4px 0 0">每個字下面：第一個是注音（✓ 對／✗ 拼錯過），第二個是國字（✓ 自己寫對／💡 看了提示／△ 錯 3 筆以上／— 沒寫）。</p></details>` : ''}</div>`;
   }
   /** 🎁 獎勵區：每次操作後整區重畫（資料直接讀 localStorage） */
   _renderRewards() {
