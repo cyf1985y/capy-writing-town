@@ -63,13 +63,15 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 <div class="list" id="list"></div>
 <script type="module">
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { zhuyinHTML, wordHTML } from './writing-panel.js?v=53';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=54';
+import { isApp, shareTextFile, bindExternalLinks } from './app-env.js?v=54'; // v54 App 版
+import { parentGate, gateValid } from './parent-gate.js?v=54';
 const KEY = 'capy_check_v1', $ = s => document.querySelector(s);
 const get = async u => { const r = await fetch(u, { cache: 'no-cache' }); if (!r.ok) throw new Error(u + ' HTTP ' + r.status); return r.json(); };
-const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=53'), get('./stroke_names.json?v=53'), get('./zhuyin.json?v=53'), get('./parts_game.json?v=53')]);
+const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=54'), get('./stroke_names.json?v=54'), get('./zhuyin.json?v=54'), get('./parts_game.json?v=54')]);
 // v53：季節小考的字、守門員的部件題、朋友台詞（讀不到就不出現那一頁，其他照常）
 const opt = u => get(u).catch(() => null);
-const [SEASONS, BPARTS, EXTRAS] = await Promise.all([opt('./seasons.json?v=53'), opt('./boss_parts.json?v=53'), opt('./extras.json?v=53')]);
+const [SEASONS, BPARTS, EXTRAS] = await Promise.all([opt('./seasons.json?v=54'), opt('./boss_parts.json?v=54'), opt('./extras.json?v=54')]);
 let state = {}; try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { state = {}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { $('#msg').textContent = '無法儲存（私密瀏覽？）'; } };
 const dataUrl = ch => (TW.chars[ch] ? '../vendor-v2/hanzi-writer/data-tw/' : '../vendor-v2/hanzi-writer/data/') + encodeURIComponent(ch) + '.json';
@@ -104,37 +106,37 @@ function verdictHTML(id) {
 function cardHTML(t, it) {
   if (t.key === 'order') {
     const m = it.m, notes = [m.newOrderFromOriginal && '調整筆順', m.split && '拆開一筆（台灣多一畫）', m.directionFix && '修正行筆方向'].filter(Boolean);
-    return `<h3><span class="big">${it.ch}</span>${m.moeStrokes} 畫<a href="${moe(it.ch)}" target="_blank" rel="noopener">教育部筆順 ↗</a></h3>
+    return `<h3><span class="big">${it.ch}</span>${m.moeStrokes} 畫<a href="${moe(it.ch)}" target="_blank" rel="noopener" data-ext>教育部筆順 ↗</a></h3>
       <div class="order"><div class="hw" data-hw="${it.ch}"></div><div class="side"><p>${notes.map(n => `<span class="pill">${n}</span>`).join('')}</p><p>左邊會照遊戲裡的筆順一筆一筆示範，請和教育部網站的動畫對照。</p><button type="button" data-play="${it.ch}">▶ 再播一次</button></div></div>`;
   }
   if (t.key === 'sname') {
     const names = SN.chars[it.ch];
-    return `<h3><span class="big">${it.ch}</span>${names.length} 畫${TW.chars[it.ch] ? '<span class="pill">台灣版字形</span>' : ''}<a href="${moe(it.ch)}" target="_blank" rel="noopener">教育部筆順 ↗</a></h3>
+    return `<h3><span class="big">${it.ch}</span>${names.length} 畫${TW.chars[it.ch] ? '<span class="pill">台灣版字形</span>' : ''}<a href="${moe(it.ch)}" target="_blank" rel="noopener" data-ext>教育部筆順 ↗</a></h3>
       <p>紅色是這一筆，圓點是起筆。名稱不對的那一筆請點一下（變紅框），再按「✘ 不對」。</p><div class="strokes" data-sn="${it.ch}">${names.map((n, i) => `<div class="stroke${state[it.id]?.bad?.includes(i) ? ' bad' : ''}" data-i="${i}"><svg viewBox="0 0 1024 1024"></svg><b>${n ?? '—'}</b><em>第 ${i + 1} 筆</em></div>`).join('')}</div>`;
   }
   if (t.key === 'zy' && it.ch) {
     const v = it.v, others = v.moeReadings.filter(r => r !== v.zhuyin);
-    return `<h3><span class="big">${it.ch}</span><span class="big-zy">${zhuyinHTML(v.zhuyin)}</span><span style="font-size:14px">${esc(v.zhuyin)}</span><a href="https://dict.revised.moe.edu.tw/search.jsp?md=1&word=${encodeURIComponent(it.ch)}" target="_blank" rel="noopener">教育部辭典 ↗</a></h3>
+    return `<h3><span class="big">${it.ch}</span><span class="big-zy">${zhuyinHTML(v.zhuyin)}</span><span style="font-size:14px">${esc(v.zhuyin)}</span><a href="https://dict.revised.moe.edu.tw/search.jsp?md=1&word=${encodeURIComponent(it.ch)}" target="_blank" rel="noopener" data-ext>教育部辭典 ↗</a></h3>
       <p>來源：${esc(v.source)}${v.moeAgrees ? '；辭典有這個讀音' : ''}</p>${others.length ? `<p><span class="pill warn">多音字</span>辭典其他讀音：${others.map(esc).join('、')}</p>` : ''}`;
   }
   if (t.key === 'zy') {
     const v = it.v, poly = v.segments.some(s => s.polyphonic);
-    return `<h3><span class="zyrow"><span class="wp-word">${wordHTML(it.w, v.zhuyin)}</span></span><a href="https://dict.revised.moe.edu.tw/search.jsp?md=1&word=${encodeURIComponent(it.w.replace(/[！!]/g, ''))}" target="_blank" rel="noopener">教育部辭典 ↗</a></h3>
+    return `<h3><span class="zyrow"><span class="wp-word">${wordHTML(it.w, v.zhuyin)}</span></span><a href="https://dict.revised.moe.edu.tw/search.jsp?md=1&word=${encodeURIComponent(it.w.replace(/[！!]/g, ''))}" target="_blank" rel="noopener" data-ext>教育部辭典 ↗</a></h3>
       <p style="font-size:14px;color:var(--ink)">${v.zhuyin.map(esc).join('　')}</p>
       <p class="seg">${v.segments.map(s => `${esc(s.text)}（${esc(s.source)}${s.manualSeg ? '・人工切詞' : ''}）`).join(' + ')}${poly ? ' <span class="pill warn">含多音字</span>' : ''}</p>
       <p>課本若標「一」「不」的變調或輕聲和這裡不同，請按不對並寫課本的寫法。</p>`;
   }
   if (t.key === 'season') {
     const w = it.sw;
-    return `<h3><span class="big">${esc(it.ch)}</span><span class="big-zy">${zhuyinHTML(w.zhuyin)}</span><span style="font-size:14px">${esc(w.zhuyin)}</span><a href="${moe(it.ch)}" target="_blank" rel="noopener">教育部筆順 ↗</a></h3>
+    return `<h3><span class="big">${esc(it.ch)}</span><span class="big-zy">${zhuyinHTML(w.zhuyin)}</span><span style="font-size:14px">${esc(w.zhuyin)}</span><a href="${moe(it.ch)}" target="_blank" rel="noopener" data-ext>教育部筆順 ↗</a></h3>
       <div class="order"><div class="hw" data-hw="${esc(it.ch)}"></div><div class="side"><p><span class="pill">${esc(it.season.icon)} ${esc(it.season.short)}小考</span></p>
       <p style="font-size:14px;color:var(--ink)">詞：<span class="wp-word" style="font-size:24px">${wordHTML(w.word, w.wordZy)}</span></p>
-      <p>${(w.wordZy ?? []).map(esc).join('　')}　<a href="https://dict.revised.moe.edu.tw/search.jsp?md=1&word=${encodeURIComponent(w.word)}" target="_blank" rel="noopener">辭典 ↗</a></p>
+      <p>${(w.wordZy ?? []).map(esc).join('　')}　<a href="https://dict.revised.moe.edu.tw/search.jsp?md=1&word=${encodeURIComponent(w.word)}" target="_blank" rel="noopener" data-ext>辭典 ↗</a></p>
       <p>請確認：字的注音、詞和詞的注音、左邊示範的筆順（已用程式比對過教育部筆順網）。</p><button type="button" data-play="${esc(it.ch)}">▶ 再播一次</button></div></div>`;
   }
   if (t.key === 'bpart') {
     const q = it.q;
-    return `<h3><span class="big">${esc(it.ch)}</span>守門員「認部件」<a href="${moe(it.ch)}" target="_blank" rel="noopener">教育部筆順 ↗</a></h3>
+    return `<h3><span class="big">${esc(it.ch)}</span>守門員「認部件」<a href="${moe(it.ch)}" target="_blank" rel="noopener" data-ext>教育部筆順 ↗</a></h3>
       <p>遊戲會問：「${esc(it.ch)}」裡有哪一個部件？</p>
       <p style="color:var(--ok)">正確答案：<span class="parts">${esc(q.part)}</span>（${esc(q.say)}）</p>
       <p style="color:var(--ng)">錯誤選項：<span class="parts">${q.wrong.map(x => esc(x.part)).join(' ')}</span>（${q.wrong.map(x => esc(x.say)).join('、')}）</p>
@@ -179,11 +181,13 @@ $('#list').addEventListener('input', e => { const box = e.target.closest('.verdi
 $('#exportBtn').addEventListener('click', async () => {
   const summary = Object.fromEntries(TABS.map(t => { const c = counts(t), ng = t.items.filter(i => state[i.id]?.v === 'ng').length; return [t.key, { total: c.n, checked: c.done, ng }]; }));
   const obj = { format: 'capy-check', version: 1, exportedAt: new Date().toISOString(), summary, results: state };
-  const name = `甜點寫字核對結果_${obj.exportedAt.slice(0, 10)}.json`, blob = new Blob([JSON.stringify(obj, null, 1)], { type: 'application/json' }), file = new File([blob], name, { type: 'application/json' });
-  if (navigator.canShare?.({ files: [file] })) { try { await navigator.share({ files: [file], title: name }); $('#msg').textContent = '已分享 ' + name; return; } catch (err) { if (err?.name === 'AbortError') return; } }
-  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name }); document.body.append(a); a.click(); a.remove();
-  $('#msg').textContent = `已下載 ${name}（${Object.values(summary).map(s => s.checked).reduce((a, b) => a + b, 0)} 項已核對）`;
+  const name = `甜點寫字核對結果_${obj.exportedAt.slice(0, 10)}.json`, n = Object.values(summary).map(s => s.checked).reduce((a, b) => a + b, 0);
+  if (isApp() && !gateValid() && !(await parentGate({ reason: 'check-export' }))) return; // v54：App 裡匯出前確認是大人（核對頁直接打開時）
+  let r; try { r = await shareTextFile(name, JSON.stringify(obj, null, 1)); } catch (err) { $('#msg').textContent = '匯出失敗：' + (err?.message || err); return; }
+  $('#msg').textContent = r.via === 'cancel' ? '已取消。' : r.via === 'unavailable' ? '⚠️ App 裡現在不能存檔案，請截圖回報。' : `${r.via === 'share' ? '已分享' : '已下載'} ${name}（${n} 項已核對）`;
+  window.__checkLastExport = r;
 });
+bindExternalLinks($('#list'));
 render();
 window.__check = { TABS, get state() { return state; } };
 </script>

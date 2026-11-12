@@ -1,8 +1,9 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=53';
-import { LEVELS } from './writing-panel.js?v=53';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=53';
+import { isApp, bindExternalLinks } from './app-env.js?v=54'; // v54 App 版
+import { starsOf } from './stars.js?v=54';
+import { LEVELS } from './writing-panel.js?v=54';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=54';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -137,7 +138,7 @@ export class ParentPanel {
       ${(() => { const q = this.seasons?.info().list.filter(x => x.runs) ?? []; return q.length ? `<p class="pp-note" style="margin:6px 0 0">🌸 季節小考（課本外的字，不算進上面的進度）：${q.map(x => `${esc(x.short)} 做過 ${x.runs} 次`).join('、')}</p>` : ''; })()}
       </div><div class="pp-c">
       <h3>常錯的字</h3>
-      ${st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${w.char}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${w.worstStroke.name}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${w.char.codePointAt(0)}" target="_blank" rel="noopener">教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>'}
+      ${st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${w.char}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${w.worstStroke.name}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${w.char.codePointAt(0)}" target="_blank" rel="noopener" data-ext>教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>'}
       </div></section>
       ${this.dictation ? `<section class="pp-sec" data-sec="dict">${this._dictationHTML()}</section>` : ''}
       <section class="pp-sec" data-sec="star"><div class="pp-c">
@@ -152,8 +153,9 @@ export class ParentPanel {
       <section class="pp-sec" data-sec="set"><div class="pp-c">
       ${this.backup ? (() => { const i = this.backup.info() ?? {}; return `<h3>📱 存檔保護</h3>
       <div class="pp-save">
-        <p>${i.standalone ? '<span class="ok">✔ 已從主畫面開啟</span>，資料比較不會被系統清掉。' : '<span class="warn">建議加到主畫面</span>：在 Safari 按分享鈕 ⬆️ →「加入主畫面」，以後從主畫面的圖示打開。'}${i.persisted ? '（瀏覽器已同意長期保存）' : ''}</p>
-        <p>iPhone 上「主畫面 App」和「Safari」是兩份分開的存檔。換手機或改用主畫面 App 前，先在原本的地方按「備份」，再到新的地方按「還原」。</p>
+        ${isApp() ? `<p><span class="ok">✔ 資料存在這個 App 裡</span>，沒有網路也能玩。<b>刪掉 App 會連進度一起刪掉</b>，換 iPad 或刪 App 前，先按「備份」。</p>
+        <p>App 和 Safari 網站版的進度是分開的。要把網站版的進度搬過來：先在 Safari 按「備份」，再到 App 按「還原」（康軒、南一要各做一次）。</p>` : `<p>${i.standalone ? '<span class="ok">✔ 已從主畫面開啟</span>，資料比較不會被系統清掉。' : '<span class="warn">建議加到主畫面</span>：在 Safari 按分享鈕 ⬆️ →「加入主畫面」，以後從主畫面的圖示打開。'}${i.persisted ? '（瀏覽器已同意長期保存）' : ''}</p>
+        <p>iPhone 上「主畫面 App」和「Safari」是兩份分開的存檔。換手機或改用主畫面 App 前，先在原本的地方按「備份」，再到新的地方按「還原」。</p>`}
         <div class="row"><button type="button" data-act="export">💾 備份進度</button><button type="button" data-act="import">📂 從備份還原</button><input type="file" accept="application/json,.json" hidden></div>
         <output></output>
       </div>`; })() : ''}
@@ -169,12 +171,13 @@ export class ParentPanel {
         ${this._seasonSetHTML()}
         ${this.books ? `<span>課本版本</span><div class="seg">${this.books.list.map(b => `<button type="button" data-book="${esc(b.id)}" aria-pressed="${b.id === this.books.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
       </div>
-      <p class="pp-note">🔍 <a href="./game/check.html" target="_blank" rel="noopener">家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
-      <p class="pp-note">🖨️ <a href="./game/worksheet.html" target="_blank" rel="noopener">列印練習單</a>：把還沒三顆星、常錯的字印成 A4 練習單（可存成 PDF）。</p>
+      <p class="pp-note">🔍 <a href="./game/check.html"${isApp() ? '' : ' target="_blank" rel="noopener"'}>家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
+      <p class="pp-note">🖨️ <a href="./game/worksheet.html"${isApp() ? '' : ' target="_blank" rel="noopener"'}>列印練習單</a>：把還沒三顆星、常錯的字印成 A4 練習單（可存成 PDF）。</p>
       </div><div class="pp-c">
       ${this.skins?.list.length > 1 ? '<p class="pp-note">換遊戲主題只是換圖案和朋友的樣子，會重新載入；學會的字、星星、獎勵和配件都不變。</p>' : ''}
       ${this.seasons?.info().list.length ? '<p class="pp-note">季節只是換顏色和飄落的雪花／花瓣，不影響學習進度，也不用重新載入。總星數到了會自動解鎖，孩子也可以在商店用星星提早換。換上季節後地圖上會出現「季節小考」（課本外的字，第一次做完送星星）。</p>' : ''}
       ${this.books ? '<p class="pp-note">換課本版本會重新載入。每個版本的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各版本分別做。</p>' : ''}
+      <p class="pp-note">🔒 <a href="./game/privacy.html">隱私權政策</a>　❓ <a href="./game/support.html">使用說明與聯絡</a></p>
       <p class="pp-note">設定只存在這台裝置。筆畫名稱與口訣由 AI 撰寫，若和課本不同請以課本為準。</p>
       </div></section>
     </div>`;
@@ -199,6 +202,7 @@ export class ParentPanel {
       const f = e.target.files?.[0], out = el.querySelector('.pp-save output'); e.target.value = ''; if (!f) return;
       try { const r = await this.backup.onImport(f); out.textContent = r.message; } catch (err) { out.textContent = '還原失敗：' + (err?.message || err); this.log('restore failed ' + err); }
     });
+    bindExternalLinks(el, m => this.log(m)); // v54：外部連結（App 裡先過家長確認）
     document.body.append(el); this.el = el; this.stats = st; this._showTab(this._tab);
     this._rw = { mode: null, id: null, msg: '', quiz: null }; this._renderRewards();
   }
@@ -290,7 +294,7 @@ export class ParentPanel {
   async _backupAct(act) {
     const out = this.el.querySelector('.pp-save output');
     if (act === 'import') { this.el.querySelector('.pp-save input').click(); return; }
-    try { out.textContent = '準備備份檔…'; const r = await this.backup.onExport(); out.textContent = r.via === 'cancel' ? '已取消。' : `已產生備份檔「${r.name}」（${Math.max(1, Math.round(r.bytes / 1024))} KB）。請存到「檔案」或傳給自己。`; }
+    try { out.textContent = '準備備份檔…'; const r = await this.backup.onExport(); out.textContent = r.via === 'cancel' ? '已取消。' : r.via === 'unavailable' ? '⚠️ App 裡現在不能存備份檔，請截圖回報。' : `已產生備份檔「${r.name}」（${Math.max(1, Math.round(r.bytes / 1024))} KB）。請存到「檔案」或傳給自己。`; }
     catch (err) { out.textContent = '備份失敗：' + (err?.message || err); this.log('backup failed ' + err); }
   }
   close() { if (!this.el) return; document.removeEventListener('keydown', this._onKey, true); this.el.remove(); this.el = null; }

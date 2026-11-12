@@ -84,12 +84,15 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 </div>
 <div class="preview" id="preview"></div>
 <script type="module">
-import { loadContract } from './content.js?v=53';
-import { openDB } from './store.js?v=53';
-import { starsOf, bestStars, starText } from './stars.js?v=53';
-import { wordHTML, zhuyinHTML } from './writing-panel.js?v=53';
-import { BOOKS, currentBook, profileFor } from './books.js?v=53';
-import { currentSkin, loadSkin } from './skin.js?v=53';
+import { loadContract } from './content.js?v=54';
+import { openDB } from './store.js?v=54';
+import { starsOf, bestStars, starText } from './stars.js?v=54';
+import { wordHTML, zhuyinHTML } from './writing-panel.js?v=54';
+import { BOOKS, currentBook, profileFor } from './books.js?v=54';
+import { currentSkin, loadSkin } from './skin.js?v=54';
+import { isApp, plugin } from './app-env.js?v=54'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
+const NOPRINT = isApp() && !plugin('CapyPrint');
+if (NOPRINT) document.querySelector('.tools').insertAdjacentHTML('beforeend', '<span id="noPrint" style="font-size:13px;color:#a8440e">App 裡不能列印，請用 Safari 打開網站版列印。</span>');
 
 const MAX_DEFAULT = 12, ROWS_PER_PAGE = 12, WEAK_N = 5, CELLS = { model: 1, trace: 3, blank: 4 };
 const $ = s => document.querySelector(s), qs = new URLSearchParams(location.search);
@@ -153,7 +156,7 @@ async function renderSheet() {
   for (let i = 0; i < ok.length; i += ROWS_PER_PAGE) pages.push({ kind, rows: ok.slice(i, i + ROWS_PER_PAGE).map(([t, g]) => ROW(t, g)) });
   $('#preview').innerHTML = pages.map(({ kind, rows: p }, i) => { const a = DECO[i % DECO.length], [title, sub] = TITLES[kind]; return `<section class="sheet ws-${kind}"><header><img class="deco" src="${SPR + a.capy}.webp" alt=""><b>${title}${sub ? `<small>${sub}</small>` : ''}</b><span>姓名：<i></i></span><span>日期：<i></i></span><img class="deco r" src="${SPR + a.bunny}.webp" alt=""></header>${p.join('')}
     <footer class="ft"><img src="${SPR + a.capy2}.webp" alt=""><img class="sm" src="${SPR}fx_star.webp" alt=""><div class="say">寫完了！幫自己塗星星<i>☆☆☆☆☆</i></div><img class="sm" src="${SPR}fx_heart.webp" alt=""><img src="${SPR + a.bunny2}.webp" alt=""></footer></section>`; }).join('');
-  $('#printBtn').disabled = !rows.length;
+  $('#printBtn').disabled = !rows.length || NOPRINT;
   $('#msg').textContent = rows.length ? `已選 ${rows.length} 個字，共 ${pages.length} 頁（每頁 ${ROWS_PER_PAGE} 個字）。${missing.length ? '字形載入失敗：' + missing.join('、') : ''}` : '還沒有選字。請在下面勾選要練習的字。';
 }
 function renderPick() {
@@ -168,13 +171,13 @@ $('#pick').addEventListener('change', e => {
 });
 $('#defBtn').addEventListener('click', () => { selected = defaultPicks(artifacts); renderPick(); renderSheet(); });
 $('#noneBtn').addEventListener('click', () => { selected = []; renderPick(); renderSheet(); });
-$('#printBtn').addEventListener('click', async () => { await Promise.all([...document.querySelectorAll('.sheet img')].map(im => im.decode().catch(() => {}))); window.print(); }); // 插畫載完再印
+$('#printBtn').addEventListener('click', async () => { await Promise.all([...document.querySelectorAll('.sheet img')].map(im => im.decode().catch(() => {}))); const P = plugin('CapyPrint'); if (P) { try { await P.print(); } catch (e) { alert('列印失敗：' + (e?.message || e)); } } else window.print(); }); // 插畫載完再印
 
 try {
   loaded = await loadContract('../../', BOOKS[BOOK].contract);
   tasks = [...loaded.writingTasks.values()];
-  try { ZY = (await get('./zhuyin.json?v=53')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
-  try { TW = (await get('../vendor-v2/hanzi-writer/data-tw/index.json?v=53')).chars ?? {}; } catch { /* 沒有索引就全用原資料 */ }
+  try { ZY = (await get('./zhuyin.json?v=54')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
+  try { TW = (await get('../vendor-v2/hanzi-writer/data-tw/index.json?v=54')).chars ?? {}; } catch { /* 沒有索引就全用原資料 */ }
   try { // 唯讀：只開 readonly 交易讀作品
     const db = await openDB(), tx = db.transaction('artifacts', 'readonly');
     artifacts = await new Promise((res, rej) => { const r = tx.objectStore('artifacts').index('profileId').getAll(PROFILE_ID); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
