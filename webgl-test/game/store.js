@@ -32,7 +32,10 @@ const wrap = req => new Promise((res, rej) => { req.onsuccess = () => res(req.re
 export class Store {
   constructor({ contract, contentSha256, profileId, mode = 'demo3', crashAt = null, log = () => {} }) {
     Object.assign(this, { contract, contentSha256, profileId, mode, crashAt, log }); this.db = null;
+    // v55：題庫換成中性版本後，契約的 legacySha256（舊題庫的雜湊，只增不減）寫的紀錄照樣算數
+    this.okSha = new Set([contentSha256, ...(contract?.content?.legacySha256 ?? [])]);
   }
+  isCurrent(r) { return !!r && this.okSha.has(r.contentSha256); }
   async open() { this.db = await openDB(); return this; }
 
   /** 讀出本 profile 的全部狀態（重開時推導固定終點用） */
@@ -43,7 +46,7 @@ export class Store {
       wrap(tx.objectStore('artifacts').index('profileId').getAll(this.profileId)),
       wrap(tx.objectStore('rewardLedger').index('profileId').getAll(this.profileId)),
     ]);
-    const current = r => r.contentSha256 === this.contentSha256; // 題庫版本不同的舊紀錄不計入（契約：需人工遷移）
+    const current = r => this.isCurrent(r); // 題庫版本不同的舊紀錄不計入；legacySha256 列出的舊版本照樣算（v55）
     const passedTaskIds = progress.filter(r => current(r) && r.status === 'passed').map(r => r.taskId);
     return { progress, artifacts, ledger, passedTaskIds, committedRewardKeys: ledger.map(l => l.rewardKey) };
   }
@@ -57,14 +60,14 @@ export class Store {
   async markInProgress(task, attemptId) {
     const tx = this.db.transaction(['progress'], 'readwrite'); const s = tx.objectStore('progress');
     const old = await wrap(s.get(progressKey(this.profileId, task.id)));
-    const rec = old && old.status === 'passed' && old.contentSha256 === this.contentSha256 ? { ...old, attemptId, lastReplayAt: new Date().toISOString() } : this._baseProgress(task, attemptId, 'in_progress');
+    const rec = old && old.status === 'passed' && this.isCurrent(old) ? { ...old, attemptId, lastReplayAt: new Date().toISOString() } : this._baseProgress(task, attemptId, 'in_progress');
     s.put(rec); await txDone(tx); return rec;
   }
   /** 缺字形資料：status=deferred，不算 passed、不發獎勵 */
   async markDeferred(task, attemptId, reason) {
     const tx = this.db.transaction(['progress'], 'readwrite'); const s = tx.objectStore('progress');
     const old = await wrap(s.get(progressKey(this.profileId, task.id)));
-    if (old && old.status === 'passed' && old.contentSha256 === this.contentSha256) { await txDone(tx); return old; }
+    if (old && old.status === 'passed' && this.isCurrent(old)) { await txDone(tx); return old; }
     const rec = this._baseProgress(task, attemptId, 'deferred', { deferredReason: reason }); s.put(rec); await txDone(tx); return rec;
   }
 
@@ -86,7 +89,7 @@ export class Store {
       const existing = await wrap(sL.get(key));
       const old = await wrap(sP.get(progressKey(this.profileId, task.id)));
       const rec = this._baseProgress(task, artifact.attemptId, 'passed', {
-        passedAt: old?.status === 'passed' && old.contentSha256 === this.contentSha256 ? old.passedAt : now, // 首次通過時間不被重玩覆蓋
+        passedAt: old?.status === 'passed' && this.isCurrent(old) ? old.passedAt : now, // 首次通過時間不被重玩覆蓋
         hintCount: artifact.hints ?? 0, mistakeCount: artifact.mistakes ?? 0, artifactId: artifact.artifactId, artifactSaveStatus: 'saved',
         rewardKey: key, rewardCommittedAt: existing ? existing.committedAt : now, replayCount: (old?.replayCount ?? 0) + (old?.status === 'passed' ? 1 : 0),
       });

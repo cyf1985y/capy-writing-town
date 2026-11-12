@@ -8,7 +8,7 @@ export const appInfo = () => ({ native: isApp(), plugins: ['Browser', 'Filesyste
 /** 外部網站（教育部筆順、辭典）：網站版另開分頁；App 裡先過家長確認，再用 App 內 Safari 打開 */
 export async function openExternal(url, { log = () => {} } = {}) {
   if (!isApp()) { window.open(url, '_blank', 'noopener'); return true; }
-  const { parentGate } = await import('./parent-gate.js?v=54');
+  const { parentGate } = await import('./parent-gate.js?v=55');
   if (!(await parentGate({ reason: 'link', log }))) return false;
   const B = plugin('Browser');
   if (!B) { log('external unavailable'); window.alert('App 裡現在打不開外部網站，請用 Safari 開。'); return false; }

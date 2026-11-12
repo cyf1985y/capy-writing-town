@@ -5,7 +5,7 @@
   "source": "教育部《國字標準字體筆順學習網》 https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=<Unicode 十進位>",
   "method": "抓取教育部頁面每一筆外框的中心與大小，與 hanzi-writer-data@2.0.1 的筆畫中線做最小成本配對；順序不同就重排，教育部多一畫就把一筆依中線切成兩筆（外框依投影位置切開）。只重排／切開原資料，不含教育部字形。 v1.1：再以教育部頁面的 Track（每筆行筆軌跡）比對起筆方向，比／花的匕首筆改成由左往右，說的上方兩筆左右鏡射成「八」形。",
   "license": "衍生自 hanzi-writer-data（Arphic Public License，見 ARPHICPL.TXT）",
-  "v1.2": "加入南一一上新字的修正：出都悄呢房（tw_check.py／tw_fix.py，做法同 v1.1）"
+  "v1.2": "加入課程 2新字的修正：出都悄呢房（tw_check.py／tw_fix.py，做法同 v1.1）"
  },
  "chars": {
   "來": {

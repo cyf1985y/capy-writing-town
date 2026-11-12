@@ -84,13 +84,13 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 </div>
 <div class="preview" id="preview"></div>
 <script type="module">
-import { loadContract } from './content.js?v=54';
-import { openDB } from './store.js?v=54';
-import { starsOf, bestStars, starText } from './stars.js?v=54';
-import { wordHTML, zhuyinHTML } from './writing-panel.js?v=54';
-import { BOOKS, currentBook, profileFor } from './books.js?v=54';
-import { currentSkin, loadSkin } from './skin.js?v=54';
-import { isApp, plugin } from './app-env.js?v=54'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
+import { loadContract } from './content.js?v=55';
+import { openDB } from './store.js?v=55';
+import { starsOf, bestStars, starText } from './stars.js?v=55';
+import { wordHTML, zhuyinHTML } from './writing-panel.js?v=55';
+import { BOOKS, currentBook, profileFor } from './books.js?v=55';
+import { currentSkin, loadSkin } from './skin.js?v=55';
+import { isApp, plugin } from './app-env.js?v=55'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
 const NOPRINT = isApp() && !plugin('CapyPrint');
 if (NOPRINT) document.querySelector('.tools').insertAdjacentHTML('beforeend', '<span id="noPrint" style="font-size:13px;color:#a8440e">App 裡不能列印，請用 Safari 打開網站版列印。</span>');
 
@@ -176,8 +176,8 @@ $('#printBtn').addEventListener('click', async () => { await Promise.all([...doc
 try {
   loaded = await loadContract('../../', BOOKS[BOOK].contract);
   tasks = [...loaded.writingTasks.values()];
-  try { ZY = (await get('./zhuyin.json?v=54')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
-  try { TW = (await get('../vendor-v2/hanzi-writer/data-tw/index.json?v=54')).chars ?? {}; } catch { /* 沒有索引就全用原資料 */ }
+  try { ZY = (await get('./zhuyin.json?v=55')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
+  try { TW = (await get('../vendor-v2/hanzi-writer/data-tw/index.json?v=55')).chars ?? {}; } catch { /* 沒有索引就全用原資料 */ }
   try { // 唯讀：只開 readonly 交易讀作品
     const db = await openDB(), tx = db.transaction('artifacts', 'readonly');
     artifacts = await new Promise((res, rej) => { const r = tx.objectStore('artifacts').index('profileId').getAll(PROFILE_ID); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });

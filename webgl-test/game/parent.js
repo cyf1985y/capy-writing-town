@@ -1,9 +1,9 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { isApp, bindExternalLinks } from './app-env.js?v=54'; // v54 App 版
-import { starsOf } from './stars.js?v=54';
-import { LEVELS } from './writing-panel.js?v=54';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=54';
+import { isApp, bindExternalLinks } from './app-env.js?v=55'; // v54 App 版
+import { starsOf } from './stars.js?v=55';
+import { LEVELS } from './writing-panel.js?v=55';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=55';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -129,7 +129,7 @@ export class ParentPanel {
     el.innerHTML = `<div class="pp-dialog">
       <h2>👪 家長面板${this._tabsHTML()}<button type="button" data-act="close">關閉</button></h2>
       <section class="pp-sec" data-sec="learn"><div class="pp-c">
-      ${this.books ? `<p class="pp-note" style="margin:0 0 8px">📚 目前課本：<b>${esc(this.books.list.find(b => b.id === this.books.current)?.label ?? '')}</b>（可在「設定」切換）</p>` : ''}
+      ${this.books ? `<p class="pp-note" style="margin:0 0 8px">📚 目前課程：<b>${esc(this.books.list.find(b => b.id === this.books.current)?.label ?? '')}</b>（可在「設定」切換）</p>` : ''}
       <div class="pp-kpis"><div>學會的字<b>${st.learned}</b>／${st.totalChars}</div><div>今天寫了<b>${st.today.n}</b>次</div><div>今天練習<b>${mins(st.today.ms)}</b>分鐘</div></div>
       <h3>最近 7 天（分鐘）</h3>
       <div class="pp-week">${st.week.map(w => `<div title="${w.d}：${w.n} 次"><span>${mins(w.ms)}</span><i style="height:${Math.round(70 * w.ms / maxMs)}%"></i>${w.d.slice(5).replace('-', '/')}</div>`).join('')}</div>
@@ -154,7 +154,7 @@ export class ParentPanel {
       ${this.backup ? (() => { const i = this.backup.info() ?? {}; return `<h3>📱 存檔保護</h3>
       <div class="pp-save">
         ${isApp() ? `<p><span class="ok">✔ 資料存在這個 App 裡</span>，沒有網路也能玩。<b>刪掉 App 會連進度一起刪掉</b>，換 iPad 或刪 App 前，先按「備份」。</p>
-        <p>App 和 Safari 網站版的進度是分開的。要把網站版的進度搬過來：先在 Safari 按「備份」，再到 App 按「還原」（康軒、南一要各做一次）。</p>` : `<p>${i.standalone ? '<span class="ok">✔ 已從主畫面開啟</span>，資料比較不會被系統清掉。' : '<span class="warn">建議加到主畫面</span>：在 Safari 按分享鈕 ⬆️ →「加入主畫面」，以後從主畫面的圖示打開。'}${i.persisted ? '（瀏覽器已同意長期保存）' : ''}</p>
+        <p>App 和 Safari 網站版的進度是分開的。要把網站版的進度搬過來：先在 Safari 按「備份」，再到 App 按「還原」（兩個課程要各做一次）。</p>` : `<p>${i.standalone ? '<span class="ok">✔ 已從主畫面開啟</span>，資料比較不會被系統清掉。' : '<span class="warn">建議加到主畫面</span>：在 Safari 按分享鈕 ⬆️ →「加入主畫面」，以後從主畫面的圖示打開。'}${i.persisted ? '（瀏覽器已同意長期保存）' : ''}</p>
         <p>iPhone 上「主畫面 App」和「Safari」是兩份分開的存檔。換手機或改用主畫面 App 前，先在原本的地方按「備份」，再到新的地方按「還原」。</p>`}
         <div class="row"><button type="button" data-act="export">💾 備份進度</button><button type="button" data-act="import">📂 從備份還原</button><input type="file" accept="application/json,.json" hidden></div>
         <output></output>
@@ -169,14 +169,14 @@ export class ParentPanel {
         ${this.shop ? `<span>配件商店</span>${seg('shop', [[true, '開'], [false, '關']])}` : ''}
         ${this.skins?.list.length > 1 ? `<span>遊戲主題</span><div class="seg">${this.skins.list.map(b => `<button type="button" data-skin="${esc(b.id)}" aria-pressed="${b.id === this.skins.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
         ${this._seasonSetHTML()}
-        ${this.books ? `<span>課本版本</span><div class="seg">${this.books.list.map(b => `<button type="button" data-book="${esc(b.id)}" aria-pressed="${b.id === this.books.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
+        ${this.books ? `<span>課程</span><div class="seg">${this.books.list.map(b => `<button type="button" data-book="${esc(b.id)}" aria-pressed="${b.id === this.books.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
       </div>
       <p class="pp-note">🔍 <a href="./game/check.html"${isApp() ? '' : ' target="_blank" rel="noopener"'}>家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
       <p class="pp-note">🖨️ <a href="./game/worksheet.html"${isApp() ? '' : ' target="_blank" rel="noopener"'}>列印練習單</a>：把還沒三顆星、常錯的字印成 A4 練習單（可存成 PDF）。</p>
       </div><div class="pp-c">
       ${this.skins?.list.length > 1 ? '<p class="pp-note">換遊戲主題只是換圖案和朋友的樣子，會重新載入；學會的字、星星、獎勵和配件都不變。</p>' : ''}
       ${this.seasons?.info().list.length ? '<p class="pp-note">季節只是換顏色和飄落的雪花／花瓣，不影響學習進度，也不用重新載入。總星數到了會自動解鎖，孩子也可以在商店用星星提早換。換上季節後地圖上會出現「季節小考」（課本外的字，第一次做完送星星）。</p>' : ''}
-      ${this.books ? '<p class="pp-note">換課本版本會重新載入。每個版本的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各版本分別做。</p>' : ''}
+      ${this.books ? '<p class="pp-note">換課程會重新載入。每個課程的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各課程分別做。</p>' : ''}
       <p class="pp-note">🔒 <a href="./game/privacy.html">隱私權政策</a>　❓ <a href="./game/support.html">使用說明與聯絡</a></p>
       <p class="pp-note">設定只存在這台裝置。筆畫名稱與口訣由 AI 撰寫，若和課本不同請以課本為準。</p>
       </div></section>
