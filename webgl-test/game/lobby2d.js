@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=49';
-import { placeAccessory } from './shop.js?v=49';
+import { Album } from './album.js?v=50';
+import { placeAccessory } from './shop.js?v=50';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -84,6 +84,33 @@ const CSS = `
 .t2-pins-hidden .t2-say{opacity:0;pointer-events:none}
 .t2-say.below{bottom:auto;top:96%;left:12%;transform:none;animation:none} /* 角色在畫面頂端（例如走到溫泉後）：氣泡改到腳下偏右，不被切掉、不擋第 5 課標記 */
 .t2-say.below::after{top:auto;bottom:100%;left:18%;border-top-color:transparent;border-bottom-color:#FFA94D}
+/* v50 區域全三星：標記金色光暈＋標記附近常駐的小粒子（只動 transform／opacity；每課 3 個） */
+.t2-pin.mastered img{filter:drop-shadow(0 0 3px #FFD54A) drop-shadow(0 0 7px #FFB300) drop-shadow(0 3px 4px rgba(91,58,74,.35))}
+.t2-pin.mastered b{border-color:#FFD54A;box-shadow:0 0 0 2px #FFB300,0 4px 10px rgba(0,0,0,.25)}
+.t2-amb{position:absolute;z-index:140;pointer-events:none;width:9%;aspect-ratio:1;transform:translate(-50%,-80%);transition:opacity .25s}
+.t2-amb i{position:absolute;top:0;left:8%;width:26%;aspect-ratio:1;background:center/contain no-repeat;opacity:0;animation:t2-amb 3.6s linear infinite}
+.t2-amb i:nth-child(2){left:40%;animation-delay:1.2s}
+.t2-amb i:nth-child(3){left:68%;animation-delay:2.4s}
+@keyframes t2-amb{0%{transform:translateY(-20%) rotate(0);opacity:0}15%{opacity:.95}80%{opacity:.8}100%{transform:translateY(270%) rotate(150deg);opacity:0}}
+.t2-pins-hidden .t2-amb{opacity:0}
+@media (prefers-reduced-motion:reduce){.t2-amb{display:none}}
+/* v50 朋友的對話氣泡（每個字附注音；注音樣式同寫字面板的 .zy，這裡另存一份，因為面板的樣式要開過面板才有） */
+.t2-char.talking .t2-say{opacity:0;pointer-events:none}
+.t2-talk{position:absolute;z-index:180;transform:translate(-50%,-100%);margin-top:-1.4%;display:flex;align-items:center;gap:.15em;font:800 clamp(18px,2.6vw,28px)/1.2 system-ui,"Noto Sans TC",sans-serif;color:#5B3A4A;background:#fff;border:3px solid #F48FB1;border-radius:16px;padding:6px 12px;white-space:nowrap;box-shadow:0 4px 10px rgba(91,58,74,.3);pointer-events:none;animation:t2-talkIn .18s ease-out}
+.t2-talk::after{content:'';position:absolute;left:calc(50% + var(--ax,0px));top:100%;transform:translateX(-50%);border:9px solid transparent;border-top-color:#F48FB1}
+.t2-talk.below{transform:translate(-50%,0);margin-top:1.4%}
+.t2-talk.below::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#F48FB1}
+@keyframes t2-talkIn{from{opacity:0}}
+.t2-talk .wz{display:inline-flex;align-items:center}
+.t2-talk .wz-c{font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif;font-size:1.15em}
+.t2-talk .zy{display:inline-flex;align-items:flex-end;line-height:1;font:700 .56em/1 system-ui,"Noto Sans TC",sans-serif;font-style:normal;color:#8a5a6a;margin-left:1px}
+.t2-talk .zy-s{display:inline-flex;flex-direction:column;align-items:center}
+.t2-talk .zy-s b{font-weight:inherit}
+.t2-talk .zy-dot{font-style:normal;line-height:.6}
+.t2-talk .zy-t{font-size:.85em;width:.7em;margin-bottom:.15em}
+.t2-talk .gift{display:inline-flex;align-items:center;gap:2px;margin-left:.3em;color:#E8A000;font-weight:900}
+.t2-talk .gift img{height:1.7em;width:1.7em;object-fit:contain}
+.t2-pins-hidden .t2-talk{opacity:0}
 .t2-paused *,.t2-paused *::before{animation-play-state:paused!important}
 /* v15：寫字／小遊戲全螢幕蓋住地圖時，只留底圖，雲、角色、標記先藏起來（瀏覽器不必每格整理這些圖層，寫字較順）；關掉就恢復 */
 .t2-paused .t2-world>:not(.t2-bg){visibility:hidden}
@@ -331,7 +358,47 @@ export class TownFx2D {
     const kind = c.sprite.startsWith('capy') ? 'capy' : 'bunny';
     if (kind === 'capy') this.sound?.puru(); else this.sound?.boing();
     this.spriteBurst([c.at[0], c.at[1] - this.town.H * this.art.characterHeight], { n: 6, spread: 70, sprites: kind === 'capy' ? ['fx_heart', 'fx_candy'] : ['fx_star', 'fx_sparkle'], d: 0.8 });
-    this.log('tap ' + c.name + ' (' + kind + ')'); return c.name;
+    this.log('tap ' + c.name + ' (' + kind + ')'); this.onFriendTap?.(c); /* v50：對話氣泡、首次禮物（game-v1.html 接） */ return c.name;
+  }
+  // ======== v50 區域全三星（外觀、常駐粒子、慶祝）與朋友對話氣泡 ========
+  /** lessons＝全三星的課（數字陣列）；sprites＝各課輪流用的特效圖。重複呼叫只補差異 */
+  setMastery(lessons, sprites = ['fx_star']) {
+    const want = new Set(lessons.map(String)); this.amb ??= new Map();
+    for (const b of this.pins ?? []) b.classList.toggle('mastered', want.has(b.dataset.lesson));
+    for (const [l, el] of this.amb) if (!want.has(l)) { el.remove(); this.amb.delete(l); }
+    for (const l of want) {
+      const p = this.art.pins?.[l]; if (this.amb.has(l) || !p) continue;
+      const el = document.createElement('div'), src = this.town.url(sprites[+l % sprites.length]); el.className = 't2-amb'; el.dataset.lesson = l;
+      el.style.left = (p.at[0] / this.town.W * 100) + '%'; el.style.top = (p.at[1] / this.town.H * 100) + '%';
+      el.innerHTML = `<i style="background-image:url('${src}')"></i>`.repeat(3);
+      this.town.world.append(el); this.amb.set(l, el);
+    }
+    this.masteryState = [...want].map(Number).sort((a, b) => a - b);
+  }
+  /** 某一課剛達成全三星：在那一課的標記噴特效，看得到的朋友跳一下 */
+  masteryCheer(lesson, sprite = 'fx_star') {
+    const p = this.art.pins?.[lesson]; if (!p) return false;
+    this.spriteBurst(p.at, { n: 12, spread: 150, sprites: [sprite, 'fx_sparkle'], d: 1.2 });
+    const vis = [...this.town.chars.values()].filter(c => this._visible(c));
+    vis.forEach((c, k) => setTimeout(() => this._anim(c, 'hop', 550), k * 100));
+    this.lastMastery = { lesson, sprite, residents: vis.length }; return true;
+  }
+  /** 在朋友頭上顯示一個氣泡（一次只有一個），ms 毫秒後收起；回傳氣泡元素 */
+  talk(name, html, ms = 3200) {
+    const c = this.town.chars.get(name); if (!c) return null;
+    this._talkEnd?.();
+    const b = document.createElement('span'); b.className = 't2-talk'; b.innerHTML = html;
+    // 氣泡掛在地圖上（不掛在朋友身上：朋友被點時會壓扁、跳，氣泡不要跟著變形），位置＝朋友頭頂
+    const feet = parseFloat(c.el.style.top), place = y => { b.style.left = c.el.style.left; b.style.top = y + '%'; }; // 用朋友現在的位置（導遊會走到別的地方）
+    place(feet - this.art.characterHeight * 100); c.el.classList.add('talking'); this.town.world.append(b);
+    // 量實際位置：超出地圖上緣就改放腳下；左右超出就平移回來（箭頭留在朋友頭上）
+    const v = this.town.view.getBoundingClientRect(); let r = b.getBoundingClientRect();
+    if (r.top < v.top + 2) { b.classList.add('below'); place(feet); r = b.getBoundingClientRect(); }
+    const dx = r.left < v.left + 4 ? v.left + 4 - r.left : r.right > v.right - 4 ? v.right - 4 - r.right : 0;
+    if (dx) { b.style.translate = dx.toFixed(1) + 'px 0'; b.style.setProperty('--ax', (-dx).toFixed(1) + 'px'); }
+    const t = setTimeout(() => this._talkEnd?.(), ms);
+    this._talkEnd = () => { clearTimeout(t); b.remove(); c.el.classList.remove('talking'); this._talkEnd = null; };
+    return b;
   }
   /** 甜點特效：從世界座標往外噴 */
   spriteBurst([x, y], { n = 12, spread = 140, sprites = ['fx_star', 'fx_heart', 'fx_sparkle', 'fx_candy', 'fx_petal', 'fx_macaron'], d = 1.1 } = {}) {

@@ -1,8 +1,8 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=49';
-import { LEVELS } from './writing-panel.js?v=49';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=49';
+import { starsOf } from './stars.js?v=50';
+import { LEVELS } from './writing-panel.js?v=50';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=50';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -143,7 +143,7 @@ export class ParentPanel {
       ${this.rewards ? '<h3>🎁 獎勵（用星星換）</h3><div class="pp-rw"></div>' : ''}
       </div><div class="pp-c">
       ${this.shop ? (() => { const s = this.shop.summary(); return s ? `<h3>🏪 配件商店</h3>
-      <div class="pp-save pp-shop"><p>孩子自己用星星買配件，幫小鎮的朋友換裝。已買 <b>${s.count}</b>／${s.all} 件，花了 ★${s.spent}，還能用 ★${Math.max(0, s.balance)}。</p>
+      <div class="pp-save pp-shop"><p>孩子自己用星星買配件，幫小鎮的朋友換裝。已買 <b>${s.count}</b>／${s.all} 件${s.gifted ? `（另有朋友送的 ${s.gifted} 件）` : ''}，花了 ★${s.spent}，還能用 ★${Math.max(0, s.balance)}。</p>
         <p class="pp-note" style="margin:0">配件的星星和上面的獎勵<b>分開算</b>：買配件不會讓獎勵變遠，兌換獎勵也不會讓配件星星變少。買了不能退。</p>
         ${s.names.length ? `<details><summary>已買的配件（${s.names.length} 件）</summary><p style="margin:4px 0 0">${s.names.map(esc).join('、')}</p></details>` : ''}</div>` : ''; })() : ''}
       </div></section>
@@ -225,7 +225,7 @@ export class ParentPanel {
   /** 🎁 獎勵區：每次操作後整區重畫（資料直接讀 localStorage） */
   _renderRewards() {
     const box = this.el?.querySelector('.pp-rw'); if (!box) return;
-    const data = loadRewards(this.rewards.key), st = rewardState({ ...this.rewards.totals(), data }), ui = this._rw, n = st.items.length;
+    const tot = this.rewards.totals(), bonus = tot.bonus || 0, data = loadRewards(this.rewards.key), st = rewardState({ ...tot, data }), ui = this._rw, n = st.items.length; // v50：bonus＝朋友送的額外星星（已含在 total）
     const fields = r => `<input type="text" data-f="title" maxlength="${TITLE_MAX}" placeholder="獎勵名稱（例：去公園玩）" value="${esc(r?.title ?? '')}" aria-label="獎勵名稱"><label>★ <input type="number" data-f="cost" min="1" max="${st.maxTotal}" step="1" inputmode="numeric" placeholder="星數" value="${r?.cost ?? ''}" aria-label="需要幾顆星"></label>`;
     const item = r => {
       if (ui.mode === 'edit' && ui.id === r.id) return `<li data-id="${esc(r.id)}"><div class="rw-form">${fields(r)}<button type="button" data-rw="save">儲存</button><button type="button" data-rw="cancel">取消</button></div><small>改名稱或星數只影響之後的兌換，以前的紀錄不變。</small></li>`;
@@ -238,7 +238,7 @@ export class ParentPanel {
         ${ui.mode === 'redeem' && ui.id === r.id ? `<div class="rw-ask"><span>請大人回答：${ui.quiz.a} ＋ ${ui.quiz.b} ＝</span><input type="number" data-f="ans" inputmode="numeric" aria-label="答案"><button type="button" data-rw="redeemOk">確定兌換</button><button type="button" data-rw="cancel">取消</button></div>` : ''}
         ${ui.mode === 'archive' && ui.id === r.id ? '<div class="rw-ask"><span>封存後孩子就看不到這個獎勵（兌換紀錄會留著）。</span><button type="button" data-rw="archiveOk">確定封存</button><button type="button" data-rw="cancel">取消</button></div>' : ''}</li>`;
     };
-    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
+    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星${bonus ? `（含地圖上朋友送的 ${bonus} 顆）` : ''}，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
       ${n ? `<ul>${st.items.map(item).join('')}</ul>` : '<p class="pp-note" style="margin:0 0 6px">還沒有獎勵。可以設定 1～3 個實際的獎勵（例：去公園玩、選今天的晚餐），孩子存夠星星後由大人按「已兌換」。</p>'}
       <div class="rw-form" data-new>${fields(null)}<button type="button" data-rw="add" ${st.canAdd ? '' : 'disabled'}>新增</button></div>
       <small>${st.overLimit ? `<span class="warn">現在有 ${n} 個獎勵，封存到 ${MAX_ACTIVE} 個以內才能再新增</span>` : !st.canAdd ? `最多 ${MAX_ACTIVE} 個獎勵；要新增請先封存一個。` : `每個字最多 3 顆星，全部拿滿是 ★${st.maxTotal}。`}</small>

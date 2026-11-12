@@ -15,9 +15,12 @@ export function normalizeShop(obj) {
   if (!obj || typeof obj !== 'object') return out;
   const seen = new Map();
   for (const p of Array.isArray(obj.purchases) ? obj.purchases : []) {
-    if (!p || typeof p.itemId !== 'string' || !isInt(p.cost)) continue;
-    const r = { itemId: p.itemId, cost: p.cost, boughtAt: String(p.boughtAt || '') }, old = seen.get(r.itemId);
-    if (!old || (r.boughtAt && r.boughtAt < old.boughtAt)) seen.set(r.itemId, r);
+    if (!p || typeof p.itemId !== 'string') continue;
+    const gift = p.gift === true && p.cost === 0; // v50：朋友送的配件（不花星星）
+    if (!gift && !isInt(p.cost)) continue;
+    const r = gift ? { itemId: p.itemId, cost: 0, gift: true, boughtAt: String(p.boughtAt || '') } : { itemId: p.itemId, cost: p.cost, boughtAt: String(p.boughtAt || '') }, old = seen.get(r.itemId);
+    // 同一件有多筆：花星星買的一律優先於禮物（付過星星的證據不能被禮物紀錄取代）；同類才留較早的
+    if (!old || (old.gift && !r.gift) || (!!old.gift === !!r.gift && r.boughtAt && r.boughtAt < old.boughtAt)) seen.set(r.itemId, r);
   }
   out.purchases = [...seen.values()];
   const owned = new Set(seen.keys());
@@ -49,6 +52,24 @@ export function buyItem(data, item, { total, now = new Date() }) {
   const spent = data.purchases.reduce((s, p) => s + p.cost, 0);
   if (total - spent < item.price) return { data, error: '星星還不夠' };
   return { data: { ...data, purchases: [...data.purchases, { itemId: item.id, cost: item.price, boughtAt: now.toISOString() }] } };
+}
+/** v50 朋友送的配件：已經有（不論買的或送的）就不變；否則加一筆 cost 0 的禮物紀錄 */
+export function giftItem(data, itemId, { now = new Date() } = {}) {
+  if (typeof itemId !== 'string' || !itemId || data.purchases.some(p => p.itemId === itemId)) return data;
+  return { ...data, purchases: [...data.purchases, { itemId, cost: 0, gift: true, boughtAt: now.toISOString() }] };
+}
+/**
+ * v50 禮物配件和 extras 存檔的雙向對帳（純函式；沒有變動就回傳原物件）：
+ * - 補：extras.gifts 有 itemId、商店完全沒有這件 → 補一筆禮物紀錄（第二步寫入失敗、舊版程式丟掉禮物紀錄）。
+ * - 刪：商店裡 gift 的紀錄沒有被任何 extras.gifts[*].itemId 指到 → 移除，戴著的位置清掉（備份合併後本機留的是星星禮物）。
+ * 花星星買的紀錄完全不動。
+ */
+export function reconcileGiftItems(data, extras, { now = new Date() } = {}) {
+  const want = new Set(Object.values(extras?.gifts ?? {}).map(g => g?.itemId).filter(Boolean));
+  const keep = data.purchases.filter(p => !p.gift || want.has(p.itemId)), have = new Set(keep.map(p => p.itemId));
+  const add = [...want].filter(id => !have.has(id)).map(itemId => ({ itemId, cost: 0, gift: true, boughtAt: now.toISOString() }));
+  if (keep.length === data.purchases.length && !add.length) return data;
+  return normalizeShop({ ...data, purchases: [...keep, ...add] });
 }
 /** 給朋友 who 的 slot 戴上 itemId（null＝拿下來）；只能戴買過的 */
 export function wearItem(data, who, slot, itemId, { now = new Date() } = {}) {
