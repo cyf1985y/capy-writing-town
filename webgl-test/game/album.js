@@ -1,6 +1,6 @@
 // 卡比巴拉圖鑑（契約 v4 album，簡化版）：完成一課解鎖一隻；縮圖在執行時從小鎮近拍，不需要新美術。
 // 解鎖狀態由 passedTaskIds 推導，不寫存檔。
-import * as THREE from 'three';
+// v49：3D 小鎮拿掉了，這裡不再載入 three.js；近拍縮圖、飛過去看牠只有 2D 版（lobby2d.js 的 Album2D）在做
 
 const CSS = `
 .al-overlay{position:fixed;inset:0;z-index:900;background:rgba(91,58,74,.6);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A)}
@@ -51,35 +51,8 @@ export class Album {
   }
   unseenCount(passed) { return this.status(passed).filter(r => r.unlocked && !this.seen.has(r.object)).length; }
 
-  /** 用遊戲鏡頭方向近拍一隻卡比巴拉（全彩），回傳 dataURL */
-  _snap(object) {
-    if (this.thumbs.has(object)) return this.thumbs.get(object);
-    const fig = this.townFx.figureFor?.(object); if (!fig) return ''; // v6：{objects, box}；兔子、胡蘿蔔是全場共用的 InstancedMesh，取景框由 town-fx 算
-    const figs = fig.objects, fbox = fig.box;
-    const { renderer, scene, camera } = this.town, canvas = renderer.domElement;
-    const box = fbox, c = box.getCenter(new THREE.Vector3()), size = box.getSize(new THREE.Vector3());
-    const cam = camera.clone(), off = camera.position.clone().sub(this.townFx.home.target);
-    cam.position.copy(c).add(off); cam.lookAt(c);
-    const viewH = Math.max(size.x, size.y, size.z) * 1.25;
-    cam.zoom = (camera.top - camera.bottom) / viewH; cam.updateProjectionMatrix(); cam.updateMatrixWorld();
-    // 只拍這一隻：Mesh 與燈光加到圖層 7，相機只看圖層 7（未解鎖卡片的剪影才會是卡比巴拉的形狀）
-    const L = 7, lights = []; scene.traverse(o => { if (o.isLight) { o.layers.enable(L); lights.push(o); } });
-    figs.forEach(f => f.traverse(o => o.layers.enable(L))); cam.layers.set(L);
-    const bg = scene.background; scene.background = new THREE.Color('#00ff00'); // v5：去背用純綠（白兔、奶油色都離它很遠）
-    const u = this.townFx.u, floor0 = u.uZoneFloor.value; u.uZoneFloor.value = 1; // 圖鑑裡一律全彩
-    fig.isolate?.(); renderer.render(scene, cam); fig.restore?.();
-    scene.background = bg; figs.forEach(f => f.traverse(o => o.layers.disable(L))); lights.forEach(o => o.layers.disable(L));
-    const side = Math.min(canvas.width, canvas.height), out = document.createElement('canvas'); out.width = out.height = 160;
-    const g2 = out.getContext('2d', { willReadFrequently: true });
-    g2.drawImage(canvas, (canvas.width - side) / 2, (canvas.height - side) / 2, side, side, 0, 0, 160, 160);
-    // 背景色去掉（透明），未解鎖時 CSS 剪影才只剩卡比巴拉輪廓
-    const img = g2.getImageData(0, 0, 160, 160), d = img.data;
-    for (let i = 0; i < d.length; i += 4) { const e = Math.abs(d[i]) + Math.abs(d[i + 1] - 0xff) + Math.abs(d[i + 2]); if (e < 60) d[i + 3] = 0; else if (e < 140) { d[i + 3] = Math.round(255 * (e - 60) / 80); d[i + 1] = Math.min(d[i + 1], (d[i] + d[i + 2]) / 2 + 40); /* 邊緣去綠 */ } }
-    g2.putImageData(img, 0, 0);
-    u.uZoneFloor.value = floor0;
-    this.lobby.requestFrame(); // 下一幀畫回原本的小鎮
-    const url = out.toDataURL('image/png'); this.thumbs.set(object, url); return url;
-  }
+  /** 縮圖網址：由子類別（Album2D）提供 */
+  _snap() { return ''; }
 
   open(passedTaskIds, { highlight = [] } = {}) {
     if (this.el) return;
@@ -106,16 +79,6 @@ export class Album {
   }
   close() { this.el?.remove(); this.el = null; document.removeEventListener('keydown', this._onKey); this.onClose?.(); }
 
-  /** 點圖鑑卡：飛過去看牠、跳一下、唸名字 */
-  async visit(r) {
-    this.close();
-    const fx = this.townFx, res = fx.residents.find(x => x.name === r.object); if (!res) return;
-    const p = new THREE.Vector3().setFromMatrixPosition(res.mesh.matrixWorld);
-    fx._showPins(false); this.sound?.whoosh(); this.voice?.say(r.name);
-    if (!(await fx._camTo(p, 4, 0.8))) return;
-    const token = fx.camToken; fx.hop(res, 0.05, 1.3); fx.hop(res, 0.65, 1.0);
-    await new Promise(ok => setTimeout(ok, 1600));
-    if (token === fx.camToken) await fx.flyHome();
-    this.lastVisit = r.object;
-  }
+  /** 點圖鑑卡：由子類別（Album2D）飛過去看牠 */
+  async visit() { this.close(); }
 }
