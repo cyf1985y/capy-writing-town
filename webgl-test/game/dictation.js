@@ -4,8 +4,8 @@
 // 要再練的字（注音第一次沒拼對、用了提示、或寫錯很多筆）記在 localStorage，下次優先出題；之後一次答對就會消掉。
 // 注音磚是用點的，不是手寫（沒有注音符號的筆順資料）。語音用裝置內建的語音，輕聲、多音字唸得對不對要真人聽。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { bravo, flash } from './fx.js?v=51';
-import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=51';
+import { bravo, flash } from './fx.js?v=52';
+import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=52';
 
 const CSS = `
 .dc-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}
@@ -218,7 +218,7 @@ export class Dictation {
     if (this.state !== s || this._cur() !== q) return;
     const target = this._q('.dc-target'), size = target.clientWidth || 280, total = data.strokes.length, len = total >= FAT_FINGER.minStrokes ? QUIZ_CONFIG.leniency * FAT_FINGER.boost : QUIZ_CONFIG.leniency;
     s.writer = HanziWriter.create(target, q.char, {
-      width: size, height: size, padding: QUIZ_CONFIG.padding, renderer: QUIZ_CONFIG.renderer, showOutline: false, showCharacter: false,
+      width: size, height: size, padding: QUIZ_CONFIG.padding, renderer: QUIZ_CONFIG.renderer, showOutline: this._showOutline(q), showCharacter: false,
       strokeColor: '#2f3e46', outlineColor: '#dcd5c6', drawingColor: '#1c5d99', highlightColor: '#f08c00', highlightCompleteColor: '#2b8a3e',
       drawingWidth: QUIZ_CONFIG.drawingWidth, strokeWidth: QUIZ_CONFIG.strokeWidth,
       charDataLoader: (char, onLoad, onError) => { if (char === q.char) onLoad(data); else onError(new Error('UNEXPECTED_CHAR:' + char)); }, // 只讀本機資料
@@ -243,6 +243,8 @@ export class Dictation {
     q.hint = true; try { s.writer.showOutline(); } catch { /* ignore */ }
     this._msg('淡淡的字出來了，照著寫', ''); const b = this._q('.dc-actions [data-act="hint"]'); if (b) b.disabled = true; this.log(`dictation hint ${q.char}`);
   }
+  /** v52：寫國字時要不要淡淡的底圖（聽寫、守門員是默寫＝不要；季節小考是課本沒教的字＝要） */
+  _showOutline() { return false; }
   /** 寫完國字之後（守門員關會在這裡多一步「認部件」） */
   _afterWrite() { this._nextBtn(); }
   /** 這一題結束：記成績、更新「要再練的字」 */

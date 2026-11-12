@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=51';
-import { placeAccessory } from './shop.js?v=51';
+import { Album } from './album.js?v=52';
+import { placeAccessory } from './shop.js?v=52';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -103,6 +103,23 @@ const CSS = `
 @keyframes t2-bossGlow{50%{box-shadow:0 0 0 3px #fff,0 0 16px 6px rgba(242,193,78,.9)}}
 .t2-boss.done{box-shadow:0 0 0 3px #FFD54A,0 0 12px 4px rgba(255,179,0,.7)}
 @media (prefers-reduced-motion:reduce){.t2-boss.ready,.t2-boss.ready b{animation:none}}
+/* v52 季節層：色調（半透明漸層，不用 filter）在背景上、雲和朋友下；粒子在朋友上、標記下。粒子只動 transform／opacity */
+.t2-season-tint{position:absolute;inset:0;z-index:1;pointer-events:none}
+.t2-season-fx{position:absolute;inset:0;z-index:120;pointer-events:none;overflow:hidden}
+.t2-season-fx i{position:absolute;top:0;left:var(--x);width:var(--s);height:100%;animation:t2-fall var(--d) linear var(--dl) infinite;will-change:transform}
+.t2-season-fx i::before{content:'';position:absolute;left:0;top:0;width:100%;aspect-ratio:1;animation:t2-sway calc(var(--d) / 3) ease-in-out var(--dl) infinite alternate}
+.t2-season-fx[data-kind=snow] i::before{border-radius:50%;background:#fff;box-shadow:0 0 3px rgba(150,180,220,.8);opacity:.92}
+.t2-season-fx[data-kind=petal] i::before{aspect-ratio:1.3;border-radius:80% 0 80% 0;background:linear-gradient(135deg,#ffd1e0,#ff9fbe);box-shadow:0 1px 2px rgba(200,90,130,.3)}
+@keyframes t2-fall{from{transform:translateY(-6%)}to{transform:translateY(102%)}}
+@keyframes t2-sway{from{transform:translateX(calc(var(--sw) * -1)) rotate(-25deg)}to{transform:translateX(var(--sw)) rotate(35deg)}}
+.t2-paused .t2-season-fx i,.t2-paused .t2-season-fx i::before{animation-play-state:paused}
+/* v52 季節小考節點（同守門員：圓形底＋圖示，不用新圖） */
+.t2-quest{border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ffd6e3 60%,#f39ab8);box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.3);animation:t2-questGlow 2s ease-in-out infinite}
+.t2-quest .ico{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(22px,4vw,52px);line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.t2-quest b{background:#E8665C}
+.t2-quest.done{animation:none;box-shadow:0 0 0 3px #8fd18f,0 4px 10px rgba(0,0,0,.3)}
+@keyframes t2-questGlow{50%{box-shadow:0 0 0 3px #fff,0 0 16px 6px rgba(255,143,163,.85)}}
+@media (prefers-reduced-motion:reduce){.t2-quest{animation:none}}
 /* v50 朋友的對話氣泡（每個字附注音；注音樣式同寫字面板的 .zy，這裡另存一份，因為面板的樣式要開過面板才有） */
 .t2-char.talking .t2-say{opacity:0;pointer-events:none}
 .t2-talk{position:absolute;z-index:180;transform:translate(-50%,-100%);margin-top:-1.4%;display:flex;align-items:center;gap:.15em;font:800 clamp(18px,2.6vw,28px)/1.2 system-ui,"Noto Sans TC",sans-serif;color:#5B3A4A;background:#fff;border:3px solid #F48FB1;border-radius:16px;padding:6px 12px;white-space:nowrap;box-shadow:0 4px 10px rgba(91,58,74,.3);pointer-events:none;animation:t2-talkIn .18s ease-out}
@@ -410,6 +427,48 @@ export class TownFx2D {
     b.querySelector('small').textContent = st.done ? `👑 ${st.cleared}/${st.stages}` : st.ready ? `${st.cleared}/${st.stages} 挑戰！` : `再學 ${st.need} 字`;
     b.title = st.done ? `${title}：全部 ${st.stages} 關都過了（可以再練習）` : st.ready ? `${title}：可以挑戰第 ${st.next} 關（已過 ${st.cleared}/${st.stages}）` : `${title}：再學 ${st.need} 個字就能挑戰第 ${st.next} 關（已過 ${st.cleared}/${st.stages}）`;
     b.setAttribute('aria-label', b.title); this.bossState = st;
+  }
+  // ======== v52 季節層與季節小考節點 ========
+  /** cfg＝seasons.json 的一季（null＝不用季節）；small＝手機尺寸（粒子少一點）；reduced＝不要動畫（不建粒子，只留色調）。三個值都一樣就不重建 */
+  setSeason(cfg, { small = false, reduced = false } = {}) {
+    const key = cfg ? `${cfg.id}|${small ? 1 : 0}|${reduced ? 1 : 0}` : 'none';
+    if (key === this._seasonKey) return this.seasonState;
+    this._seasonKey = key; this.seasonTint?.remove(); this.seasonFx?.remove(); this.seasonTint = this.seasonFx = null;
+    const bg = this.town.bg; if (bg) bg.style.filter = '';
+    if (!cfg) { this.seasonState = { id: null, kind: null, particles: 0 }; return this.seasonState; }
+    const w = this.town.world, anchor = this.town.glow?.nextSibling ?? null;
+    if (cfg.tint) { const t = document.createElement('div'); t.className = 't2-season-tint'; t.style.background = cfg.tint; w.insertBefore(t, anchor); this.seasonTint = t; }
+    if (cfg.bgFilter && bg) bg.style.filter = cfg.bgFilter;
+    const n = reduced ? 0 : small ? cfg.particles.nSmall : cfg.particles.n;
+    if (n) {
+      const fx = document.createElement('div'); fx.className = 't2-season-fx'; fx.dataset.kind = cfg.particles.kind;
+      const big = cfg.particles.kind === 'petal' ? 1.5 : 1.1;
+      fx.innerHTML = Array.from({ length: n }, (_, i) => {
+        const x = ((i + Math.random() * 0.8) / n * 100).toFixed(1), sz = (big * (0.6 + Math.random() * 0.7)).toFixed(2), d = (7 + Math.random() * 6).toFixed(1), dl = (-Math.random() * 12).toFixed(1), sw = (8 + Math.random() * 16).toFixed(0);
+        return `<i style="--x:${x}%;--s:${sz}%;--d:${d}s;--dl:${dl}s;--sw:${sw}px"></i>`;
+      }).join('');
+      w.append(fx); this.seasonFx = fx;
+    }
+    this.seasonState = { id: cfg.id, kind: cfg.particles.kind, particles: n }; return this.seasonState;
+  }
+  /** 季節小考節點：q＝{ at, icon, label, done, title }；null＝移除 */
+  setQuest(q, onTap) {
+    if (!q) { this.quest?.remove(); this.quest = null; this.questState = null; return; }
+    let b = this.quest;
+    if (!b || this._questAt?.join() !== q.at.join()) {
+      b?.remove(); b = document.createElement('button'); b.type = 'button'; b.className = 't2-pin t2-quest'; b.dataset.quest = '1';
+      b.innerHTML = '<span class="ico" aria-hidden="true"></span><b>考</b><small></small>';
+      b.style.left = (q.at[0] / this.town.W * 100) + '%'; b.style.top = (q.at[1] / this.town.H * 100) + '%';
+      if (q.at[0] < this.town.W * 0.2) b.classList.add('edge-l'); else if (q.at[0] > this.town.W * 0.8) b.classList.add('edge-r');
+      b.addEventListener('pointerdown', e => e.stopPropagation());
+      b.addEventListener('click', e => { e.stopPropagation(); this.sound?.unlock(); this._questTap?.(); });
+      this.town.world.append(b); this.quest = b; this._questAt = q.at;
+    }
+    this._questTap = onTap;
+    b.querySelector('.ico').textContent = q.icon || '🌸'; b.classList.toggle('done', !!q.done);
+    b.querySelector('small').textContent = q.label + (q.done ? ' ✓' : '');
+    b.title = `${q.title ?? q.label}${q.done ? '（做過了，可以再練習）' : '（第一次做完送星星）'}`; b.setAttribute('aria-label', b.title);
+    this.questState = { icon: q.icon, label: q.label, done: !!q.done };
   }
   /** 在朋友頭上顯示一個氣泡（一次只有一個），ms 毫秒後收起；回傳氣泡元素 */
   talk(name, html, ms = 3200) {

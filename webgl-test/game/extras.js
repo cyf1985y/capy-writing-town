@@ -6,11 +6,12 @@
 //   { version:1, mastery:{<lesson>:{at}}, gifts:{<resident object>:{at,stars,itemId}}, bonusStars:[{id,kind,stars,at}] }
 // 不認得的頂層欄位原樣保留（之後階段向前相容）。設計文件：docs/plans/2026-11-12-phase1-area-mastery-and-friend-gifts.md
 export const extrasKey = profileId => 'capy_extras_' + profileId;
-export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] } });
+export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] }, season: { current: null, currentAt: '', unlocked: {} }, quests: {} });
 export const BOSS_STAGES = 8;
 const intIn = (n, a, b) => Number.isInteger(n) && n >= a && n <= b;
 const isObj = o => !!o && typeof o === 'object' && !Array.isArray(o);
 const starOk = n => Number.isInteger(n) && n >= 1 && n <= 5;
+export const SEASON_ID = /^[a-z_]+$/;
 
 /** 把讀進來的東西整理成合法結構；壞掉的項目丟掉（不丟錯） */
 export function normalizeExtras(obj) {
@@ -43,6 +44,15 @@ export function normalizeExtras(obj) {
   let k = out.boss.cleared; const ids = new Map(out.bonusStars.map(x => [x.id, x]));
   while (k < BOSS_STAGES && ids.has('boss:' + (k + 1))) { k += 1; if (!hs.has(k)) out.boss.history.push({ stage: k, at: ids.get('boss:' + k).at, chars: [], perfect: 0 }); }
   if (k > out.boss.cleared) { out.boss.cleared = k; out.boss.history.sort((x, y) => x.stage - y.stage); }
+  // v52 季節：current 只檢查格式（季節存不存在由套用時檢查，設定檔可能暫時讀不到）
+  const se = isObj(obj.season) ? obj.season : {};
+  out.season = { current: typeof se.current === 'string' && SEASON_ID.test(se.current) ? se.current : null, currentAt: String(se.currentAt || ''), unlocked: {} };
+  if (isObj(se.unlocked)) for (const [id, v] of Object.entries(se.unlocked)) if (SEASON_ID.test(id) && isObj(v)) out.season.unlocked[id] = { at: String(v.at || '') };
+  if (isObj(obj.quests)) for (const [id, q] of Object.entries(obj.quests)) {
+    if (!SEASON_ID.test(id) || !isObj(q)) continue;
+    const chars = {}; if (isObj(q.chars)) for (const [c, n] of Object.entries(q.chars)) if ([...c].length === 1 && Number.isInteger(n) && n >= 1) chars[c] = Math.min(n, 9999);
+    out.quests[id] = { firstAt: String(q.firstAt || ''), runs: intIn(q.runs, 0, 9999) ? q.runs : 0, chars };
+  }
   return out;
 }
 export function loadExtras(key) { try { return normalizeExtras(JSON.parse(localStorage.getItem(key) || 'null')); } catch { return emptyExtras(); } }
@@ -88,7 +98,24 @@ export function claimGift(data, object, gift, now = new Date()) {
 export function mergeExtras(cur, inc) {
   const a = normalizeExtras(cur), b = normalizeExtras(inc);
   return normalizeExtras({ ...b, ...a, mastery: { ...b.mastery, ...a.mastery }, gifts: { ...b.gifts, ...a.gifts }, bonusStars: [...a.bonusStars, ...b.bonusStars.filter(x => !a.bonusStars.some(y => y.id === x.id))],
-    boss: { cleared: Math.max(a.boss.cleared, b.boss.cleared), history: [...a.boss.history, ...b.boss.history.filter(x => !a.boss.history.some(y => y.stage === x.stage))] } }); // 守門員：關數取大的、紀錄依關聯集（星星 boss:k 依 id 聯集，每關只有一筆）
+    boss: { cleared: Math.max(a.boss.cleared, b.boss.cleared), history: [...a.boss.history, ...b.boss.history.filter(x => !a.boss.history.some(y => y.stage === x.stage))] }, // 守門員：關數取大的、紀錄依關聯集（星星 boss:k 依 id 聯集，每關只有一筆）
+    season: mergeSeason(a.season, b.season), quests: mergeQuests(a.quests, b.quests) });
+}
+/** v52：解鎖依鍵聯集（留較早的）；current 留 currentAt 較新的，一樣新留本機的 */
+function mergeSeason(a, b) {
+  const unlocked = { ...b.unlocked }; for (const [id, v] of Object.entries(a.unlocked)) if (!unlocked[id] || !unlocked[id].at || (v.at && v.at < unlocked[id].at)) unlocked[id] = v;
+  const useB = b.currentAt > a.currentAt; return { current: useB ? b.current : a.current, currentAt: useB ? b.currentAt : a.currentAt, unlocked };
+}
+/** v52：同一季 runs 取大的、每字次數取大的、firstAt 取較早的（非空） */
+function mergeQuests(a, b) {
+  const out = { ...b };
+  for (const [id, q] of Object.entries(a)) {
+    const o = out[id]; if (!o) { out[id] = q; continue; }
+    const chars = { ...o.chars }; for (const [c, n] of Object.entries(q.chars)) chars[c] = Math.max(n, chars[c] || 0);
+    const fa = [q.firstAt, o.firstAt].filter(Boolean).sort()[0] ?? '';
+    out[id] = { firstAt: fa, runs: Math.max(q.runs, o.runs), chars };
+  }
+  return out;
 }
 /** 給 backup.js 用：兩邊都是 localStorage 的字串；備份那份壞掉就維持本機的 */
 export function mergeExtrasJSON(curStr, incStr) {
@@ -121,4 +148,49 @@ export function clearBossStage(data, { stage, chars = [], perfect = 0, stars = 5
   const at = now.toISOString();
   return { ...data, boss: { cleared: stage, history: [...data.boss.history.filter(h => h.stage !== stage), { stage, at, chars: chars.slice(), perfect }] },
     bonusStars: [...data.bonusStars.filter(b => b.id !== 'boss:' + stage), { id: 'boss:' + stage, kind: 'boss', stars, at }] };
+}
+
+// ======== v52 季節主題與季節小考（設計：docs/plans/2026-11-12-phase3-seasons-and-side-quests.md） ========
+const posInt = n => Number.isInteger(n) && n >= 1;
+/** 讀 seasons.json 後整理：不合法的季節整個丟掉；小考詞不夠就 quest＝null（季節照常）。回傳 { seasons, dropped } */
+export function validSeasons(cfg) {
+  const out = [], seen = new Set(); let dropped = 0;
+  for (const s of Array.isArray(cfg?.seasons) ? cfg.seasons : []) {
+    const p = s?.particles, ok = isObj(s) && typeof s.id === 'string' && SEASON_ID.test(s.id) && !seen.has(s.id) && typeof s.label === 'string' && s.label
+      && posInt(s.unlockStars) && posInt(s.price) && s.price < s.unlockStars
+      && isObj(p) && (p.kind === 'snow' || p.kind === 'petal') && intIn(p.n, 0, 20) && intIn(p.nSmall, 0, 20)
+      && (s.tint == null || typeof s.tint === 'string') && (s.bgFilter == null || typeof s.bgFilter === 'string');
+    if (!ok) { dropped++; continue; }
+    seen.add(s.id);
+    const q = s.quest; let quest = null;
+    if (isObj(q) && Array.isArray(q.at) && q.at.length === 2 && q.at.every(Number.isFinite) && intIn(q.questions, 3, 5) && starOk(q.stars)) {
+      const words = (Array.isArray(q.words) ? q.words : []).filter(w => isObj(w) && typeof w.char === 'string' && [...w.char].length === 1 && typeof w.zhuyin === 'string' && w.zhuyin && typeof w.word === 'string' && w.word.includes(w.char));
+      if (words.length >= q.questions) quest = { ...q, words };
+    }
+    out.push({ ...s, short: typeof s.short === 'string' && s.short ? s.short : s.label, icon: typeof s.icon === 'string' ? s.icon : '', unlockLine: lineOk(s.unlockLine) ? s.unlockLine : null, quest });
+  }
+  return { seasons: out, dropped };
+}
+export const seasonItemId = id => 'season:' + id;
+/** 已解鎖＝星數解鎖記過，或商店買過 */
+export const seasonUnlocked = ({ data, shop, id }) => !!data.season.unlocked[id] || !!shop?.purchases?.some(p => p.itemId === seasonItemId(id));
+/** 總星數達到門檻、而且兩條路都還沒解鎖的季節記下來；沒有新的回傳 null */
+export function markSeasonUnlocks(data, { seasons, total, shop, now = new Date() }) {
+  const add = seasons.filter(s => total >= s.unlockStars && !seasonUnlocked({ data, shop, id: s.id })).map(s => s.id);
+  if (!add.length) return null;
+  const unlocked = { ...data.season.unlocked }; for (const id of add) unlocked[id] = { at: now.toISOString() };
+  return { ...data, season: { ...data.season, unlocked } };
+}
+/** 換季節（id＝null＝不用季節）；和目前一樣回傳 null。呼叫端先確認 id 已解鎖 */
+export function setSeason(data, id, now = new Date()) {
+  if (id !== null && !(typeof id === 'string' && SEASON_ID.test(id))) return null;
+  if (data.season.current === id) return null;
+  return { ...data, season: { ...data.season, current: id, currentAt: now.toISOString() } };
+}
+/** 做完一次季節小考：次數、每字次數；第一次（bonusStars 還沒有 quest:<id>）才給星。回傳 { data, first } */
+export function finishQuest(data, { id, chars = [], stars = 3, now = new Date() }) {
+  const at = now.toISOString(), old = data.quests[id] ?? { firstAt: '', runs: 0, chars: {} }, cs = { ...old.chars };
+  for (const c of chars) cs[c] = Math.min((cs[c] || 0) + 1, 9999);
+  const bid = 'quest:' + id, first = starOk(stars) && !data.bonusStars.some(b => b.id === bid);
+  return { first, data: { ...data, quests: { ...data.quests, [id]: { firstAt: old.firstAt || at, runs: Math.min(old.runs + 1, 9999), chars: cs } }, bonusStars: first ? [...data.bonusStars, { id: bid, kind: 'quest', stars, at }] : data.bonusStars } };
 }

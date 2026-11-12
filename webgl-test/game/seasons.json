@@ -1,0 +1,184 @@
+{
+ "version": 1,
+ "status": "pending",
+ "_note": "v52 季節主題與季節小考（設計：docs/plans/2026-11-12-phase3-seasons-and-side-quests.md）。字都經 textbooks/tw_check.py 對照教育部筆順（status=same、glyph=data）。注音、詞、筆順請家長或老師人工核對後再把 status 改掉。",
+ "seasons": [
+  {
+   "id": "onsen_winter",
+   "label": "冬季溫泉草莓季",
+   "short": "冬季",
+   "icon": "🍓",
+   "unlockStars": 100,
+   "price": 30,
+   "tint": "linear-gradient(180deg, rgba(185,212,255,.38), rgba(255,255,255,.12) 60%, rgba(255,190,200,.22))",
+   "bgFilter": null,
+   "particles": {
+    "kind": "snow",
+    "n": 14,
+    "nSmall": 8
+   },
+   "unlockLine": {
+    "t": "冬天到了！",
+    "zy": [
+     "ㄉㄨㄥ",
+     "ㄊㄧㄢ",
+     "ㄉㄠˋ",
+     "˙ㄌㄜ"
+    ]
+   },
+   "quest": {
+    "at": [
+     520,
+     870
+    ],
+    "questions": 4,
+    "stars": 3,
+    "words": [
+     {
+      "char": "冬",
+      "zhuyin": "ㄉㄨㄥ",
+      "word": "冬天",
+      "wordZy": [
+       "ㄉㄨㄥ",
+       "ㄊㄧㄢ"
+      ]
+     },
+     {
+      "char": "冰",
+      "zhuyin": "ㄅㄧㄥ",
+      "word": "冰塊",
+      "wordZy": [
+       "ㄅㄧㄥ",
+       "ㄎㄨㄞˋ"
+      ]
+     },
+     {
+      "char": "冷",
+      "zhuyin": "ㄌㄥˇ",
+      "word": "好冷",
+      "wordZy": [
+       "ㄏㄠˇ",
+       "ㄌㄥˇ"
+      ]
+     },
+     {
+      "char": "果",
+      "zhuyin": "ㄍㄨㄛˇ",
+      "word": "水果",
+      "wordZy": [
+       "ㄕㄨㄟˇ",
+       "ㄍㄨㄛˇ"
+      ]
+     },
+     {
+      "char": "泉",
+      "zhuyin": "ㄑㄩㄢˊ",
+      "word": "溫泉",
+      "wordZy": [
+       "ㄨㄣ",
+       "ㄑㄩㄢˊ"
+      ]
+     },
+     {
+      "char": "紅",
+      "zhuyin": "ㄏㄨㄥˊ",
+      "word": "紅草莓",
+      "wordZy": [
+       "ㄏㄨㄥˊ",
+       "ㄘㄠˇ",
+       "ㄇㄟˊ"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "sakura_spring",
+   "label": "春日櫻花祭",
+   "short": "春天",
+   "icon": "🌸",
+   "unlockStars": 180,
+   "price": 50,
+   "tint": "linear-gradient(180deg, rgba(255,200,220,.24), rgba(255,255,255,.08) 60%, rgba(255,230,240,.16))",
+   "bgFilter": null,
+   "particles": {
+    "kind": "petal",
+    "n": 14,
+    "nSmall": 8
+   },
+   "unlockLine": {
+    "t": "春天來了！",
+    "zy": [
+     "ㄔㄨㄣ",
+     "ㄊㄧㄢ",
+     "ㄌㄞˊ",
+     "˙ㄌㄜ"
+    ]
+   },
+   "quest": {
+    "at": [
+     520,
+     870
+    ],
+    "questions": 4,
+    "stars": 3,
+    "words": [
+     {
+      "char": "春",
+      "zhuyin": "ㄔㄨㄣ",
+      "word": "春天",
+      "wordZy": [
+       "ㄔㄨㄣ",
+       "ㄊㄧㄢ"
+      ]
+     },
+     {
+      "char": "田",
+      "zhuyin": "ㄊㄧㄢˊ",
+      "word": "花田",
+      "wordZy": [
+       "ㄏㄨㄚ",
+       "ㄊㄧㄢˊ"
+      ]
+     },
+     {
+      "char": "朵",
+      "zhuyin": "ㄉㄨㄛˇ",
+      "word": "花朵",
+      "wordZy": [
+       "ㄏㄨㄚ",
+       "ㄉㄨㄛˇ"
+      ]
+     },
+     {
+      "char": "青",
+      "zhuyin": "ㄑㄧㄥ",
+      "word": "青草",
+      "wordZy": [
+       "ㄑㄧㄥ",
+       "ㄘㄠˇ"
+      ]
+     },
+     {
+      "char": "鳥",
+      "zhuyin": "ㄋㄧㄠˇ",
+      "word": "小鳥",
+      "wordZy": [
+       "ㄒㄧㄠˇ",
+       "ㄋㄧㄠˇ"
+      ]
+     },
+     {
+      "char": "光",
+      "zhuyin": "ㄍㄨㄤ",
+      "word": "陽光",
+      "wordZy": [
+       "ㄧㄤˊ",
+       "ㄍㄨㄤ"
+      ]
+     }
+    ]
+   }
+  }
+ ]
+}

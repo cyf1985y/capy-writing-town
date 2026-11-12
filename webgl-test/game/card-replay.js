@@ -2,7 +2,7 @@
 // 存檔的 drawnPaths 只有座標、沒有時間，所以是「等速」重播，不是原本的書寫速度。
 // 動畫用 Web Animations，播完即停（不用無限動畫）；prefers-reduced-motion 時直接顯示完成圖。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { zhuyinHTML, wordHTML } from './writing-panel.js?v=51';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=52';
 
 /** 重播速度：字形座標（1024 em）每毫秒走幾單位；每筆最短時間；筆與筆之間的停頓 */
 export const REPLAY = Object.freeze({ unitsPerMs: 1.1, minStrokeMs: 180, gapMs: 150, startMs: 250 });

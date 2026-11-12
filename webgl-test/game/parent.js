@@ -1,8 +1,8 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { starsOf } from './stars.js?v=51';
-import { LEVELS } from './writing-panel.js?v=51';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=51';
+import { starsOf } from './stars.js?v=52';
+import { LEVELS } from './writing-panel.js?v=52';
+import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=52';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -117,7 +117,7 @@ const CSS = `
 export class ParentPanel {
   /** rewards（可省略）：{ key, totals: () => ({ total, maxTotal }), onChange }，見 rewards.js；shop（可省略）：{ summary: () => ({ count, all, spent, balance, names }) }，見 shop.js */
   /** books（可省略）：{ list: [{ id, label }], current, onPick(id) }，見 books.js */
-  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, skins = null, dictation = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, skins, dictation, log }); this.el = null; }
+  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, skins = null, dictation = null, seasons = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, skins, dictation, seasons, log }); /* v52 seasons＝{ info()：{ current, list:[{id,label,short,unlocked,unlockStars,price,runs}] }, onPick(id|null)：async → true／false } */ this.el = null; }
   isOpen() { return !!this.el; }
   open() {
     if (this.el) return;
@@ -134,6 +134,7 @@ export class ParentPanel {
       <div class="pp-week">${st.week.map(w => `<div title="${w.d}：${w.n} 次"><span>${mins(w.ms)}</span><i style="height:${Math.round(70 * w.ms / maxMs)}%"></i>${w.d.slice(5).replace('-', '/')}</div>`).join('')}</div>
       <h3>關卡進度（已過關的字）</h3>
       <div class="pp-kpis">${LEVELS.map((l, i) => `<div>${l.icon} ${l.label}<b>${st.levelCount[i]}</b>字</div>`).join('')}</div>
+      ${(() => { const q = this.seasons?.info().list.filter(x => x.runs) ?? []; return q.length ? `<p class="pp-note" style="margin:6px 0 0">🌸 季節小考（課本外的字，不算進上面的進度）：${q.map(x => `${esc(x.short)} 做過 ${x.runs} 次`).join('、')}</p>` : ''; })()}
       </div><div class="pp-c">
       <h3>常錯的字</h3>
       ${st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${w.char}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${w.worstStroke.name}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${w.char.codePointAt(0)}" target="_blank" rel="noopener">教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>'}
@@ -145,7 +146,8 @@ export class ParentPanel {
       ${this.shop ? (() => { const s = this.shop.summary(); return s ? `<h3>🏪 配件商店</h3>
       <div class="pp-save pp-shop"><p>孩子自己用星星買配件，幫小鎮的朋友換裝。已買 <b>${s.count}</b>／${s.all} 件${s.gifted ? `（另有朋友送的 ${s.gifted} 件）` : ''}，花了 ★${s.spent}，還能用 ★${Math.max(0, s.balance)}。</p>
         <p class="pp-note" style="margin:0">配件的星星和上面的獎勵<b>分開算</b>：買配件不會讓獎勵變遠，兌換獎勵也不會讓配件星星變少。買了不能退。</p>
-        ${s.names.length ? `<details><summary>已買的配件（${s.names.length} 件）</summary><p style="margin:4px 0 0">${s.names.map(esc).join('、')}</p></details>` : ''}</div>` : ''; })() : ''}
+        ${s.names.length ? `<details><summary>已買的配件（${s.names.length} 件）</summary><p style="margin:4px 0 0">${s.names.map(esc).join('、')}</p></details>` : ''}
+        ${s.seasons?.length ? `<p style="margin:6px 0 0">🌸 用星星提早換的季節：${s.seasons.map(x => `${esc(x.name)}（★${x.cost}）`).join('、')}</p>` : ''}</div>` : ''; })() : ''}
       </div></section>
       <section class="pp-sec" data-sec="set"><div class="pp-c">
       ${this.backup ? (() => { const i = this.backup.info() ?? {}; return `<h3>📱 存檔保護</h3>
@@ -164,12 +166,14 @@ export class ParentPanel {
         <span>複習方式</span>${seg('reviewDictation', [[true, '聽寫'], [false, '照進度']])}
         ${this.shop ? `<span>配件商店</span>${seg('shop', [[true, '開'], [false, '關']])}` : ''}
         ${this.skins?.list.length > 1 ? `<span>遊戲主題</span><div class="seg">${this.skins.list.map(b => `<button type="button" data-skin="${esc(b.id)}" aria-pressed="${b.id === this.skins.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
+        ${this._seasonSetHTML()}
         ${this.books ? `<span>課本版本</span><div class="seg">${this.books.list.map(b => `<button type="button" data-book="${esc(b.id)}" aria-pressed="${b.id === this.books.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
       </div>
       <p class="pp-note">🔍 <a href="./game/check.html" target="_blank" rel="noopener">家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
       <p class="pp-note">🖨️ <a href="./game/worksheet.html" target="_blank" rel="noopener">列印練習單</a>：把還沒三顆星、常錯的字印成 A4 練習單（可存成 PDF）。</p>
       </div><div class="pp-c">
       ${this.skins?.list.length > 1 ? '<p class="pp-note">換遊戲主題只是換圖案和朋友的樣子，會重新載入；學會的字、星星、獎勵和配件都不變。</p>' : ''}
+      ${this.seasons?.info().list.length ? '<p class="pp-note">季節只是換顏色和飄落的雪花／花瓣，不影響學習進度，也不用重新載入。總星數到了會自動解鎖，孩子也可以在商店用星星提早換。換上季節後地圖上會出現「季節小考」（課本外的字，第一次做完送星星）。</p>' : ''}
       ${this.books ? '<p class="pp-note">換課本版本會重新載入。每個版本的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各版本分別做。</p>' : ''}
       <p class="pp-note">設定只存在這台裝置。筆畫名稱與口訣由 AI 撰寫，若和課本不同請以課本為準。</p>
       </div></section>
@@ -183,6 +187,7 @@ export class ParentPanel {
       if (b.dataset.rw) return this._rewardAct(b);
       if (b.dataset.skin) { this.log('skin ' + b.dataset.skin); return this.skins.onPick(b.dataset.skin); }
       if (b.dataset.book) { this.log('book ' + b.dataset.book); return this.books.onPick(b.dataset.book); }
+      if (b.dataset.season != null) return this._seasonPick(b);
       if (b.dataset.k) {
         const s = loadSettings(), v = b.dataset.v; s[b.dataset.k] = v === 'true' ? true : v === 'false' ? false : v; saveSettings(s);
         for (const x of el.querySelectorAll(`button[data-k="${b.dataset.k}"]`)) x.setAttribute('aria-pressed', String(x === b));
@@ -196,6 +201,19 @@ export class ParentPanel {
     });
     document.body.append(el); this.el = el; this.stats = st; this._showTab(this._tab);
     this._rw = { mode: null, id: null, msg: '', quiz: null }; this._renderRewards();
+  }
+  /** v52 設定裡的季節選擇：不用＋各季（沒解鎖的灰色、寫怎麼解鎖） */
+  _seasonSetHTML() {
+    const inf = this.seasons?.info(); if (!inf?.list.length) return '';
+    const btn = (id, label, on, dis, note = '') => `<button type="button" data-season="${esc(id)}" aria-pressed="${on}"${dis ? ' disabled' : ''}>${esc(label)}${note ? `<small style="display:block;font-size:11px;font-weight:600">${esc(note)}</small>` : ''}</button>`;
+    return `<span>季節</span><div class="seg pp-season">${btn('', '不用', inf.current == null, false)}${inf.list.map(x => btn(x.id, x.short, inf.current === x.id, !x.unlocked, x.unlocked ? '' : `★${x.unlockStars} 解鎖／商店 ★${x.price}`)).join('')}</div>`;
+  }
+  async _seasonPick(b) {
+    const id = b.dataset.season || null; this.log('parent season ' + (id ?? 'none'));
+    const ok = await this.seasons.onPick(id); if (!this.el) return;
+    const cur = this.seasons.info().current;
+    for (const x of this.el.querySelectorAll('button[data-season]')) x.setAttribute('aria-pressed', String((x.dataset.season || null) === cur));
+    if (!ok) { const o = this.el.querySelector('.pp-season'); o?.insertAdjacentHTML('afterend', '<p class="pp-note" style="grid-column:1/-1;color:#c92a2a">換不了（可能是私密瀏覽模式）</p>'); }
   }
   /** v48 手機橫放用的分頁鈕（其他尺寸 CSS 藏起來，所有區塊照舊一路排下來） */
   _tabsHTML() {
@@ -238,7 +256,7 @@ export class ParentPanel {
         ${ui.mode === 'redeem' && ui.id === r.id ? `<div class="rw-ask"><span>請大人回答：${ui.quiz.a} ＋ ${ui.quiz.b} ＝</span><input type="number" data-f="ans" inputmode="numeric" aria-label="答案"><button type="button" data-rw="redeemOk">確定兌換</button><button type="button" data-rw="cancel">取消</button></div>` : ''}
         ${ui.mode === 'archive' && ui.id === r.id ? '<div class="rw-ask"><span>封存後孩子就看不到這個獎勵（兌換紀錄會留著）。</span><button type="button" data-rw="archiveOk">確定封存</button><button type="button" data-rw="cancel">取消</button></div>' : ''}</li>`;
     };
-    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星${bonus ? `（含額外獲得的 ${bonus} 顆：地圖上朋友送的、守門員獎勵）` : ''}，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
+    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星${bonus ? `（含額外獲得的 ${bonus} 顆：地圖上朋友送的、守門員、季節小考）` : ''}，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
       ${n ? `<ul>${st.items.map(item).join('')}</ul>` : '<p class="pp-note" style="margin:0 0 6px">還沒有獎勵。可以設定 1～3 個實際的獎勵（例：去公園玩、選今天的晚餐），孩子存夠星星後由大人按「已兌換」。</p>'}
       <div class="rw-form" data-new>${fields(null)}<button type="button" data-rw="add" ${st.canAdd ? '' : 'disabled'}>新增</button></div>
       <small>${st.overLimit ? `<span class="warn">現在有 ${n} 個獎勵，封存到 ${MAX_ACTIVE} 個以內才能再新增</span>` : !st.canAdd ? `最多 ${MAX_ACTIVE} 個獎勵；要新增請先封存一個。` : `每個字最多 3 顆星，全部拿滿是 ★${st.maxTotal}。`}</small>
