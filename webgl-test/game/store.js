@@ -81,13 +81,14 @@ export class Store {
     const now = new Date().toISOString();
     const tx = this.db.transaction(STORES, 'readwrite');
     const sA = tx.objectStore('artifacts'), sP = tx.objectStore('progress'), sL = tx.objectStore('rewardLedger');
-    const result = { rewardKey: key, rewardNew: false, progress: null };
+    const result = { rewardKey: key, rewardNew: false, wasPassed: false, progress: null }; // v58 wasPassed：這次存檔前就已經過關（目前接受的題庫版本）
     const run = async () => {
       sA.put({ ...artifact, profileId: this.profileId, savedAt: now });
       await wrap(sA.get(artifact.artifactId)); // 確認作品已在交易內寫入
       this._crash('afterArtifact', tx);
       const existing = await wrap(sL.get(key));
       const old = await wrap(sP.get(progressKey(this.profileId, task.id)));
+      result.wasPassed = old?.status === 'passed' && this.isCurrent(old);
       const rec = this._baseProgress(task, artifact.attemptId, 'passed', {
         passedAt: old?.status === 'passed' && this.isCurrent(old) ? old.passedAt : now, // 首次通過時間不被重玩覆蓋
         hintCount: artifact.hints ?? 0, mistakeCount: artifact.mistakes ?? 0, artifactId: artifact.artifactId, artifactSaveStatus: 'saved',

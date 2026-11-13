@@ -3,8 +3,8 @@
 // 兩次都沒寫錯、沒用提示＝描得好：由呼叫端（game-v1.html）照 v56 重複練習的規則給星、記練習紀錄。
 // 筆畫資料 strokes/strokes.json 由 strokes/build_strokes.py 產生（AI 標的名稱，人工核對 pending）。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { bravo, flash } from './fx.js?v=57';
-import { QUIZ_CONFIG } from './writing-panel.js?v=57';
+import { bravo, flash } from './fx.js?v=58';
+import { QUIZ_CONFIG } from './writing-panel.js?v=58';
 
 const CSS = `
 .sp-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}
@@ -18,6 +18,11 @@ const CSS = `
 .sp-picks button.good{border-color:#2b8a3e;background:#F3FBF4}
 .sp-picks button i{position:absolute;right:4px;top:2px;font-style:normal;color:#2b8a3e;font-size:16px}
 .sp-picks button small{display:block;font-size:11px;font-weight:400;opacity:.75}
+.sp-picks button em{position:absolute;left:3px;top:2px;font-style:normal;font-size:11px;font-weight:700;color:#fff;background:#E55A4E;border-radius:999px;padding:0 5px}
+.sp-weak{border:3px solid #F4B6A8;border-radius:16px;background:#FFF4F1;padding:6px 8px 8px;margin:4px 0 6px}
+.sp-weak .sp-group{margin-top:0;color:#C2410C}.sp-weak p{margin:0 0 6px;font-size:13px;text-align:left;opacity:.85}
+.sp-weak .sp-picks button{border-color:#E55A4E}
+.sp-dialog .sp-actions.sp-sticky{position:sticky;bottom:-18px;background:#fffdf7;padding:8px 0 4px;margin:0 -4px;box-shadow:0 -6px 10px -6px rgba(91,58,74,.25)} /* v58 選筆畫畫面：按鈕列固定在底部 */
 .sp-name{font-size:40px;font-weight:800;margin:2px 0;font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif;color:#E55A4E}
 .sp-step{display:flex;gap:6px;justify-content:center;margin:0 0 6px}
 .sp-step span{font-size:13px;padding:2px 9px;border-radius:999px;background:#eee6d8}.sp-step span.on{background:var(--ui-primaryDark,#E8665C);color:#fff}
@@ -66,8 +71,8 @@ export class StrokePractice {
    * finish({ id, good, roundId }) → Promise<{ add, reason, leftChar }>（呼叫端寫存檔、給星；add>0＝拿到星）；
    * today() → { goodIds:Set, fullIds:Set, strokeStars, dayStars, perDay, starsOn }
    */
-  constructor({ strokes, voice, sound, log = () => {}, loadHost, finish, today, onOpen, onClose }) {
-    Object.assign(this, { strokes, voice, sound, log, loadHost, finish, today, onOpen, onClose }); this.el = null; this.state = null;
+  constructor({ strokes, voice, sound, log = () => {}, loadHost, finish, today, weak = null, onOpen, onClose }) {
+    Object.assign(this, { strokes, voice, sound, log, loadHost, finish, today, weak, onOpen, onClose }); this.el = null; this.state = null; // v58 weak()→[{ id, name, misses, seen }] 最近常寫錯的筆畫
   }
   isOpen() { return !!this.el; }
   open() {
@@ -76,10 +81,15 @@ export class StrokePractice {
     const el = document.createElement('div'); el.className = 'sp-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', '筆畫練習');
     el.innerHTML = `<div class="sp-dialog"><h2>✏️ 筆畫練習</h2><div class="sp-body"></div></div>`;
     for (const t of ['pointerdown', 'pointermove', 'mousedown', 'mousemove', 'wheel', 'touchstart', 'touchmove']) el.addEventListener(t, e => e.stopPropagation(), { passive: true });
-    el.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.disabled) return; if (b.dataset.pick != null) this._start(+b.dataset.pick); else if (b.dataset.act) this._act(b.dataset.act); });
+    el.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.disabled) return; if (b.dataset.wpick != null) this._startWeak(+b.dataset.wpick); else if (b.dataset.pick != null) this._start(+b.dataset.pick); else if (b.dataset.act) this._act(b.dataset.act); });
     this._onKey = e => { e.stopPropagation(); if (e.key === 'Escape') this.close(); }; document.addEventListener('keydown', this._onKey, true);
     document.body.append(el); this.el = el; this.state = { phase: 'pick', i: -1, rounds: 0, good: 0, stars: 0 };
-    this.onOpen?.(); this._picker(); this.log('strokes open'); return true;
+    // v58：打開時算一次最近常寫錯的筆畫（只留筆畫練習裡有的種類）
+    let wk = []; try { wk = this.weak?.() ?? []; } catch (e) { this.log('strokes weak failed ' + e); }
+    this.weakList = wk.map(w => ({ ...w, i: this.strokes.findIndex(s => s.id === w.id) })).filter(w => w.i >= 0);
+    this.onOpen?.(); this._picker(); this.log('strokes open weak=' + this.weakList.map(w => w.id).join(','));
+    if (this.weakList.length) this.voice?.say(`最近比較常寫錯的是${this.weakList[0].name}，先練練看吧！`);
+    return true;
   }
   close() {
     if (!this.el) return;
@@ -95,15 +105,26 @@ export class StrokePractice {
   // ---------- 選筆畫 ----------
   _picker() {
     const t = this.today?.() ?? {}, good = t.goodIds ?? new Set(), full = t.fullIds ?? new Set();
-    const btn = (s, i) => `<button type="button" data-pick="${i}" class="${good.has(s.id) ? 'good' : ''}" aria-label="${esc(s.name)}${good.has(s.id) ? '（今天描得好）' : ''}">${good.has(s.id) ? '<i>✓</i>' : ''}${svgOf(`<path d="${s.glyph.strokes[0]}" fill="#5B3A4A"/>`)}${esc(s.name)}${full.has(s.id) ? '<small>今天星星滿了</small>' : ''}</button>`;
+    const W = this.weakList ?? [], weakIds = new Set(W.map(w => w.id));
+    const btn = (s, i, w = null) => `<button type="button" ${w ? `data-wpick="${w.k}"` : `data-pick="${i}"`} class="${good.has(s.id) ? 'good' : ''}" aria-label="${esc(s.name)}${weakIds.has(s.id) ? '（常寫錯）' : ''}${good.has(s.id) ? '（今天描得好）' : ''}">${!w && weakIds.has(s.id) ? '<em>常錯</em>' : ''}${good.has(s.id) ? '<i>✓</i>' : ''}${svgOf(`<path d="${s.glyph.strokes[0]}" fill="#5B3A4A"/>`)}${esc(s.name)}${w ? `<small>錯 ${w.misses} 次</small>` : full.has(s.id) ? '<small>今天星星滿了</small>' : ''}</button>`;
+    const weakHTML = W.length ? `<div class="sp-weak"><div class="sp-group">🎯 最近常寫錯的筆畫</div><p>最近兩週寫字時，這幾種筆畫比較常寫錯（同一筆錯好幾次會算好幾次）。</p><div class="sp-picks">${W.map((w, k) => btn(this.strokes[w.i], w.i, { ...w, k })).join('')}</div></div>` : '';
     const grp = (tb, label) => { const xs = this.strokes.map((s, i) => [s, i]).filter(([s]) => s.table === tb); return xs.length ? `<div class="sp-group">${label}</div><div class="sp-picks">${xs.map(([s, i]) => btn(s, i)).join('')}</div>` : ''; };
     const top = t.perDay ? `今天練筆畫拿了 ★${t.strokeStars ?? 0}・今天全部練習星星 ★${t.dayStars ?? 0}／${t.perDay}` : '點一個筆畫開始練';
-    this._body(`<div class="sp-top">${top}</div>${grp(1, '基本筆畫')}${grp(2, '其他筆畫')}<div class="sp-msg">兩次都描對，就能拿星星喔！</div><div class="sp-actions"><button type="button" data-act="first" class="sp-primary">從頭練 ▶</button><button type="button" data-act="close">回小鎮</button></div>`);
+    const acts = W.length ? '<button type="button" data-act="weakFirst" class="sp-primary">先練常錯的 ▶</button><button type="button" data-act="first">從頭練</button>' : '<button type="button" data-act="first" class="sp-primary">從頭練 ▶</button>';
+    this._body(`<div class="sp-top">${top}</div>${weakHTML}${grp(1, '基本筆畫')}${grp(2, '其他筆畫')}<div class="sp-msg">兩次都描對，就能拿星星喔！</div><div class="sp-actions sp-sticky">${acts}<button type="button" data-act="close">回小鎮</button></div>`);
+    this.state.seq = null; // 回到選筆畫畫面就結束常錯模式
     this.state.phase = 'pick'; this.state.i = -1;
   }
 
   // ---------- 一種筆畫 ----------
-  _start(i) {
+  /** v58 常錯模式：從第 k 種開始繞一圈（點 B → B、C、A），每一種都會輪到 */
+  _startWeak(k) {
+    const W = this.weakList ?? []; if (!W[k]) return;
+    const order = W.map((_, j) => W[(k + j) % W.length].i);
+    this._start(order[0], { order, pos: 0 }); this.log('strokes weak mode ' + order.map(i => this.strokes[i].id).join(','));
+  }
+  _start(i, seq) {
+    if (seq !== undefined) this.state.seq = seq; // 沒傳＝維持原本的模式（再練一次）
     const st = this.state, s = this.strokes[i]; if (!s) return;
     Object.assign(st, { i, round: { id: globalThis.crypto?.randomUUID?.() ?? String(Date.now()) + Math.random(), mistakes: 0, hint: false, trace: 0 } });
     this._run('demo'); this.log('strokes start ' + s.id);
@@ -172,19 +193,21 @@ export class StrokePractice {
       this.voice?.say(`${s.host.char}的第${n}筆，就是${s.name}`);
     } else grid.hidden = true;
     this._msg(starMsg, good ? 'ok' : '');
-    const last = st.i >= this.strokes.length - 1;
+    const sq = st.seq, last = sq ? sq.pos >= sq.order.length - 1 : st.i >= this.strokes.length - 1;
+    if (sq && last) this._msg(starMsg + ' 常錯的筆畫都練完了！', good ? 'ok' : '');
     this._q('.sp-actions').innerHTML = `<button type="button" data-act="again">再練一次</button><button type="button" data-act="pick">選別的</button>${last ? '' : '<button type="button" data-act="next" class="sp-primary">下一種 ▶</button>'}<button type="button" data-act="close"${last ? ' class="sp-primary"' : ''}>回小鎮</button>`;
   }
   _dropWriter() { const s = this.state; if (s?.writer) { try { s.writer.cancelQuiz(); } catch { /* ignore */ } s.writer = null; } }
   _act(a) {
     const st = this.state; if (!st) return;
     if (a === 'close') this.close();
-    else if (a === 'first') this._start(0);
+    else if (a === 'first') this._start(0, null);
+    else if (a === 'weakFirst') this._startWeak(0);
     else if (a === 'pick') this._picker();
     else if (a === 'replayDemo') this._animate();
     else if (a === 'toT1' && st.phase === 'demo') this._run('t1');
     else if (a === 'toT2' && st.phase === 't1') this._run('t2');
     else if (a === 'again' && st.phase === 'host') this._start(st.i);
-    else if (a === 'next' && st.phase === 'host') this._start(st.i + 1);
+    else if (a === 'next' && st.phase === 'host') { const sq = st.seq; if (sq) { sq.pos += 1; if (sq.pos < sq.order.length) this._start(sq.order[sq.pos]); } else this._start(st.i + 1); }
   }
 }

@@ -1,6 +1,6 @@
 // v18 配件商店畫面：選朋友 → 選位置分頁 → 點配件試戴 → 用星星換（問一次）→ 戴上。買過的點一下＝戴上／拿下來。
 // 規則與存檔都在 shop.js；這裡只管畫面、語音與音效。所有字都很短，點配件會唸名稱（孩子不一定認得字）。
-import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=57';
+import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=58';
 const SEASON_TAB = '__season', seasonItemId = id => 'season:' + id; // v52 季節分頁（和 extras.js 的 seasonItemId 同一個格式）
 
 const CSS = `

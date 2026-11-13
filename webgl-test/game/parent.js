@@ -1,9 +1,9 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { isApp, bindExternalLinks } from './app-env.js?v=57'; // v54 App 版
-import { starsOf } from './stars.js?v=57';
-import { LEVELS } from './writing-panel.js?v=57';
-import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=57';
+import { isApp, bindExternalLinks } from './app-env.js?v=58'; // v54 App 版
+import { starsOf } from './stars.js?v=58';
+import { LEVELS } from './writing-panel.js?v=58';
+import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=58';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -126,7 +126,7 @@ const CSS = `
 export class ParentPanel {
   /** rewards（可省略）：{ key, totals: () => ({ total, maxTotal }), onChange }，見 rewards.js；shop（可省略）：{ summary: () => ({ count, all, spent, balance, names }) }，見 shop.js */
   /** books（可省略）：{ list: [{ id, label }], current, onPick(id), lessons: [課號] }，見 books.js；v56 lessons 給「可以寫到」設定用 */
-  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, skins = null, dictation = null, seasons = null, strokes = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, skins, dictation, seasons, strokes, log }); /* v57 strokes＝{ summary()：{ done, total, good } } */ /* v52 seasons＝{ info()：{ current, list:[{id,label,short,unlocked,unlockStars,price,runs}] }, onPick(id|null)：async → true／false } */ this.el = null; }
+  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, skins = null, dictation = null, seasons = null, strokes = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, skins, dictation, seasons, strokes, log }); /* v57 strokes＝{ summary()：{ done, total, good, weak } }；v58 weak＝最近常寫錯的筆畫 */ /* v52 seasons＝{ info()：{ current, list:[{id,label,short,unlocked,unlockStars,price,runs}] }, onPick(id|null)：async → true／false } */ this.el = null; }
   isOpen() { return !!this.el; }
   open() {
     if (this.el) return;
@@ -144,7 +144,7 @@ export class ParentPanel {
       <h3>關卡進度（已過關的字）</h3>
       <div class="pp-kpis">${LEVELS.map((l, i) => `<div>${l.icon} ${l.label}<b>${st.levelCount[i]}</b>字</div>`).join('')}</div>
       ${(() => { const q = this.seasons?.info().list.filter(x => x.runs) ?? []; return q.length ? `<p class="pp-note" style="margin:6px 0 0">🌸 季節小考（課本外的字，不算進上面的進度）：${q.map(x => `${esc(x.short)} 做過 ${x.runs} 次`).join('、')}</p>` : ''; })()}
-      ${(() => { const k = this.strokes?.summary?.(); return k ? `<p class="pp-note" style="margin:6px 0 0">✏️ 筆畫練習：練過 ${k.done}／${k.total} 種，描得好 ${k.good} 次</p>` : ''; })()}
+      ${(() => { const k = this.strokes?.summary?.(); return k ? `<p class="pp-note" style="margin:6px 0 0">✏️ 筆畫練習：練過 ${k.done}／${k.total} 種，描得好 ${k.good} 次</p>${k.weak?.length ? `<p class="pp-note pp-weakstroke" style="margin:4px 0 0">🎯 最近兩週最常寫錯的筆畫：${k.weak.map(w => `${esc(w.name)}（寫過 ${w.seen} 次，寫錯 ${w.misses} 次）`).join('、')}。建議先到大廳「✏️ 筆畫練習」練這幾種。<small style="display:block;opacity:.75">寫錯是寫錯的次數，同一筆錯好幾次會算好幾次。</small></p>` : ''}` : ''; })()}
       </div><div class="pp-c">
       <h3>常錯的字</h3>
       ${st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${w.char}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${w.worstStroke.name}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${w.char.codePointAt(0)}" target="_blank" rel="noopener" data-ext>教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>'}
@@ -285,11 +285,11 @@ export class ParentPanel {
         ${ui.mode === 'redeem' && ui.id === r.id ? `<div class="rw-ask"><span>請大人回答：${ui.quiz.a} ＋ ${ui.quiz.b} ＝</span><input type="number" data-f="ans" inputmode="numeric" aria-label="答案"><button type="button" data-rw="redeemOk">確定兌換</button><button type="button" data-rw="cancel">取消</button></div>` : ''}
         ${ui.mode === 'archive' && ui.id === r.id ? '<div class="rw-ask"><span>封存後孩子就看不到這個獎勵（兌換紀錄會留著）。</span><button type="button" data-rw="archiveOk">確定封存</button><button type="button" data-rw="cancel">取消</button></div>' : ''}</li>`;
     };
-    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星${bonus ? `（含額外獲得的 ${bonus} 顆：地圖上朋友送的、守門員、季節小考、三星字重複練習、筆畫練習）` : ''}，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
-      ${tot.repeat ? `<p class="pp-note" style="margin:0 0 6px">🔁 今天重複練習（三星字＋筆畫）拿了 ★${tot.repeat.today}（每個字每天最多 ${tot.repeat.perChar} 顆，每天最多 ${tot.repeat.perDay} 顆）</p>` : ''}
+    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星${bonus ? `（含額外獲得的 ${bonus} 顆：地圖上朋友送的、守門員、季節小考、學過的字再寫一次、筆畫練習）` : ''}，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
+      ${tot.repeat ? `<p class="pp-note" style="margin:0 0 6px">🔁 今天重複練習（再寫一次＋筆畫）拿了 ★${tot.repeat.today}（每個字每天最多 ${tot.repeat.perChar} 顆，每天最多 ${tot.repeat.perDay} 顆）</p>` : ''}
       ${n ? `<ul>${st.items.map(item).join('')}</ul>` : '<p class="pp-note" style="margin:0 0 6px">還沒有獎勵。可以設定 1～3 個實際的獎勵（例：去公園玩、選今天的晚餐），孩子存夠星星後由大人按「已兌換」。</p>'}
       <div class="rw-form" data-new>${fields(null)}<button type="button" data-rw="add" ${st.canAdd ? '' : 'disabled'}>新增</button></div>
-      <small>${st.overLimit ? `<span class="warn">現在有 ${n} 個獎勵，封存到 ${MAX_ACTIVE} 個以內才能再新增</span>` : !st.canAdd ? `最多 ${MAX_ACTIVE} 個獎勵；要新增請先封存一個。` : st.open ? `三顆星的字重複練習還能多拿星星（每個字每天 ${tot.repeat?.perChar ?? 8} 顆，每天最多 ${tot.repeat?.perDay ?? 60} 顆），獎勵最多可以設 ★${st.costMax}。` : `每個字最多 3 顆星，全部拿滿是 ★${st.maxTotal}。`}</small>
+      <small>${st.overLimit ? `<span class="warn">現在有 ${n} 個獎勵，封存到 ${MAX_ACTIVE} 個以內才能再新增</span>` : !st.canAdd ? `最多 ${MAX_ACTIVE} 個獎勵；要新增請先封存一個。` : st.open ? `已經學會的字再寫一次還能多拿星星（每個字每天 ${tot.repeat?.perChar ?? 8} 顆，每天最多 ${tot.repeat?.perDay ?? 60} 顆），獎勵最多可以設 ★${st.costMax}。` : `每個字最多 3 顆星，全部拿滿是 ★${st.maxTotal}。`}</small>
       <output>${esc(ui.msg)}</output>
       ${data.redemptions.length ? `<details><summary>兌換紀錄（${data.redemptions.length} 筆）</summary><ul>${[...data.redemptions].sort((a, b) => b.redeemedAt.localeCompare(a.redeemedAt)).map(x => `<li>${x.redeemedAt ? day(x.redeemedAt) : ''}　${esc(x.title)}　★${x.cost}</li>`).join('')}</ul></details>` : ''}`;
     this.rewardState = st;

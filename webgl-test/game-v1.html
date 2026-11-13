@@ -119,28 +119,29 @@ details{margin-top:8px}pre{white-space:pre-wrap;font-size:12px;background:#fff;b
 <div id="done"></div>
 <details><summary>診斷（draw calls、RAF、事件）</summary><pre id="diag"></pre></details>
 <script type="module">
-import { loadContract, describeLoadError } from './game/content.js?v=57';
-import { WritingPanel, renderArtifactCard, levelIcon, wordHTML, loadCharData } from './game/writing-panel.js?v=57';
-import { Store, clearProfile } from './game/store.js?v=57';
-import { Sound, Voice } from './game/fx.js?v=57';
-import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=57';
-import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=57';
-import { PartsGame, canFocus } from './game/minigame.js?v=57';
-import { Dictation, DICTATION_N, loadWeak } from './game/dictation.js?v=57';
-import { ParentPanel, loadSettings, SETTINGS_KEY, lessonMaxOf } from './game/parent.js?v=57';
-import { requestPersist, exportBackup, importBackup, saveBackupFile } from './game/backup.js?v=57';
-import { isApp, appInfo } from './game/app-env.js?v=57';
-import { parentGate, gateOpen } from './game/parent-gate.js?v=57';
-import { CardReplay } from './game/card-replay.js?v=57';
-import { rewardsKey, loadRewards, rewardState, childStatus, mergeRewardsJSON } from './game/rewards.js?v=57';
-import { shopKey, loadShop, saveShop, shopState, outfitOf, mergeShopJSON, loadCatalog, giftItem, reconcileGiftItems } from './game/shop.js?v=57';
-import { extrasKey, loadExtras, saveExtras, bonusTotal, masteredLessons, pendingMastery, markMastery, planGift, claimGift, mergeExtrasJSON, validLines, lineOk, bossStatus, clearBossStage, validSeasons, seasonUnlocked, markSeasonUnlocks, setSeason, finishQuest, validRepeat, awardRepeat, repeatDay, finishStroke, strokeTaskId, strokeStarsOn } from './game/extras.js?v=57';
-import { StrokePractice, validStrokes } from './game/stroke-practice.js?v=57'; // v57 基本筆畫練習
-import { QuestRun, pickQuestWords } from './game/quest.js?v=57';
-import { BossRun, pickBossChars, pickQuestionFor } from './game/boss.js?v=57';
-import { ShopPanel } from './game/shop-ui.js?v=57';
-import { BOOKS, currentBook, saveBook, profileFor, lessonKeyFor } from './game/books.js?v=57';
-import { currentSkin, saveSkin, loadSkin, applySkin, readySkins } from './game/skin.js?v=57';
+import { loadContract, describeLoadError } from './game/content.js?v=58';
+import { WritingPanel, renderArtifactCard, levelIcon, wordHTML, loadCharData } from './game/writing-panel.js?v=58';
+import { Store, clearProfile } from './game/store.js?v=58';
+import { Sound, Voice } from './game/fx.js?v=58';
+import { Town2D, Lobby2D, TownFx2D, Reward2D, Album2D, PIN_COLORS } from './game/lobby2d.js?v=58';
+import { starsOf, bestStars, lessonStars, starText } from './game/stars.js?v=58';
+import { PartsGame, canFocus } from './game/minigame.js?v=58';
+import { Dictation, DICTATION_N, loadWeak } from './game/dictation.js?v=58';
+import { ParentPanel, loadSettings, SETTINGS_KEY, lessonMaxOf } from './game/parent.js?v=58';
+import { requestPersist, exportBackup, importBackup, saveBackupFile } from './game/backup.js?v=58';
+import { isApp, appInfo } from './game/app-env.js?v=58';
+import { parentGate, gateOpen } from './game/parent-gate.js?v=58';
+import { CardReplay } from './game/card-replay.js?v=58';
+import { rewardsKey, loadRewards, rewardState, childStatus, mergeRewardsJSON } from './game/rewards.js?v=58';
+import { shopKey, loadShop, saveShop, shopState, outfitOf, mergeShopJSON, loadCatalog, giftItem, reconcileGiftItems } from './game/shop.js?v=58';
+import { extrasKey, loadExtras, saveExtras, bonusTotal, masteredLessons, pendingMastery, markMastery, planGift, claimGift, mergeExtrasJSON, validLines, lineOk, bossStatus, clearBossStage, validSeasons, seasonUnlocked, markSeasonUnlocks, setSeason, finishQuest, validRepeat, awardRepeat, repeatDay, finishStroke, strokeTaskId, strokeStarsOn } from './game/extras.js?v=58';
+import { StrokePractice, validStrokes } from './game/stroke-practice.js?v=58'; // v57 基本筆畫練習
+import { weakStrokes } from './game/stroke-stats.js?v=58'; // v58 最近常寫錯的筆畫
+import { QuestRun, pickQuestWords } from './game/quest.js?v=58';
+import { BossRun, pickBossChars, pickQuestionFor } from './game/boss.js?v=58';
+import { ShopPanel } from './game/shop-ui.js?v=58';
+import { BOOKS, currentBook, saveBook, profileFor, lessonKeyFor } from './game/books.js?v=58';
+import { currentSkin, saveSkin, loadSkin, applySkin, readySkins } from './game/skin.js?v=58';
 const $ = s => document.querySelector(s);
 const qs = new URLSearchParams(location.search);
 // v19 課本版本：每個版本一份契約；profileId 加版本後綴，進度、星星、獎勵、配件都分開（課程 1 沒有後綴，舊存檔照舊）
@@ -227,14 +228,14 @@ reward.applyState({ rewardCount: saved.ledger.length });
 townFx = new TownFx2D({ town, lobby, contract, reward, sound, stage: $('#stage'), log });
 diag.townFx = { tintedMaterials: townFx.tintedMaterials, residents: townFx.residents.map(r => r.name + '@' + townFx.zoneIds[r.zone]), props: townFx.props.length, color: townFx.setProgress(saved.passedTaskIds, { instant: true }) };
 // v18 配件商店（只有 2D 大廳）：目錄讀不到就不出現商店，遊戲照常
-const SHOP_KEY = shopKey(PROFILE_ID), CATALOG = LOBBY2D ? await loadCatalog('./game/art2d/accessories.json?v=57') : null;
+const SHOP_KEY = shopKey(PROFILE_ID), CATALOG = LOBBY2D ? await loadCatalog('./game/art2d/accessories.json?v=58') : null;
 // v44 主題可以帶自己的配件圖（同一個配件代號換圖和名字，買過的照樣算）：圖放在主題的 sprites/，檔名相同
 const ACC_BASE = CATALOG ? (SKIN?.accessories ? SKIN.base : './game/art2d/' + CATALOG.base) : '';
 if (CATALOG && SKIN?.accessories) for (const i of CATALOG.items) Object.assign(i, SKIN.accessories[i.id]);
 if (CATALOG && SKIN?.anchors) CATALOG.anchors = { ...CATALOG.anchors, ...SKIN.anchors }; // v44 主題可以帶自己的配件掛點（恐龍的頭形和水豚不同）
 // v50 額外內容（區域全三星、朋友的首次禮物、額外星星）：存檔 capy_extras_<profileId>；設定檔讀不到就整個停用，遊戲照常
 const EXTRAS_KEY = extrasKey(PROFILE_ID); let extras = loadExtras(EXTRAS_KEY);
-const EXTRAS_CFG = !LOBBY2D ? null : await fetch('./game/extras.json?v=57', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(c => {
+const EXTRAS_CFG = !LOBBY2D ? null : await fetch('./game/extras.json?v=58', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(c => {
   if (!c || c.version !== 1 || !Array.isArray(c.mastery?.sprites) || !c.mastery.sprites.length || !c.gifts) return null;
   const v = validLines(c.lines); if (v.dropped) log('extras: dropped ' + v.dropped + ' bad lines');
   const bz = c.boss, int = (n, a, b) => Number.isInteger(n) && n >= a && n <= b; // v51 守門員設定：不合法就整個第二階段停用
@@ -246,9 +247,10 @@ const BOSS_CFG = EXTRAS_CFG?.boss ?? null;
 const REPEAT_CFG = validRepeat(EXTRAS_CFG?.repeat); if (EXTRAS_CFG?.repeat && !REPEAT_CFG) log('extras: bad repeat config'); // v56 三星字重複練習給星；沒有或不合法＝不給
 const localDay = (d = new Date()) => d.toLocaleDateString('sv');
 // v57 基本筆畫練習的資料（strokes/build_strokes.py 產生）；讀不到或全部不合就沒有這個按鈕
-const STROKES = await fetch('./game/strokes/strokes.json?v=57', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(d => { const v = validStrokes(d); if (v.dropped) log('strokes: dropped ' + v.dropped); return v.strokes; }).catch(() => []);
+const weakNow = () => (STROKES.length ? weakStrokes({ artifacts: saved.artifacts, names: SNAMES, strokes: STROKES, twChars: TW_CHARS, twReady: TW_READY }).list : []); // v58
+const STROKES = await fetch('./game/strokes/strokes.json?v=58', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(d => { const v = validStrokes(d); if (v.dropped) log('strokes: dropped ' + v.dropped); return v.strokes; }).catch(() => []);
 let strokePractice = null; // 和每日複習的 today() 一樣（那個宣告在後面，載入時還不能用）
-const BOSS_PARTS = BOSS_CFG ? await fetch('./game/boss_parts.json?v=57', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null) : null;
+const BOSS_PARTS = BOSS_CFG ? await fetch('./game/boss_parts.json?v=58', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null) : null;
 /** v51 跨分頁的鎖：同一個帳號的所有分頁，extras 的「讀 → 算 → 寫」一次只有一個在做（沒有 Web Locks 的瀏覽器直接執行） */
 const EXTRAS_LOCK = 'capy_extras_lock_' + PROFILE_ID;
 const withExtrasLock = fn => (navigator.locks?.request ? navigator.locks.request(EXTRAS_LOCK, fn) : Promise.resolve().then(fn));
@@ -266,7 +268,7 @@ await withExtrasLock(() => { extras = loadExtras(EXTRAS_KEY); const d = loadShop
 diag.extras = { cfg: !!EXTRAS_CFG, boss: extras.boss.cleared, bossCfg: !!BOSS_CFG, bossParts: !!BOSS_PARTS, lock: !!navigator.locks?.request, lines: EXTRAS_CFG?.lines.length ?? 0, mastery: Object.keys(extras.mastery), gifts: Object.keys(extras.gifts).length, bonus: bonusTotal(extras) };
 let bossRun = null; // v51：守門員關卡（下面建立；先宣告，視窗檢查才能安全引用）
 // v52 季節主題與季節小考（設計：docs/plans/2026-11-12-phase3-seasons-and-side-quests.md）。設定讀不到＝沒有季節功能，其他照常
-const SEASONS = await fetch('./game/seasons.json?v=57', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(c => { const v = validSeasons(c); if (v.dropped) log('seasons: dropped ' + v.dropped); return v.seasons; }).catch(e => { log('seasons load failed: ' + e); return []; });
+const SEASONS = await fetch('./game/seasons.json?v=58', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).then(c => { const v = validSeasons(c); if (v.dropped) log('seasons: dropped ' + v.dropped); return v.seasons; }).catch(e => { log('seasons load failed: ' + e); return []; });
 let questRun = null; diag.seasons = SEASONS.map(x => x.id + (x.quest ? '+quest' : ''));
 if (CATALOG) { town.setAccessories(CATALOG, ACC_BASE); const d = loadShop(SHOP_KEY); for (const name of town.chars.keys()) town.setOutfit(name, outfitOf(d, name)); }
 log('accessories ' + (CATALOG ? CATALOG.items.length : 'off'));
@@ -452,11 +454,11 @@ async function questClosed(r) {
 /** v56 已過關的字再寫一次：狀態列的話（重複練習星） */
 function repeatNote(e) {
   const r = e.repeat, R = REPEAT_CFG;
-  if (r?.add) return `「${e.char}」又寫了三顆星，多拿 ★${r.add}！` + (r.leftChar > 0 ? `（今天這個字還可以拿 ${r.leftChar} 顆）` : r.leftDay > 0 ? '（今天這個字的練習星星拿滿了）' : '（今天的練習星星都拿滿了）');
+  if (r?.add) return `「${e.char}」又寫了一次，多拿 ★${r.add}！` + (r.leftChar > 0 ? `（今天這個字還可以拿 ${r.leftChar} 顆）` : r.leftDay > 0 ? '（今天這個字的練習星星拿滿了）' : '（今天的練習星星都拿滿了）');
   if (r?.reason === 'char') return `「${e.char}」今天的練習星星拿滿了，明天再來！換別的字練習吧。`;
   if (r?.reason === 'day') return `今天的練習星星都拿滿了（★${R.perDay}），明天再來！`;
-  if (r?.reason === 'save') return `「${e.char}」又寫了三顆星！可是星星存不進去（可能是私密瀏覽模式）。`;
-  return `「${e.char}」又寫了一次，很棒！` + (R && e.before === 3 ? '寫到三顆星還可以多拿星星喔。' : '（這個字的獎勵之前領過了）');
+  if (r?.reason === 'save') return `「${e.char}」又寫了一次！可是星星存不進去（可能是私密瀏覽模式）。`;
+  return `「${e.char}」又寫了一次，很棒！（這個字的獎勵之前領過了）`;
 }
 function updateRewardLine() { const t = childStatus(rewardState({ ...starTotals(), data: loadRewards(REWARDS_KEY) })), el = $('#rewardLine'); el.hidden = !t; el.textContent = t ? '🎁 ' + t : ''; }
 function renderChapters() {
@@ -507,17 +509,17 @@ function friendGoal(extraTaskId) {
 }
 const friendNote = g => g && g.left <= Math.ceil(g.total / 2) ? `再寫 ${g.left} 個字，新朋友就來了！` : '';
 // v11 漢字積木資料（獨立檔，不動已鎖 SHA 的題庫）：載入失敗就照舊只唸「字，詞的字」
-let ENRICH = {}; try { const r = await fetch('./game/courses/enrichment_base.json?v=57', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
+let ENRICH = {}; try { const r = await fetch('./game/courses/enrichment_base.json?v=58', { cache: 'no-cache' }); if (r.ok) ENRICH = (await r.json()).chars ?? {}; } catch (e) { log('enrichment load failed: ' + e); }
 // v19：這一冊自己的口訣（提示詞不同、新字），同一字蓋過共用的
-if (BOOKS[BOOK].enrichment) try { const r = await fetch('./game/' + BOOKS[BOOK].enrichment + '?v=57', { cache: 'no-cache' }); if (r.ok) Object.assign(ENRICH, (await r.json()).chars ?? {}); } catch (e) { log('book enrichment load failed: ' + e); }
+if (BOOKS[BOOK].enrichment) try { const r = await fetch('./game/' + BOOKS[BOOK].enrichment + '?v=58', { cache: 'no-cache' }); if (r.ok) Object.assign(ENRICH, (await r.json()).chars ?? {}); } catch (e) { log('book enrichment load failed: ' + e); }
 log('enrichment ' + Object.keys(ENRICH).length + ' chars');
 // v12 台灣標準筆順：和教育部筆順網不同的字改讀 data-tw（只重排／切開原資料）；索引載入失敗就照舊用原資料
-let TW_CHARS = new Set(); try { const r = await fetch('./vendor-v2/hanzi-writer/data-tw/index.json?v=57', { cache: 'no-cache' }); if (r.ok) TW_CHARS = new Set(Object.keys((await r.json()).chars ?? {})); } catch (e) { log('data-tw index load failed: ' + e); }
+let TW_CHARS = new Set(), TW_READY = false; try { const r = await fetch('./vendor-v2/hanzi-writer/data-tw/index.json?v=58', { cache: 'no-cache' }); if (r.ok) { TW_CHARS = new Set(Object.keys((await r.json()).chars ?? {})); TW_READY = true; } } catch (e) { log('data-tw index load failed: ' + e); } // v58 TW_READY：索引讀到才能確定作品的筆序對得上筆畫名稱
 log('data-tw ' + TW_CHARS.size + ' chars');
 // v12 筆畫名稱（台灣用語，人工核對 pending）：載入失敗就不唸名稱
-let SNAMES = {}; try { const r = await fetch('./game/stroke_names.json?v=57', { cache: 'no-cache' }); if (r.ok) SNAMES = (await r.json()).chars ?? {}; } catch (e) { log('stroke names load failed: ' + e); }
+let SNAMES = {}; try { const r = await fetch('./game/stroke_names.json?v=58', { cache: 'no-cache' }); if (r.ok) SNAMES = (await r.json()).chars ?? {}; } catch (e) { log('stroke names load failed: ' + e); }
 // v14 詞語注音（教育部辭典，人工核對 pending）：載入失敗就只顯示單字注音
-let ZY = {}; try { const r = await fetch('./game/zhuyin.json?v=57', { cache: 'no-cache' }); if (r.ok) ZY = (await r.json()).words ?? {}; } catch (e) { log('zhuyin load failed: ' + e); }
+let ZY = {}; try { const r = await fetch('./game/zhuyin.json?v=58', { cache: 'no-cache' }); if (r.ok) ZY = (await r.json()).words ?? {}; } catch (e) { log('zhuyin load failed: ' + e); }
 // v17-C 字卡重播：詞只用題庫 characters[].words（沒有就用任務的提示詞），部首只顯示題庫的文字
 const CHAR_INFO = new Map((loaded.content.characters ?? []).map(c => [c.char, c]));
 const TASK_BY_CHAR = new Map([...loaded.writingTasks.values()].map(t => [t.char, t]));
@@ -574,7 +576,7 @@ const panel = new WritingPanel({
     updateReviewBtn(); updatePartsBtn(); updateDictBtn();
     // 已領過獎的字再寫一次：只保存作品、沒有動畫，要在狀態列講清楚，孩子才不會以為壞了
     const note = effect && !effect.rewardNew ? repeatNote(effect) : '';
-    if (effect?.repeat?.add) { sound.complete(); voice.say(`又是三顆星，多拿${effect.repeat.add}顆星星！`); }
+    if (effect?.repeat?.add) { sound.complete(); voice.say(`又寫了一次，多拿${effect.repeat.add}顆星星！`); }
     const friendNote = newFriends.length ? `新朋友「${newFriends.map(r => r.name).join('、')}」加入圖鑑！點「📖 圖鑑」看看。` : '';
     setStatus(reviewDoneNow ? RV.icon + ' ' + RV.name + '完成！今天的複習做完了，明天再來喔。' : friendNote + note + nextLabel(!!note));
     if (newFriends.length || reviewDoneNow) masteryQuietUntil = performance.now() + 4000; // v50：這次已經用語音唸了新朋友／複習完成，全三星不搶話
@@ -590,8 +592,8 @@ const panel = new WritingPanel({
     const result = await store.commitCompletion(task, a);   // 失敗會 throw → 面板顯示「重試保存」
     session.artifacts.push(a); session.commits.push(result);
     $('#done').append(starCard(a)); $('#done').scrollLeft = $('#done').scrollWidth; saved.artifacts.push(a); // v9：最佳星數要算進剛寫的這張
-    pendingEffect = { ...result, char: a.char, before, stars: starsOf(a) };
-    if (REPEAT_CFG && before === 3 && starsOf(a) === 3) { // v56：三星的字又寫三星 → 多給星（每個字每天、每天全部都有上限；用作品 id 去重）
+    pendingEffect = { ...result, char: a.char, before, stars: starsOf(a) }; // result 含 wasPassed（v58）
+    if (REPEAT_CFG && result.wasPassed && !result.rewardNew) { // v58：已經過關的字再寫一次，寫完就多給星（不看幾顆星；每個字每天、每天全部都有上限；用作品 id 去重）
       let r = null; const day = localDay(new Date(a.createdAt));
       const u = await updateExtras(d => { r = awardRepeat(d, { taskId: a.taskId, artifactId: a.artifactId, day, cfg: REPEAT_CFG }); return r.data; }).catch(e => ({ ok: false, error: e }));
       pendingEffect.repeat = u.ok ? { add: r.add, leftChar: Math.min(r.leftChar, r.leftDay), leftDay: r.leftDay } : { add: 0, reason: u.skipped ? r?.reason : 'save' };
@@ -600,7 +602,7 @@ const panel = new WritingPanel({
     log(`committed ${a.char} rewardKey=${result.rewardKey} rewardNew=${result.rewardNew}`);
   },
 });
-if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=57'); installTestDriver(panel); window.__game = { get parent() { return parent; }, get settings() { return SETTINGS; }, get partsGame() { return partsGame; }, get dictation() { return dictation; }, reviewPicks: (...a) => reviewPicks(...a), book: BOOK, profileId: PROFILE_ID, get enrich() { return ENRICH; }, get shop() { return shop; }, get extras() { return extras; }, extrasKey: EXTRAS_KEY, extrasLock: EXTRAS_LOCK, get bossRun() { return bossRun; }, seasons: SEASONS, get questRun() { return questRun; }, get strokePractice() { return strokePractice; }, strokes: STROKES, seasonNow: () => seasonNow(), pickSeason: id => pickSeason(id), openQuest: () => openQuest(), checkSeasonUnlocks: () => checkSeasonUnlocks(), applySeason: () => applySeason(), freshTotals: () => freshTotals(), seasonFreshState: id => seasonFreshState(id), bossNow: () => bossNow(), openBoss: () => openBoss(), anyOverlayOpen: () => anyOverlayOpen(), updateExtras: (f, a) => updateExtras(f, a), extrasCfg: EXTRAS_CFG, checkMastery: () => checkMastery(), lobbyFree: () => lobbyFree(), shopKey: SHOP_KEY, catalog: CATALOG, get review() { return review; }, LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, cardReplay, switchChapter, rewards: { key: REWARDS_KEY, totals: starTotals, update: updateRewardLine }, backupIO: { exportObj: () => exportObj(), importObj: o => importObj(o) }, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
+if (qs.get('test') === '1') { const { installTestDriver } = await import('./game/test-driver.js?v=58'); installTestDriver(panel); window.__game = { get parent() { return parent; }, get settings() { return SETTINGS; }, get partsGame() { return partsGame; }, get dictation() { return dictation; }, reviewPicks: (...a) => reviewPicks(...a), book: BOOK, profileId: PROFILE_ID, get enrich() { return ENRICH; }, get shop() { return shop; }, get extras() { return extras; }, extrasKey: EXTRAS_KEY, extrasLock: EXTRAS_LOCK, get bossRun() { return bossRun; }, seasons: SEASONS, get questRun() { return questRun; }, get strokePractice() { return strokePractice; }, strokes: STROKES, seasonNow: () => seasonNow(), pickSeason: id => pickSeason(id), openQuest: () => openQuest(), checkSeasonUnlocks: () => checkSeasonUnlocks(), applySeason: () => applySeason(), freshTotals: () => freshTotals(), seasonFreshState: id => seasonFreshState(id), bossNow: () => bossNow(), openBoss: () => openBoss(), anyOverlayOpen: () => anyOverlayOpen(), updateExtras: (f, a) => updateExtras(f, a), extrasCfg: EXTRAS_CFG, checkMastery: () => checkMastery(), lobbyFree: () => lobbyFree(), shopKey: SHOP_KEY, catalog: CATALOG, get review() { return review; }, LOBBY2D, town, lobby, panel, session, diag, loaded, store, reward, townFx, sound, voice, album, cardReplay, switchChapter, rewards: { key: REWARDS_KEY, totals: starTotals, update: updateRewardLine }, backupIO: { exportObj: () => exportObj(), importObj: o => importObj(o) }, clearProfile: () => clearProfile(store.db, PROFILE_ID), get saved() { return saved; } }; }
 function nextLabel(skipAllDone = false) {
   const t = loaded.writingTasks.get(demoIds[queueIndex]);
   const allDone = !skipAllDone && demoIds.every(id => saved.passedTaskIds.includes(id));
@@ -685,7 +687,7 @@ const backup = {
   },
 };
 const shopSummary = () => { if (!CATALOG) return null; const d = loadShop(SHOP_KEY), st = shopState({ total: starTotals().total, catalog: CATALOG, data: d }); const isSeason = p => p.itemId.startsWith('season:'), acc = d.purchases.filter(p => !isSeason(p)), gifted = acc.filter(p => p.gift).length; return { count: acc.length - gifted, gifted, all: CATALOG.items.length, /* v50：朋友送的另外算；v52：季節另外列 */ spent: st.spent, balance: st.balance, names: acc.map(p => CATALOG.items.find(i => i.id === p.itemId)?.name ?? p.itemId), seasons: d.purchases.filter(isSeason).map(p => ({ name: seasonCfg(p.itemId.slice(7))?.label ?? p.itemId.slice(7), cost: p.cost })) }; };
-const parent = new ParentPanel({ log, backup, seasons: SEASONS.length ? { info: () => ({ current: seasonNow()?.id ?? null, list: SEASONS.map(x => ({ id: x.id, label: x.label, short: x.short, unlocked: isSeasonUnlocked(x.id), unlockStars: x.unlockStars, price: x.price, runs: extras.quests[x.id]?.runs ?? 0 })) }), onPick: id => pickSeason(id) } : null, rewards: { key: REWARDS_KEY, totals: starTotals, onChange: updateRewardLine }, shop: CATALOG ? { summary: shopSummary } : null, dictation: { summary: () => loadWeak(DICT_KEY) }, strokes: STROKES.length ? { summary: () => { const st = Object.values(extras.strokes ?? {}); return { done: st.filter(x => x.runs > 0).length, total: STROKES.length, good: st.reduce((n, x) => n + x.good, 0) }; } } : null, skins: { list: await readySkins('./game/', qs.get('test') === '1'), current: diag.skin, onPick: id => { if (id === diag.skin || !saveSkin(id)) return; const u = new URL(location.href); u.searchParams.delete('skin'); location.href = u.toString(); } }, books: { list: Object.entries(BOOKS).map(([id, b]) => ({ id, label: b.label })), current: BOOK, lessons: LESSONS, onPick: id => { if (id === BOOK || !saveBook(id)) return; const u = new URL(location.href); u.searchParams.delete('book'); location.href = u.toString(); } }, onSettings: s => { SETTINGS = s; updateReviewBtn(); updateShopBtn(); applyLessonLimit(); },
+const parent = new ParentPanel({ log, backup, seasons: SEASONS.length ? { info: () => ({ current: seasonNow()?.id ?? null, list: SEASONS.map(x => ({ id: x.id, label: x.label, short: x.short, unlocked: isSeasonUnlocked(x.id), unlockStars: x.unlockStars, price: x.price, runs: extras.quests[x.id]?.runs ?? 0 })) }), onPick: id => pickSeason(id) } : null, rewards: { key: REWARDS_KEY, totals: starTotals, onChange: updateRewardLine }, shop: CATALOG ? { summary: shopSummary } : null, dictation: { summary: () => loadWeak(DICT_KEY) }, strokes: STROKES.length ? { summary: () => { const st = Object.values(extras.strokes ?? {}); return { done: st.filter(x => x.runs > 0).length, total: STROKES.length, good: st.reduce((n, x) => n + x.good, 0), weak: weakNow() }; } } : null, skins: { list: await readySkins('./game/', qs.get('test') === '1'), current: diag.skin, onPick: id => { if (id === diag.skin || !saveSkin(id)) return; const u = new URL(location.href); u.searchParams.delete('skin'); location.href = u.toString(); } }, books: { list: Object.entries(BOOKS).map(([id, b]) => ({ id, label: b.label })), current: BOOK, lessons: LESSONS, onPick: id => { if (id === BOOK || !saveBook(id)) return; const u = new URL(location.href); u.searchParams.delete('book'); location.href = u.toString(); } }, onSettings: s => { SETTINGS = s; updateReviewBtn(); updateShopBtn(); applyLessonLimit(); },
   getData: () => ({ artifacts: saved.artifacts, passedTaskIds: saved.passedTaskIds, tasks: loaded.writingTasks, names: SNAMES,
     totalChars: new Set(Object.keys(contract.modes).filter(k => k.startsWith('lesson_')).flatMap(k => contract.modes[k].writingTaskIds).map(id => loaded.writingTasks.get(id)?.char)).size }) });
 $('#parentBtn').addEventListener('click', async () => { if (anyOverlayOpen() || opening) return; if (isApp() && !(await parentGate({ reason: 'parent', log }))) return; if (!anyOverlayOpen() && !opening) parent.open(); }); // v54：App 裡家長面板前要先家長確認
@@ -701,7 +703,7 @@ function updateShopBtn() { $('#shopBtn').hidden = !shop || SETTINGS.shop === fal
 if (shop) $('#shopBtn').innerHTML = `<img alt="" src="${ACC_BASE}${CATALOG.ui.btn}"><span class="lbl">商店</span>`; $('#shopBtn').setAttribute('aria-label', '配件商店');
 $('#shopBtn').addEventListener('click', () => { if (!shop || anyOverlayOpen() || opening) return; sound.unlock(); shop.open(); });
 // v12 部件小偵探：學過 4 個字以上才出現；字庫＝學過的字＋目前這一課的字
-let PARTS = null; try { const r = await fetch('./game/parts_game.json?v=57', { cache: 'no-cache' }); if (r.ok) PARTS = await r.json(); } catch (e) { log('parts game load failed: ' + e); }
+let PARTS = null; try { const r = await fetch('./game/parts_game.json?v=58', { cache: 'no-cache' }); if (r.ok) PARTS = await r.json(); } catch (e) { log('parts game load failed: ' + e); }
 const partsGame = PARTS && new PartsGame({ data: PARTS, voice, sound, log,
   onOpen: () => { lobby.pause('parts'); $('#startBtn').disabled = true; },
   onClose: r => { lobby.resume('parts'); $('#startBtn').disabled = false; diag.partsGame = r; setStatus(`🧩 部件小偵探完成 ${r.rounds}／${r.total} 題！` + nextLabel()); } });
@@ -736,6 +738,7 @@ if (STROKES.length) strokePractice = new StrokePractice({ strokes: STROKES, voic
     const out = !u.ok ? { add: 0, reason: 'save' } : r?.data ? { add: r.add, leftChar: r.leftChar } : { add: 0, reason: r?.reason ?? null, perDay: REPEAT_CFG?.perDay };
     log('strokes finish ' + id + ' good=' + (good ? 1 : 0) + ' ' + JSON.stringify(out)); return out;
   },
+  weak: () => weakNow(),
   today: () => { const day = localDay(), ids = STROKES.map(x => x.id); return { goodIds: new Set(ids.filter(id => extras.strokes?.[id]?.lastGood === day)), fullIds: new Set(REPEAT_CFG ? ids.filter(id => repeatDay(extras, day, strokeTaskId(id)).char >= REPEAT_CFG.perChar) : []), strokeStars: strokeStarsOn(extras, day), dayStars: repeatDay(extras, day).day, perDay: REPEAT_CFG?.perDay ?? 0 }; },
   onOpen: () => { lobby.pause('strokes'); $('#startBtn').disabled = true; },
   onClose: r => { lobby.resume('strokes'); $('#startBtn').disabled = false; diag.strokes = r; renderChapters(); checkSeasonUnlocks(); if (r.rounds) townFx?.cheer?.(r.good > 0); setStatus((r.rounds ? `✏️ 筆畫練習練了 ${r.rounds} 次${r.stars ? `，多拿 ★${r.stars}` : ''}！` : '') + nextLabel()); } });
