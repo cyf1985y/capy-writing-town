@@ -113,6 +113,12 @@
       ]
     }
   ],
+  "repeat": {
+    "note": "v56：之前已經三顆星的字，再寫一次又是三顆星就多給星星。stars＝每次給幾顆；perChar＝每個字每天最多；perDay＝每天全部字加起來最多。",
+    "stars": 1,
+    "perChar": 8,
+    "perDay": 60
+  },
   "boss": {
     "note": "v51 守門員總複習關。at＝地圖座標（四張地圖左下角草地）；questions 3..5；stars 1..5；stages 1..8。",
     "title": "守門員",

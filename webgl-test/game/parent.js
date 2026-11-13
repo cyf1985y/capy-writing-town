@@ -1,14 +1,22 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { isApp, bindExternalLinks } from './app-env.js?v=55'; // v54 App 版
-import { starsOf } from './stars.js?v=55';
-import { LEVELS } from './writing-panel.js?v=55';
-import { loadRewards, saveRewards, rewardState, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=55';
+import { isApp, bindExternalLinks } from './app-env.js?v=56'; // v54 App 版
+import { starsOf } from './stars.js?v=56';
+import { LEVELS } from './writing-panel.js?v=56';
+import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=56';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
 export function loadSettings() {
   try { return { ...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') }; } catch { return { ...DEFAULT_SETTINGS }; }
+}
+/**
+ * v56 家長限制課程範圍：settings.lessonMax＝{ <課程 id>: 最大可寫的課號 }。lessons＝這個課程的課號（含 0）。
+ * 回傳 null＝不限制（沒設、壞值、或已經是最後一課）。第 0 課一直開放（由呼叫端處理）。
+ */
+export function lessonMaxOf(settings, book, lessons) {
+  const v = settings?.lessonMax?.[book], last = Math.max(...lessons);
+  return Number.isInteger(v) && v >= 1 && v < last ? v : null;
 }
 function saveSettings(s) { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* 私密模式：只在這次有效 */ } }
 
@@ -117,7 +125,7 @@ const CSS = `
 
 export class ParentPanel {
   /** rewards（可省略）：{ key, totals: () => ({ total, maxTotal }), onChange }，見 rewards.js；shop（可省略）：{ summary: () => ({ count, all, spent, balance, names }) }，見 shop.js */
-  /** books（可省略）：{ list: [{ id, label }], current, onPick(id) }，見 books.js */
+  /** books（可省略）：{ list: [{ id, label }], current, onPick(id), lessons: [課號] }，見 books.js；v56 lessons 給「可以寫到」設定用 */
   constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, skins = null, dictation = null, seasons = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, skins, dictation, seasons, log }); /* v52 seasons＝{ info()：{ current, list:[{id,label,short,unlocked,unlockStars,price,runs}] }, onPick(id|null)：async → true／false } */ this.el = null; }
   isOpen() { return !!this.el; }
   open() {
@@ -169,6 +177,7 @@ export class ParentPanel {
         ${this.shop ? `<span>配件商店</span>${seg('shop', [[true, '開'], [false, '關']])}` : ''}
         ${this.skins?.list.length > 1 ? `<span>遊戲主題</span><div class="seg">${this.skins.list.map(b => `<button type="button" data-skin="${esc(b.id)}" aria-pressed="${b.id === this.skins.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
         ${this._seasonSetHTML()}
+        ${this._lessonMaxHTML(set)}
         ${this.books ? `<span>課程</span><div class="seg">${this.books.list.map(b => `<button type="button" data-book="${esc(b.id)}" aria-pressed="${b.id === this.books.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
       </div>
       <p class="pp-note">🔍 <a href="./game/check.html"${isApp() ? '' : ' target="_blank" rel="noopener"'}>家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
@@ -176,6 +185,7 @@ export class ParentPanel {
       </div><div class="pp-c">
       ${this.skins?.list.length > 1 ? '<p class="pp-note">換遊戲主題只是換圖案和朋友的樣子，會重新載入；學會的字、星星、獎勵和配件都不變。</p>' : ''}
       ${this.seasons?.info().list.length ? '<p class="pp-note">季節只是換顏色和飄落的雪花／花瓣，不影響學習進度，也不用重新載入。總星數到了會自動解鎖，孩子也可以在商店用星星提早換。換上季節後地圖上會出現「季節小考」（課本外的字，第一次做完送星星）。</p>' : ''}
+      ${this.books?.lessons?.length > 2 ? '<p class="pp-note">「可以寫到」：孩子只能選到這一課（第 0 課一直開著），只改目前這個課程。已經學會的字照樣會出現在每日複習、聽寫小考和守門員。</p>' : ''}
       ${this.books ? '<p class="pp-note">換課程會重新載入。每個課程的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各課程分別做。</p>' : ''}
       <p class="pp-note">🔒 <a href="./game/privacy.html">隱私權政策</a>　❓ <a href="./game/support.html">使用說明與聯絡</a></p>
       <p class="pp-note">設定只存在這台裝置。筆畫名稱與口訣由 AI 撰寫，若和課本不同請以課本為準。</p>
@@ -191,6 +201,13 @@ export class ParentPanel {
       if (b.dataset.skin) { this.log('skin ' + b.dataset.skin); return this.skins.onPick(b.dataset.skin); }
       if (b.dataset.book) { this.log('book ' + b.dataset.book); return this.books.onPick(b.dataset.book); }
       if (b.dataset.season != null) return this._seasonPick(b);
+      if (b.dataset.lmax != null) { // v56 可以寫到第幾課
+        const s = loadSettings(), lm = { ...(s.lessonMax && typeof s.lessonMax === 'object' ? s.lessonMax : {}) }, v = b.dataset.lmax;
+        if (v === '') delete lm[this.books.current]; else lm[this.books.current] = Number(v);
+        s.lessonMax = lm; saveSettings(s);
+        for (const x of el.querySelectorAll('button[data-lmax]')) x.setAttribute('aria-pressed', String(x === b));
+        this.onSettings?.(s); this.log('lessonMax ' + this.books.current + '=' + (v || 'all')); return;
+      }
       if (b.dataset.k) {
         const s = loadSettings(), v = b.dataset.v; s[b.dataset.k] = v === 'true' ? true : v === 'false' ? false : v; saveSettings(s);
         for (const x of el.querySelectorAll(`button[data-k="${b.dataset.k}"]`)) x.setAttribute('aria-pressed', String(x === b));
@@ -205,6 +222,13 @@ export class ParentPanel {
     bindExternalLinks(el, m => this.log(m)); // v54：外部連結（App 裡先過家長確認）
     document.body.append(el); this.el = el; this.stats = st; this._showTab(this._tab);
     this._rw = { mode: null, id: null, msg: '', quiz: null }; this._renderRewards();
+  }
+  /** v56「可以寫到」：不限＋第 1 課…倒數第二課（最後一課＝不限） */
+  _lessonMaxHTML(set) {
+    const ls = this.books?.lessons; if (!ls || ls.length <= 2) return '';
+    const cur = lessonMaxOf(set, this.books.current, ls), opts = ls.filter(l => l >= 1 && l < Math.max(...ls));
+    const btn = (v, label) => `<button type="button" data-lmax="${v}" aria-pressed="${String(cur ?? '') === String(v)}">${label}</button>`;
+    return `<span>可以寫到</span><div class="seg pp-lmax">${btn('', '不限')}${opts.map(l => btn(l, '第 ' + l + ' 課')).join('')}</div>`;
   }
   /** v52 設定裡的季節選擇：不用＋各季（沒解鎖的灰色、寫怎麼解鎖） */
   _seasonSetHTML() {
@@ -248,7 +272,7 @@ export class ParentPanel {
   _renderRewards() {
     const box = this.el?.querySelector('.pp-rw'); if (!box) return;
     const tot = this.rewards.totals(), bonus = tot.bonus || 0, data = loadRewards(this.rewards.key), st = rewardState({ ...tot, data }), ui = this._rw, n = st.items.length; // v50：bonus＝朋友送的額外星星（已含在 total）
-    const fields = r => `<input type="text" data-f="title" maxlength="${TITLE_MAX}" placeholder="獎勵名稱（例：去公園玩）" value="${esc(r?.title ?? '')}" aria-label="獎勵名稱"><label>★ <input type="number" data-f="cost" min="1" max="${st.maxTotal}" step="1" inputmode="numeric" placeholder="星數" value="${r?.cost ?? ''}" aria-label="需要幾顆星"></label>`;
+    const fields = r => `<input type="text" data-f="title" maxlength="${TITLE_MAX}" placeholder="獎勵名稱（例：去公園玩）" value="${esc(r?.title ?? '')}" aria-label="獎勵名稱"><label>★ <input type="number" data-f="cost" min="1" max="${st.costMax}" step="1" inputmode="numeric" placeholder="星數" value="${r?.cost ?? ''}" aria-label="需要幾顆星"></label>`;
     const item = r => {
       if (ui.mode === 'edit' && ui.id === r.id) return `<li data-id="${esc(r.id)}"><div class="rw-form">${fields(r)}<button type="button" data-rw="save">儲存</button><button type="button" data-rw="cancel">取消</button></div><small>改名稱或星數只影響之後的兌換，以前的紀錄不變。</small></li>`;
       const have = Math.max(0, Math.min(st.balance, r.cost));
@@ -260,10 +284,11 @@ export class ParentPanel {
         ${ui.mode === 'redeem' && ui.id === r.id ? `<div class="rw-ask"><span>請大人回答：${ui.quiz.a} ＋ ${ui.quiz.b} ＝</span><input type="number" data-f="ans" inputmode="numeric" aria-label="答案"><button type="button" data-rw="redeemOk">確定兌換</button><button type="button" data-rw="cancel">取消</button></div>` : ''}
         ${ui.mode === 'archive' && ui.id === r.id ? '<div class="rw-ask"><span>封存後孩子就看不到這個獎勵（兌換紀錄會留著）。</span><button type="button" data-rw="archiveOk">確定封存</button><button type="button" data-rw="cancel">取消</button></div>' : ''}</li>`;
     };
-    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星${bonus ? `（含額外獲得的 ${bonus} 顆：地圖上朋友送的、守門員、季節小考）` : ''}，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
+    box.innerHTML = `<p>現在有 <b>★${st.total}</b> 顆星${bonus ? `（含額外獲得的 ${bonus} 顆：地圖上朋友送的、守門員、季節小考、三星字重複練習）` : ''}，已兌換 ${st.spent} 顆，還能用 <b>${Math.max(0, st.balance)}</b> 顆。${st.advance ? `<span class="warn">已預支 ${st.advance} 顆</span>（補回來以前不能再兌換）` : ''}</p>
+      ${tot.repeat ? `<p class="pp-note" style="margin:0 0 6px">🔁 今天三星字重複練習拿了 ★${tot.repeat.today}（每個字每天最多 ${tot.repeat.perChar} 顆，每天最多 ${tot.repeat.perDay} 顆）</p>` : ''}
       ${n ? `<ul>${st.items.map(item).join('')}</ul>` : '<p class="pp-note" style="margin:0 0 6px">還沒有獎勵。可以設定 1～3 個實際的獎勵（例：去公園玩、選今天的晚餐），孩子存夠星星後由大人按「已兌換」。</p>'}
       <div class="rw-form" data-new>${fields(null)}<button type="button" data-rw="add" ${st.canAdd ? '' : 'disabled'}>新增</button></div>
-      <small>${st.overLimit ? `<span class="warn">現在有 ${n} 個獎勵，封存到 ${MAX_ACTIVE} 個以內才能再新增</span>` : !st.canAdd ? `最多 ${MAX_ACTIVE} 個獎勵；要新增請先封存一個。` : `每個字最多 3 顆星，全部拿滿是 ★${st.maxTotal}。`}</small>
+      <small>${st.overLimit ? `<span class="warn">現在有 ${n} 個獎勵，封存到 ${MAX_ACTIVE} 個以內才能再新增</span>` : !st.canAdd ? `最多 ${MAX_ACTIVE} 個獎勵；要新增請先封存一個。` : st.open ? `三顆星的字重複練習還能多拿星星（每個字每天 ${tot.repeat?.perChar ?? 8} 顆，每天最多 ${tot.repeat?.perDay ?? 60} 顆），獎勵最多可以設 ★${st.costMax}。` : `每個字最多 3 顆星，全部拿滿是 ★${st.maxTotal}。`}</small>
       <output>${esc(ui.msg)}</output>
       ${data.redemptions.length ? `<details><summary>兌換紀錄（${data.redemptions.length} 筆）</summary><ul>${[...data.redemptions].sort((a, b) => b.redeemedAt.localeCompare(a.redeemedAt)).map(x => `<li>${x.redeemedAt ? day(x.redeemedAt) : ''}　${esc(x.title)}　★${x.cost}</li>`).join('')}</ul></details>` : ''}`;
     this.rewardState = st;
@@ -271,7 +296,7 @@ export class ParentPanel {
   }
   _rewardAct(b) {
     const R = this.rewards, ui = this._rw, act = b.dataset.rw, id = b.closest('li[data-id]')?.dataset.id ?? null, row = b.closest('.rw-form, .rw-ask');
-    const val = f => row?.querySelector(`[data-f="${f}"]`)?.value ?? '', { total, maxTotal } = R.totals(), data = loadRewards(R.key);
+    const val = f => row?.querySelector(`[data-f="${f}"]`)?.value ?? '', tt = R.totals(), { total } = tt, maxTotal = costMaxOf(tt), data = loadRewards(R.key); // v56：重複練習開著時獎勵上限另外算
     const quiz = () => ({ a: 11 + Math.floor(Math.random() * 79), b: 11 + Math.floor(Math.random() * 79) });
     const commit = (res, okMsg) => {
       if (res.error) { ui.msg = res.error; return; }

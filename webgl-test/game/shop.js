@@ -101,9 +101,12 @@ export async function loadCatalog(url) {
  * 配件寬＝角色圖高 × size × s；配件的 (px,py) 對到掛點 (x,y)；繞這一點轉 (anchor.rot + item.rot) 度。
  * aspect＝這個姿勢角色圖的寬／高（寬度要換算成外框寬的百分比）。和 anchor-tool.html 的 wear() 同一套算法。
  */
+// v56：髮夾整組放大（不改 accessories.json／主題設定裡調好的每件 size；對位點在配件中心，以掛點為中心變大）。anchor-tool.html 的 wear() 用同一組倍數
+export const SLOT_SCALE = Object.freeze({ clip: 1.2 });
+export const slotScale = item => SLOT_SCALE[item?.slot] ?? 1;
 export function placeAccessory(img, item, an, aspect) {
   img.style.left = an.x * 100 + '%'; img.style.top = an.y * 100 + '%';
-  img.style.width = (item.size * an.s / aspect * 100).toFixed(2) + '%';
+  img.style.width = (item.size * slotScale(item) * an.s / aspect * 100).toFixed(2) + '%';
   img.style.transformOrigin = `${item.px * 100}% ${item.py * 100}%`;
   img.style.transform = `translate(${-item.px * 100}%,${-item.py * 100}%) rotate(${an.rot + (item.rot || 0)}deg)`;
 }

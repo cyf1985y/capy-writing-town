@@ -6,7 +6,7 @@
 //   { version:1, mastery:{<lesson>:{at}}, gifts:{<resident object>:{at,stars,itemId}}, bonusStars:[{id,kind,stars,at}] }
 // 不認得的頂層欄位原樣保留（之後階段向前相容）。設計文件：docs/plans/2026-11-12-phase1-area-mastery-and-friend-gifts.md
 export const extrasKey = profileId => 'capy_extras_' + profileId;
-export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] }, season: { current: null, currentAt: '', unlocked: {} }, quests: {} });
+export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] }, season: { current: null, currentAt: '', unlocked: {} }, quests: {}, repeat: {} });
 export const BOSS_STAGES = 8;
 const intIn = (n, a, b) => Number.isInteger(n) && n >= a && n <= b;
 const isObj = o => !!o && typeof o === 'object' && !Array.isArray(o);
@@ -53,14 +53,15 @@ export function normalizeExtras(obj) {
     const chars = {}; if (isObj(q.chars)) for (const [c, n] of Object.entries(q.chars)) if ([...c].length === 1 && Number.isInteger(n) && n >= 1) chars[c] = Math.min(n, 9999);
     out.quests[id] = { firstAt: String(q.firstAt || ''), runs: intIn(q.runs, 0, 9999) ? q.runs : 0, chars };
   }
+  out.repeat = cleanRepeat(obj.repeat);
   return out;
 }
 export function loadExtras(key) { try { return normalizeExtras(JSON.parse(localStorage.getItem(key) || 'null')); } catch { return emptyExtras(); } }
 export function saveExtras(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); return true; } catch { return false; } }
 
-/** 額外星星合計：朋友送的＋其他來源 */
+/** 額外星星合計：朋友送的＋其他來源（守門員、季節小考）＋v56 三星字重複練習 */
 export function bonusTotal(data) {
-  return Object.values(data.gifts).reduce((s, g) => s + (g.stars || 0), 0) + data.bonusStars.reduce((s, b) => s + b.stars, 0);
+  return Object.values(data.gifts).reduce((s, g) => s + (g.stars || 0), 0) + data.bonusStars.reduce((s, b) => s + b.stars, 0) + repeatTotal(data);
 }
 
 /** 每個寫字任務最高星數都是 3 的課（回傳 lesson 數字陣列，照 order 順序）。best＝stars.js 的 bestStars() */
@@ -99,7 +100,7 @@ export function mergeExtras(cur, inc) {
   const a = normalizeExtras(cur), b = normalizeExtras(inc);
   return normalizeExtras({ ...b, ...a, mastery: { ...b.mastery, ...a.mastery }, gifts: { ...b.gifts, ...a.gifts }, bonusStars: [...a.bonusStars, ...b.bonusStars.filter(x => !a.bonusStars.some(y => y.id === x.id))],
     boss: { cleared: Math.max(a.boss.cleared, b.boss.cleared), history: [...a.boss.history, ...b.boss.history.filter(x => !a.boss.history.some(y => y.stage === x.stage))] }, // 守門員：關數取大的、紀錄依關聯集（星星 boss:k 依 id 聯集，每關只有一筆）
-    season: mergeSeason(a.season, b.season), quests: mergeQuests(a.quests, b.quests) });
+    season: mergeSeason(a.season, b.season), quests: mergeQuests(a.quests, b.quests), repeat: mergeRepeat(a.repeat, b.repeat) });
 }
 /** v52：解鎖依鍵聯集（留較早的）；current 留 currentAt 較新的，一樣新留本機的 */
 function mergeSeason(a, b) {
@@ -193,4 +194,56 @@ export function finishQuest(data, { id, chars = [], stars = 3, now = new Date() 
   for (const c of chars) cs[c] = Math.min((cs[c] || 0) + 1, 9999);
   const bid = 'quest:' + id, first = starOk(stars) && !data.bonusStars.some(b => b.id === bid);
   return { first, data: { ...data, quests: { ...data.quests, [id]: { firstAt: old.firstAt || at, runs: Math.min(old.runs + 1, 9999), chars: cs } }, bonusStars: first ? [...data.bonusStars, { id: bid, kind: 'quest', stars, at }] : data.bonusStars } };
+}
+
+// ======== v56 三星字重複練習給星（設計：docs/plans/2026-11-13-lesson-limit-repeat-stars-clip-size.md §4） ========
+// repeat：{ 'YYYY-MM-DD': { <taskId>: { <作品 id 前 8 碼>: 星數 } } }。每一筆給過的星都記下來，總數＝相加（和設定檔、上限無關）；上限只在給的時候檢查。
+const DAY = /^\d{4}-\d{2}-\d{2}$/;
+export const repeatKey = artifactId => String(artifactId ?? '').slice(0, 8);
+function cleanRepeat(r) {
+  const out = {};
+  if (!isObj(r)) return out;
+  for (const [day, tasks] of Object.entries(r)) {
+    if (!DAY.test(day) || !isObj(tasks)) continue;
+    const t2 = {};
+    for (const [tid, arts] of Object.entries(tasks)) {
+      if (!tid || !isObj(arts)) continue;
+      const a2 = {}; for (const [k, n] of Object.entries(arts)) if (k.length >= 1 && k.length <= 36 && starOk(n)) a2[k] = n;
+      if (Object.keys(a2).length) t2[tid] = a2;
+    }
+    if (Object.keys(t2).length) out[day] = t2;
+  }
+  return out;
+}
+const sumObj = o => Object.values(o ?? {}).reduce((s, n) => s + n, 0);
+/** 重複練習拿到的星星合計（不套上限） */
+export const repeatTotal = data => Object.values(data.repeat ?? {}).reduce((s, tasks) => s + Object.values(tasks).reduce((t, arts) => t + sumObj(arts), 0), 0);
+/** 某一天的 { day: 全部字加總, char: 這個字加總 } */
+export function repeatDay(data, day, taskId = null) {
+  const tasks = data.repeat?.[day] ?? {};
+  return { day: Object.values(tasks).reduce((t, arts) => t + sumObj(arts), 0), char: taskId ? sumObj(tasks[taskId]) : 0 };
+}
+/** 合併：日期、字、作品鍵三層聯集；同一個作品鍵兩邊都有就留本機的 */
+function mergeRepeat(a, b) {
+  const out = structuredClone(b ?? {});
+  for (const [day, tasks] of Object.entries(a ?? {})) for (const [tid, arts] of Object.entries(tasks)) out[day] = { ...out[day], [tid]: { ...out[day]?.[tid], ...arts } };
+  return out;
+}
+/** extras.json 的 repeat：不合法回傳 null（功能關閉） */
+export function validRepeat(c) {
+  const ok = isObj(c) && intIn(c.stars, 1, 5) && intIn(c.perChar, 1, 50) && intIn(c.perDay, 1, 500) && c.stars <= c.perChar && c.perChar <= c.perDay;
+  return ok ? { stars: c.stars, perChar: c.perChar, perDay: c.perDay } : null;
+}
+/**
+ * 給一次重複練習星。呼叫端先確認：這個字之前已經 3 星、這次也 3 星。
+ * 回傳 { data, add, leftChar, leftDay }；給不了 data＝null、reason＝'dup'（這個作品給過了）｜'char'（這個字今天滿了）｜'day'（今天全部滿了）｜'bad'。
+ */
+export function awardRepeat(data, { taskId, artifactId, day, cfg }) {
+  const key = repeatKey(artifactId);
+  if (!cfg || !taskId || !key || !DAY.test(day)) return { data: null, reason: 'bad' };
+  if (data.repeat?.[day]?.[taskId]?.[key] != null) return { data: null, reason: 'dup' };
+  const { day: sum, char: n } = repeatDay(data, day, taskId), add = Math.min(cfg.stars, cfg.perChar - n, cfg.perDay - sum);
+  if (add <= 0) return { data: null, reason: n >= cfg.perChar ? 'char' : 'day' };
+  const repeat = { ...data.repeat, [day]: { ...data.repeat?.[day], [taskId]: { ...data.repeat?.[day]?.[taskId], [key]: add } } };
+  return { data: { ...data, repeat }, add, leftChar: cfg.perChar - n - add, leftDay: cfg.perDay - sum - add };
 }

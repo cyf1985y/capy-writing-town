@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=55';
-import { placeAccessory } from './shop.js?v=55';
+import { Album } from './album.js?v=56';
+import { placeAccessory } from './shop.js?v=56';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -61,6 +61,10 @@ const CSS = `
 @keyframes nodePulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(229,90,78,.6),0 4px 10px rgba(0,0,0,.3)}50%{transform:scale(1.12);box-shadow:0 0 0 8px rgba(229,90,78,0),0 6px 14px rgba(0,0,0,.35)}}
 @keyframes t2-arrow{0%,100%{transform:translate(-50%,-10%)}50%{transform:translate(-50%,-45%)}}
 .t2-pins-hidden .t2-pin{opacity:0;pointer-events:none}
+.t2-pin.locked img{filter:grayscale(1) opacity(.55) drop-shadow(0 0 2px #fff)}
+.t2-pin.locked b{background:#9a8f94;font-size:0}
+.t2-pin.locked b::after{content:'🔒';font-size:clamp(12px,1.2vw,17px)}
+.t2-pin.locked small{opacity:.75}
 /* v13：選中課次的標記加呼吸光圈；標記旁的課名膠囊靠邊時往內收 */
 .t2-pin.active::before{content:'';position:absolute;inset:-16%;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 4px rgba(229,90,78,.75),0 0 24px 10px rgba(255,214,90,.85);animation:t2-ring 1.6s ease-out infinite;pointer-events:none}
 .t2-pin.active img{animation:t2-breathe 1.6s ease-in-out infinite}
@@ -574,12 +578,13 @@ export class TownFx2D {
     });
   }
   placePins() { /* 標記用百分比定位，隨版面縮放，不必重算 */ }
-  updatePins(activeLesson, counts) {
+  updatePins(activeLesson, counts, locked = new Set()) {
     for (const b of this.pins ?? []) {
       const l = +b.dataset.lesson, c = counts[l];
       b.classList.toggle('active', l === activeLesson); b.classList.toggle('done', !!c && c[0] === c[1]);
+      b.classList.toggle('locked', locked.has(l)); /* v56 家長限制的課：灰色＋鎖，點了由 switchChapter 說明 */
       b.querySelector('small').innerHTML = c ? (l === activeLesson ? c[2] + ' ' : '') + `${c[0]}/${c[1]}` + (c[3] ? ` <i>★${c[3]}</i>` : '') : ''; /* v9：c[3]＝星星合計；v13：選中的課加課名（頂部章節列已收起） */
-      b.title = c ? `${c[2]}（${c[0]}/${c[1]} 字${c[3] != null ? `，★${c[3]}/${c[4]}` : ''}）` : ''; b.setAttribute('aria-label', b.title);
+      b.title = c ? `${locked.has(l) ? '（還沒開放）' : ''}${c[2]}（${c[0]}/${c[1]} 字${c[3] != null ? `，★${c[3]}/${c[4]}` : ''}）` : ''; b.setAttribute('aria-label', b.title);
     }
   }
   _showPins(on) { this.town.view.classList.toggle('t2-pins-hidden', !on); }

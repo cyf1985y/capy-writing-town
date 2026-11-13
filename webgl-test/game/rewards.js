@@ -23,10 +23,14 @@ export function saveRewards(key, data) { try { localStorage.setItem(key, JSON.st
 /**
  * 由總星數與獎勵資料算出狀態（純函式）。
  * total＝目前總星數；maxTotal＝全部寫字任務都 3 星的星數；balance 可以是負的（合併備份後超支＝預支）。
+ * open＝v56 還能一直拿星星（三星字重複練習）：沒有「換不到」的獎勵、不會「收集完了」。
  */
-export function rewardState({ total, maxTotal, data }) {
-  const active = data.rewards.filter(r => !r.archived), spent = data.redemptions.reduce((s, x) => s + x.cost, 0), balance = total - spent, maxBalance = maxTotal - spent;
-  return { total, maxTotal, spent, balance, maxBalance, advance: Math.max(0, -balance), canAdd: active.length < MAX_ACTIVE, overLimit: active.length > MAX_ACTIVE,
+export const COST_MAX_OPEN = 999;
+/** 獎勵最多可以設幾顆星 */
+export const costMaxOf = ({ maxTotal, open }) => (open ? Math.max(COST_MAX_OPEN, maxTotal) : maxTotal);
+export function rewardState({ total, maxTotal, data, open = false }) {
+  const active = data.rewards.filter(r => !r.archived), spent = data.redemptions.reduce((s, x) => s + x.cost, 0), balance = total - spent, maxBalance = open ? Infinity : maxTotal - spent;
+  return { total, maxTotal, costMax: costMaxOf({ maxTotal, open }), open, spent, balance, maxBalance, advance: Math.max(0, -balance), canAdd: active.length < MAX_ACTIVE, overLimit: active.length > MAX_ACTIVE,
     items: active.map(r => ({ ...r, canRedeem: balance >= r.cost, unreachable: maxBalance < r.cost, need: Math.max(0, r.cost - balance) })) };
 }
 
