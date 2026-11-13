@@ -1,0 +1,492 @@
+{
+ "capy_cocoa_idle": {
+  "file": "capy_cocoa_idle.webp",
+  "w": 235,
+  "h": 360
+ },
+ "capy_cocoa_happy": {
+  "file": "capy_cocoa_happy.webp",
+  "w": 316,
+  "h": 360
+ },
+ "capy_cocoa_surprised": {
+  "file": "capy_cocoa_surprised.webp",
+  "w": 277,
+  "h": 360
+ },
+ "capy_cocoa_wave": {
+  "file": "capy_cocoa_wave.webp",
+  "w": 288,
+  "h": 360
+ },
+ "bunny_a_idle": {
+  "file": "bunny_a_idle.webp",
+  "w": 236,
+  "h": 360
+ },
+ "bunny_a_happy": {
+  "file": "bunny_a_happy.webp",
+  "w": 330,
+  "h": 360
+ },
+ "bunny_a_surprised": {
+  "file": "bunny_a_surprised.webp",
+  "w": 312,
+  "h": 360
+ },
+ "bunny_a_wave": {
+  "file": "bunny_a_wave.webp",
+  "w": 287,
+  "h": 360
+ },
+ "bunny_b_idle": {
+  "file": "bunny_b_idle.webp",
+  "w": 234,
+  "h": 360
+ },
+ "bunny_b_happy": {
+  "file": "bunny_b_happy.webp",
+  "w": 310,
+  "h": 360
+ },
+ "bunny_b_surprised": {
+  "file": "bunny_b_surprised.webp",
+  "w": 260,
+  "h": 360
+ },
+ "bunny_b_wave": {
+  "file": "bunny_b_wave.webp",
+  "w": 307,
+  "h": 360
+ },
+ "capy_orange_idle": {
+  "file": "capy_orange_idle.webp",
+  "w": 271,
+  "h": 360
+ },
+ "capy_orange_happy": {
+  "file": "capy_orange_happy.webp",
+  "w": 345,
+  "h": 360
+ },
+ "capy_orange_surprised": {
+  "file": "capy_orange_surprised.webp",
+  "w": 285,
+  "h": 360
+ },
+ "capy_orange_wave": {
+  "file": "capy_orange_wave.webp",
+  "w": 327,
+  "h": 360
+ },
+ "capy_d5_idle": {
+  "file": "capy_d5_idle.webp",
+  "w": 216,
+  "h": 360
+ },
+ "capy_d5_happy": {
+  "file": "capy_d5_happy.webp",
+  "w": 297,
+  "h": 360
+ },
+ "capy_d5_surprised": {
+  "file": "capy_d5_surprised.webp",
+  "w": 241,
+  "h": 360
+ },
+ "capy_d5_wave": {
+  "file": "capy_d5_wave.webp",
+  "w": 272,
+  "h": 360
+ },
+ "capy_d6_idle": {
+  "file": "capy_d6_idle.webp",
+  "w": 260,
+  "h": 360
+ },
+ "capy_d6_happy": {
+  "file": "capy_d6_happy.webp",
+  "w": 286,
+  "h": 360
+ },
+ "capy_d6_surprised": {
+  "file": "capy_d6_surprised.webp",
+  "w": 279,
+  "h": 360
+ },
+ "capy_d6_wave": {
+  "file": "capy_d6_wave.webp",
+  "w": 295,
+  "h": 360
+ },
+ "bunny_d7_idle": {
+  "file": "bunny_d7_idle.webp",
+  "w": 261,
+  "h": 360
+ },
+ "bunny_d7_happy": {
+  "file": "bunny_d7_happy.webp",
+  "w": 318,
+  "h": 360
+ },
+ "bunny_d7_surprised": {
+  "file": "bunny_d7_surprised.webp",
+  "w": 240,
+  "h": 360
+ },
+ "bunny_d7_wave": {
+  "file": "bunny_d7_wave.webp",
+  "w": 308,
+  "h": 360
+ },
+ "bunny_d8_idle": {
+  "file": "bunny_d8_idle.webp",
+  "w": 257,
+  "h": 360
+ },
+ "bunny_d8_happy": {
+  "file": "bunny_d8_happy.webp",
+  "w": 300,
+  "h": 360
+ },
+ "bunny_d8_surprised": {
+  "file": "bunny_d8_surprised.webp",
+  "w": 260,
+  "h": 360
+ },
+ "bunny_d8_wave": {
+  "file": "bunny_d8_wave.webp",
+  "w": 312,
+  "h": 360
+ },
+ "pin_entry": {
+  "file": "pin_entry.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_fruit": {
+  "file": "pin_fruit.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_cafe": {
+  "file": "pin_cafe.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_bridge": {
+  "file": "pin_bridge.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_plaza": {
+  "file": "pin_plaza.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_onsen": {
+  "file": "pin_onsen.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_cookie": {
+  "file": "pin_cookie.webp",
+  "w": 160,
+  "h": 160
+ },
+ "pin_sakura": {
+  "file": "pin_sakura.webp",
+  "w": 160,
+  "h": 160
+ },
+ "btn_album": {
+  "file": "btn_album.webp",
+  "w": 155,
+  "h": 160
+ },
+ "btn_sound": {
+  "file": "btn_sound.webp",
+  "w": 154,
+  "h": 160
+ },
+ "btn_mute": {
+  "file": "btn_mute.webp",
+  "w": 155,
+  "h": 160
+ },
+ "btn_back": {
+  "file": "btn_back.webp",
+  "w": 154,
+  "h": 160
+ },
+ "btn_home": {
+  "file": "btn_home.webp",
+  "w": 156,
+  "h": 160
+ },
+ "shop_btn": {
+  "file": "shop_btn.webp",
+  "w": 156,
+  "h": 160
+ },
+ "fx_star": {
+  "file": "fx_star.webp",
+  "w": 164,
+  "h": 160
+ },
+ "fx_heart": {
+  "file": "fx_heart.webp",
+  "w": 172,
+  "h": 160
+ },
+ "fx_sparkle": {
+  "file": "fx_sparkle.webp",
+  "w": 141,
+  "h": 160
+ },
+ "fx_candy": {
+  "file": "fx_candy.webp",
+  "w": 214,
+  "h": 160
+ },
+ "fx_petal": {
+  "file": "fx_petal.webp",
+  "w": 213,
+  "h": 160
+ },
+ "fx_macaron": {
+  "file": "fx_macaron.webp",
+  "w": 157,
+  "h": 160
+ },
+ "card_open": {
+  "file": "card_open.webp",
+  "w": 414,
+  "h": 600
+ },
+ "card_locked": {
+  "file": "card_locked.webp",
+  "w": 414,
+  "h": 600
+ },
+ "fx_flame_1": {
+  "file": "fx_flame_1.webp",
+  "w": 105,
+  "h": 220
+ },
+ "fx_flame_2": {
+  "file": "fx_flame_2.webp",
+  "w": 154,
+  "h": 220
+ },
+ "fx_smoke_1": {
+  "file": "fx_smoke_1.webp",
+  "w": 217,
+  "h": 220
+ },
+ "fx_smoke_2": {
+  "file": "fx_smoke_2.webp",
+  "w": 399,
+  "h": 220
+ },
+ "town_b": {
+  "file": "town_b.webp",
+  "w": 1536,
+  "h": 768
+ },
+ "planet_1": {
+  "file": "planet_1.webp",
+  "w": 1200,
+  "h": 800
+ },
+ "planet_2": {
+  "file": "planet_2.webp",
+  "w": 1200,
+  "h": 800
+ },
+ "planet_3": {
+  "file": "planet_3.webp",
+  "w": 1200,
+  "h": 800
+ },
+ "build_0_1": {
+  "file": "build_0_1.webp",
+  "w": 487,
+  "h": 420
+ },
+ "build_0_2": {
+  "file": "build_0_2.webp",
+  "w": 487,
+  "h": 420
+ },
+ "build_0_3": {
+  "file": "build_0_3.webp",
+  "w": 487,
+  "h": 420
+ },
+ "build_1_1": {
+  "file": "build_1_1.webp",
+  "w": 419,
+  "h": 420
+ },
+ "build_1_2": {
+  "file": "build_1_2.webp",
+  "w": 419,
+  "h": 420
+ },
+ "build_1_3": {
+  "file": "build_1_3.webp",
+  "w": 419,
+  "h": 420
+ },
+ "build_2_1": {
+  "file": "build_2_1.webp",
+  "w": 462,
+  "h": 420
+ },
+ "build_2_2": {
+  "file": "build_2_2.webp",
+  "w": 462,
+  "h": 420
+ },
+ "build_2_3": {
+  "file": "build_2_3.webp",
+  "w": 462,
+  "h": 420
+ },
+ "build_3_1": {
+  "file": "build_3_1.webp",
+  "w": 590,
+  "h": 399
+ },
+ "build_3_2": {
+  "file": "build_3_2.webp",
+  "w": 590,
+  "h": 399
+ },
+ "build_3_3": {
+  "file": "build_3_3.webp",
+  "w": 590,
+  "h": 399
+ },
+ "build_4_1": {
+  "file": "build_4_1.webp",
+  "w": 364,
+  "h": 420
+ },
+ "build_4_2": {
+  "file": "build_4_2.webp",
+  "w": 364,
+  "h": 420
+ },
+ "build_4_3": {
+  "file": "build_4_3.webp",
+  "w": 364,
+  "h": 420
+ },
+ "build_5_1": {
+  "file": "build_5_1.webp",
+  "w": 481,
+  "h": 420
+ },
+ "build_5_2": {
+  "file": "build_5_2.webp",
+  "w": 481,
+  "h": 420
+ },
+ "build_5_3": {
+  "file": "build_5_3.webp",
+  "w": 481,
+  "h": 420
+ },
+ "build_6_1": {
+  "file": "build_6_1.webp",
+  "w": 326,
+  "h": 420
+ },
+ "build_6_2": {
+  "file": "build_6_2.webp",
+  "w": 326,
+  "h": 420
+ },
+ "build_6_3": {
+  "file": "build_6_3.webp",
+  "w": 326,
+  "h": 420
+ },
+ "build_7_1": {
+  "file": "build_7_1.webp",
+  "w": 366,
+  "h": 420
+ },
+ "build_7_2": {
+  "file": "build_7_2.webp",
+  "w": 366,
+  "h": 420
+ },
+ "build_7_3": {
+  "file": "build_7_3.webp",
+  "w": 366,
+  "h": 420
+ },
+ "rocket_1_1": {
+  "file": "rocket_1_1.webp",
+  "w": 210,
+  "h": 420
+ },
+ "rocket_1_2": {
+  "file": "rocket_1_2.webp",
+  "w": 210,
+  "h": 420
+ },
+ "rocket_1_3": {
+  "file": "rocket_1_3.webp",
+  "w": 210,
+  "h": 420
+ },
+ "rocket_1_4": {
+  "file": "rocket_1_4.webp",
+  "w": 210,
+  "h": 420
+ },
+ "rocket_2_1": {
+  "file": "rocket_2_1.webp",
+  "w": 163,
+  "h": 420
+ },
+ "rocket_2_2": {
+  "file": "rocket_2_2.webp",
+  "w": 163,
+  "h": 420
+ },
+ "rocket_2_3": {
+  "file": "rocket_2_3.webp",
+  "w": 163,
+  "h": 420
+ },
+ "rocket_2_4": {
+  "file": "rocket_2_4.webp",
+  "w": 163,
+  "h": 420
+ },
+ "rocket_3_1": {
+  "file": "rocket_3_1.webp",
+  "w": 162,
+  "h": 420
+ },
+ "rocket_3_2": {
+  "file": "rocket_3_2.webp",
+  "w": 162,
+  "h": 420
+ },
+ "rocket_3_3": {
+  "file": "rocket_3_3.webp",
+  "w": 162,
+  "h": 420
+ },
+ "rocket_3_4": {
+  "file": "rocket_3_4.webp",
+  "w": 162,
+  "h": 420
+ }
+}

@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=58';
-import { placeAccessory } from './shop.js?v=58';
+import { Album } from './album.js?v=59';
+import { placeAccessory } from './shop.js?v=59';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -144,6 +144,20 @@ const CSS = `
 .t2-paused *,.t2-paused *::before{animation-play-state:paused!important}
 /* v15：寫字／小遊戲全螢幕蓋住地圖時，只留底圖，雲、角色、標記先藏起來（瀏覽器不必每格整理這些圖層，寫字較順）；關掉就恢復 */
 .t2-paused .t2-world>:not(.t2-bg){visibility:hidden}
+/* v59 寬版地圖（太空）：可以左右拖曳、角色走路、建築和火箭圖層 */
+.t2-view.t2-pan{touch-action:pan-y}
+.t2-pan .t2-pin{width:clamp(40px,6%,84px)} /* 太空版：標記小一點，才看得到後面的建築 */
+.t2-char.t2-walkmode{transition:none!important}
+.t2-char.walking .t2-fig{animation:t2-walk .42s ease-in-out infinite}
+.t2-fig.flip>img:not(.t2-acc){transform:scaleX(-1)}
+@keyframes t2-walk{0%,100%{transform:translateY(0)}50%{transform:translateY(-5%)}}
+.t2-builds{position:absolute;inset:0;z-index:1;pointer-events:none}
+.t2-builds img{position:absolute;display:block;height:auto;pointer-events:none;-webkit-user-drag:none}
+.t2-builds img.rocket{z-index:2}
+.t2-edge{position:absolute;z-index:300;top:50%;transform:translateY(-50%);width:34px;height:64px;border:0;border-radius:12px;background:rgba(36,50,74,.45);color:#fff;font:900 30px/1 system-ui;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;padding:0 0 4px}
+.t2-edge.l{left:6px}.t2-edge.r{right:6px}
+.t2-edge[hidden],.t2-paused .t2-edge,.t2-pins-hidden .t2-edge{display:none}
+@media (prefers-reduced-motion:reduce){.t2-char.walking .t2-fig{animation:none}}
 `;
 
 const loadImg = src => new Promise((ok, bad) => { const i = new Image(); i.decoding = 'async'; i.onload = () => ok(i); i.onerror = () => bad(new Error('IMG_LOAD_FAILED:' + src)); i.src = src; });
@@ -212,8 +226,49 @@ export class Town2D {
     const an = this.acc.catalog.anchors[c.sprite + '_' + c.pose], m = this.sprites[c.sprite + '_' + c.pose];
     for (const im of c.fig.querySelectorAll('.t2-acc')) { const item = this.acc.byId.get(im.dataset.id), a = an?.[im.dataset.slot]; if (item && a) placeAccessory(im, item, a, m.w / m.h); }
   }
-  /** 頁面版面寬度（px） */
-  resize(w) { this.width = w; this.view.style.width = w + 'px'; this.view.style.height = Math.round(w * this.aspect) + 'px'; }
+  /** 頁面版面寬度（px）；v59 寬版地圖：resize(畫面寬, 畫面高)，地圖高＝畫面高、可以左右平移（pan） */
+  resize(w, h = null) {
+    if (h == null) { this.width = w; this.view.style.width = w + 'px'; this.view.style.height = Math.round(w * this.aspect) + 'px'; return; }
+    const ratio = this.maxPan > 0 ? this.pan / this.maxPan : null, mw = Math.round(h * this.W / this.H);
+    this.panMode = true; this.view.classList.add('t2-pan');
+    Object.assign(this, { width: mw, vw: w, vh: h, maxPan: Math.max(0, mw - w) });
+    this.view.style.width = w + 'px'; this.view.style.height = h + 'px'; this.world.style.width = mw + 'px'; this.world.style.height = h + 'px';
+    this.pan = ratio != null ? ratio * this.maxPan : this.panFocus ? this._panFor(this.panFocus()) : 0;
+    this.pan = Math.min(this.maxPan, Math.max(0, this.pan)); this.applyPan(false);
+  }
+  /** 讓插畫 x 座標在畫面中間的 pan 值 */
+  _panFor(x) { return Math.min(this.maxPan, Math.max(0, x * this.width / this.W - this.vw / 2)); }
+  /** 套用平移（鏡頭推近中不動，等 flyHome 套用）；animate＝0.4 秒動畫 */
+  applyPan(animate = false) {
+    if (!this.panMode || this.zoom.s !== 1) { this.onPan?.(); return; }
+    this.world.style.transition = animate ? 'transform .4s ease' : 'none';
+    this.world.style.transform = this.pan ? `translate(${(-this.pan).toFixed(1)}px,0)` : '';
+    this.zoom = { s: 1, tx: -this.pan, ty: 0 };
+    if (!animate) { void this.world.offsetWidth; this.world.style.transition = ''; } else { clearTimeout(this._panT); this._panT = setTimeout(() => { this.world.style.transition = ''; }, 420); }
+    this.onPan?.();
+  }
+  panTo(x, animate = true) { if (!this.panMode) return; this.pan = this._panFor(x); this.applyPan(animate); }
+  panBy(dx, animate = true) { if (!this.panMode) return; this.pan = Math.min(this.maxPan, Math.max(0, this.pan + dx)); this.applyPan(animate); }
+  /** v59 建築圖層：list＝[{ sprite, at, w, cx, by }]（at＝圖上 (cx,by) 那一點在插畫的位置，w＝顯示寬度，插畫 px） */
+  setBuildings(list) {
+    if (!this.builds) { this.builds = document.createElement('div'); this.builds.className = 't2-builds'; this.world.insertBefore(this.builds, this.glow); this.buildEls = []; }
+    list.forEach((b, i) => {
+      let im = this.buildEls[i]; if (!im) { im = document.createElement('img'); im.alt = ''; im.draggable = false; im.dataset.idx = i; this.builds.append(im); this.buildEls[i] = im; }
+      this._placeSprite(im, b);
+    });
+    if (this.rocketEl) this.builds.append(this.rocketEl);
+  }
+  /** v59 火箭（null＝發射台上沒有火箭）；排在建築後面＝蓋在發射台上 */
+  setRocket(r) {
+    if (!this.builds) return;
+    if (!this.rocketEl) { this.rocketEl = document.createElement('img'); this.rocketEl.alt = ''; this.rocketEl.draggable = false; this.rocketEl.className = 'rocket'; this.builds.append(this.rocketEl); }
+    this.rocketEl.hidden = !r; if (r) this._placeSprite(this.rocketEl, r); else this.rocketEl.dataset.src = '';
+  }
+  _placeSprite(im, { sprite, at, w, cx = 0.5, by = 1 }) {
+    const m = this.sprites[sprite]; if (!m) return; const h = w * m.h / m.w;
+    if (im.dataset.src !== sprite) { im.src = this.url(sprite); im.dataset.src = sprite; }
+    im.style.left = ((at[0] - cx * w) / this.W * 100) + '%'; im.style.top = ((at[1] - by * h) / this.H * 100) + '%'; im.style.width = (w / this.W * 100) + '%';
+  }
 }
 
 export class Lobby2D {
@@ -249,14 +304,46 @@ export class Lobby2D {
 }
 
 export class TownFx2D {
-  constructor({ town, lobby, contract, reward, sound, stage, log = () => {} }) {
-    Object.assign(this, { town, lobby, contract, reward, sound, stage, log });
+  constructor({ town, lobby, contract, reward, sound, stage, map = null, log = () => {} }) {
+    Object.assign(this, { town, lobby, contract, reward, sound, stage, map, log }); this.camBusy = false;
     this.zoneIds = contract.zones.ids; this.lessonToZone = contract.zones.lessonToZone; this.colorCfg = contract.zones.color;
     this.art = contract.art2d; this.tintedMaterials = 0; this.props = []; this.camToken = 0; this.fogFront = 0; this.busy = false;
     this.residents = [...town.chars.values()].map(c => ({ name: c.name, kind: c.sprite.startsWith('capy') ? 'capy' : 'bunny', zone: this.zoneIds.indexOf(c.zone), el: c.el }));
     this._makeGray(); this._mountClouds();
     town.view.addEventListener('pointerdown', e => this._tap(e));
     this._waveTimer = setInterval(() => this._idleWave(), 3800);
+    if (map?.pan) this._setupPan();
+  }
+  // ======== v59 寬版地圖：拖曳與邊緣箭頭 ========
+  _setupPan() {
+    const t = this.town, v = t.view; let drag = null;
+    const arrow = (cls, sign, label) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 't2-edge ' + cls; b.textContent = sign < 0 ? '‹' : '›'; b.setAttribute('aria-label', label);
+      b.addEventListener('pointerdown', e => e.stopPropagation());
+      b.addEventListener('click', e => { e.stopPropagation(); if (this.camBusy) return; this.sound?.unlock(); t.panBy(sign * t.vw / 2, true); this.log('pan arrow ' + cls + ' -> ' + Math.round(t.pan)); });
+      v.append(b); return b;
+    };
+    this.edges = [arrow('l', -1, '往左看'), arrow('r', 1, '往右看')];
+    t.onPan = () => { const [l, r] = this.edges; l.hidden = !(t.maxPan > 0 && t.pan > 1); r.hidden = !(t.maxPan > 0 && t.pan < t.maxPan - 1); };
+    t.onPan();
+    v.addEventListener('pointerdown', e => {
+      t.dragged = false;
+      if (!t.panMode || t.maxPan <= 0 || this.camBusy || this.lobby.mode !== 'active' || t.zoom.s !== 1) return;
+      if (e.target.closest?.('.t2-char,.t2-pin,.t2-say,.t2-boss,.t2-quest,.t2-edge')) return;
+      drag = { id: e.pointerId, x: e.clientX, y: e.clientY, pan: t.pan, on: false };
+    });
+    v.addEventListener('pointermove', e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x;
+      if (!drag.on) {
+        if (Math.abs(dx) < 8) return;
+        if (Math.abs(e.clientY - drag.y) > Math.abs(dx)) { drag = null; return; }
+        drag.on = true; t.dragged = true; try { v.setPointerCapture(e.pointerId); } catch { /* ignore */ }
+      }
+      t.pan = Math.min(t.maxPan, Math.max(0, drag.pan - dx)); t.applyPan(false);
+    });
+    const end = e => { if (drag && e.pointerId === drag.id) { if (drag.on) this.log('pan drag -> ' + Math.round(t.pan)); drag = null; } };
+    v.addEventListener('pointerup', end); v.addEventListener('pointercancel', end);
   }
   /** 把背景插畫轉一份低彩度版本（只做一次） */
   _makeGray() {
@@ -303,8 +390,15 @@ export class TownFx2D {
       b.addEventListener('click', e => { e.stopPropagation(); this.sound?.unlock(); this._sayTap?.(); });
       c.el.append(b);
     }
-    b.classList.toggle('below', c.at[1] - this.town.H * this.art.characterHeight < 260);
+    this.refreshHintSide();
     this._sayTap = onTap; b.innerHTML = `<small>下一個字</small><em>${char}</em><small>點我寫字！</small>`; b.setAttribute('aria-label', `下一個字「${char}」，點我開始寫字`);
+  }
+  /** v59：「下一個字」氣泡放上面或下面（導遊走路時每格呼叫；只在結果改變時改 class） */
+  refreshHintSide() {
+    const c = this.town.chars.get(this.art.nextHint?.resident), b = c?.el.querySelector('.t2-say'); if (!b) return null;
+    const below = c.at[1] - this.town.H * this.art.characterHeight < (this.map ? 0.3 * this.town.H : 260);
+    if (b.classList.contains('below') !== below) b.classList.toggle('below', below);
+    return below;
   }
   zoneOfLesson(l) { return this.zoneIds.indexOf(this.lessonToZone[String(l)]); }
   /** 已解鎖（出現在小鎮上）的朋友：規則同圖鑑 */
@@ -377,7 +471,7 @@ export class TownFx2D {
     setTimeout(() => { if (c.pose === 'wave' || c.pose === 'happy') this.town.pose(c.name, 'idle'); }, 1400);
   }
   _tap(e) {
-    const el = e.target.closest?.('.t2-char'); if (!el) return null;
+    const el = e.target.closest?.('.t2-char'); if (!el || this.town.dragged) return null;
     const c = this.town.chars.get(el.dataset.name); this.sound?.unlock();
     if (c.el.classList.contains('shadow')) { // v9：點影子＝預告
       const n = this.preview?.[c.name]?.remaining ?? 0; this._anim(c, 'squash', 500); this.sound?.squeak(0.8);
@@ -505,20 +599,27 @@ export class TownFx2D {
   }
   // ======== 鏡頭（推近／拉遠） ========
   _zoomTo([x, y], s) {
-    const w = this.town.width, h = Math.round(w * this.town.aspect), k = w / this.town.W;
-    let tx = w / 2 - x * k * s, ty = h / 2 - y * k * s;
-    tx = Math.min(0, Math.max(w - w * s, tx)); ty = Math.min(0, Math.max(h - h * s, ty)); /* 不露出插畫外面 */
-    this.town.zoom = { s, tx, ty };
-    this.town.world.style.transform = s === 1 ? '' : `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px) scale(${s})`;
-    const token = ++this.camToken;
-    return sleep(820).then(() => token === this.camToken);
+    const t = this.town, mw = t.width, mh = Math.round(mw * t.aspect), vw = t.panMode ? t.vw : mw, vh = t.panMode ? t.vh : mh, k = mw / t.W;
+    let tx, ty;
+    if (s === 1) { tx = -(t.panMode ? t.pan : 0); ty = 0; } /* v59：拉回時保留平移的位置 */
+    else { tx = vw / 2 - x * k * s; ty = vh / 2 - y * k * s; tx = Math.min(0, Math.max(vw - mw * s, tx)); ty = Math.min(0, Math.max(vh - mh * s, ty)); } /* 不露出插畫外面 */
+    t.zoom = { s, tx, ty }; t.world.style.transition = '';
+    t.world.style.transform = s === 1 && !tx ? '' : `translate(${tx.toFixed(1)}px,${ty.toFixed(1)}px)` + (s === 1 ? '' : ` scale(${s})`);
+    const token = ++this.camToken; if (s !== 1) this.camBusy = true;
+    return sleep(820).then(() => { const ok = token === this.camToken; if (ok && s === 1 && this.camBusy) { this.camBusy = false; this.onCamIdle?.(); } return ok; });
+  }
+  /** v59：每一課鏡頭推近的目標（有寬版地圖＝那一課的標記；沒有＝區域中心；全鎮課回傳 null＝不推近） */
+  lessonFocus(lesson) {
+    if (this.map) return this.art.pins[String(lesson)]?.at ?? null;
+    const i = this.zoneOfLesson(lesson); return i >= 0 ? this._zoneCenter(i) : null;
   }
   flyHome() { return this._zoomTo([0, 0], 1).then(ok => { if (ok) this._showPins(true); return ok; }); }
   _zoneCenter(i) { return i >= 0 ? this.art.zones[this.zoneIds[i]].center : [this.town.W / 2, this.town.H / 2]; }
   async flyToLesson(lesson, { hold = 1.2, zoom = 1.9 } = {}) {
-    const i = this.zoneOfLesson(lesson); if (i < 0) return true;
+    const f = this.lessonFocus(lesson); if (!f) return true;
+    if (this.town.panMode) this.town.pan = this.town._panFor(f[0]); /* v59：拉回後停在那一課 */
     this._showPins(false); this.sound?.whoosh();
-    if (!(await this._zoomTo(this._zoneCenter(i), zoom))) return false;
+    if (!(await this._zoomTo(f, zoom))) return false;
     const token = this.camToken; await sleep(hold * 1000);
     return token === this.camToken ? this.flyHome() : false;
   }
@@ -532,16 +633,17 @@ export class TownFx2D {
     return token === this.camToken ? this.flyHome() : false;
   }
   async celebrate(lesson) {
-    const i = this.zoneOfLesson(lesson), center = this._zoneCenter(i);
+    const i = this.zoneOfLesson(lesson), center = this.map ? (this.lessonFocus(lesson) ?? this._zoneCenter(i)) : this._zoneCenter(i);
+    if (this.map && this.town.panMode) this.town.pan = this.town._panFor(center[0]);
     this._showPins(false); this.sound?.whoosh(); this.busy = true;
-    if (!(await this._zoomTo(center, i >= 0 ? 1.9 : 1))) { this.busy = false; return false; }
+    if (!(await this._zoomTo(center, i >= 0 || this.map ? 1.9 : 1))) { this.busy = false; return false; }
     const token = this.camToken;
-    const r = i >= 0 ? this.art.zones[this.zoneIds[i]].r : this.town.W / 2, g = this.town.glow;
+    const r = this.map ? (i >= 0 ? this.art.zones[this.zoneIds[i]].r : 260) : i >= 0 ? this.art.zones[this.zoneIds[i]].r : this.town.W / 2, g = this.town.glow;
     g.style.left = ((center[0] - r) / this.town.W * 100) + '%'; g.style.top = ((center[1] - r) / this.town.H * 100) + '%';
     g.style.width = (2 * r / this.town.W * 100) + '%'; g.style.height = (2 * r / this.town.H * 100) + '%';
     g.classList.remove('on'); void g.offsetWidth; g.classList.add('on');
     const vis = [...this.town.chars.values()].filter(c => this._visible(c));
-    let rs = i >= 0 ? vis.filter(c => c.zone === this.zoneIds[i]) : vis;
+    let rs = this.map ? [] : i >= 0 ? vis.filter(c => c.zone === this.zoneIds[i]) : vis; /* v59 寬版地圖：挑標記附近的朋友 */
     if (rs.length < 2) rs = [...vis].sort((a, b) => Math.hypot(a.at[0] - center[0], a.at[1] - center[1]) - Math.hypot(b.at[0] - center[0], b.at[1] - center[1])).slice(0, 2);
     rs.forEach((c, k) => setTimeout(() => { this.town.pose(c.name, 'happy'); this._anim(c, 'hop', 550); }, 100 + k * 180));
     this.spriteBurst(center, { n: 16, spread: 170 });
@@ -591,8 +693,8 @@ export class TownFx2D {
 }
 
 export class Reward2D {
-  constructor({ town, lobby, contract, log = () => {} }) {
-    Object.assign(this, { town, lobby, contract, log });
+  constructor({ town, lobby, contract, walkMode = false, log = () => {} }) {
+    Object.assign(this, { town, lobby, contract, walkMode, log }); /* v59 walkMode：導遊的位置由 Walker 決定，這裡只開關蒸氣、跳一下 */
     this.cfg = contract.art2d.reward; this.npc = this.cfg.npc;
     if (!town.chars.has(this.npc)) throw new Error('NPC_NOT_FOUND:' + this.npc);
     this.rest = town.chars.get(this.npc).home; this.end = this.cfg.to;
@@ -601,6 +703,7 @@ export class Reward2D {
   }
   /** 重開／載入：由帳本筆數推導固定位置（不累加） */
   applyState({ rewardCount }) {
+    if (this.walkMode) { const on = rewardCount > 0; this.town.steam.classList.toggle('on', on); this.state = { atPool: false, steamOn: on }; this.log(`applyState rewardCount=${rewardCount} → steam ${on ? 'on' : 'off'} (walk mode)`); return; }
     const on = rewardCount > 0, el = this.town.chars.get(this.npc).el;
     el.style.transition = 'none'; this.town.place(this.npc, on ? this.end : this.rest); void el.offsetWidth; el.style.transition = '';
     this.town.steam.classList.toggle('on', on); this.state = { atPool: on, steamOn: on };
@@ -610,6 +713,12 @@ export class Reward2D {
     if (!rewardNew) { this.log('reward replay: no new reward, no displacement'); return Promise.resolve(false); }
     const c = this.town.chars.get(this.npc);
     this.busy = true;
+    if (this.walkMode) {
+      const first = !this.state.steamOn; this.town.steam.classList.add('on'); this.state = { atPool: false, steamOn: true };
+      if (first) this.town.pose(this.npc, 'happy');
+      c.el.classList.remove('hop'); void c.el.offsetWidth; c.el.classList.add('hop');
+      return sleep(first ? 1200 : 560).then(() => { c.el.classList.remove('hop'); if (first) this.town.pose(this.npc, 'idle'); this.busy = false; this.log('reward (walk mode): ' + (first ? 'steam on, hop' : 'hop')); return true; });
+    }
     if (this.state.atPool) {
       c.el.classList.remove('hop'); void c.el.offsetWidth; c.el.classList.add('hop');
       return sleep(560).then(() => { c.el.classList.remove('hop'); this.busy = false; return true; });

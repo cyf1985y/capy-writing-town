@@ -1,9 +1,9 @@
 // v51 守門員總複習關（設計：docs/plans/2026-11-12-phase2-gatekeeper-boss-review.md）
 // 重用聽寫小考的整個流程（拼注音 → 默寫國字），每個字之後多一步「認」：選出字裡的部件（或聽音找字）。
 // 不寫聽寫小考的存檔、不寫 IndexedDB（不影響各字的星數與進度）；結果由 onClose 交給 game-v1.html 記到 extras。
-import { Dictation } from './dictation.js?v=58';
-import { bravo, flash } from './fx.js?v=58';
-import { introText, zhuyinHTML } from './writing-panel.js?v=58';
+import { Dictation } from './dictation.js?v=59';
+import { bravo, flash } from './fx.js?v=59';
+import { introText, zhuyinHTML } from './writing-panel.js?v=59';
 
 const shuffle = (a, rand = Math.random) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 

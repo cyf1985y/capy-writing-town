@@ -1,9 +1,9 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { isApp, bindExternalLinks } from './app-env.js?v=58'; // v54 App 版
-import { starsOf } from './stars.js?v=58';
-import { LEVELS } from './writing-panel.js?v=58';
-import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=58';
+import { isApp, bindExternalLinks } from './app-env.js?v=59'; // v54 App 版
+import { starsOf } from './stars.js?v=59';
+import { LEVELS } from './writing-panel.js?v=59';
+import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=59';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -157,7 +157,8 @@ export class ParentPanel {
       <div class="pp-save pp-shop"><p>孩子自己用星星買配件，幫小鎮的朋友換裝。已買 <b>${s.count}</b>／${s.all} 件${s.gifted ? `（另有朋友送的 ${s.gifted} 件）` : ''}，花了 ★${s.spent}，還能用 ★${Math.max(0, s.balance)}。</p>
         <p class="pp-note" style="margin:0">配件的星星和上面的獎勵<b>分開算</b>：買配件不會讓獎勵變遠，兌換獎勵也不會讓配件星星變少。買了不能退。</p>
         ${s.names.length ? `<details><summary>已買的配件（${s.names.length} 件）</summary><p style="margin:4px 0 0">${s.names.map(esc).join('、')}</p></details>` : ''}
-        ${s.seasons?.length ? `<p style="margin:6px 0 0">🌸 用星星提早換的季節：${s.seasons.map(x => `${esc(x.name)}（★${x.cost}）`).join('、')}</p>` : ''}</div>` : ''; })() : ''}
+        ${s.seasons?.length ? `<p style="margin:6px 0 0">🌸 用星星提早換的季節：${s.seasons.map(x => `${esc(x.name)}（★${x.cost}）`).join('、')}</p>` : ''}
+        ${s.space ? `<p class="pp-space" style="margin:6px 0 0">🛰️ 太空基地：升級 ${s.space.builds} 次、火箭零件 ${s.space.parts} 個、去過 ${s.space.planets} 顆星球（共用 ★${s.space.cost}）</p>` : ''}</div>` : ''; })() : ''}
       </div></section>
       <section class="pp-sec" data-sec="set"><div class="pp-c">
       ${this.backup ? (() => { const i = this.backup.info() ?? {}; return `<h3>📱 存檔保護</h3>

@@ -9,7 +9,7 @@ export const BACKUP_FORMAT = 'capy-writing-backup';
 const wrap = req => new Promise((res, rej) => { req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); });
 const done = tx => new Promise((res, rej) => { tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error || new Error('IDB_TX_ABORT')); });
 
-import { shareTextFile } from './app-env.js?v=58';
+import { shareTextFile } from './app-env.js?v=59';
 export async function requestPersist() {
   const st = navigator.storage;
   const info = { supported: !!st?.persist, persisted: false, standalone: matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true, usage: null };
