@@ -6,7 +6,7 @@
 //   { version:1, mastery:{<lesson>:{at}}, gifts:{<resident object>:{at,stars,itemId}}, bonusStars:[{id,kind,stars,at}] }
 // 不認得的頂層欄位原樣保留（之後階段向前相容）。設計文件：docs/plans/2026-11-12-phase1-area-mastery-and-friend-gifts.md
 export const extrasKey = profileId => 'capy_extras_' + profileId;
-export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] }, season: { current: null, currentAt: '', unlocked: {} }, quests: {}, repeat: {} });
+export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] }, season: { current: null, currentAt: '', unlocked: {} }, quests: {}, repeat: {}, strokes: {} });
 export const BOSS_STAGES = 8;
 const intIn = (n, a, b) => Number.isInteger(n) && n >= a && n <= b;
 const isObj = o => !!o && typeof o === 'object' && !Array.isArray(o);
@@ -54,6 +54,7 @@ export function normalizeExtras(obj) {
     out.quests[id] = { firstAt: String(q.firstAt || ''), runs: intIn(q.runs, 0, 9999) ? q.runs : 0, chars };
   }
   out.repeat = cleanRepeat(obj.repeat);
+  out.strokes = cleanStrokes(obj.strokes);
   return out;
 }
 export function loadExtras(key) { try { return normalizeExtras(JSON.parse(localStorage.getItem(key) || 'null')); } catch { return emptyExtras(); } }
@@ -100,7 +101,7 @@ export function mergeExtras(cur, inc) {
   const a = normalizeExtras(cur), b = normalizeExtras(inc);
   return normalizeExtras({ ...b, ...a, mastery: { ...b.mastery, ...a.mastery }, gifts: { ...b.gifts, ...a.gifts }, bonusStars: [...a.bonusStars, ...b.bonusStars.filter(x => !a.bonusStars.some(y => y.id === x.id))],
     boss: { cleared: Math.max(a.boss.cleared, b.boss.cleared), history: [...a.boss.history, ...b.boss.history.filter(x => !a.boss.history.some(y => y.stage === x.stage))] }, // 守門員：關數取大的、紀錄依關聯集（星星 boss:k 依 id 聯集，每關只有一筆）
-    season: mergeSeason(a.season, b.season), quests: mergeQuests(a.quests, b.quests), repeat: mergeRepeat(a.repeat, b.repeat) });
+    season: mergeSeason(a.season, b.season), quests: mergeQuests(a.quests, b.quests), repeat: mergeRepeat(a.repeat, b.repeat), strokes: mergeStrokes(a.strokes, b.strokes) });
 }
 /** v52：解鎖依鍵聯集（留較早的）；current 留 currentAt 較新的，一樣新留本機的 */
 function mergeSeason(a, b) {
@@ -247,3 +248,38 @@ export function awardRepeat(data, { taskId, artifactId, day, cfg }) {
   const repeat = { ...data.repeat, [day]: { ...data.repeat?.[day], [taskId]: { ...data.repeat?.[day]?.[taskId], [key]: add } } };
   return { data: { ...data, repeat }, add, leftChar: cfg.perChar - n - add, leftDay: cfg.perDay - sum - add };
 }
+
+// ======== v57 基本筆畫練習（設計：docs/plans/2026-11-13-basic-strokes-practice.md §4.4） ========
+// strokes：{ <筆畫 id>: { firstAt, runs, good, lastGood } }。lastGood＝最近一次描得好的本機日期（和星星分開記：星星拿滿了也照樣記）
+export const STROKE_ID = /^[a-z]+$/;
+const localDayOf = d => d.toLocaleDateString('sv');
+function cleanStrokes(o) {
+  const out = {};
+  if (!isObj(o)) return out;
+  for (const [id, v] of Object.entries(o)) {
+    if (!STROKE_ID.test(id) || !isObj(v) || !intIn(v.runs, 0, 9999) || !intIn(v.good, 0, 9999) || v.good > v.runs) continue;
+    out[id] = { firstAt: String(v.firstAt || ''), runs: v.runs, good: v.good, lastGood: typeof v.lastGood === 'string' && DAY.test(v.lastGood) ? v.lastGood : '' };
+  }
+  return out;
+}
+/** 合併：runs、good 取大的，firstAt 取較早的非空值，lastGood 取較晚的 */
+function mergeStrokes(a, b) {
+  const out = { ...b };
+  for (const [id, x] of Object.entries(a ?? {})) {
+    const y = out[id]; if (!y) { out[id] = x; continue; }
+    const runs = Math.max(x.runs, y.runs);
+    out[id] = { firstAt: [x.firstAt, y.firstAt].filter(Boolean).sort()[0] ?? '', runs, good: Math.min(runs, Math.max(x.good, y.good)), lastGood: x.lastGood > y.lastGood ? x.lastGood : y.lastGood };
+  }
+  return out;
+}
+/** 練完一輪（走到「看字」）：runs+1；描得好 good+1、lastGood＝今天 */
+export function finishStroke(data, { id, good = false, now = new Date() }) {
+  if (!STROKE_ID.test(id)) return data;
+  const at = now.toISOString(), old = data.strokes?.[id] ?? { firstAt: '', runs: 0, good: 0, lastGood: '' };
+  const runs = Math.min(old.runs + 1, 9999), g = good ? Math.min(old.good + 1, runs) : old.good;
+  return { ...data, strokes: { ...data.strokes, [id]: { firstAt: old.firstAt || at, runs, good: g, lastGood: good ? localDayOf(now) : old.lastGood } } };
+}
+/** 筆畫練習的重複星用的 taskId（和寫字任務 W0011／NA001 分開） */
+export const strokeTaskId = id => 'stroke:' + id;
+/** 某一天筆畫練習拿到的星星合計 */
+export const strokeStarsOn = (data, day) => Object.entries(data.repeat?.[day] ?? {}).filter(([t]) => t.startsWith('stroke:')).reduce((s, [, arts]) => s + sumObj(arts), 0);
