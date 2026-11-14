@@ -63,15 +63,15 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 <div class="list" id="list"></div>
 <script type="module">
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { zhuyinHTML, wordHTML } from './writing-panel.js?v=62';
-import { isApp, shareTextFile, bindExternalLinks } from './app-env.js?v=62'; // v54 App 版
-import { parentGate, gateValid } from './parent-gate.js?v=62';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=63';
+import { isApp, shareTextFile, bindExternalLinks } from './app-env.js?v=63'; // v54 App 版
+import { parentGate, gateValid } from './parent-gate.js?v=63';
 const KEY = 'capy_check_v1', $ = s => document.querySelector(s);
 const get = async u => { const r = await fetch(u, { cache: 'no-cache' }); if (!r.ok) throw new Error(u + ' HTTP ' + r.status); return r.json(); };
-const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=62'), get('./stroke_names.json?v=62'), get('./zhuyin.json?v=62'), get('./parts_game.json?v=62')]);
+const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=63'), get('./stroke_names.json?v=63'), get('./zhuyin.json?v=63'), get('./parts_game.json?v=63')]);
 // v53：季節小考的字、守門員的部件題、朋友台詞（讀不到就不出現那一頁，其他照常）
 const opt = u => get(u).catch(() => null);
-const [SEASONS, BPARTS, EXTRAS, BSTROKES] = await Promise.all([opt('./seasons.json?v=62'), opt('./boss_parts.json?v=62'), opt('./extras.json?v=62'), opt('./strokes/strokes.json?v=62')]); // v57 基本筆畫
+const [SEASONS, BPARTS, EXTRAS, BSTROKES] = await Promise.all([opt('./seasons.json?v=63'), opt('./boss_parts.json?v=63'), opt('./extras.json?v=63'), opt('./strokes/strokes.json?v=63')]); // v57 基本筆畫
 let state = {}; try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { state = {}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { $('#msg').textContent = '無法儲存（私密瀏覽？）'; } };
 const dataUrl = ch => (TW.chars[ch] ? '../vendor-v2/hanzi-writer/data-tw/' : '../vendor-v2/hanzi-writer/data/') + encodeURIComponent(ch) + '.json';

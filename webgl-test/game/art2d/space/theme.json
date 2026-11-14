@@ -659,5 +659,11 @@
     "nSmall": 9
    }
   }
+ },
+ "buttonIcons": {
+  "review": "icon_review",
+  "parts": "icon_parts",
+  "dict": "icon_dict",
+  "stroke": "icon_stroke"
  }
 }

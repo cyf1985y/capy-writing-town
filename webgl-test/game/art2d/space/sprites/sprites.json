@@ -608,5 +608,25 @@
   "file": "thumb_build_7_3.webp",
   "w": 223,
   "h": 256
+ },
+ "icon_review": {
+  "file": "icon_review.webp",
+  "w": 111,
+  "h": 160
+ },
+ "icon_parts": {
+  "file": "icon_parts.webp",
+  "w": 149,
+  "h": 160
+ },
+ "icon_dict": {
+  "file": "icon_dict.webp",
+  "w": 178,
+  "h": 160
+ },
+ "icon_stroke": {
+  "file": "icon_stroke.webp",
+  "w": 145,
+  "h": 160
  }
 }
