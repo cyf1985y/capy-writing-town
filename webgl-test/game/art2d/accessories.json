@@ -10,6 +10,7 @@
   "hat": "帽子",
   "side": "身邊小物"
  },
+ "defaultSlot": "hat",
  "base": "sprites/",
  "ui": {
   "btn": "shop_btn.webp",

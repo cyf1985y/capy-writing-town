@@ -1,0 +1,13 @@
+{
+ "version": 1,
+ "_note": "衣服目錄（整隻重畫，docs/plans/2026-11-14-outfit-full-redraw.md §4.1）。pad 要和 art2d/outfit_tool.py 的 PAD 一樣。某個主題要「所有外觀都有圖」這套才會上架（game/outfit.js availableOutfits）。",
+ "pad": 0.12,
+ "items": [
+  { "id": "outfit_yukata", "variant": "yukata", "name": "浴衣", "price": 30 },
+  { "id": "outfit_raincoat", "variant": "raincoat", "name": "黃雨衣", "price": 30 },
+  { "id": "outfit_overalls", "variant": "overalls", "name": "吊帶褲", "price": 35 },
+  { "id": "outfit_sweater", "variant": "sweater", "name": "紅毛衣", "price": 35 },
+  { "id": "outfit_sailor", "variant": "sailor", "name": "水手服", "price": 40 },
+  { "id": "outfit_hoodie", "variant": "hoodie", "name": "薄荷帽T", "price": 40 }
+ ]
+}

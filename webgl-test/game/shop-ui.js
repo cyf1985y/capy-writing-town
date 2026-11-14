@@ -1,7 +1,11 @@
 // v18 配件商店畫面：選朋友 → 選位置分頁 → 點配件試戴 → 用星星換（問一次）→ 戴上。買過的點一下＝戴上／拿下來。
 // 規則與存檔都在 shop.js；這裡只管畫面、語音與音效。所有字都很短，點配件會唸名稱（孩子不一定認得字）。
-import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=63';
-const SEASON_TAB = '__season', seasonItemId = id => 'season:' + id; // v52 季節分頁（和 extras.js 的 seasonItemId 同一個格式）
+import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=64';
+import { variantOf, frameStyle } from './outfit.js?v=64'; // v64 衣服＝整張角色圖的變體（kind:'outfit'），不是疊圖
+const isOutfit = i => i?.kind === 'outfit';
+const SEASON_TAB = '__season', seasonItemId = id => 'season:' + id;
+// v64 預設分頁：目錄的 defaultSlot（accessories.json 寫 "hat"）；沒寫就照以前＝第 2 個格子（slots 加了 body 之後第 2 個會變髮夾，所以要明寫）
+const defaultSlot = c => c.slots.includes(c.defaultSlot) ? c.defaultSlot : (c.slots[1] ?? c.slots[0]); // v52 季節分頁（和 extras.js 的 seasonItemId 同一個格式）
 
 const CSS = `
 .sh-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:15px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);-webkit-user-select:none;user-select:none}
@@ -91,7 +95,7 @@ export class ShopPanel {
    */
   constructor({ key, catalog, base, town, friends, totals, onOutfit, onPractice, onOpen, onClose, voice, sound, seasons = null, log = () => {} }) {
     Object.assign(this, { key, catalog, base, town, friends, totals, onOutfit, onPractice, onOpen, onClose, voice, sound, seasons, log });
-    this.byId = new Map(catalog.items.map(i => [i.id, i])); this.el = null; this.ui = { who: null, slot: catalog.slots[1] ?? catalog.slots[0], tryId: null, confirm: false, msg: '' };
+    this.byId = new Map(catalog.items.map(i => [i.id, i])); this.el = null; this.ui = { who: null, slot: defaultSlot(catalog), tryId: null, confirm: false, msg: '' };
   }
   isOpen() { return !!this.el; }
   url(file) { return this.base + file; }
@@ -100,7 +104,7 @@ export class ShopPanel {
     if (!document.getElementById('sh-style')) { const s = document.createElement('style'); s.id = 'sh-style'; s.textContent = CSS; document.head.append(s); }
     const fr = this.friends(); if (!fr.length) return;
     if (!fr.some(f => f.object === this.ui.who)) this.ui.who = fr[0].object;
-    if (this.ui.slot === SEASON_TAB && !this._seasons().length) this.ui.slot = this.catalog.slots[1] ?? this.catalog.slots[0];
+    if (this.ui.slot === SEASON_TAB && !this._seasons().length) this.ui.slot = defaultSlot(this.catalog);
     Object.assign(this.ui, { tryId: null, confirm: false, msg: '', sid: undefined, busy: false });
     const el = document.createElement('div'); el.className = 'sh-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', '配件商店');
     el.innerHTML = `<div class="sh-dialog">
@@ -130,15 +134,16 @@ export class ShopPanel {
     $('.sh-wallet').innerHTML = `<img alt="" src="${this.url(this.catalog.ui.coin)}">可以用 ★${Math.max(0, st.balance)}`;
     $('.sh-wallet').setAttribute('aria-label', `可以用 ${Math.max(0, st.balance)} 顆星`);
     $('.sh-friends').innerHTML = fr.map(f => `<button type="button" data-who="${esc(f.object)}" aria-pressed="${f.object === who.object}"><img alt="" src="${this.town.url(f.sprite + '_idle')}">${esc(f.name)}</button>`).join('');
-    $('.sh-name').textContent = who.name; $('.sh-try').textContent = ui.tryId ? '試戴中' : '';
+    $('.sh-name').textContent = who.name; $('.sh-try').textContent = ui.tryId ? (isOutfit(this.byId.get(ui.tryId)) ? '試穿中' : '試戴中') : '';
     this._drawFig($('.sh-fig'), who.sprite, ui.pose ?? 'idle', preview);
     for (const b of this.el.querySelectorAll('.sh-tabs button')) b.setAttribute('aria-selected', String(b.dataset.slot === ui.slot));
     $('.sh-stage').classList.toggle('season', ui.slot === SEASON_TAB);
     if (ui.slot === SEASON_TAB) return this._renderSeasons(st);
     $('.sh-grid').innerHTML = st.items.filter(i => i.slot === ui.slot).map(i => {
       const worn = outfit[i.slot] === i.id, cls = ['sh-item', i.owned ? 'owned' : i.canBuy ? 'buy' : 'poor', worn ? 'worn' : '', ui.tryId === i.id ? 'trying' : ''].join(' ');
-      const tag = i.owned ? `<img alt="" src="${this.url(this.catalog.ui.owned)}">${worn ? '戴著' : '有了'}` : i.canBuy ? `<img alt="" src="${this.url(this.catalog.ui.coin)}">${i.price}` : `★${i.price}・再 ${i.need} 顆`;
-      return `<button type="button" class="${cls}" data-id="${esc(i.id)}" aria-label="${esc(i.name)}，${i.owned ? (worn ? '戴著' : '已經有了') : i.price + ' 顆星'}"><span class="pic"><img alt="" src="${this.url(i.file)}"></span><b>${esc(i.name)}</b><span class="tag">${tag}</span></button>`;
+      const of = isOutfit(i), on = of ? '穿著' : '戴著', pic = of ? (this.town.outfitUrl?.(who.sprite, i.variant, 'idle') ?? this.town.url(who.sprite + '_idle')) : this.url(i.file); // v64 衣服的卡片圖＝目前這位朋友穿這套的樣子
+      const tag = i.owned ? `<img alt="" src="${this.url(this.catalog.ui.owned)}">${worn ? on : '有了'}` : i.canBuy ? `<img alt="" src="${this.url(this.catalog.ui.coin)}">${i.price}` : `★${i.price}・再 ${i.need} 顆`;
+      return `<button type="button" class="${cls}" data-id="${esc(i.id)}" aria-label="${esc(i.name)}，${i.owned ? (worn ? on : '已經有了') : i.price + ' 顆星'}"><span class="pic"><img alt="" src="${pic}"></span><b>${esc(i.name)}</b><span class="tag">${tag}</span></button>`;
     }).join('');
     $('.sh-bar').innerHTML = this._bar(st);
     this.lastState = { balance: st.balance, spent: st.spent, owned: [...st.owned], who: who.object, outfit, preview, slot: ui.slot, tryId: ui.tryId, confirm: ui.confirm };
@@ -225,15 +230,22 @@ export class ShopPanel {
     if (it && it.canBuy) return `<span>「${esc(it.name)}」好看嗎？</span><button type="button" class="go" data-act="buy">${coin} 用 ${it.price} 顆換</button><button type="button" data-act="cancel">不要了</button>`;
     if (it) return `<span>「${esc(it.name)}」還差 ${it.need} 顆星</span><button type="button" class="go" data-act="practice">✏️ 去練習寫字</button><button type="button" data-act="cancel">不要了</button>`;
     if (ui.msg) return `<span>${esc(ui.msg)}</span>`;
-    return st.allOwned ? '<span>🎉 全部收集完了！點一下就能幫朋友換裝。</span>' : '<span>點配件試戴看看！買過的點一下就能戴上或拿下來。</span>';
+    if (st.allOwned) return '<span>🎉 全部收集完了！點一下就能幫朋友換裝。</span>';
+    return ui.slot === 'body' ? '<span>點衣服試穿看看！買過的點一下就能穿上或脫下來。</span>' : '<span>點配件試戴看看！買過的點一下就能戴上或拿下來。</span>';
   }
-  /** 把角色和配件畫到 fig（外框比例＝這個姿勢角色圖的寬高比） */
+  /** 把角色和配件畫到 fig（外框比例＝這個姿勢「原圖」的寬高比；v64 穿衣服時角色圖換成衣服那張、往四邊凸出去，外框和掛點不變） */
   _drawFig(fig, sprite, pose, outfit) {
-    const m = this.town.sprites[sprite + '_' + pose], an = this.catalog.anchors[sprite + '_' + pose] ?? {};
-    fig.style.aspectRatio = (m.w / m.h).toFixed(4); fig.querySelector('img.ch').src = this.town.url(sprite + '_' + pose);
+    const m = this.town.sprites[sprite + '_' + pose], an = this.catalog.anchors[sprite + '_' + pose] ?? {}, ch = fig.querySelector('img.ch');
+    const variant = variantOf(this.byId, outfit), ready = variant && this.town.outfitLoaded?.has(sprite + '__' + variant), vurl = ready ? this.town.outfitUrl(sprite, variant, pose) : null;
+    // 衣服圖還沒載好：先畫原圖，載好再重畫一次（render 會從目前的 ui 重新算，孩子已經點別件或關掉商店就不會畫出過期的衣服）
+    if (variant && !ready) this.town._preloadOutfit?.(sprite, variant).then(() => { if (this.el) this.render(); }, () => {});
+    fig.style.aspectRatio = (m.w / m.h).toFixed(4);
+    if (vurl) Object.assign(ch.style, { maxWidth: 'none', ...frameStyle(m, this.town.outfitPad) });
+    else for (const k of ['max-width', 'left', 'top', 'width', 'height']) ch.style.removeProperty(k);
+    const src = vurl ?? this.town.url(sprite + '_' + pose); if (ch.getAttribute('src') !== src) ch.src = src;
     fig.querySelectorAll('img.acc').forEach(im => im.remove());
     for (const s of this.catalog.slots) {
-      const item = outfit[s] && this.byId.get(outfit[s]); if (!item || !an[s]) continue;
+      const item = outfit[s] && this.byId.get(outfit[s]); if (!item || isOutfit(item) || !an[s]) continue;
       const im = document.createElement('img'); im.className = 'acc'; im.alt = ''; im.src = this.url(item.file); im.dataset.slot = s; placeAccessory(im, item, an[s], m.w / m.h); fig.append(im);
     }
   }
@@ -266,10 +278,10 @@ export class ShopPanel {
     if (it.owned) {
       const on = outfitOf(data, ui.who)[it.slot] === id, r = wearItem(data, ui.who, it.slot, on ? null : id);
       if (!saveShop(this.key, r.data)) { ui.msg = '存不進去（可能是私密瀏覽模式）'; return this.render(); }
-      Object.assign(ui, { tryId: null, confirm: false, msg: on ? `拿下「${it.name}」了` : `戴上「${it.name}」了！` });
+      const of = isOutfit(it); Object.assign(ui, { tryId: null, confirm: false, msg: on ? `${of ? '脫下' : '拿下'}「${it.name}」了` : `${of ? '穿上' : '戴上'}「${it.name}」了！` });
       this.onOutfit?.(ui.who, outfitOf(r.data, ui.who)); this.log(`shop ${on ? 'off' : 'wear'} ${id} on ${ui.who}`);
       if (on) this.sound?.squeak(0.8); else { this.sound?.boing(); this._yay(false); }
-      this.voice?.say(on ? `拿下${it.name}` : it.name); return this.render();
+      this.voice?.say(on ? `${of ? '脫下' : '拿下'}${it.name}` : it.name); return this.render();
     }
     Object.assign(ui, { tryId: ui.tryId === id ? null : id, confirm: false, msg: '' });
     if (ui.tryId) { this.sound?.squeak(1.2); this.voice?.say(it.canBuy ? `${it.name}，${it.price}顆星` : `${it.name}，還差${it.need}顆星`); }

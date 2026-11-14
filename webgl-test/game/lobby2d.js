@@ -4,8 +4,9 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=63';
-import { placeAccessory } from './shop.js?v=63';
+import { Album } from './album.js?v=64';
+import { placeAccessory } from './shop.js?v=64';
+import { OUTFIT_POSES, variantKey, frameStyle, variantOf } from './outfit.js?v=64';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;box-shadow:0 4px 14px rgba(0,0,0,.15);touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -211,7 +212,7 @@ export class Town2D {
       const img = document.createElement('img'); img.alt = ''; img.draggable = false; img.src = this.url(r.sprite + '_idle');
       fig.style.aspectRatio = (meta.w / meta.h).toFixed(4); /* 外框＝這個姿勢角色圖的大小（各姿勢寬度不同，換姿勢時跟著改） */
       fig.append(img); el.append(fig); world.append(el);
-      this.chars.set(name, { name, el, fig, img, sprite: r.sprite, home: r.at, zone: r.zone, pose: 'idle', outfit: null });
+      this.chars.set(name, { name, el, fig, img, sprite: r.sprite, home: r.at, zone: r.zone, pose: 'idle', outfit: null, wear: null, wearWant: null, wearSeq: 0, wearReady: Promise.resolve() }); // v64 wear＝畫面上穿的衣服、wearWant＝最後一次要求的（圖還在載時兩者不同）
       this.place(name, r.at);
     }
     const st = this.cfg.reward.steamAt; this.steam = document.createElement('div'); this.steam.className = 't2-steam'; this.steam.innerHTML = '<i></i><i></i><i></i>';
@@ -221,19 +222,47 @@ export class Town2D {
     return this;
   }
   place(name, [x, y]) { const c = this.chars.get(name); c.at = [x, y]; c.el.style.left = (x / this.W * 100) + '%'; c.el.style.top = (y / this.H * 100) + '%'; c.el.style.zIndex = c.el.classList.contains('t2-front') ? 161 + Math.min(17, Math.floor(y / 45)) : 2 + Math.round(y / 10); } /* v61 走路地圖：在路上的角色（t2-front，由 Walker 加）在課次標記（150／160）前面、說話泡泡（180）後面；在家的朋友照舊在標記後面 */
-  pose(name, p) { const c = this.chars.get(name); if (c.pose === p) return; c.img.src = this.url(c.sprite + '_' + p); c.pose = p; const m = this.sprites[c.sprite + '_' + p]; c.fig.style.aspectRatio = (m.w / m.h).toFixed(4); this._placeAcc(c); }
+  pose(name, p) { const c = this.chars.get(name); if (c.pose === p) return; c.pose = p; this._show(c); }
+  // ======== v64 換衣服（整隻重畫）：衣服＝同一隻角色、同樣姿勢、穿著衣服的另一組圖（設計 docs/plans/2026-11-14-outfit-full-redraw.md §4.5） ========
+  /** manifest＝這個主題的 outfits_sprites.json；pad＝outfits.json 的 pad。沒呼叫過＝沒有衣服，其餘照舊 */
+  setOutfitSprites(manifest, pad) { this.outfitSprites = manifest; this.outfitPad = pad; this.outfitLoaded = new Set(); }
+  outfitUrl(sprite, variant, pose) { const m = this.outfitSprites?.[variantKey(sprite, variant, pose)]; return m ? this.cfg.base + m.file : null; }
+  /** 預載某個外觀某套衣服的 4 個姿勢；缺任何一張就 reject（不發請求）。載過的記在 outfitLoaded */
+  _preloadOutfit(sprite, variant) {
+    const k = sprite + '__' + variant; if (this.outfitLoaded?.has(k)) return Promise.resolve();
+    const urls = OUTFIT_POSES.map(p => this.outfitUrl(sprite, variant, p)); if (urls.some(u => !u)) return Promise.reject(new Error('OUTFIT_MISSING:' + k));
+    return Promise.all(urls.map(loadImg)).then(() => { this.outfitLoaded.add(k); });
+  }
+  /** 依 c.pose 和 c.wear 把圖、外框、配件一次擺好。fig 的寬高比一律取「原圖」的，所以穿衣服前後角色大小、位置、配件掛點都不變；衣服圖用絕對定位往四邊凸出去 */
+  _show(c) {
+    const key = c.sprite + '_' + c.pose, m = this.sprites[key], v = c.wear ? this.outfitSprites?.[variantKey(c.sprite, c.wear, c.pose)] : null, st = c.img.style;
+    if (v) Object.assign(st, { position: 'absolute', maxWidth: 'none', ...frameStyle(m, this.outfitPad) });
+    else for (const k of ['position', 'max-width', 'left', 'top', 'width', 'height']) st.removeProperty(k);
+    const src = v ? this.cfg.base + v.file : this.url(key); if (c.img.getAttribute('src') !== src) c.img.src = src;
+    c.fig.style.aspectRatio = (m.w / m.h).toFixed(4); this._placeAcc(c);
+  }
   /** v18 配件：catalog＝art2d/accessories.json，base＝配件圖所在的網址前綴 */
   setAccessories(catalog, base) { this.acc = { catalog, base, byId: new Map(catalog.items.map(i => [i.id, i])) }; }
-  /** outfit＝{ clip, hat, side }（itemId 或 null）；null＝全部拿掉 */
+  /** outfit＝{ body, clip, hat, side }（itemId 或 null）；null＝全部拿掉。body 是「衣服」（kind:'outfit'）時換整張角色圖，其他格子是疊圖 */
   setOutfit(name, outfit) {
     const c = this.chars.get(name); if (!c || !this.acc) return;
     for (const s of this.acc.catalog.slots) {
       const id = outfit?.[s] ?? null, item = id && this.acc.byId.get(id); let im = c.fig.querySelector(`.t2-acc[data-slot="${s}"]`);
-      if (!item) { im?.remove(); continue; }
+      if (!item || item.kind === 'outfit') { im?.remove(); continue; } // v64 衣服不是疊圖（見下面）
       if (!im) { im = document.createElement('img'); im.className = 't2-acc'; im.alt = ''; im.draggable = false; im.dataset.slot = s; c.fig.append(im); }
       if (im.dataset.id !== id) { im.src = this.acc.base + item.file; im.dataset.id = id; }
     }
+    // v64 疊圖層序＝catalog.slots 的順序（衣服在帽子下面）。上面只有新建的 <img> 才 append，先戴帽子再穿衣服會排在帽子後面，所以每次都照順序再 append 一輪（append 已存在的節點＝搬到最後）
+    for (const s of this.acc.catalog.slots) { const im = c.fig.querySelector(`.t2-acc[data-slot="${s}"]`); if (im) c.fig.append(im); }
     c.outfit = outfit; this._placeAcc(c);
+    // v64 衣服：守衛比的是「要求」（wearWant）不是「畫面」（wear），圖還在載的時候脫掉或換別套，會先作廢進行中的載入
+    const want = variantOf(this.acc.byId, outfit);
+    if (want === c.wearWant) return;
+    c.wearWant = want; const seq = ++c.wearSeq;
+    if (want === null) { c.wear = null; this._show(c); c.wearReady = Promise.resolve(); return; }
+    c.wearReady = this._preloadOutfit(c.sprite, want)
+      .then(() => { if (seq !== c.wearSeq) return; c.wear = want; this._show(c); })   // 載完才換圖（不閃破圖）
+      .catch(e => { if (seq === c.wearSeq) { c.wearWant = c.wear; this.log?.('outfit load failed ' + c.sprite + '/' + want + ': ' + (e?.message ?? e)); } }); // 失敗：畫面不變，退回要求，之後可重試
   }
   _placeAcc(c) {
     if (!this.acc) return;

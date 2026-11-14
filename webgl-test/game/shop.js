@@ -1,11 +1,12 @@
 // v18 配件商店（資料與規則，不碰畫面）：孩子用星星買配件，給已解鎖的朋友戴。
 // - 兩本帳：配件可用星數＝總星數 − 已買配件的價錢（同一件只算一次）；和 v17 家長獎勵（rewards.js）互不影響。
-// - 買一次永久擁有、不能退；買過的配件所有朋友都能戴；每位朋友每個位置（髮夾／帽子／身邊小物）最多一件。
-// - 存在 localStorage `capy_shop_<profileId>`：{ version:1, purchases:[{itemId,cost,boughtAt}], outfits:{<居民 object>:{clip,hat,side,updatedAt}} }
+// - 買一次永久擁有、不能退；買過的配件所有朋友都能戴；每位朋友每個位置（衣服／髮夾／帽子／身邊小物）最多一件。
+// - 存在 localStorage `capy_shop_<profileId>`：{ version:1, purchases:[{itemId,cost,boughtAt}], outfits:{<居民 object>:{body,clip,hat,side,updatedAt}} }
+//   v64 多了 body（衣服）：舊存檔沒有這個欄位，normalizeShop 讀進來補 null，不升版本（設計 docs/plans/2026-11-14-body-outfit-slot.md §5）。
 //   cost 是購買當下的價錢快照，之後調價不影響已買的。
 // - 配件目錄與對位表在 art2d/accessories.json（build_accessories.py 產生、anchor-tool.html 調整）。
 export const shopKey = profileId => 'capy_shop_' + profileId;
-export const SLOTS = ['clip', 'hat', 'side'];
+export const SLOTS = ['body', 'clip', 'hat', 'side']; // 順序＝大廳疊圖層序（衣服最下、帽子在髮夾上面；lobby2d.js setOutfit 照 catalog.slots 重排）
 const isInt = n => Number.isInteger(n) && n >= 1;
 export const emptyShop = () => ({ version: 1, purchases: [], outfits: {} });
 
@@ -43,7 +44,7 @@ export function shopState({ total, catalog, data }) {
   const items = catalog.items.map(i => ({ ...i, owned: owned.has(i.id), canBuy: !owned.has(i.id) && balance >= i.price, need: owned.has(i.id) ? 0 : Math.max(0, i.price - balance) }));
   return { total, spent, balance, owned, items, ownedCount: owned.size, allOwned: catalog.items.every(i => owned.has(i.id)) };
 }
-export const outfitOf = (data, who) => ({ clip: null, hat: null, side: null, ...(data.outfits[who] ?? {}) });
+export const outfitOf = (data, who) => ({ ...Object.fromEntries(SLOTS.map(s => [s, null])), ...(data.outfits[who] ?? {}) });
 
 /** 以下操作都回傳 { data, error }；有 error 時 data 不變。now 可注入（測試用）。 */
 export function buyItem(data, item, { total, now = new Date() }) {
