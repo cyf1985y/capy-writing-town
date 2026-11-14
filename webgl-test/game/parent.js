@@ -1,9 +1,9 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { isApp, bindExternalLinks } from './app-env.js?v=60'; // v54 App 版
-import { starsOf } from './stars.js?v=60';
-import { LEVELS } from './writing-panel.js?v=60';
-import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=60';
+import { isApp, bindExternalLinks } from './app-env.js?v=61'; // v54 App 版
+import { starsOf } from './stars.js?v=61';
+import { LEVELS } from './writing-panel.js?v=61';
+import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=61';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -194,7 +194,7 @@ export class ParentPanel {
       </div><div class="pp-c">
       ${this.skins?.list.length > 1 ? '<p class="pp-note">換遊戲主題只是換圖案和朋友的樣子，會重新載入；學會的字、星星、獎勵和配件都不變。</p>' : ''}
       ${this._namesHTML()}
-      ${this.seasons?.info().list.length ? '<p class="pp-note">季節只是換顏色和飄落的雪花／花瓣，不影響學習進度，也不用重新載入。總星數到了會自動解鎖，孩子也可以在商店用星星提早換。換上季節後地圖上會出現「季節小考」（課本外的字，第一次做完送星星）。</p>' : ''}
+      ${this.seasons?.info().list.length ? `<p class="pp-note">季節只是換顏色和飄落的小東西，不影響學習進度，也不用重新載入。總星數到了會自動解鎖${this.seasons.shop === false ? '' : '，孩子也可以在商店用星星提早換'}。換上季節後地圖上會出現「季節小考」（課本外的字，第一次做完送星星）。</p>` : ''}
       ${this.books?.lessons?.length > 2 ? '<p class="pp-note">「可以寫到」：孩子只能選到這一課（第 0 課一直開著），只改目前這個課程。已經學會的字照樣會出現在每日複習、聽寫小考和守門員。</p>' : ''}
       ${this.books ? '<p class="pp-note">換課程會重新載入。每個課程的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各課程分別做。</p>' : ''}
       <p class="pp-note">🔒 <a href="./game/privacy.html">隱私權政策</a>　❓ <a href="./game/support.html">使用說明與聯絡</a></p>
@@ -259,7 +259,7 @@ export class ParentPanel {
   _seasonSetHTML() {
     const inf = this.seasons?.info(); if (!inf?.list.length) return '';
     const btn = (id, label, on, dis, note = '') => `<button type="button" data-season="${esc(id)}" aria-pressed="${on}"${dis ? ' disabled' : ''}>${esc(label)}${note ? `<small style="display:block;font-size:11px;font-weight:600">${esc(note)}</small>` : ''}</button>`;
-    return `<span>季節</span><div class="seg pp-season">${btn('', '不用', inf.current == null, false)}${inf.list.map(x => btn(x.id, x.short, inf.current === x.id, !x.unlocked, x.unlocked ? '' : `★${x.unlockStars} 解鎖／商店 ★${x.price}`)).join('')}</div>`;
+    return `<span>季節</span><div class="seg pp-season">${btn('', '不用', inf.current == null, false)}${inf.list.map(x => btn(x.id, x.short, inf.current === x.id, !x.unlocked, x.unlocked ? '' : `★${x.unlockStars} 解鎖${this.seasons.shop === false ? '' : `／商店 ★${x.price}`}`)).join('')}</div>`;
   }
   async _seasonPick(b) {
     const id = b.dataset.season || null; this.log('parent season ' + (id ?? 'none'));

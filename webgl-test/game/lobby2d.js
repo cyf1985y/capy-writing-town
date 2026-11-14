@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=60';
-import { placeAccessory } from './shop.js?v=60';
+import { Album } from './album.js?v=61';
+import { placeAccessory } from './shop.js?v=61';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -117,6 +117,15 @@ const CSS = `
 @keyframes t2-fall{from{transform:translateY(-6%)}to{transform:translateY(102%)}}
 @keyframes t2-sway{from{transform:translateX(calc(var(--sw) * -1)) rotate(-25deg)}to{transform:translateX(var(--sw)) rotate(35deg)}}
 .t2-paused .t2-season-fx i,.t2-paused .t2-season-fx i::before{animation-play-state:paused}
+/* v61 太空季節：流星（斜斜劃過、一輪只亮一下）、星光（原地閃、慢慢往上飄） */
+.t2-season-fx[data-kind=meteor] i{top:var(--y);height:auto;width:var(--s);aspect-ratio:8;animation:t2-meteor var(--d) linear var(--dl) infinite;opacity:0}
+.t2-season-fx[data-kind=meteor] i::before{aspect-ratio:auto;height:100%;border-radius:999px;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(160,215,255,.55) 65%,#fff);box-shadow:0 0 6px rgba(170,220,255,.9);animation:none}
+@keyframes t2-meteor{0%{opacity:0;transform:rotate(8deg) translateX(0)}2%{opacity:1}12%{opacity:1}16%{opacity:0;transform:rotate(8deg) translateX(200%)}100%{opacity:0;transform:rotate(8deg) translateX(200%)}}
+.t2-season-fx[data-kind=meteor] i{transform-origin:0 50%}
+.t2-season-fx[data-kind=stardust] i{top:var(--y);height:auto;aspect-ratio:1;animation:t2-drift var(--d) ease-in-out var(--dl) infinite alternate}
+.t2-season-fx[data-kind=stardust] i::before{background:radial-gradient(circle,#fff 0 28%,#fff1b0 50%,#ffc94a 100%);clip-path:polygon(50% 0,64% 36%,100% 50%,64% 64%,50% 100%,36% 64%,0 50%,36% 36%);animation:t2-twinkle calc(var(--d) / 4) ease-in-out var(--dl) infinite alternate}
+@keyframes t2-drift{from{transform:translateY(0)}to{transform:translateY(-40%)}}
+@keyframes t2-twinkle{from{transform:scale(.35);opacity:.25}to{transform:scale(1);opacity:1}}
 /* v52 季節小考節點（同守門員：圓形底＋圖示，不用新圖） */
 .t2-quest{border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#ffd6e3 60%,#f39ab8);box-shadow:0 0 0 3px #fff,0 4px 10px rgba(0,0,0,.3);animation:t2-questGlow 2s ease-in-out infinite}
 .t2-quest .ico{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(22px,4vw,52px);line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
@@ -206,7 +215,7 @@ export class Town2D {
     this.inventory = { kind: '2d', background: this.cfg.background, size: this.cfg.size, sprites: Object.keys(this.sprites).length, characters: this.chars.size, loadMs: Math.round(performance.now() - t0) };
     return this;
   }
-  place(name, [x, y]) { const c = this.chars.get(name); c.at = [x, y]; c.el.style.left = (x / this.W * 100) + '%'; c.el.style.top = (y / this.H * 100) + '%'; c.el.style.zIndex = 2 + Math.round(y / 10); }
+  place(name, [x, y]) { const c = this.chars.get(name); c.at = [x, y]; c.el.style.left = (x / this.W * 100) + '%'; c.el.style.top = (y / this.H * 100) + '%'; c.el.style.zIndex = c.el.classList.contains('t2-front') ? 161 + Math.min(17, Math.floor(y / 45)) : 2 + Math.round(y / 10); } /* v61 走路地圖：在路上的角色（t2-front，由 Walker 加）在課次標記（150／160）前面、說話泡泡（180）後面；在家的朋友照舊在標記後面 */
   pose(name, p) { const c = this.chars.get(name); if (c.pose === p) return; c.img.src = this.url(c.sprite + '_' + p); c.pose = p; const m = this.sprites[c.sprite + '_' + p]; c.fig.style.aspectRatio = (m.w / m.h).toFixed(4); this._placeAcc(c); }
   /** v18 配件：catalog＝art2d/accessories.json，base＝配件圖所在的網址前綴 */
   setAccessories(catalog, base) { this.acc = { catalog, base, byId: new Map(catalog.items.map(i => [i.id, i])) }; }
@@ -349,10 +358,10 @@ export class TownFx2D {
   _makeGray() {
     const { W, H } = this.town, c = document.createElement('canvas'); c.width = W; c.height = H;
     const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(this.town.bg, 0, 0);
-    const img = g.getImageData(0, 0, W, H), d = img.data;
+    const img = g.getImageData(0, 0, W, H), d = img.data, f = this.map?.fog, k = f?.keep ?? 0.22, [a0, a1, a2] = f?.add ?? [18, 14, 16];
     for (let i = 0; i < d.length; i += 4) {
       const l = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
-      d[i] = l + (d[i] - l) * 0.22 + 18; d[i + 1] = l + (d[i + 1] - l) * 0.22 + 14; d[i + 2] = l + (d[i + 2] - l) * 0.22 + 16; /* 奶油灰，不是死灰 */
+      d[i] = l + (d[i] - l) * k + a0; d[i + 1] = l + (d[i + 1] - l) * k + a1; d[i + 2] = l + (d[i + 2] - l) * k + a2; /* 奶油灰，不是死灰；v61 太空：偏暗偏藍（map.fog） */
     }
     g.putImageData(img, 0, 0); this.gray = c;
   }
@@ -418,8 +427,18 @@ export class TownFx2D {
     }
     const glob = ratio[this.lessonToZone[String(this.colorCfg.globalLesson)]] ?? 0;
     const sat = this.zoneIds.map(z => Math.max(ratio[z] ?? 0, glob));
-    const outside = Math.max(glob, sat.reduce((a, b) => a + b, 0) / sat.length);
-    this._drawFog(sat, outside, instant);
+    let outside = Math.max(glob, sat.reduce((a, b) => a + b, 0) / sat.length), zs, lessonSat = null;
+    const fog = this.map?.fog;
+    if (fog?.byLesson) { /* v61 太空：每一課一個圓（圓心＝標記），不用甜點的 5 區（設計 docs/plans/2026-11-14-space-polish.md §1） */
+      const gl = String(this.colorCfg.globalLesson), gIds = this.contract.modes['lesson_' + gl]?.writingTaskIds || [], g2 = gIds.length ? gIds.filter(id => passed.has(id)).length / gIds.length : 0;
+      lessonSat = {}; zs = [];
+      for (const l of Object.keys(this.lessonToZone)) {
+        const ids = this.contract.modes['lesson_' + l]?.writingTaskIds || [], s = Math.max(ids.length ? ids.filter(id => passed.has(id)).length / ids.length : 0, g2);
+        lessonSat[l] = +s.toFixed(2); const at = this.art.pins?.[l]?.at; if (at) zs.push({ c: at, r: fog.r ?? 150, s });
+      }
+      const v = Object.values(lessonSat); outside = Math.max(g2, v.length ? v.reduce((a, b) => a + b, 0) / v.length : 0);
+    } else zs = this.zoneIds.map((z, i) => ({ c: this.art.zones[z].center, r: this.art.zones[z].r, s: sat[i] }));
+    this._drawFog(zs, outside, instant);
     // 朋友出現：剛解鎖的跳出來；v9 還沒解鎖但該課寫過一半的，先出現影子（剩 ≤ 3 字會晃）
     const on = new Set(this.unlockedNames(passedTaskIds)), pv = this.contract.feedback?.friendPreview ?? { showAtRatio: 0.5, nearRemaining: 3 };
     this.preview = {};
@@ -438,15 +457,15 @@ export class TownFx2D {
       if (!instant && ((now && !was) || (pre && !wasShadow))) this._anim(c, 'pop', 700);
     }
     const clouds = this._updateClouds(passed, instant);
-    this.colorState = { saturation: sat.map(v => +v.toFixed(2)), outside: +outside.toFixed(2), visibleFriends: [...on], shadows: this.preview, cloudsLeft: clouds };
+    this.colorState = { saturation: sat.map(v => +v.toFixed(2)), outside: +outside.toFixed(2), visibleFriends: [...on], shadows: this.preview, cloudsLeft: clouds, ...(lessonSat ? { fogBy: 'lesson', lessonSat } : {}) };
     return this.colorState;
   }
-  _drawFog(sat, outside, instant) {
-    const { W, H } = this.town, max = this.art.zoneColor?.fogMax ?? 0.62;
+  /** zs＝[{ c:[x,y], r, s }]（甜點：5 區；v61 太空：每一課） */
+  _drawFog(zs, outside, instant) {
+    const { W, H } = this.town, max = this.map?.fog?.max ?? this.art.zoneColor?.fogMax ?? 0.62;
     // 遮罩用 1/8 解析度計算（各區高斯權重混合），再平滑放大到整張插畫
     const mw = W / 8, mh = H / 8, m = document.createElement('canvas'); m.width = mw; m.height = mh;
     const mg = m.getContext('2d'), md = mg.createImageData(mw, mh);
-    const zs = this.zoneIds.map((z, i) => ({ c: this.art.zones[z].center, r: this.art.zones[z].r, s: sat[i] }));
     for (let y = 0; y < mh; y++) for (let x = 0; x < mw; x++) {
       let wsum = 0.15, v = 0.15 * outside;
       for (const z of zs) { const dx = x * 8 - z.c[0], dy = y * 8 - z.c[1], w = Math.exp(-(dx * dx + dy * dy) / (2 * (z.r * 0.6) ** 2)); wsum += w; v += w * z.s; }
@@ -540,9 +559,12 @@ export class TownFx2D {
     const n = reduced ? 0 : small ? cfg.particles.nSmall : cfg.particles.n;
     if (n) {
       const fx = document.createElement('div'); fx.className = 't2-season-fx'; fx.dataset.kind = cfg.particles.kind;
-      const big = cfg.particles.kind === 'petal' ? 1.5 : 1.1;
+      const kind = cfg.particles.kind, big = kind === 'petal' ? 1.5 : kind === 'stardust' ? 2.4 : 1.1, R = Math.random;
       fx.innerHTML = Array.from({ length: n }, (_, i) => {
-        const x = ((i + Math.random() * 0.8) / n * 100).toFixed(1), sz = (big * (0.6 + Math.random() * 0.7)).toFixed(2), d = (7 + Math.random() * 6).toFixed(1), dl = (-Math.random() * 12).toFixed(1), sw = (8 + Math.random() * 16).toFixed(0);
+        const x = ((i + R() * 0.8) / n * 100).toFixed(1), sz = (big * (0.6 + R() * 0.7)).toFixed(2), d = (7 + R() * 6).toFixed(1), dl = (-R() * 12).toFixed(1), sw = (8 + R() * 16).toFixed(0);
+        if (kind === 'meteor') /* v61 流星：長 7～11%、只在地圖最上面一條（y 0.5～5%）稍微往右下劃（8°），碰到塔和建築以前就消失；週期 3～7 秒只亮前 ~16% */
+          return `<i style="--x:${(R() * 75).toFixed(1)}%;--y:${(0.5 + R() * 4.5).toFixed(1)}%;--s:${(7 + R() * 4).toFixed(1)}%;--d:${(3 + R() * 4).toFixed(1)}s;--dl:${(-R() * 7).toFixed(1)}s"></i>`;
+        if (kind === 'stardust') return `<i style="--x:${x}%;--y:${(3 + R() * 52).toFixed(1)}%;--s:${sz}%;--d:${d}s;--dl:${dl}s"></i>`;
         return `<i style="--x:${x}%;--s:${sz}%;--d:${d}s;--dl:${dl}s;--sw:${sw}px"></i>`;
       }).join('');
       w.append(fx); this.seasonFx = fx;

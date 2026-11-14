@@ -393,6 +393,17 @@
      478
     ]
    }
+  },
+  "fog": {
+   "byLesson": true,
+   "r": 150,
+   "max": 0.42,
+   "keep": 0.6,
+   "add": [
+    -16,
+    -10,
+    6
+   ]
   }
  },
  "build": {
@@ -626,5 +637,27 @@
     }
    }
   ]
+ },
+ "seasons": {
+  "onsen_winter": {
+   "label": "冬季冰晶流星雨",
+   "icon": "☄️",
+   "tint": "linear-gradient(180deg, rgba(120,170,255,.24), rgba(255,255,255,0) 55%, rgba(140,210,255,.14))",
+   "particles": {
+    "kind": "meteor",
+    "n": 7,
+    "nSmall": 4
+   }
+  },
+  "sakura_spring": {
+   "label": "春日星光祭",
+   "icon": "🌟",
+   "tint": "linear-gradient(180deg, rgba(190,140,255,.2), rgba(255,255,255,0) 55%, rgba(255,170,220,.14))",
+   "particles": {
+    "kind": "stardust",
+    "n": 16,
+    "nSmall": 9
+   }
+  }
  }
 }

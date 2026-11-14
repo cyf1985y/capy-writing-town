@@ -155,6 +155,24 @@ export function clearBossStage(data, { stage, chars = [], perfect = 0, stars = 5
 // ======== v52 季節主題與季節小考（設計：docs/plans/2026-11-12-phase3-seasons-and-side-quests.md） ========
 const posInt = n => Number.isInteger(n) && n >= 1;
 /** 讀 seasons.json 後整理：不合法的季節整個丟掉；小考詞不夠就 quest＝null（季節照常）。回傳 { seasons, dropped } */
+/** v61 主題版季節（設計 docs/plans/2026-11-14-space-polish.md §3）：ov＝theme.json 的 seasons（{ id: { label, icon, tint, particles } }）。
+ * 只蓋過畫面用的欄位；不合格的欄位丟掉、記在 dropped（不影響其他欄位）。回傳 { seasons, dropped: [說明] } */
+export function skinSeasons(seasons, ov) {
+  const dropped = [], str = v => typeof v === 'string' && v.trim() !== '', n20 = v => Number.isInteger(v) && v >= 0 && v <= 20;
+  if (!ov || typeof ov !== 'object' || Array.isArray(ov)) return { seasons, dropped };
+  const out = seasons.map(x => {
+    const o = ov[x.id]; if (!o || typeof o !== 'object') return x;
+    const y = { ...x, particles: { ...x.particles } };
+    for (const k of ['label', 'icon', 'tint']) if (k in o) { if (str(o[k])) y[k] = o[k]; else dropped.push(`${x.id}.${k}`); }
+    const p = o.particles;
+    if (p && typeof p === 'object') {
+      if ('kind' in p) { if (['snow', 'petal', 'meteor', 'stardust'].includes(p.kind)) y.particles.kind = p.kind; else dropped.push(`${x.id}.particles.kind`); }
+      for (const k of ['n', 'nSmall']) if (k in p) { if (n20(p[k])) y.particles[k] = p[k]; else dropped.push(`${x.id}.particles.${k}`); }
+    } else if (p !== undefined) dropped.push(`${x.id}.particles`);
+    return y;
+  });
+  return { seasons: out, dropped };
+}
 export function validSeasons(cfg) {
   const out = [], seen = new Set(); let dropped = 0;
   for (const s of Array.isArray(cfg?.seasons) ? cfg.seasons : []) {

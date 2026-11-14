@@ -1,8 +1,8 @@
 // v59 太空主題「太空基地」面板：🏗️ 基地（8 棟建築升級）、🚀 火箭（組零件、發射、到達星球）。
 // 規則都在 space-build.js；存檔是配件商店同一個 capy_shop_<profileId>（shop.js 的 loadShop／saveShop）。
 // 設計：docs/plans/2026-11-13-space-base-rocket.md §6。發射從「買到第 4 個零件」到「到達畫面關掉」整段都算面板開著（isOpen() 一直是 true）。
-import { loadShop, saveShop } from './shop.js?v=60';
-import { buildState, buyBuild } from './space-build.js?v=60';
+import { loadShop, saveShop } from './shop.js?v=61';
+import { buildState, buyBuild } from './space-build.js?v=61';
 
 const CSS = `
 .sb-overlay{position:fixed;inset:0;z-index:1000;background:rgba(20,30,52,.72);display:flex;align-items:center;justify-content:center;font:15px system-ui,"Noto Sans TC",sans-serif;color:#24324A;-webkit-user-select:none;user-select:none}
@@ -114,6 +114,8 @@ export class SpaceBuildPanel {
     $('.sb-body').innerHTML = ui.tab === 'base' ? this._baseHTML(st) : this._rocketHTML(st);
     $('.sb-bar').innerHTML = this._barHTML(st);
   }
+  /** v61：面板用裁掉透明邊的縮圖；圖片清單裡沒有就用地圖那張 */
+  _thumb(n) { return this.has?.('thumb_' + n) ? this.url('thumb_' + n) : this.url(n); }
   _price(o, max = false) {
     if (max) return '<span class="sb-price max">滿級！</span>';
     if (!o) return '';
@@ -122,7 +124,7 @@ export class SpaceBuildPanel {
   _baseHTML(st) {
     return `<div class="sb-grid">${this.build.buildings.map((b, i) => {
       const lv = st.levels[i], nx = st.next.buildings[i];
-      return `<div class="sb-card${this.ui.sel === i ? ' sel' : ''}" role="button" tabindex="0" data-b="${i}" aria-label="${esc(b.name)}，${lv} 級"><div class="pic"><img alt="" src="${this.url(`build_${i}_${lv}`)}"></div><b>${esc(b.name)}</b><span class="lv">${'★'.repeat(lv)}<i>${'★'.repeat(3 - lv)}</i></span>${this._price(nx, lv >= 3)}</div>`;
+      return `<div class="sb-card${this.ui.sel === i ? ' sel' : ''}" role="button" tabindex="0" data-b="${i}" aria-label="${esc(b.name)}，${lv} 級"><div class="pic"><img alt="" src="${this._thumb(`build_${i}_${lv}`)}"></div><b>${esc(b.name)}</b><span class="lv">${'★'.repeat(lv)}<i>${'★'.repeat(3 - lv)}</i></span>${this._price(nx, lv >= 3)}</div>`;
     }).join('')}</div>`;
   }
   _rocketHTML(st) {

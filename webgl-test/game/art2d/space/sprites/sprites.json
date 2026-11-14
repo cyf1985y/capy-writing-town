@@ -488,5 +488,125 @@
   "file": "rocket_3_4.webp",
   "w": 162,
   "h": 420
+ },
+ "thumb_build_0_1": {
+  "file": "thumb_build_0_1.webp",
+  "w": 256,
+  "h": 199
+ },
+ "thumb_build_0_2": {
+  "file": "thumb_build_0_2.webp",
+  "w": 230,
+  "h": 256
+ },
+ "thumb_build_0_3": {
+  "file": "thumb_build_0_3.webp",
+  "w": 256,
+  "h": 221
+ },
+ "thumb_build_1_1": {
+  "file": "thumb_build_1_1.webp",
+  "w": 199,
+  "h": 226
+ },
+ "thumb_build_1_2": {
+  "file": "thumb_build_1_2.webp",
+  "w": 224,
+  "h": 256
+ },
+ "thumb_build_1_3": {
+  "file": "thumb_build_1_3.webp",
+  "w": 255,
+  "h": 256
+ },
+ "thumb_build_2_1": {
+  "file": "thumb_build_2_1.webp",
+  "w": 182,
+  "h": 196
+ },
+ "thumb_build_2_2": {
+  "file": "thumb_build_2_2.webp",
+  "w": 256,
+  "h": 233
+ },
+ "thumb_build_2_3": {
+  "file": "thumb_build_2_3.webp",
+  "w": 256,
+  "h": 233
+ },
+ "thumb_build_3_1": {
+  "file": "thumb_build_3_1.webp",
+  "w": 256,
+  "h": 169
+ },
+ "thumb_build_3_2": {
+  "file": "thumb_build_3_2.webp",
+  "w": 256,
+  "h": 169
+ },
+ "thumb_build_3_3": {
+  "file": "thumb_build_3_3.webp",
+  "w": 256,
+  "h": 173
+ },
+ "thumb_build_4_1": {
+  "file": "thumb_build_4_1.webp",
+  "w": 256,
+  "h": 159
+ },
+ "thumb_build_4_2": {
+  "file": "thumb_build_4_2.webp",
+  "w": 158,
+  "h": 256
+ },
+ "thumb_build_4_3": {
+  "file": "thumb_build_4_3.webp",
+  "w": 222,
+  "h": 256
+ },
+ "thumb_build_5_1": {
+  "file": "thumb_build_5_1.webp",
+  "w": 203,
+  "h": 217
+ },
+ "thumb_build_5_2": {
+  "file": "thumb_build_5_2.webp",
+  "w": 213,
+  "h": 256
+ },
+ "thumb_build_5_3": {
+  "file": "thumb_build_5_3.webp",
+  "w": 256,
+  "h": 224
+ },
+ "thumb_build_6_1": {
+  "file": "thumb_build_6_1.webp",
+  "w": 229,
+  "h": 230
+ },
+ "thumb_build_6_2": {
+  "file": "thumb_build_6_2.webp",
+  "w": 252,
+  "h": 256
+ },
+ "thumb_build_6_3": {
+  "file": "thumb_build_6_3.webp",
+  "w": 199,
+  "h": 256
+ },
+ "thumb_build_7_1": {
+  "file": "thumb_build_7_1.webp",
+  "w": 214,
+  "h": 175
+ },
+ "thumb_build_7_2": {
+  "file": "thumb_build_7_2.webp",
+  "w": 242,
+  "h": 256
+ },
+ "thumb_build_7_3": {
+  "file": "thumb_build_7_3.webp",
+  "w": 223,
+  "h": 256
  }
 }

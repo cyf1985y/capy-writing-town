@@ -1,9 +1,9 @@
 // v52 季節限定支線小考（設計：docs/plans/2026-11-12-phase3-seasons-and-side-quests.md §5.5）
 // 重用聽寫小考的流程（聽 → 拼注音 → 寫國字），但這些字課本沒教，所以寫字時有淡淡的底圖（照著描）。
 // 不寫聽寫小考的存檔、不寫 IndexedDB（不算進課本進度、不影響守門員門檻）；結果由 onClose 交給 game-v1.html 記到 extras。
-import { Dictation } from './dictation.js?v=60';
-import { bravo } from './fx.js?v=60';
-import { zhuyinHTML } from './writing-panel.js?v=60';
+import { Dictation } from './dictation.js?v=61';
+import { bravo } from './fx.js?v=61';
+import { zhuyinHTML } from './writing-panel.js?v=61';
 
 /** 抽題：練過次數少的優先，其餘隨機；words＝seasons.json 的 quest.words；history＝extras.quests[id].chars */
 export function pickQuestWords({ words, history = {}, n = 4, rand = Math.random }) {

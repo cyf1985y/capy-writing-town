@@ -2,7 +2,7 @@
 // - 路線圖＝MAP.walk（節點＋連線）。朋友站在 residentAt，導遊站在 guideStand[課]；站的位置和節點之間是「接駁線」。
 // - 走路只走「接駁線＋路線圖的邊」；導遊改路時先走完目前這一段，再從那一端重新找路。
 // - Walker 掛在 lobby.animators（RAF 每格呼叫），所以大廳暫停時自動停。
-import { graphOf } from './skin.js?v=60';
+import { graphOf } from './skin.js?v=61';
 
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 /** 最短節點序列（BFS）；from === to 回傳 [from]；不連通回傳 null */
@@ -24,7 +24,7 @@ export class Walker {
     this.speed = 0.09 * town.W; // 插畫 px／秒
     this.st = new Map(); // name → { anchor, route, idx, from, onArrive, rest }
     for (const c of town.chars.values()) {
-      c.el.classList.add('t2-walkmode');
+      c.el.classList.add('t2-walkmode'); c.el.classList.remove('t2-front'); town.place(c.name, c.at); /* v61：一開始大家都站在站位上＝照舊在標記後面（t2-front 只給在路上的角色） */
       this.st.set(c.name, { anchor: { kind: 'stand', node: map.walk.residentNode[c.name], p: c.at }, route: null, idx: 0, rest: 0 });
     }
     this.strollT = this._nextStroll(); this.paths = [];
@@ -58,7 +58,7 @@ export class Walker {
     s.onArrive = onArrive ?? null;
     if (!route.length) { s.route = null; onArrive?.(); return true; }
     if (this.reduced) { const last = route[route.length - 1]; this._arrive(name, last); return true; }
-    s.route = route; s.idx = 0; s.from = [...c.at]; c.el.classList.add('walking'); this.town.pose(name, 'idle'); return true;
+    s.route = route; s.idx = 0; s.from = [...c.at]; c.el.classList.add('walking', 't2-front'); /* v61：走路時在標記前面 */ this.town.pose(name, 'idle'); return true;
   }
   /** 立刻放到某個位置（載入時、reduced motion） */
   put(name, target) {
@@ -75,6 +75,7 @@ export class Walker {
   }
   _arrive(name, wp, silent = false) {
     const s = this.st.get(name), c = this.town.chars.get(name);
+    c.el.classList.toggle('t2-front', !wp.stand); /* v61：停在路上（節點）＝標記前面；回到站位（家、導遊站位）＝照舊在標記後面 */
     this.town.place(name, wp.p); s.anchor = wp.stand ? { kind: 'stand', node: wp.node, p: wp.p } : { kind: 'node', id: wp.node };
     s.route = null; s.prevWp = null; c.el.classList.remove('walking'); c.fig.classList.remove('flip');
     if (name === this.guide) this.townFx.refreshHintSide?.();
