@@ -1,8 +1,8 @@
 // v59 太空主題「太空基地」面板：🏗️ 基地（8 棟建築升級）、🚀 火箭（組零件、發射、到達星球）。
 // 規則都在 space-build.js；存檔是配件商店同一個 capy_shop_<profileId>（shop.js 的 loadShop／saveShop）。
 // 設計：docs/plans/2026-11-13-space-base-rocket.md §6。發射從「買到第 4 個零件」到「到達畫面關掉」整段都算面板開著（isOpen() 一直是 true）。
-import { loadShop, saveShop } from './shop.js?v=61';
-import { buildState, buyBuild } from './space-build.js?v=61';
+import { loadShop, saveShop } from './shop.js?v=62';
+import { buildState, buyBuild } from './space-build.js?v=62';
 
 const CSS = `
 .sb-overlay{position:fixed;inset:0;z-index:1000;background:rgba(20,30,52,.72);display:flex;align-items:center;justify-content:center;font:15px system-ui,"Noto Sans TC",sans-serif;color:#24324A;-webkit-user-select:none;user-select:none}

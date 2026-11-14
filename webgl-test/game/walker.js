@@ -2,7 +2,7 @@
 // - 路線圖＝MAP.walk（節點＋連線）。朋友站在 residentAt，導遊站在 guideStand[課]；站的位置和節點之間是「接駁線」。
 // - 走路只走「接駁線＋路線圖的邊」；導遊改路時先走完目前這一段，再從那一端重新找路。
 // - Walker 掛在 lobby.animators（RAF 每格呼叫），所以大廳暫停時自動停。
-import { graphOf } from './skin.js?v=61';
+import { graphOf } from './skin.js?v=62';
 
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 /** 最短節點序列（BFS）；from === to 回傳 [from]；不連通回傳 null */

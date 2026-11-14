@@ -4,11 +4,11 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=61';
-import { placeAccessory } from './shop.js?v=61';
+import { Album } from './album.js?v=62';
+import { placeAccessory } from './shop.js?v=62';
 
 const CSS = `
-.t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;box-shadow:0 4px 14px rgba(0,0,0,.15);touch-action:manipulation;user-select:none;-webkit-user-select:none}
 .t2-world{position:absolute;left:0;top:0;width:100%;height:100%;transform-origin:0 0;transition:transform .8s cubic-bezier(.45,0,.25,1);will-change:transform}
 .t2-world>img.t2-bg,.t2-world>canvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block;pointer-events:none}
 .t2-world>canvas{transition:opacity 1.1s ease}
@@ -17,6 +17,8 @@ const CSS = `
 @keyframes t2-glow{20%{opacity:1}100%{opacity:0}}
 .t2-char{position:absolute;transform:translate(-50%,-100%);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:left 1.6s ease-in-out,top 1.6s ease-in-out}
 .t2-char::before{content:'';position:absolute;inset:-12px}
+.t2-pad{position:absolute;display:block;left:50%;bottom:-5%;width:120%;height:20%;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,255,255,.9) 0,rgba(255,240,170,.75) 45%,rgba(255,210,90,.55) 68%);border:2px solid rgba(255,206,64,.95);box-shadow:0 0 10px 2px rgba(255,200,70,.75);box-sizing:border-box;pointer-events:none} /* v62 導遊腳下的光盤（設計 §4；不用 ::before，那是點擊範圍） */
+.t2-view::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:250;box-shadow:inset 0 0 0 2px rgba(255,255,255,.55),inset 0 0 18px rgba(0,0,0,.22),inset 0 -14px 20px -10px rgba(0,0,0,.25)} /* v62 觀景窗內陰影（§5） */
 .t2-fig{position:relative;display:block;height:100%;width:auto;transform-origin:50% 100%;animation:t2-bob 2.6s ease-in-out infinite;filter:drop-shadow(0 3px 2px rgba(91,58,74,.22))} /* v18：角色圖＋配件包在同一層，跳動、壓扁、陰影一起 */
 .t2-fig>img{display:block;height:100%;width:100%}
 .t2-fig>img.t2-acc{position:absolute;height:auto;max-width:none;pointer-events:none}
@@ -56,7 +58,7 @@ const CSS = `
 .t2-pin u{display:none;position:absolute;left:50%;bottom:100%;transform:translateX(-50%);text-decoration:none;font:900 clamp(16px,1.8vw,26px)/1 system-ui;color:#E55A4E;text-shadow:0 0 3px #fff,0 0 3px #fff,0 2px 3px rgba(91,58,74,.4);pointer-events:none}
 .t2-pin.active{z-index:160;transform:translate(-50%,-50%) scale(1.15)}
 .t2-pin.active b{background:#E55A4E;animation:nodePulse 1.6s ease-in-out infinite}
-.t2-pin.active img{filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px rgba(229,90,78,.8)) drop-shadow(0 3px 4px rgba(91,58,74,.35))}
+.t2-pin.active img{filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 8px #FFD54A) drop-shadow(0 0 14px rgba(255,179,0,.85))} /* v62：亮金色光暈（動畫見下面 v13 那段） */
 .t2-pin.active u{display:block;animation:t2-arrow .9s ease-in-out infinite}
 @keyframes nodePulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(229,90,78,.6),0 4px 10px rgba(0,0,0,.3)}50%{transform:scale(1.12);box-shadow:0 0 0 8px rgba(229,90,78,0),0 6px 14px rgba(0,0,0,.35)}}
 @keyframes t2-arrow{0%,100%{transform:translate(-50%,-10%)}50%{transform:translate(-50%,-45%)}}
@@ -66,10 +68,12 @@ const CSS = `
 .t2-pin.locked b::after{content:'🔒';font-size:clamp(12px,1.2vw,17px)}
 .t2-pin.locked small{opacity:.75}
 /* v13：選中課次的標記加呼吸光圈；標記旁的課名膠囊靠邊時往內收 */
-.t2-pin.active::before{content:'';position:absolute;inset:-16%;border-radius:50%;border:4px solid #fff;box-shadow:0 0 0 4px rgba(229,90,78,.75),0 0 24px 10px rgba(255,214,90,.85);animation:t2-ring 1.6s ease-out infinite;pointer-events:none}
-.t2-pin.active img{animation:t2-breathe 1.6s ease-in-out infinite}
+.t2-pin.active::before{content:'';position:absolute;inset:-16%;border-radius:50%;border:4px solid #FFF3B0;box-shadow:0 0 0 4px rgba(255,179,0,.85),0 0 24px 10px rgba(255,214,90,.9);animation:t2-ring 1.6s ease-out infinite;pointer-events:none} /* v62：光圈從紅改亮金色 */
+.t2-pin.active img{animation:t2-pinBob 1.6s ease-in-out infinite} /* v62：「呼吸」改成輕輕上下浮動 */
+@keyframes t2-pinBob{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7%) scale(1.04)}}
 @keyframes t2-ring{0%{transform:scale(.8);opacity:1}100%{transform:scale(1.45);opacity:0}}
 @keyframes t2-breathe{50%{transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.t2-pin.active img,.t2-pin.active::before{animation:none}} /* v62：減少動態＝光圈、標記都不動 */
 .t2-pin.active small{background:#E55A4E;font-size:clamp(12px,1.2vw,16px);padding:2px 9px}
 .t2-pin.edge-r small{left:auto;right:-10%;transform:none}
 .t2-pin.edge-l small{left:-10%;transform:none}
@@ -82,7 +86,8 @@ const CSS = `
 /* v13：下一個字的對話氣泡（點它＝開始寫字） */
 .t2-say{position:absolute;z-index:3;left:50%;bottom:104%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;font:900 clamp(13px,1.5vw,20px)/1.2 system-ui,"Noto Sans TC",sans-serif;color:#5B3A4A;background:#fff;border:3px solid #FFA94D;border-radius:16px;padding:4px 12px 5px;white-space:nowrap;box-shadow:0 4px 10px rgba(91,58,74,.3);cursor:pointer;animation:t2-sayBob 1.8s ease-in-out infinite;touch-action:manipulation}
 .t2-say::after{content:'';position:absolute;left:50%;top:100%;transform:translateX(-50%);border:9px solid transparent;border-top-color:#FFA94D}
-.t2-say em{font-style:normal;font-size:1.7em;line-height:1;color:#E55A4E;font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif}
+.t2-say em{font-style:normal;font-size:2.2em;line-height:1;color:#E55A4E;font-family:"Kaiti TC","BiauKai","DFKai-SB","Noto Serif TC",serif} /* v62：放大 1.3 倍 */
+.t2-say em svg{display:block;width:1.05em;height:1.05em;fill:#E55A4E;stroke:#E55A4E;stroke-width:22;stroke-linejoin:round} /* v62：用寫字的筆畫資料畫的標準字形 */
 .t2-say small{font:700 .7em/1.2 system-ui,"Noto Sans TC",sans-serif;color:#E8665C}
 @keyframes t2-sayBob{50%{transform:translateX(-50%) translateY(-6%)}}
 .t2-pins-hidden .t2-say{opacity:0;pointer-events:none}
@@ -319,6 +324,8 @@ export class TownFx2D {
     this.art = contract.art2d; this.tintedMaterials = 0; this.props = []; this.camToken = 0; this.fogFront = 0; this.busy = false;
     this.residents = [...town.chars.values()].map(c => ({ name: c.name, kind: c.sprite.startsWith('capy') ? 'capy' : 'bunny', zone: this.zoneIds.indexOf(c.zone), el: c.el }));
     this._makeGray(); this._mountClouds();
+    const gd = town.chars.get(this.art.nextHint?.resident); /* v62 導遊腳下的光盤 */
+    if (gd && !gd.el.querySelector('.t2-pad')) { gd.el.classList.add('t2-guide'); const pad = document.createElement('i'); pad.className = 't2-pad'; pad.setAttribute('aria-hidden', 'true'); gd.el.insertBefore(pad, gd.fig ?? gd.el.firstChild); }
     town.view.addEventListener('pointerdown', e => this._tap(e));
     this._waveTimer = setInterval(() => this._idleWave(), 3800);
     if (map?.pan) this._setupPan();
@@ -389,7 +396,8 @@ export class TownFx2D {
     return left;
   }
   /** v13：下一個字的對話氣泡，掛在引導角色（泡泡）頭上；text=null 隱藏 */
-  setNextHint(char, { onTap } = {}) {
+  /** v62 glyph＝() => Promise<字形資料（有 strokes 陣列）>：讀到就把字換成 SVG（每台裝置字形一樣）；讀不到維持文字 */
+  setNextHint(char, { onTap, glyph } = {}) {
     const c = this.town.chars.get(this.art.nextHint?.resident); if (!c) return;
     let b = c.el.querySelector('.t2-say');
     if (!char) { b?.remove(); return; }
@@ -401,6 +409,18 @@ export class TownFx2D {
     }
     this.refreshHintSide();
     this._sayTap = onTap; b.innerHTML = `<small>下一個字</small><em>${char}</em><small>點我寫字！</small>`; b.setAttribute('aria-label', `下一個字「${char}」，點我開始寫字`);
+    b.dataset.char = char; this._glyphFor(b, char, glyph);
+  }
+  _glyphFor(b, char, glyph) {
+    this.glyphs ??= new Map();
+    const put = svg => { if (b.dataset.char === char && b.isConnected) { const em = b.querySelector('em'); if (em) em.innerHTML = svg; } };
+    if (this.glyphs.has(char)) { put(this.glyphs.get(char)); return; }
+    if (!glyph) return;
+    Promise.resolve().then(glyph).then(d => {
+      if (!d || !Array.isArray(d.strokes) || !d.strokes.length) throw new Error('no strokes');
+      const svg = `<svg viewBox="0 0 1024 1024" aria-hidden="true"><g transform="translate(0,900) scale(1,-1)">${d.strokes.map(x => `<path d="${String(x).replace(/[^MLQCZmlqcz0-9.,\s-]/g, '')}"/>`).join('')}</g></svg>`;
+      this.glyphs.set(char, svg); put(svg);
+    }).catch(e => this.log('glyph ' + char + ' failed: ' + (e?.message ?? e)));
   }
   /** v59：「下一個字」氣泡放上面或下面（導遊走路時每格呼叫；只在結果改變時改 class） */
   refreshHintSide() {
