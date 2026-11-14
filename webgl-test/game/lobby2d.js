@@ -4,8 +4,8 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=59';
-import { placeAccessory } from './shop.js?v=59';
+import { Album } from './album.js?v=60';
+import { placeAccessory } from './shop.js?v=60';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -753,12 +753,35 @@ const ALBUM_CSS = (frame, locked) => `
 @media (orientation:landscape) and (max-height:560px){.al-badges{margin:4px 0 0;padding-top:4px;bottom:-12px;padding-bottom:4px}.al-badges i{width:26px;height:26px;font-size:12px}.al-badges h3{font-size:13px}}
 `;
 
+/** v60 主題的圖鑑卡片名字樣式（太空的名牌是深藍色）：不合格的欄位就不用 */
+export function cardCSS(card) {
+  if (!card || typeof card !== 'object') return '';
+  const col = c => typeof c === 'string' && /^#[0-9a-fA-F]{6}$/.test(c) ? c : null, top = Number.isFinite(card.nameTop) && card.nameTop >= 50 && card.nameTop <= 98 ? card.nameTop : null;
+  let css = '';
+  if (top != null || col(card.nameColor)) css += `.al2 .al-card b{${top != null ? `top:${top}%;` : ''}${col(card.nameColor) ? `color:${col(card.nameColor)};` : ''}}`;
+  if (col(card.lockedColor)) css += `.al2 .al-card.locked b{color:${col(card.lockedColor)}}`;
+  return css;
+}
 export class Album2D extends Album {
   constructor(opts) {
     super(opts);
-    if (!document.getElementById('al2-style')) { const s = document.createElement('style'); s.id = 'al2-style'; s.textContent = ALBUM_CSS(this.town.url('card_open'), this.town.url('card_locked')); document.head.append(s); }
+    if (!document.getElementById('al2-style')) { const s = document.createElement('style'); s.id = 'al2-style'; s.textContent = ALBUM_CSS(this.town.url('card_open'), this.town.url('card_locked')) + cardCSS(opts.card); document.head.append(s); }
+    this._refit = () => { clearTimeout(this._fitT); this._fitT = setTimeout(() => this.fitNames(), 350); };
+  }
+  /** v60 名字放得下：先回到 CSS 的字體大小，放不下就每次縮 1 px，最小 10 px */
+  fitNames() {
+    if (!this.el) return [];
+    return [...this.el.querySelectorAll('.al-card b')].map(b => {
+      b.style.fontSize = ''; let fs = parseFloat(getComputedStyle(b).fontSize) || 16;
+      while (b.scrollWidth > b.clientWidth + 0.5 && fs > 10) { fs -= 1; b.style.fontSize = fs + 'px'; }
+      return fs;
+    });
   }
   _snap(object) { const c = this.town.chars.get(object); return c ? this.town.url(c.sprite + '_idle') : ''; }
-  open(passed, opts) { const r = super.open(passed, opts); this.el?.classList.add('al2'); return r; }
+  open(passed, opts) {
+    const r = super.open(passed, opts); this.el?.classList.add('al2'); this.fitNames();
+    addEventListener('resize', this._refit); addEventListener('orientationchange', this._refit); return r;
+  }
+  close() { removeEventListener('resize', this._refit); removeEventListener('orientationchange', this._refit); clearTimeout(this._fitT); super.close(); }
   async visit(r) { this.close(); this.voice?.say(r.name); await this.townFx.flyToResident(r.object); this.lastVisit = r.object; }
 }

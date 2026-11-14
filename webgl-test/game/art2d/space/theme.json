@@ -30,6 +30,15 @@
   "name": "火箭加油站",
   "cont": "繼續加油"
  },
+ "albumCard": {
+  "nameTop": 84.5,
+  "nameColor": "#FFFFFF",
+  "lockedColor": "#C9D3E6"
+ },
+ "_albumCard": "圖鑑卡片的名牌是深藍色：名字放名牌正中間、白字（v60）",
+ "notes": {
+  "0": "太空隊長，一開始就在"
+ },
  "residentSprites": [
   "capy_cocoa",
   "bunny_a",

@@ -3,8 +3,8 @@
 // 兩次都沒寫錯、沒用提示＝描得好：由呼叫端（game-v1.html）照 v56 重複練習的規則給星、記練習紀錄。
 // 筆畫資料 strokes/strokes.json 由 strokes/build_strokes.py 產生（AI 標的名稱，人工核對 pending）。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { bravo, flash } from './fx.js?v=59';
-import { QUIZ_CONFIG } from './writing-panel.js?v=59';
+import { bravo, flash } from './fx.js?v=60';
+import { QUIZ_CONFIG } from './writing-panel.js?v=60';
 
 const CSS = `
 .sp-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}

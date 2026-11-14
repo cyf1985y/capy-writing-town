@@ -42,7 +42,7 @@ export function applySkin(contract, skin, MAP = null) {
   if (skin.residentAt && !MAP) contract.art2d.residents = Object.fromEntries(Object.entries(contract.art2d.residents).map(([k, r]) => [k, skin.residentAt[k] ? { ...r, at: skin.residentAt[k] } : r]));
   if (skin.rewardTo && contract.art2d.reward && !MAP) contract.art2d.reward = { ...contract.art2d.reward, to: skin.rewardTo };
   contract.theme = { ...contract.theme, title: skin.title ?? contract.theme.title, ui: { ...contract.theme.ui, ...skin.ui } };
-  contract.album = { ...contract.album, title: skin.albumTitle ?? contract.album.title, residents: contract.album.residents.map((r, i) => ({ ...r, name: skin.names?.[i] ?? r.name })) };
+  contract.album = { ...contract.album, title: skin.albumTitle ?? contract.album.title, residents: contract.album.residents.map((r, i) => ({ ...r, name: skin.names?.[i] ?? r.name, ...(typeof skin.notes?.[String(i)] === 'string' ? { note: skin.notes[String(i)] } : {}) })) }; // v60 notes＝圖鑑卡片下面的小字
   return contract;
 }
 /** 家長頁可以選的主題：預設主題＋圖片已經準備好的主題 */

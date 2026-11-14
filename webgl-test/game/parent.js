@@ -1,9 +1,9 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { isApp, bindExternalLinks } from './app-env.js?v=59'; // v54 App 版
-import { starsOf } from './stars.js?v=59';
-import { LEVELS } from './writing-panel.js?v=59';
-import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=59';
+import { isApp, bindExternalLinks } from './app-env.js?v=60'; // v54 App 版
+import { starsOf } from './stars.js?v=60';
+import { LEVELS } from './writing-panel.js?v=60';
+import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=60';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -45,6 +45,13 @@ export function parentStats({ artifacts, passedTaskIds, tasks, names = {}, total
 }
 
 const CSS = `
+.pp-names h3{margin:10px 0 6px}
+.pp-nms{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
+.pp-nm{display:flex;align-items:center;gap:4px;background:#fff;border:1.5px solid #F3D9CF;border-radius:12px;padding:3px 6px}
+.pp-nm img{width:30px;height:36px;object-fit:contain;flex:none}
+.pp-nm input{flex:1;min-width:0;font:inherit;font-size:16px;font-weight:700;border:1px solid #e5d3cc;border-radius:8px;padding:5px 6px}
+.pp-nm button{flex:none;font:inherit;font-size:12px;padding:4px 6px;border-radius:8px;border:1px solid #F5CBA7;background:#FFF6EC;cursor:pointer}
+.pp-nm button[hidden]{display:none}
 .pp-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:15px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A)}
 .pp-dialog{background:#fffdf7;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:16px 18px 18px;width:min(94vw,560px);max-height:94vh;overflow:auto;box-sizing:border-box}
 .pp-dialog h2{margin:0 0 10px;font-size:20px;display:flex;align-items:center}
@@ -126,7 +133,7 @@ const CSS = `
 export class ParentPanel {
   /** rewards（可省略）：{ key, totals: () => ({ total, maxTotal }), onChange }，見 rewards.js；shop（可省略）：{ summary: () => ({ count, all, spent, balance, names }) }，見 shop.js */
   /** books（可省略）：{ list: [{ id, label }], current, onPick(id), lessons: [課號] }，見 books.js；v56 lessons 給「可以寫到」設定用 */
-  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, skins = null, dictation = null, seasons = null, strokes = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, skins, dictation, seasons, strokes, log }); /* v57 strokes＝{ summary()：{ done, total, good, weak } }；v58 weak＝最近常寫錯的筆畫 */ /* v52 seasons＝{ info()：{ current, list:[{id,label,short,unlocked,unlockStars,price,runs}] }, onPick(id|null)：async → true／false } */ this.el = null; }
+  constructor({ getData, onSettings, backup = null, rewards = null, shop = null, books = null, skins = null, dictation = null, seasons = null, strokes = null, names = null, log = () => {} }) { Object.assign(this, { getData, onSettings, backup, rewards, shop, books, skins, dictation, seasons, strokes, names, log }); /* v60 names＝{ list()：[{ object, name, def, src, changed }], onSet(object, name)：{ ok, name }, max } */ /* v57 strokes＝{ summary()：{ done, total, good, weak } }；v58 weak＝最近常寫錯的筆畫 */ /* v52 seasons＝{ info()：{ current, list:[{id,label,short,unlocked,unlockStars,price,runs}] }, onPick(id|null)：async → true／false } */ this.el = null; }
   isOpen() { return !!this.el; }
   open() {
     if (this.el) return;
@@ -186,6 +193,7 @@ export class ParentPanel {
       <p class="pp-note">🖨️ <a href="./game/worksheet.html"${isApp() ? '' : ' target="_blank" rel="noopener"'}>列印練習單</a>：把還沒三顆星、常錯的字印成 A4 練習單（可存成 PDF）。</p>
       </div><div class="pp-c">
       ${this.skins?.list.length > 1 ? '<p class="pp-note">換遊戲主題只是換圖案和朋友的樣子，會重新載入；學會的字、星星、獎勵和配件都不變。</p>' : ''}
+      ${this._namesHTML()}
       ${this.seasons?.info().list.length ? '<p class="pp-note">季節只是換顏色和飄落的雪花／花瓣，不影響學習進度，也不用重新載入。總星數到了會自動解鎖，孩子也可以在商店用星星提早換。換上季節後地圖上會出現「季節小考」（課本外的字，第一次做完送星星）。</p>' : ''}
       ${this.books?.lessons?.length > 2 ? '<p class="pp-note">「可以寫到」：孩子只能選到這一課（第 0 課一直開著），只改目前這個課程。已經學會的字照樣會出現在每日複習、聽寫小考和守門員。</p>' : ''}
       ${this.books ? '<p class="pp-note">換課程會重新載入。每個課程的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各課程分別做。</p>' : ''}
@@ -203,6 +211,7 @@ export class ParentPanel {
       if (b.dataset.skin) { this.log('skin ' + b.dataset.skin); return this.skins.onPick(b.dataset.skin); }
       if (b.dataset.book) { this.log('book ' + b.dataset.book); return this.books.onPick(b.dataset.book); }
       if (b.dataset.season != null) return this._seasonPick(b);
+      if (b.dataset.nreset != null) return this._nameSet(b.dataset.nreset, ''); // v60 恢復預設名字
       if (b.dataset.lmax != null) { // v56 可以寫到第幾課
         const s = loadSettings(), lm = { ...(s.lessonMax && typeof s.lessonMax === 'object' ? s.lessonMax : {}) }, v = b.dataset.lmax;
         if (v === '') delete lm[this.books.current]; else lm[this.books.current] = Number(v);
@@ -216,7 +225,8 @@ export class ParentPanel {
         this.onSettings?.(s); this.log('settings ' + JSON.stringify(s));
       }
     });
-    this._onKey = e => { e.stopPropagation(); if (e.key === 'Escape') this.close(); else if (e.key === 'Enter' && e.target.matches?.('.pp-rw input')) e.target.closest('.rw-form, .rw-ask')?.querySelector('button:not(:disabled)')?.click(); }; document.addEventListener('keydown', this._onKey, true);
+    el.addEventListener('change', e => { const i = e.target.closest?.('.pp-nm input'); if (i) this._nameSet(i.closest('.pp-nm').dataset.obj, i.value); }); // v60 朋友名字：離開輸入框或按 Enter 就存
+    this._onKey = e => { e.stopPropagation(); if (e.key === 'Enter' && e.target.matches?.('.pp-nm input')) { e.target.blur(); return; } if (e.key === 'Escape') this.close(); else if (e.key === 'Enter' && e.target.matches?.('.pp-rw input')) e.target.closest('.rw-form, .rw-ask')?.querySelector('button:not(:disabled)')?.click(); }; document.addEventListener('keydown', this._onKey, true);
     el.querySelector('.pp-save input')?.addEventListener('change', async e => {
       const f = e.target.files?.[0], out = el.querySelector('.pp-save output'); e.target.value = ''; if (!f) return;
       try { const r = await this.backup.onImport(f); out.textContent = r.message; } catch (err) { out.textContent = '還原失敗：' + (err?.message || err); this.log('restore failed ' + err); }
@@ -226,6 +236,19 @@ export class ParentPanel {
     this._rw = { mode: null, id: null, msg: '', quiz: null }; this._renderRewards();
   }
   /** v56「可以寫到」：不限＋第 1 課…倒數第二課（最後一課＝不限） */
+  /** v60 朋友名字（只改目前這個主題） */
+  _namesHTML() {
+    if (!this.names) return '';
+    const rows = this.names.list().map(f => `<div class="pp-nm" data-obj="${esc(f.object)}"><img alt="" src="${esc(f.src)}"><input type="text" value="${esc(f.name)}" placeholder="${esc(f.def)}" aria-label="${esc(f.def)}的名字" autocomplete="off" enterkeyhint="done"><button type="button" data-nreset="${esc(f.object)}"${f.changed ? '' : ' hidden'}>恢復</button></div>`).join('');
+    return `<div class="pp-names"><h3>🏷️ 朋友名字（只改這個主題）</h3><div class="pp-nms">${rows}</div><p class="pp-note">最多 ${this.names.max ?? 4} 個字。名字只在這台裝置、只改目前的主題；備份會一起存。<output></output></p></div>`;
+  }
+  refreshNames() { const box = this.el?.querySelector('.pp-names'); if (box) box.outerHTML = this._namesHTML(); }
+  _nameSet(object, value) {
+    const r = this.names.onSet(object, value), box = this.el?.querySelector('.pp-names'); if (!box) return r;
+    this.refreshNames();
+    if (!r.ok) this.el.querySelector('.pp-names output').textContent = ' ⚠️ 存不進去（可能是私密瀏覽模式）';
+    this.log('name ' + object + ' = ' + (r.ok ? r.name : 'FAILED')); return r;
+  }
   _lessonMaxHTML(set) {
     const ls = this.books?.lessons; if (!ls || ls.length <= 2) return '';
     const cur = lessonMaxOf(set, this.books.current, ls), opts = ls.filter(l => l >= 1 && l < Math.max(...ls));
