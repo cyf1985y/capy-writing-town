@@ -4,9 +4,9 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=65';
-import { placeAccessory } from './shop.js?v=65';
-import { OUTFIT_POSES, variantKey, frameStyle, variantOf } from './outfit.js?v=65';
+import { Album } from './album.js?v=66';
+import { placeAccessory } from './shop.js?v=66';
+import { OUTFIT_POSES, variantKey, frameStyle, variantOf } from './outfit.js?v=66';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;box-shadow:0 4px 14px rgba(0,0,0,.15);touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -94,6 +94,11 @@ const CSS = `
 .t2-pins-hidden .t2-say{opacity:0;pointer-events:none}
 .t2-say.below{bottom:auto;top:96%;left:12%;transform:none;animation:none} /* 角色在畫面頂端（例如走到溫泉後）：氣泡改到腳下偏右，不被切掉、不擋第 5 課標記 */
 .t2-say.below::after{top:auto;bottom:100%;left:18%;border-top-color:transparent;border-bottom-color:#FFA94D}
+/* v66 氣泡放在導遊旁邊（路線檔的 hintSide；導遊站在某一課旁邊、頭上和腳下都會壓到那一課的標記時用）：底邊對齊腳邊 */
+.t2-say.side-r,.t2-say.side-l{bottom:auto;top:97%;transform:translateY(-100%);animation:none}
+.t2-say.side-r{left:100%;margin-left:6px}.t2-say.side-l{left:auto;right:100%;margin-right:6px}
+.t2-say.side-r::after{left:auto;right:100%;top:72%;transform:translateY(-50%);border-top-color:transparent;border-right-color:#FFA94D}
+.t2-say.side-l::after{left:100%;top:72%;transform:translateY(-50%);border-top-color:transparent;border-left-color:#FFA94D}
 /* v50 區域全三星：標記金色光暈＋標記附近常駐的小粒子（只動 transform／opacity；每課 3 個） */
 .t2-pin.mastered img{filter:drop-shadow(0 0 3px #FFD54A) drop-shadow(0 0 7px #FFB300) drop-shadow(0 3px 4px rgba(91,58,74,.35))}
 .t2-pin.mastered b{border-color:#FFD54A;box-shadow:0 0 0 2px #FFB300,0 4px 10px rgba(0,0,0,.25)}
@@ -266,8 +271,14 @@ export class Town2D {
   }
   _placeAcc(c) {
     if (!this.acc) return;
-    const an = this.acc.catalog.anchors[c.sprite + '_' + c.pose], m = this.sprites[c.sprite + '_' + c.pose];
-    for (const im of c.fig.querySelectorAll('.t2-acc')) { const item = this.acc.byId.get(im.dataset.id), a = an?.[im.dataset.slot]; if (item && a) placeAccessory(im, item, a, m.w / m.h); }
+    const an = this.acc.catalog.anchors[c.sprite + '_' + c.pose], m = this.sprites[c.sprite + '_' + c.pose], mirror = c.fig.classList.contains('flip'); // v66 翻面時配件一起鏡射
+    for (const im of c.fig.querySelectorAll('.t2-acc')) { const item = this.acc.byId.get(im.dataset.id), a = an?.[im.dataset.slot]; if (item && a) placeAccessory(im, item, a, m.w / m.h, mirror); }
+  }
+  /** v66 角色翻面（往左走）：角色圖（含穿衣服的整隻圖）用 CSS .t2-fig.flip 翻，配件用 placeAccessory 的 mirror 重擺。值沒變就不動 */
+  setFlip(name, on) {
+    const c = this.chars.get(name); if (!c) return false; on = !!on;
+    if (c.fig.classList.contains('flip') === on) return false;
+    c.fig.classList.toggle('flip', on); this._placeAcc(c); return true;
   }
   /** 頁面版面寬度（px）；v59 寬版地圖：resize(畫面寬, 畫面高)，地圖高＝畫面高、可以左右平移（pan） */
   resize(w, h = null) {
@@ -454,8 +465,11 @@ export class TownFx2D {
   /** v59：「下一個字」氣泡放上面或下面（導遊走路時每格呼叫；只在結果改變時改 class） */
   refreshHintSide() {
     const c = this.town.chars.get(this.art.nextHint?.resident), b = c?.el.querySelector('.t2-say'); if (!b) return null;
-    const below = c.at[1] - this.town.H * this.art.characterHeight < (this.map ? 0.3 * this.town.H : 260);
+    const side = this.hintSide?.() ?? null; // v66：'left'／'right'＝放在導遊旁邊（呼叫端決定，見 game-v1.html）；null＝照舊（頭上，太靠上就改腳下）
+    const below = !side && c.at[1] - this.town.H * this.art.characterHeight < (this.map ? 0.3 * this.town.H : 260);
     if (b.classList.contains('below') !== below) b.classList.toggle('below', below);
+    if (b.classList.contains('side-r') !== (side === 'right')) b.classList.toggle('side-r', side === 'right');
+    if (b.classList.contains('side-l') !== (side === 'left')) b.classList.toggle('side-l', side === 'left');
     return below;
   }
   zoneOfLesson(l) { return this.zoneIds.indexOf(this.lessonToZone[String(l)]); }

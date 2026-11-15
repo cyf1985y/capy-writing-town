@@ -268,5 +268,25 @@
   "file": "pin_sakura.webp",
   "w": 160,
   "h": 160
+ },
+ "icon_review": {
+  "file": "icon_review.webp",
+  "w": 159,
+  "h": 160
+ },
+ "icon_parts": {
+  "file": "icon_parts.webp",
+  "w": 161,
+  "h": 160
+ },
+ "icon_dict": {
+  "file": "icon_dict.webp",
+  "w": 192,
+  "h": 160
+ },
+ "icon_stroke": {
+  "file": "icon_stroke.webp",
+  "w": 135,
+  "h": 160
  }
 }

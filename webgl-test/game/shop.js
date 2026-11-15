@@ -105,9 +105,14 @@ export async function loadCatalog(url) {
 // v56：髮夾整組放大（不改 accessories.json／主題設定裡調好的每件 size；對位點在配件中心，以掛點為中心變大）。anchor-tool.html 的 wear() 用同一組倍數
 export const SLOT_SCALE = Object.freeze({ clip: 1.2 });
 export const slotScale = item => SLOT_SCALE[item?.slot] ?? 1;
-export function placeAccessory(img, item, an, aspect) {
-  img.style.left = an.x * 100 + '%'; img.style.top = an.y * 100 + '%';
+/** v66 mirror＝角色翻面（往左走）：以角色框的垂直中心線鏡射。mirror=false 的輸出和以前逐字相同 */
+export function placeAccessory(img, item, an, aspect, mirror = false) {
+  // 掛點和配件的軸心都換到另一邊（x → 1-x），角度反向；scaleX(-1) 以新軸心翻面後，原本的軸心點跑到 2(1-px)-px，再平移 (2px-1) 個自己的寬度把它拉回軸心
+  const px = mirror ? 1 - item.px : item.px, rot = an.rot + (item.rot || 0);
+  img.style.left = (mirror ? 1 - an.x : an.x) * 100 + '%'; img.style.top = an.y * 100 + '%';
   img.style.width = (item.size * slotScale(item) * an.s / aspect * 100).toFixed(2) + '%';
-  img.style.transformOrigin = `${item.px * 100}% ${item.py * 100}%`;
-  img.style.transform = `translate(${-item.px * 100}%,${-item.py * 100}%) rotate(${an.rot + (item.rot || 0)}deg)`;
+  img.style.transformOrigin = `${px * 100}% ${item.py * 100}%`;
+  img.style.transform = mirror ? `translate(${-px * 100}%,${-item.py * 100}%) rotate(${-rot}deg) translateX(${(2 * item.px - 1) * 100}%) scaleX(-1)`
+    : `translate(${-item.px * 100}%,${-item.py * 100}%) rotate(${an.rot + (item.rot || 0)}deg)`;
 }
+

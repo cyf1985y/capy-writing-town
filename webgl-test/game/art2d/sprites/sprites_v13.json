@@ -188,5 +188,25 @@
   "file": "pin_cookie.webp",
   "w": 160,
   "h": 160
+ },
+ "icon_review": {
+  "file": "icon_review.webp",
+  "w": 155,
+  "h": 160
+ },
+ "icon_parts": {
+  "file": "icon_parts.webp",
+  "w": 168,
+  "h": 160
+ },
+ "icon_dict": {
+  "file": "icon_dict.webp",
+  "w": 204,
+  "h": 160
+ },
+ "icon_stroke": {
+  "file": "icon_stroke.webp",
+  "w": 156,
+  "h": 160
  }
 }

@@ -2,7 +2,7 @@
 // 進度、星星、獎勵、配件都共用（存檔鍵不含主題）；選哪個主題只記在這台裝置。
 // 主題的圖放在自己的資料夾，檔名和甜點版完全相同（capy_cocoa_idle…），所以座標、配件位置都不用重對。
 export const SKINS = {
-  sweet: { label: '甜點樂園' }, // 預設：契約裡原本的圖
+  sweet: { label: '甜點樂園', walk: 'art2d/sweet/walk.json' }, // 預設：契約裡原本的圖；v66 walk＝走路路線檔（相對於 game/；沒有就不走路）
   dino: { label: '恐龍島', config: 'art2d/dino/theme.json' },
   space: { label: '太空探險', config: 'art2d/space/theme.json' }, // v59 寬版地圖、會走路、蓋基地＋組火箭（設計 docs/plans/2026-11-13-space-*.md）
   _test: { label: '測試主題', config: 'art2d/_skin_test/theme.json', hidden: true }, // 只給自動測試用（?skin=_test），不出現在家長頁
@@ -24,6 +24,14 @@ export async function loadSkin(id, gameBase = './game/') {
     const manifest = cfg.manifest ?? 'sprites.json', m = await fetch(base + manifest, { cache: 'no-cache' }); if (!m.ok) return null;
     let spriteKeys = null; try { spriteKeys = Object.keys(await m.json()); } catch { return null; } // v59：給 validBuild 檢查建築／火箭圖都在
     return { ...cfg, id, label: s.label, base, manifest, spriteKeys };
+  } catch { return null; }
+}
+/** v66 讀主題的走路路線檔（SKINS[id].walk）：主題沒有、讀不到、不是 JSON、不是物件 → null（不丟例外；呼叫端就不走路）。內容要再過 validWalk */
+export async function loadWalk(id, gameBase = './game/') {
+  const s = SKINS[id]; if (!s?.walk) return null;
+  try {
+    const r = await fetch(gameBase + s.walk, { cache: 'no-cache' }); if (!r.ok) return null;
+    const w = await r.json(); return w && typeof w === 'object' && !Array.isArray(w) ? w : null;
   } catch { return null; }
 }
 /** 把主題套到契約（只改這次載入的物件，不動檔案）：圖片資料夾、標題、配色、朋友名字、圖鑑標題 */
@@ -70,9 +78,22 @@ export function validMap(map, contract, allResidents = Object.keys(contract.art2
   for (const k of people) if (!pt(map.residentAt?.[k], W, H)) E('residentAt.' + k);
   if (!pt(map.reward?.to, W, H) || !pt(map.reward?.steamAt, W, H)) E('reward');
   if (!pt(map.bossAt, W, H)) E('bossAt'); if (!pt(map.questAt, W, H)) E('questAt');
-  const wk = map.walk;
-  if (!wk || typeof wk.nodes !== 'object') E('walk.nodes');
-  else {
+  errors.push(...validWalk(map.walk, { size: [W, H], lessons: [...lessons], people: [...people] }).errors); // v66：走路那一段搬到 validWalk（格式正確的設定，檢查項目和訊息都和以前一樣）
+  return { ok: !errors.length, errors };
+}
+const isObj = v => v != null && typeof v === 'object' && !Array.isArray(v);
+/**
+ * v66 走路路線的驗證（寬版地圖的 map.walk 和甜點的路線檔 walk.json 共用）。不會丟例外：格式壞掉回 { ok:false, errors }。
+ * size＝[寬, 高]（地圖尺寸）；lessons＝要有站位的課號；people＝要有家節點的朋友；guide＝導遊代號（可省略）。
+ * 另外幾條（有寫才檢查）：walk.hintSide＝{ 課號: 'left'|'right' }；walk.size 要等於 size；walk.noWalk（不走路的朋友）不用有 residentNode、不能是導遊、不能同時出現在 residentNode。
+ */
+export function validWalk(wk, { size, lessons = [], people = [], guide = null } = {}) {
+  const errors = [], E = m => errors.push(m);
+  try {
+    const [W, H] = Array.isArray(size) ? size : [];
+    if (!(Number.isFinite(W) && W > 0 && Number.isFinite(H) && H > 0)) return { ok: false, errors: ['walk：size 要兩個正數'] };
+    if (!isObj(wk) || !isObj(wk.nodes)) { E('walk.nodes'); return { ok: false, errors }; }
+    if (wk.size != null && !(Array.isArray(wk.size) && wk.size.length === 2 && wk.size[0] === W && wk.size[1] === H)) E('walk.size 和地圖尺寸不合');
     const ids = Object.keys(wk.nodes);
     for (const id of ids) if (!pt(wk.nodes[id], W, H)) E('walk.nodes.' + id);
     if (!Array.isArray(wk.edges) || !wk.edges.length) E('walk.edges');
@@ -82,9 +103,16 @@ export function validMap(map, contract, allResidents = Object.keys(contract.art2
       while (q.length) for (const n of adj.get(q.shift())) if (!seen.has(n)) { seen.add(n); q.push(n); }
       if (seen.size !== ids.length) E('walk 不連通');
     }
-    for (const l of lessons) { if (!(wk.pinNode?.[l] in (wk.nodes ?? {}))) E('walk.pinNode.' + l); if (!pt(wk.guideStand?.[l], W, H)) E('walk.guideStand.' + l); }
-    for (const k of people) if (!(wk.residentNode?.[k] in (wk.nodes ?? {}))) E('walk.residentNode.' + k);
-  }
+    // 沒寫 pinNode／guideStand／residentNode（undefined）＝以前的行為：每一課、每個人各記一筆。寫了但不是物件（null、陣列、字串）＝格式壞掉，記一筆、跳過後面
+    const part = k => wk[k] === undefined ? {} : isObj(wk[k]) ? wk[k] : (E('walk.' + k), null);
+    const pinNode = part('pinNode'), guideStand = part('guideStand'), residentNode = part('residentNode');
+    if (wk.hintSide !== undefined && !(isObj(wk.hintSide) && Object.values(wk.hintSide).every(v => v === 'left' || v === 'right'))) E('walk.hintSide'); // v66 每一課氣泡放導遊的左邊或右邊（可省略）
+    let noWalk = [];
+    if (wk.noWalk !== undefined) { if (Array.isArray(wk.noWalk) && wk.noWalk.every(k => typeof k === 'string')) noWalk = wk.noWalk; else E('walk.noWalk'); }
+    for (const l of lessons) { if (pinNode && !(typeof pinNode[l] === 'string' && pinNode[l] in wk.nodes)) E('walk.pinNode.' + l); if (guideStand && !pt(guideStand[l], W, H)) E('walk.guideStand.' + l); }
+    if (residentNode) for (const k of people) { if (noWalk.includes(k)) continue; if (!(typeof residentNode[k] === 'string' && residentNode[k] in wk.nodes)) E('walk.residentNode.' + k); }
+    for (const k of noWalk) { if (guide != null && k === guide) E('walk.noWalk 不能有導遊'); if (residentNode && k in residentNode) E('walk.noWalk 和 residentNode 重複 ' + k); }
+  } catch (e) { return { ok: false, errors: ['walk 結構錯誤：' + (e?.message ?? e)] }; }
   return { ok: !errors.length, errors };
 }
 export function graphOf(walk) {

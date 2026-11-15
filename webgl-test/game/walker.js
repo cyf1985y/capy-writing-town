@@ -2,7 +2,7 @@
 // - 路線圖＝MAP.walk（節點＋連線）。朋友站在 residentAt，導遊站在 guideStand[課]；站的位置和節點之間是「接駁線」。
 // - 走路只走「接駁線＋路線圖的邊」；導遊改路時先走完目前這一段，再從那一端重新找路。
 // - Walker 掛在 lobby.animators（RAF 每格呼叫），所以大廳暫停時自動停。
-import { graphOf } from './skin.js?v=65';
+import { graphOf } from './skin.js?v=66';
 
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 /** 最短節點序列（BFS）；from === to 回傳 [from]；不連通回傳 null */
@@ -17,13 +17,16 @@ export function bfs(adj, from, to) {
 }
 
 export class Walker {
-  /** opts：town、lobby、townFx、map（MAP）、guide（導遊代號）、reduced（不要動畫）、stroll（散步間隔秒數 [最短, 最長]）、log */
+  /** opts：town、lobby、townFx、map（{ walk, residentAt }）、guide（導遊代號）、reduced（不要動畫）、stroll（散步間隔秒數 [最短, 最長]；null＝不自動散步，v66）、log。
+   *  walk.noWalk（v66）＝不走路的朋友：完全不管它（不加 t2-walkmode、沒有狀態），和沒有 Walker 時一樣 */
   constructor({ town, lobby, townFx, map, guide, reduced = false, stroll = [8, 16], log = () => {} }) {
     Object.assign(this, { town, lobby, townFx, map, guide, reduced, strollRange: stroll, log });
     this.walk = map.walk; this.nodes = map.walk.nodes; this.adj = graphOf(map.walk);
     this.speed = 0.09 * town.W; // 插畫 px／秒
     this.st = new Map(); // name → { anchor, route, idx, from, onArrive, rest }
+    const noWalk = new Set(map.walk.noWalk ?? []);
     for (const c of town.chars.values()) {
+      if (noWalk.has(c.name)) continue; // v66 不走路的朋友
       c.el.classList.add('t2-walkmode'); c.el.classList.remove('t2-front'); town.place(c.name, c.at); /* v61：一開始大家都站在站位上＝照舊在標記後面（t2-front 只給在路上的角色） */
       this.st.set(c.name, { anchor: { kind: 'stand', node: map.walk.residentNode[c.name], p: c.at }, route: null, idx: 0, rest: 0 });
     }
@@ -31,7 +34,7 @@ export class Walker {
     this._tick = dt => { this.step(dt); };
     lobby.animators.add(this._tick);
   }
-  _nextStroll() { const [a, b] = this.strollRange; return a + Math.random() * (b - a); }
+  _nextStroll() { if (!this.strollRange) return Infinity; const [a, b] = this.strollRange; return a + Math.random() * (b - a); } // v66 strollRange＝null：不自動散步
   isWalking(name) { return !!this.st.get(name)?.route; }
   /** 路徑點：{ p, node, stand }；stand＝站的位置（不在路線圖上），node＝它接到的節點 */
   _plan(anchor, target) {
@@ -71,13 +74,13 @@ export class Walker {
     const s = this.st.get(name), c = this.town.chars.get(name); if (!s?.route) return false;
     const b = s.route[s.idx], a = s.prevWp ?? { p: s.from, node: b.node };
     s.anchor = { kind: 'seg', a, b }; s.route = null; s.rest = 4 + Math.random() * 6;
-    c.el.classList.remove('walking'); c.fig.classList.remove('flip'); return true;
+    c.el.classList.remove('walking'); this.town.setFlip(name, false); return true;
   }
   _arrive(name, wp, silent = false) {
     const s = this.st.get(name), c = this.town.chars.get(name);
     c.el.classList.toggle('t2-front', !wp.stand); /* v61：停在路上（節點）＝標記前面；回到站位（家、導遊站位）＝照舊在標記後面 */
     this.town.place(name, wp.p); s.anchor = wp.stand ? { kind: 'stand', node: wp.node, p: wp.p } : { kind: 'node', id: wp.node };
-    s.route = null; s.prevWp = null; c.el.classList.remove('walking'); c.fig.classList.remove('flip');
+    s.route = null; s.prevWp = null; c.el.classList.remove('walking'); this.town.setFlip(name, false);
     if (name === this.guide) this.townFx.refreshHintSide?.();
     const cb = s.onArrive; s.onArrive = null; if (!silent) cb?.();
   }
@@ -88,6 +91,8 @@ export class Walker {
     if (instant || this.reduced) { this.put(this.guide, target); return true; }
     this.lastGuide = l; return this.go(this.guide, target);
   }
+  /** v66 導遊現在是不是站在第 lesson 課的站位上（沒在走路）。氣泡要不要放旁邊（walk.hintSide）看這個 */
+  guideAtStand(lesson) { const s = this.st.get(this.guide), p = this.walk.guideStand[String(lesson)]; return !!(s && p && !s.route && s.anchor.kind === 'stand' && s.anchor.p && dist(s.anchor.p, p) < 1); }
   /** 每格：走路中的角色前進；散步排程 */
   step(dt) {
     for (const [name, s] of this.st) {
@@ -101,20 +106,20 @@ export class Walker {
           this.town.place(name, wp.p); s.idx++;
         } else {
           const k = left / d, nx = c.at[0] + (wp.p[0] - c.at[0]) * k, ny = c.at[1] + (wp.p[1] - c.at[1]) * k;
-          c.fig.classList.toggle('flip', wp.p[0] < c.at[0] - 0.5); this.town.place(name, [nx, ny]); left = 0;
+          this.town.setFlip(name, wp.p[0] < c.at[0] - 0.5); /* v66：翻面交給 town（配件要跟著鏡射） */ this.town.place(name, [nx, ny]); left = 0;
         }
       }
       if (name === this.guide) this.townFx.refreshHintSide?.();
       this.paths.length > 400 && this.paths.shift(); this.paths.push([name, Math.round(c.at[0]), Math.round(c.at[1])]);
     }
-    if (this.reduced) return;
+    if (this.reduced || !this.strollRange) return; // v66 strollRange＝null：不排散步（strollOnce() 仍可手動呼叫）
     this.strollT -= dt; if (this.strollT > 0) return; this.strollT = this._nextStroll();
     this.strollOnce();
   }
   /** 挑一位朋友散步（可以直接呼叫，測試用） */
   strollOnce() {
     if (this.lobby.mode !== 'active' || this.townFx.busy || this.townFx.camBusy || document.hidden) return null;
-    const ok = [...this.town.chars.values()].filter(c => c.name !== this.guide && this.townFx._visible(c) && c.pose === 'idle' && !this.st.get(c.name).route && this.st.get(c.name).rest <= 0 && !c.el.classList.contains('talking'));
+    const ok = [...this.town.chars.values()].filter(c => c.name !== this.guide && this.st.has(c.name) && this.townFx._visible(c) && c.pose === 'idle' && !this.st.get(c.name).route && this.st.get(c.name).rest <= 0 && !c.el.classList.contains('talking'));
     if (!ok.length) return null;
     const c = ok[Math.floor(Math.random() * ok.length)], s = this.st.get(c.name), home = this.walk.residentNode[c.name];
     let target;
@@ -131,7 +136,7 @@ export class Walker {
   /** 給測試：路線圖上所有線段（含接駁線） */
   segments() {
     const segs = this.walk.edges.map(([a, b]) => [this.nodes[a], this.nodes[b], 'edge']);
-    for (const [k, n] of Object.entries(this.walk.residentNode)) if (this.map.residentAt[k]) segs.push([this.map.residentAt[k], this.nodes[n], 'link']);
+    for (const [k, n] of Object.entries(this.walk.residentNode)) if (this.map.residentAt[k] && this.nodes[n]) segs.push([this.map.residentAt[k], this.nodes[n], 'link']);
     for (const [l, n] of Object.entries(this.walk.pinNode)) segs.push([this.walk.guideStand[l], this.nodes[n], 'link']);
     return segs;
   }
