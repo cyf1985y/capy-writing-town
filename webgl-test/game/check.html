@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>家長核對頁 · 甜點寫字樂園</title>
+<title>家長核對頁 · 小一寫字樂園</title>
 <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png">
 <style>
 /* v14 家長核對頁：把 AI 產生、報告標 pending 的資料一項一項給家長確認，結果存在這台裝置並可匯出 */
@@ -63,15 +63,15 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 <div class="list" id="list"></div>
 <script type="module">
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { zhuyinHTML, wordHTML } from './writing-panel.js?v=66';
-import { isApp, shareTextFile, bindExternalLinks } from './app-env.js?v=66'; // v54 App 版
-import { parentGate, gateValid } from './parent-gate.js?v=66';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=67';
+import { isApp, shareTextFile, bindExternalLinks } from './app-env.js?v=67'; // v54 App 版
+import { parentGate, gateValid } from './parent-gate.js?v=67';
 const KEY = 'capy_check_v1', $ = s => document.querySelector(s);
 const get = async u => { const r = await fetch(u, { cache: 'no-cache' }); if (!r.ok) throw new Error(u + ' HTTP ' + r.status); return r.json(); };
-const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=66'), get('./stroke_names.json?v=66'), get('./zhuyin.json?v=66'), get('./parts_game.json?v=66')]);
+const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=67'), get('./stroke_names.json?v=67'), get('./zhuyin.json?v=67'), get('./parts_game.json?v=67')]);
 // v53：季節小考的字、守門員的部件題、朋友台詞（讀不到就不出現那一頁，其他照常）
 const opt = u => get(u).catch(() => null);
-const [SEASONS, BPARTS, EXTRAS, BSTROKES] = await Promise.all([opt('./seasons.json?v=66'), opt('./boss_parts.json?v=66'), opt('./extras.json?v=66'), opt('./strokes/strokes.json?v=66')]); // v57 基本筆畫
+const [SEASONS, BPARTS, EXTRAS, BSTROKES] = await Promise.all([opt('./seasons.json?v=67'), opt('./boss_parts.json?v=67'), opt('./extras.json?v=67'), opt('./strokes/strokes.json?v=67')]); // v57 基本筆畫
 let state = {}; try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { state = {}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { $('#msg').textContent = '無法儲存（私密瀏覽？）'; } };
 const dataUrl = ch => (TW.chars[ch] ? '../vendor-v2/hanzi-writer/data-tw/' : '../vendor-v2/hanzi-writer/data/') + encodeURIComponent(ch) + '.json';
@@ -193,7 +193,7 @@ $('#list').addEventListener('input', e => { const box = e.target.closest('.verdi
 $('#exportBtn').addEventListener('click', async () => {
   const summary = Object.fromEntries(TABS.map(t => { const c = counts(t), ng = t.items.filter(i => state[i.id]?.v === 'ng').length; return [t.key, { total: c.n, checked: c.done, ng }]; }));
   const obj = { format: 'capy-check', version: 1, exportedAt: new Date().toISOString(), summary, results: state };
-  const name = `甜點寫字核對結果_${obj.exportedAt.slice(0, 10)}.json`, n = Object.values(summary).map(s => s.checked).reduce((a, b) => a + b, 0);
+  const name = `小一寫字核對結果_${obj.exportedAt.slice(0, 10)}.json`, n = Object.values(summary).map(s => s.checked).reduce((a, b) => a + b, 0);
   if (isApp() && !gateValid() && !(await parentGate({ reason: 'check-export' }))) return; // v54：App 裡匯出前確認是大人（核對頁直接打開時）
   let r; try { r = await shareTextFile(name, JSON.stringify(obj, null, 1)); } catch (err) { $('#msg').textContent = '匯出失敗：' + (err?.message || err); return; }
   $('#msg').textContent = r.via === 'cancel' ? '已取消。' : r.via === 'unavailable' ? '⚠️ App 裡現在不能存檔案，請截圖回報。' : `${r.via === 'share' ? '已分享' : '已下載'} ${name}（${n} 項已核對）`;

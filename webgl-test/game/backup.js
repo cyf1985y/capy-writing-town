@@ -9,7 +9,7 @@ export const BACKUP_FORMAT = 'capy-writing-backup';
 const wrap = req => new Promise((res, rej) => { req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); });
 const done = tx => new Promise((res, rej) => { tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error || new Error('IDB_TX_ABORT')); });
 
-import { shareTextFile } from './app-env.js?v=66';
+import { shareTextFile } from './app-env.js?v=67';
 export async function requestPersist() {
   const st = navigator.storage;
   const info = { supported: !!st?.persist, persisted: false, standalone: matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true, usage: null };
@@ -54,5 +54,5 @@ export async function importBackup(db, obj, { profileId, localKeys = [], localMe
 /** 存成檔案：iOS 有分享面板就用（可存到「檔案」或 AirDrop），否則一般下載 */
 export async function saveBackupFile(obj, log) {
   // v54：網站版行為不變；App 裡改用原生存檔＋分享（外掛拿不到時回傳 unavailable，不假裝成功）
-  return shareTextFile(`甜點寫字備份_${obj.exportedAt.slice(0, 10)}.json`, JSON.stringify(obj), { log });
+  return shareTextFile(`小一寫字備份_${obj.exportedAt.slice(0, 10)}.json`, JSON.stringify(obj), { log });
 }
