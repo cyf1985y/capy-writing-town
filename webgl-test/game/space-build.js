@@ -71,7 +71,22 @@ export function buildState({ total, build, data }) {
   return { total, spent, balance, levels, rockets, current: cur ? cur.index : null, planets: rockets.filter(r => r.done).map(r => r.index), next };
 }
 
-/** 解析購買代號 → { kind:'b', index, lv, price } 或 { kind:'r', index, k, price }；不合格回傳 null */
+/**
+ * v68 地圖上的「下一個目標」（設計 docs/plans/2026-11-15-dino-walk-buttons-boss-goal.md §D）：
+ * 在「還能升級的建築」和「目前這枚火箭的下一個零件（沒被鎖住）」裡，挑還差最少星星的；一樣多挑便宜的；再一樣照建築順序、建築先於火箭。
+ * st＝buildState() 的結果。回傳 { kind:'b', index, name, level, … } 或 { kind:'r', index, name, part, … }，共同欄位 itemId、price、balance、need、canBuy；都買完＝null
+ */
+export function nextGoal(st, build) {
+  const c = [];
+  st.next.buildings.forEach((o, i) => { if (o) c.push({ kind: 'b', index: i, name: build.buildings[i].name, level: st.levels[i] + 1, itemId: o.itemId, price: o.price, need: o.need, canBuy: o.canBuy }); });
+  const r = st.next.rocket;
+  if (r && !r.locked) c.push({ kind: 'r', index: r.rocket, name: build.rockets[r.rocket].name, part: build.rockets[r.rocket].parts[r.part], itemId: r.itemId, price: r.price, need: r.need, canBuy: r.canBuy });
+  if (!c.length) return null;
+  let best = c[0]; for (const x of c) if (x.need < best.need || (x.need === best.need && x.price < best.price)) best = x; // 只在「嚴格更好」時換＝平手留前面的
+  return { ...best, balance: st.balance };
+}
+
+/** 解析購買代號 →{ kind:'b', index, lv, price } 或 { kind:'r', index, k, price }；不合格回傳 null */
 export function parseItem(build, itemId) {
   const m = /^space:(b|r):([a-z0-9]+):(\d)$/.exec(itemId ?? ''); if (!m) return null;
   const n = +m[3];

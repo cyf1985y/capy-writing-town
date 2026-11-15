@@ -4,9 +4,9 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=67';
-import { placeAccessory } from './shop.js?v=67';
-import { OUTFIT_POSES, variantKey, frameStyle, variantOf } from './outfit.js?v=67';
+import { Album } from './album.js?v=68';
+import { placeAccessory } from './shop.js?v=68';
+import { OUTFIT_POSES, variantKey, frameStyle, variantOf } from './outfit.js?v=68';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;box-shadow:0 4px 14px rgba(0,0,0,.15);touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -118,6 +118,13 @@ const CSS = `
 @keyframes t2-bossGlow{50%{box-shadow:0 0 0 3px #fff,0 0 16px 6px rgba(242,193,78,.9)}}
 .t2-boss.done{box-shadow:0 0 0 3px #FFD54A,0 0 12px 4px rgba(255,179,0,.7)}
 @media (prefers-reduced-motion:reduce){.t2-boss.ready,.t2-boss.ready b{animation:none}}
+/* v68 守門員還不能挑戰：能量護罩；只差 1～2 個字：輕輕晃（class 用守門員專用的名字——.t2-pin.locked 是「課次沒開放」的樣式，會把「守」換成鎖；設計 2026-11-15-dino-walk-buttons-boss-goal.md C） */
+.t2-boss.boss-shield::after{content:'';position:absolute;inset:-10%;border-radius:50%;box-sizing:border-box;background:radial-gradient(circle,rgba(120,220,255,0) 46%,rgba(120,220,255,.7) 84%,rgba(160,235,255,.4) 100%);border:3px solid rgba(170,238,255,.95);box-shadow:0 0 8px 1px rgba(120,220,255,.6);pointer-events:none;animation:t2-shield 3s ease-in-out infinite}
+@keyframes t2-shield{0%,100%{opacity:.55}50%{opacity:.9}}
+.t2-boss.boss-near{animation:t2-bossWobble 2.4s ease-in-out infinite}
+.t2-boss.boss-near::after{animation-duration:1.2s;border-color:#fff;box-shadow:0 0 10px 2px rgba(140,230,255,.8)}
+@keyframes t2-bossWobble{0%,68%,100%{transform:translate(-50%,-50%) rotate(0)}75%{transform:translate(-50%,-50%) rotate(-6deg)}84%{transform:translate(-50%,-50%) rotate(6deg)}92%{transform:translate(-50%,-50%) rotate(-3deg)}}
+@media (prefers-reduced-motion:reduce){.t2-boss.boss-shield::after{animation:none;opacity:.75}.t2-boss.boss-near{animation:none}}
 /* v52 季節層：色調（半透明漸層，不用 filter）在背景上、雲和朋友下；粒子在朋友上、標記下。粒子只動 transform／opacity */
 .t2-season-tint{position:absolute;inset:0;z-index:1;pointer-events:none}
 .t2-season-fx{position:absolute;inset:0;z-index:120;pointer-events:none;overflow:hidden}
@@ -144,6 +151,21 @@ const CSS = `
 .t2-quest.done{animation:none;box-shadow:0 0 0 3px #8fd18f,0 4px 10px rgba(0,0,0,.3)}
 @keyframes t2-questGlow{50%{box-shadow:0 0 0 3px #fff,0 0 16px 6px rgba(255,143,163,.85)}}
 @media (prefers-reduced-motion:reduce){.t2-quest{animation:none}}
+/* v68 太空：「下一個目標」牌子（位置由 Town2D._placeGoal() 算；--tip＝尖角離牌子左邊幾 px，指著目標建築） */
+.t2-goal{box-sizing:border-box;width:calc(5em + 20px);position:absolute;z-index:140;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:3px;margin:0;padding:3px 0 5px;border:2px solid #4C7FD9;border-radius:12px;background:#fff;color:#2B3A67;font:900 clamp(11px,1.25vw,16px)/1.25 system-ui,"Noto Sans TC",sans-serif;white-space:nowrap;box-shadow:0 3px 8px rgba(20,30,70,.4);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:opacity .25s}
+.t2-goal::before{content:'';position:absolute;inset:-9px -6px -12px} /* 手指好按一點 */
+.t2-goal::after{content:'';position:absolute;left:var(--tip,50%);top:100%;transform:translateX(-50%);border:7px solid transparent;border-top-color:#4C7FD9}
+.t2-goal .bar{display:block;width:4.6em;height:.5em;border-radius:99px;background:#DCE6FA;overflow:hidden}
+.t2-goal .bar i{display:block;height:100%;width:var(--p,0%);border-radius:99px;background:#FFB300}
+.t2-goal.can{border-color:#E59A00;background:#FFE08A;color:#6B3F00;animation:t2-goalHop 1.4s ease-in-out infinite}
+.t2-goal.can::after{border-top-color:#E59A00}
+.t2-goal.notip::after{display:none}
+.t2-goal.compact .bar{display:none}
+.t2-goal[hidden]{display:none}
+.t2-goal.can .bar{display:none}
+@keyframes t2-goalHop{0%,60%,100%{transform:translate(-50%,-100%)}30%{transform:translate(-50%,-114%)}}
+.t2-pins-hidden .t2-goal{opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.t2-goal.can{animation:none}}
 /* v50 朋友的對話氣泡（每個字附注音；注音樣式同寫字面板的 .zy，這裡另存一份，因為面板的樣式要開過面板才有） */
 .t2-char.talking .t2-say{opacity:0;pointer-events:none}
 .t2-talk{position:absolute;z-index:180;transform:translate(-50%,-100%);margin-top:-1.4%;display:flex;align-items:center;gap:.15em;font:800 clamp(18px,2.6vw,28px)/1.2 system-ui,"Noto Sans TC",sans-serif;color:#5B3A4A;background:#fff;border:3px solid #F48FB1;border-radius:16px;padding:6px 12px;white-space:nowrap;box-shadow:0 4px 10px rgba(91,58,74,.3);pointer-events:none;animation:t2-talkIn .18s ease-out}
@@ -282,13 +304,13 @@ export class Town2D {
   }
   /** 頁面版面寬度（px）；v59 寬版地圖：resize(畫面寬, 畫面高)，地圖高＝畫面高、可以左右平移（pan） */
   resize(w, h = null) {
-    if (h == null) { this.width = w; this.view.style.width = w + 'px'; this.view.style.height = Math.round(w * this.aspect) + 'px'; return; }
+    if (h == null) { this.width = w; this.view.style.width = w + 'px'; this.view.style.height = Math.round(w * this.aspect) + 'px'; this._placeGoal?.(); return; }
     const ratio = this.maxPan > 0 ? this.pan / this.maxPan : null, mw = Math.round(h * this.W / this.H);
     this.panMode = true; this.view.classList.add('t2-pan');
     Object.assign(this, { width: mw, vw: w, vh: h, maxPan: Math.max(0, mw - w) });
     this.view.style.width = w + 'px'; this.view.style.height = h + 'px'; this.world.style.width = mw + 'px'; this.world.style.height = h + 'px';
     this.pan = ratio != null ? ratio * this.maxPan : this.panFocus ? this._panFor(this.panFocus()) : 0;
-    this.pan = Math.min(this.maxPan, Math.max(0, this.pan)); this.applyPan(false);
+    this.pan = Math.min(this.maxPan, Math.max(0, this.pan)); this.applyPan(false); this._placeGoal?.(); // v68：牌子的位置跟著畫面大小重算
   }
   /** 讓插畫 x 座標在畫面中間的 pan 值 */
   _panFor(x) { return Math.min(this.maxPan, Math.max(0, x * this.width / this.W - this.vw / 2)); }
@@ -322,6 +344,64 @@ export class Town2D {
     const m = this.sprites[sprite]; if (!m) return; const h = w * m.h / m.w;
     if (im.dataset.src !== sprite) { im.src = this.url(sprite); im.dataset.src = sprite; }
     im.style.left = ((at[0] - cx * w) / this.W * 100) + '%'; im.style.top = ((at[1] - by * h) / this.H * 100) + '%'; im.style.width = (w / this.W * 100) + '%';
+    const vis = m.vis ?? [0, 0, 1, 1], left = at[0] - cx * w; // v68：這張圖「看得到的部分」在插畫上的位置（中心 x、屋頂 y、寬），「下一個目標」牌子用。vis＝sprites.json 的 [左,上,右,下] 比例（make_vis.py）
+    im._box = { x: left + (vis[0] + vis[2]) / 2 * w, top: at[1] - by * h + vis[1] * h, w: (vis[2] - vis[0]) * w };
+  }
+  /**
+   * v68 太空：「下一個目標」牌子（設計 2026-11-15-dino-walk-buttons-boss-goal §D）。null＝不顯示。
+   * g＝{ kind:'b'|'r', index（建築編號；火箭＝發射台的編號）, text, ratio（0～1 進度條）, canBuy, label（給報讀軟體）, avoid（導遊站的位置 [x,y]，可省略） }
+   * onTap(g)＝點牌子；傳一次就記住。位置見 _placeGoal()。
+   */
+  setGoal(g, onTap) {
+    if (onTap) this._goalTap = onTap;
+    const im = g && this.builds ? (g.kind === 'r' && this.rocketEl && !this.rocketEl.hidden ? this.rocketEl : this.buildEls[g.index]) : null;
+    if (!im?._box) { this.goalEl?.remove(); this.goalEl = null; this.goalState = null; this._goalIm = null; return null; }
+    let b = this.goalEl;
+    if (!b) {
+      b = document.createElement('button'); b.type = 'button'; b.className = 't2-goal'; b.innerHTML = '<span class="txt"></span><i class="bar" aria-hidden="true"><i></i></i>';
+      b.addEventListener('pointerdown', e => e.stopPropagation()); // 不要變成拖地圖
+      b.addEventListener('click', e => { e.stopPropagation(); this._goalTap?.(this.goalState); });
+      this.world.append(b); this.goalEl = b;
+    }
+    b.classList.toggle('can', !!g.canBuy); b.querySelector('.txt').textContent = g.text; b.style.setProperty('--p', (Math.min(1, Math.max(0, g.ratio ?? 0)) * 100).toFixed(1) + '%');
+    b.title = g.label ?? g.text; b.setAttribute('aria-label', b.title);
+    this.goalState = { ...g }; this._goalIm = im; this._placeGoal(); return b;
+  }
+  /**
+   * 牌子的位置（用畫面 px 算，resize 後重算）：
+   * 1. 預設：目標那張圖「看得到的屋頂」正上方。
+   * 2. 和課次標記（含守門員、季節小考節點）重疊（例如矮矮的太空橋）→ 往上抬到標記上面。
+   * 3. 和導遊（含頭上的「下一個字」氣泡）重疊 → 往遠離導遊的那一側挪（尖角還是指著這棟）；挪了會超出地圖或離這棟太遠 → 改成往上抬到氣泡上面；
+   *    上面放不下 → 精簡版（沒有尖角和進度條）；還是放不下 → 不顯示（mode 'hidden'；很窄的直放手機、目標就在導遊旁邊時）。
+   * 氣泡的大小是照它的 CSS 估的（寬 3.5em＋30px、高約 4em＋15px，字級 clamp(13px,1.5vw,20px)），測試用真的氣泡量。
+   */
+  _placeGoal() {
+    const b = this.goalEl, g = this.goalState, box = this._goalIm?._box; if (!b || !g || !box || !this.width) return;
+    b.hidden = false; b.classList.remove('notip', 'compact'); // 先回到完整的樣子再量大小
+    const s = this.width / this.W, Wpx = this.width, Hpx = this.H * s, tw = b.offsetWidth, ht = tw / 2, TIP = 7, clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+    const bx = box.x * s, bw = box.w * s, vw = innerWidth / 100; let th = b.offsetHeight, cx = clamp(bx, ht + 2, Wpx - ht - 2), bottom = box.top * s - TIP - 3, mode = 'roof', tip = true;
+    const overPins = () => { for (const p of this.world.querySelectorAll('.t2-pin')) { // 標記的 offsetLeft／offsetTop＝中心（不受鏡頭縮放影響）
+      const on = p.classList.contains('active'), r = p.offsetWidth / 2 * (on ? 1.15 : 1), top = p.offsetTop - r - p.offsetWidth * 0.1 /* 左上角的課號圓點 */ - (on ? clamp(1.8 * vw, 16, 26) * 1.6 : 0) /* 上面跳動的箭頭 */, low = p.offsetTop + r + clamp(1.05 * vw, 11, 14) * 2.2; // 下面的「0/11」小字
+      if (cx + ht > p.offsetLeft - r * 1.1 && cx - ht < p.offsetLeft + r * 1.1 && bottom + TIP > top && bottom - th < low) { bottom = top - TIP - 2; if (mode === 'roof') mode = 'above-pin'; }
+    } };
+    // 導遊和他頭上的氣泡：x 以氣泡的寬度算，y 從氣泡上緣（st，含上下浮動）到導遊的腳（feet）
+    const A = Array.isArray(g.avoid) ? (() => { const em = clamp(1.5 * vw, 13, 20); return { gx: g.avoid[0] * s, hb: 1.75 * em + 15 + 5, st: (g.avoid[1] - this.H * this.cfg.characterHeight * 1.04) * s - (4.04 * em + 14.5) - 8, feet: g.avoid[1] * s }; })() : null;
+    const hitsGuide = () => !!A && cx + ht > A.gx - A.hb && cx - ht < A.gx + A.hb && bottom + (tip ? TIP : 0) > A.st && bottom - th < A.feet;
+    overPins();
+    if (hitsGuide()) {
+      const side = A.gx >= bx ? A.gx - A.hb - ht : A.gx + A.hb + ht;
+      if (side - ht >= 2 && side + ht <= Wpx - 2 && Math.abs(side - bx) - (ht - 14) <= bw / 2) { cx = side; mode = 'side'; overPins(); }
+      else { // 往上抬到氣泡上面：放得下就照原樣；放不下就改成精簡版（沒有尖角、沒有進度條）；再放不下就不顯示（很窄的直放手機）
+        mode = 'lift';
+        if (A.st - TIP - 2 < th + 2) { tip = false; b.classList.add('compact'); th = b.offsetHeight; }
+        bottom = Math.min(bottom, A.st - (tip ? TIP : 0) - 2);
+      }
+    }
+    bottom = Math.max(th + 2, bottom); // 不超出地圖上緣
+    if (hitsGuide()) mode = 'hidden';  // 被上緣推回來又壓到氣泡＝真的沒有位置
+    b.hidden = mode === 'hidden'; b.classList.toggle('notip', !tip);
+    b.style.left = (cx / Wpx * 100).toFixed(3) + '%'; b.style.top = (bottom / Hpx * 100).toFixed(3) + '%';
+    b.style.setProperty('--tip', clamp(bx - (cx - ht), 14, tw - 14).toFixed(1) + 'px'); g.mode = mode;
   }
 }
 
@@ -385,7 +465,7 @@ export class TownFx2D {
     v.addEventListener('pointerdown', e => {
       t.dragged = false;
       if (!t.panMode || t.maxPan <= 0 || this.camBusy || this.lobby.mode !== 'active' || t.zoom.s !== 1) return;
-      if (e.target.closest?.('.t2-char,.t2-pin,.t2-say,.t2-boss,.t2-quest,.t2-edge')) return;
+      if (e.target.closest?.('.t2-char,.t2-pin,.t2-say,.t2-boss,.t2-quest,.t2-edge,.t2-goal')) return;
       drag = { id: e.pointerId, x: e.clientX, y: e.clientY, pan: t.pan, on: false };
     });
     v.addEventListener('pointermove', e => {
@@ -604,6 +684,7 @@ export class TownFx2D {
   setBoss(st, title = '守門員') {
     const b = this.boss; if (!b || !st) return;
     b.classList.toggle('ready', st.ready); b.classList.toggle('done', st.done);
+    const shield = !st.ready && !st.done; b.classList.toggle('boss-shield', shield); b.classList.toggle('boss-near', shield && st.need <= 2); /* v68 */
     b.querySelector('small').textContent = st.done ? `👑 ${st.cleared}/${st.stages}` : st.ready ? `${st.cleared}/${st.stages} 挑戰！` : `再學 ${st.need} 字`;
     b.title = st.done ? `${title}：全部 ${st.stages} 關都過了（可以再練習）` : st.ready ? `${title}：可以挑戰第 ${st.next} 關（已過 ${st.cleared}/${st.stages}）` : `${title}：再學 ${st.need} 個字就能挑戰第 ${st.next} 關（已過 ${st.cleared}/${st.stages}）`;
     b.setAttribute('aria-label', b.title); this.bossState = st;

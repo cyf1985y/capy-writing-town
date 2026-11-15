@@ -1,8 +1,8 @@
 // v59 太空主題「太空基地」面板：🏗️ 基地（8 棟建築升級）、🚀 火箭（組零件、發射、到達星球）。
 // 規則都在 space-build.js；存檔是配件商店同一個 capy_shop_<profileId>（shop.js 的 loadShop／saveShop）。
 // 設計：docs/plans/2026-11-13-space-base-rocket.md §6。發射從「買到第 4 個零件」到「到達畫面關掉」整段都算面板開著（isOpen() 一直是 true）。
-import { loadShop, saveShop } from './shop.js?v=67';
-import { buildState, buyBuild } from './space-build.js?v=67';
+import { loadShop, saveShop } from './shop.js?v=68';
+import { buildState, buyBuild } from './space-build.js?v=68';
 
 const CSS = `
 .sb-overlay{position:fixed;inset:0;z-index:1000;background:rgba(20,30,52,.72);display:flex;align-items:center;justify-content:center;font:15px system-ui,"Noto Sans TC",sans-serif;color:#24324A;-webkit-user-select:none;user-select:none}
@@ -76,7 +76,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;',
 export class SpaceBuildPanel {
   /**
    * key＝商店存檔鍵；build＝theme.json 的 build；town／townFx＝大廳；url(name)＝主題圖片網址；coin＝錢包小圖網址；totals()＝{ total }
-   * onOpen／onClose（暫停／恢復大廳，onClose 整段只呼叫一次）；onLaunchStart()＝發射時讓大廳播放（resume）；onBuilt()＝存檔改了，地圖重畫
+   * onOpen／onClose（暫停／恢復大廳，onClose 整段只呼叫一次）；onLaunchStart()＝發射時讓大廳播放（resume）；onLaunchEnd()＝發射結束（v68，可省略）；onBuilt()＝存檔改了，地圖重畫
    * crew()＝到達畫面上的隊員圖網址（導遊＋2 位）；onPractice()＝「去練習寫字」
    */
   constructor(o) {
@@ -89,9 +89,10 @@ export class SpaceBuildPanel {
   isOpen() { return !!this.el; }
   launching() { return !!this.launch; }
   state() { const data = loadShop(this.key); return { data, st: buildState({ total: this.totals().total, build: this.build, data }) }; }
-  open(tab = 'base') {
+  /** v68：sel＝一打開就選到第幾棟建築（地圖上「下一個目標」牌子用；只在基地分頁有效） */
+  open(tab = 'base', { sel = null } = {}) {
     if (this.el) return false;
-    this.ui = { tab, sel: null, confirm: null, msg: '', busy: false };
+    this.ui = { tab, sel: tab === 'base' && Number.isInteger(sel) && this.build.buildings[sel] ? sel : null, confirm: null, msg: '', busy: false };
     const el = document.createElement('div'); el.className = 'sb-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', '太空基地');
     el.innerHTML = `<div class="sb-dialog"><div class="sb-head"><h2>🛰️ 太空基地</h2><div class="sb-wallet"></div><button type="button" class="sb-close" data-act="close">關閉</button></div>
       <div class="sb-tabs" role="tablist"><button type="button" role="tab" data-tab="base">🏗️ 基地</button><button type="button" role="tab" data-tab="rocket">🚀 火箭</button></div>
@@ -100,7 +101,8 @@ export class SpaceBuildPanel {
     this._key = e => { if (e.key === 'Escape' && !this.launch) this.close(); };
     document.addEventListener('keydown', this._key);
     document.body.append(el); this.el = el; this.onOpen?.(); this.render(); this.voice?.say('太空基地');
-    this.log('space build open ' + tab); return true;
+    if (this.ui.sel != null) el.querySelector('.sb-card.sel')?.scrollIntoView?.({ block: 'nearest' });
+    this.log('space build open ' + tab + (this.ui.sel != null ? ' sel=' + this.ui.sel : '')); return true;
   }
   close() {
     if (!this.el || this.launch) return;
@@ -241,7 +243,7 @@ export class SpaceBuildPanel {
     const rk = this.town.rocketEl; if (rk) { rk.style.transition = 'none'; rk.style.transform = ''; void rk.offsetWidth; rk.style.transition = ''; }
     this.town.view.classList.remove('sb-shake');
     this.pendingRedraw = false; this.onBuilt?.(); // 發射台換成目前狀態（通常是空的）
-    this.launch = null; this.lastLaunch = { index: L.index, replay: !!L.replay };
+    this.launch = null; this.lastLaunch = { index: L.index, replay: !!L.replay }; this.onLaunchEnd?.(); // v68：發射結束（launching() 已經是 false），地圖上的「下一個目標」牌子回來
     document.removeEventListener('keydown', this._key); this.el?.remove(); this.el = null;
     this.log('launch finished ' + this.build.rockets[L.index].id); this.onClose?.();
   }

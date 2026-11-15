@@ -1,7 +1,7 @@
 // v18 配件商店畫面：選朋友 → 選位置分頁 → 點配件試戴 → 用星星換（問一次）→ 戴上。買過的點一下＝戴上／拿下來。
 // 規則與存檔都在 shop.js；這裡只管畫面、語音與音效。所有字都很短，點配件會唸名稱（孩子不一定認得字）。
-import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=67';
-import { variantOf, frameStyle } from './outfit.js?v=67'; // v64 衣服＝整張角色圖的變體（kind:'outfit'），不是疊圖
+import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=68';
+import { variantOf, frameStyle } from './outfit.js?v=68'; // v64 衣服＝整張角色圖的變體（kind:'outfit'），不是疊圖
 const isOutfit = i => i?.kind === 'outfit';
 const SEASON_TAB = '__season', seasonItemId = id => 'season:' + id;
 // v64 預設分頁：目錄的 defaultSlot（accessories.json 寫 "hat"）；沒寫就照以前＝第 2 個格子（slots 加了 body 之後第 2 個會變髮夾，所以要明寫）

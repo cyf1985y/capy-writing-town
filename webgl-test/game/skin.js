@@ -3,7 +3,7 @@
 // 主題的圖放在自己的資料夾，檔名和甜點版完全相同（capy_cocoa_idle…），所以座標、配件位置都不用重對。
 export const SKINS = {
   sweet: { label: '甜點樂園', walk: 'art2d/sweet/walk.json' }, // 預設：契約裡原本的圖；v66 walk＝走路路線檔（相對於 game/；沒有就不走路）
-  dino: { label: '恐龍島', config: 'art2d/dino/theme.json' },
+  dino: { label: '恐龍島', config: 'art2d/dino/theme.json', walk: 'art2d/dino/walk.json' }, // v68 恐龍島也會走路（路線 art2d/dino/gen_walk.py 產生；設計 docs/plans/2026-11-15-dino-walk-buttons-boss-goal.md A）
   space: { label: '太空探險', config: 'art2d/space/theme.json' }, // v59 寬版地圖、會走路、蓋基地＋組火箭（設計 docs/plans/2026-11-13-space-*.md）
   _test: { label: '測試主題', config: 'art2d/_skin_test/theme.json', hidden: true }, // 只給自動測試用（?skin=_test），不出現在家長頁
 };
