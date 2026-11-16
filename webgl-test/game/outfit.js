@@ -38,3 +38,15 @@ export function variantOf(byId, outfit) {
   const id = outfit?.body; if (typeof id !== 'string' || !id) return null;
   const it = byId?.get?.(id); return it?.kind === 'outfit' && typeof it.variant === 'string' ? it.variant : null;
 }
+/**
+ * v70 戴帽子自動換成「沒毛巾」的圖（docs/plans/2026-11-16-hat-hides-towel.md）：水豚頭上的溫泉毛巾是原圖的一部分，小帽子蓋不住。
+ * 沒毛巾的圖和衣服圖放在同一份清單、同樣的外框（原圖＋pad）：沒穿衣服＝<sprite>__nt_<pose>，穿著衣服＝<sprite>__<variant>_nt_<pose>。
+ * 只有「這個外觀這個組合 4 個姿勢都有沒毛巾的圖」才換；兔子、恐龍沒有這種圖，照舊。
+ */
+export const HATLESS = 'nt';
+export const hatlessVariant = variant => (variant ? variant + '_' + HATLESS : HATLESS);
+/** 現在要畫哪一組圖（清單裡的 variant 名稱；null＝原圖）。wear＝穿著的衣服 variant 或 null；hat＝帽子格有沒有戴東西 */
+export function drawVariant(manifest, sprite, wear, hat) {
+  const w = typeof wear === 'string' && wear ? wear : null;
+  return hat && hasVariant(manifest, sprite, hatlessVariant(w)) ? hatlessVariant(w) : w;
+}

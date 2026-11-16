@@ -4,9 +4,9 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=69';
-import { placeAccessory } from './shop.js?v=69';
-import { OUTFIT_POSES, variantKey, frameStyle, variantOf } from './outfit.js?v=69';
+import { Album } from './album.js?v=70';
+import { placeAccessory } from './shop.js?v=70';
+import { OUTFIT_POSES, variantKey, frameStyle, variantOf, drawVariant } from './outfit.js?v=70';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;box-shadow:0 4px 14px rgba(0,0,0,.15);touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -239,7 +239,7 @@ export class Town2D {
       const img = document.createElement('img'); img.alt = ''; img.draggable = false; img.src = this.url(r.sprite + '_idle');
       fig.style.aspectRatio = (meta.w / meta.h).toFixed(4); /* 外框＝這個姿勢角色圖的大小（各姿勢寬度不同，換姿勢時跟著改） */
       fig.append(img); el.append(fig); world.append(el);
-      this.chars.set(name, { name, el, fig, img, sprite: r.sprite, home: r.at, zone: r.zone, pose: 'idle', outfit: null, wear: null, wearWant: null, wearSeq: 0, wearReady: Promise.resolve() }); // v64 wear＝畫面上穿的衣服、wearWant＝最後一次要求的（圖還在載時兩者不同）
+      this.chars.set(name, { name, el, fig, img, sprite: r.sprite, home: r.at, zone: r.zone, pose: 'idle', outfit: null, wear: null, wearWant: null, draw: null, drawWant: null, wearSeq: 0, wearReady: Promise.resolve() }); // v64 wear＝畫面上穿的衣服、wearWant＝最後一次要求的（圖還在載時兩者不同）
       this.place(name, r.at);
     }
     const st = this.cfg.reward.steamAt; this.steam = document.createElement('div'); this.steam.className = 't2-steam'; this.steam.innerHTML = '<i></i><i></i><i></i>';
@@ -262,7 +262,7 @@ export class Town2D {
   }
   /** 依 c.pose 和 c.wear 把圖、外框、配件一次擺好。fig 的寬高比一律取「原圖」的，所以穿衣服前後角色大小、位置、配件掛點都不變；衣服圖用絕對定位往四邊凸出去 */
   _show(c) {
-    const key = c.sprite + '_' + c.pose, m = this.sprites[key], v = c.wear ? this.outfitSprites?.[variantKey(c.sprite, c.wear, c.pose)] : null, st = c.img.style;
+    const key = c.sprite + '_' + c.pose, m = this.sprites[key], v = c.draw ? this.outfitSprites?.[variantKey(c.sprite, c.draw, c.pose)] : null, st = c.img.style; // v70 c.draw＝實際畫的那一組（衣服，或戴帽子時「沒毛巾」的那組）
     if (v) Object.assign(st, { position: 'absolute', maxWidth: 'none', ...frameStyle(m, this.outfitPad) });
     else for (const k of ['position', 'max-width', 'left', 'top', 'width', 'height']) st.removeProperty(k);
     const src = v ? this.cfg.base + v.file : this.url(key); if (c.img.getAttribute('src') !== src) c.img.src = src;
@@ -283,13 +283,20 @@ export class Town2D {
     for (const s of this.acc.catalog.slots) { const im = c.fig.querySelector(`.t2-acc[data-slot="${s}"]`); if (im) c.fig.append(im); }
     c.outfit = outfit; this._placeAcc(c);
     // v64 衣服：守衛比的是「要求」（wearWant）不是「畫面」（wear），圖還在載的時候脫掉或換別套，會先作廢進行中的載入
-    const want = variantOf(this.acc.byId, outfit);
-    if (want === c.wearWant) return;
-    c.wearWant = want; const seq = ++c.wearSeq;
-    if (want === null) { c.wear = null; this._show(c); c.wearReady = Promise.resolve(); return; }
-    c.wearReady = this._preloadOutfit(c.sprite, want)
-      .then(() => { if (seq !== c.wearSeq) return; c.wear = want; this._show(c); })   // 載完才換圖（不閃破圖）
-      .catch(e => { if (seq === c.wearSeq) { c.wearWant = c.wear; this.log?.('outfit load failed ' + c.sprite + '/' + want + ': ' + (e?.message ?? e)); } }); // 失敗：畫面不變，退回要求，之後可重試
+    // v70 戴帽子：這個外觀有「沒毛巾」的圖就畫那一組（draw），沒有就照舊（draw＝want）。wear＝穿著的衣服，draw＝實際畫的那一組圖
+    const want = variantOf(this.acc.byId, outfit), hatOn = !!(outfit?.hat && this.acc.byId.get(outfit.hat)), draw = drawVariant(this.outfitSprites, c.sprite, want, hatOn);
+    if (want === c.wearWant && draw === c.drawWant) return;
+    c.wearWant = want; c.drawWant = draw; const seq = ++c.wearSeq;
+    if (draw === null) { c.wear = null; c.draw = null; this._show(c); c.wearReady = Promise.resolve(); return; }
+    const put = d => this._preloadOutfit(c.sprite, d).then(() => { if (seq !== c.wearSeq) return; c.wear = want; c.draw = d; this._show(c); });   // 載完才換圖（不閃破圖）
+    c.wearReady = put(draw)
+      .catch(e => { // v70 沒毛巾的圖載不到：退回有毛巾的那一組（衣服照穿、帽子照戴）；drawWant 退回去，之後同一個要求會再試
+        if (draw === want) throw e;
+        this.log?.('hatless load failed ' + c.sprite + '/' + draw + ': ' + (e?.message ?? e)); if (seq !== c.wearSeq) return;
+        c.drawWant = want; if (want === null) { c.wear = null; c.draw = null; this._show(c); return; }
+        return put(want);
+      })
+      .catch(e => { if (seq === c.wearSeq) { c.wearWant = c.wear; c.drawWant = c.draw; this.log?.('outfit load failed ' + c.sprite + '/' + want + ': ' + (e?.message ?? e)); } }); // 失敗：畫面不變，退回要求，之後可重試
   }
   _placeAcc(c) {
     if (!this.acc) return;

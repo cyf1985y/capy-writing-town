@@ -1,9 +1,9 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { isApp, bindExternalLinks } from './app-env.js?v=69'; // v54 App 版
-import { starsOf } from './stars.js?v=69';
-import { LEVELS } from './writing-panel.js?v=69';
-import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=69';
+import { isApp, bindExternalLinks } from './app-env.js?v=70'; // v54 App 版
+import { starsOf } from './stars.js?v=70';
+import { LEVELS } from './writing-panel.js?v=70';
+import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=70';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -12,11 +12,11 @@ export function loadSettings() {
 }
 /**
  * v56 家長限制課程範圍：settings.lessonMax＝{ <課程 id>: 最大可寫的課號 }。lessons＝這個課程的課號（含 0）。
- * 回傳 null＝不限制（沒設、壞值、或已經是最後一課）。第 0 課一直開放（由呼叫端處理）。
+ * 回傳 null＝不限制（沒設或壞值）。v70 起可以選到最後一課（選最後一課＝全部開著，但按鈕會亮在那一課上，家長看得懂）。第 0 課一直開放（由呼叫端處理）。
  */
 export function lessonMaxOf(settings, book, lessons) {
   const v = settings?.lessonMax?.[book], last = Math.max(...lessons);
-  return Number.isInteger(v) && v >= 1 && v < last ? v : null;
+  return Number.isInteger(v) && v >= 1 && v <= last ? v : null;
 }
 function saveSettings(s) { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* 私密模式：只在這次有效 */ } }
 
@@ -240,7 +240,6 @@ export class ParentPanel {
     this._rw = { mode: null, id: null, msg: '', quiz: null };
     try { this._renderRewards(); } catch (e) { this.log('parent section failed: rewards ' + e); const box = el.querySelector('.pp-rw'); if (box) box.innerHTML = '<p class="pp-note pp-broken" data-broken="rewards">這一區的資料讀不到。</p>'; }
   }
-  /** v56「可以寫到」：不限＋第 1 課…倒數第二課（最後一課＝不限） */
   /** v60 朋友名字（只改目前這個主題） */
   _namesHTML() {
     if (!this.names) return '';
@@ -256,7 +255,7 @@ export class ParentPanel {
   }
   _lessonMaxHTML(set) {
     const ls = this.books?.lessons; if (!ls || ls.length <= 2) return '';
-    const cur = lessonMaxOf(set, this.books.current, ls), opts = ls.filter(l => l >= 1 && l < Math.max(...ls));
+    const cur = lessonMaxOf(set, this.books.current, ls), opts = ls.filter(l => l >= 1); // v70：列到最後一課（原本最後一課被當成「不限」不列，家長以為選不到）
     const btn = (v, label) => `<button type="button" data-lmax="${v}" aria-pressed="${String(cur ?? '') === String(v)}">${label}</button>`;
     return `<span>可以寫到</span><div class="seg pp-lmax">${btn('', '不限')}${opts.map(l => btn(l, '第 ' + l + ' 課')).join('')}</div>`;
   }

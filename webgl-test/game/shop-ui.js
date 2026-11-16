@@ -1,7 +1,7 @@
 // v18 配件商店畫面：選朋友 → 選位置分頁 → 點配件試戴 → 用星星換（問一次）→ 戴上。買過的點一下＝戴上／拿下來。
 // 規則與存檔都在 shop.js；這裡只管畫面、語音與音效。所有字都很短，點配件會唸名稱（孩子不一定認得字）。
-import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=69';
-import { variantOf, frameStyle } from './outfit.js?v=69'; // v64 衣服＝整張角色圖的變體（kind:'outfit'），不是疊圖
+import { loadShop, saveShop, shopState, outfitOf, buyItem, wearItem, placeAccessory } from './shop.js?v=70';
+import { variantOf, frameStyle, drawVariant } from './outfit.js?v=70'; // v64 衣服＝整張角色圖的變體（kind:'outfit'），不是疊圖
 const isOutfit = i => i?.kind === 'outfit';
 const SEASON_TAB = '__season', seasonItemId = id => 'season:' + id;
 // v64 預設分頁：目錄的 defaultSlot（accessories.json 寫 "hat"）；沒寫就照以前＝第 2 個格子（slots 加了 body 之後第 2 個會變髮夾，所以要明寫）
@@ -101,6 +101,7 @@ export class ShopPanel {
   url(file) { return this.base + file; }
   open() {
     if (this.el) return;
+    this.hatlessFailed = new Set(); // v70 每次開商店都重新試一次「沒毛巾」的圖（見 _drawFig）
     if (!document.getElementById('sh-style')) { const s = document.createElement('style'); s.id = 'sh-style'; s.textContent = CSS; document.head.append(s); }
     const fr = this.friends(); if (!fr.length) return;
     if (!fr.some(f => f.object === this.ui.who)) this.ui.who = fr[0].object;
@@ -236,9 +237,13 @@ export class ShopPanel {
   /** 把角色和配件畫到 fig（外框比例＝這個姿勢「原圖」的寬高比；v64 穿衣服時角色圖換成衣服那張、往四邊凸出去，外框和掛點不變） */
   _drawFig(fig, sprite, pose, outfit) {
     const m = this.town.sprites[sprite + '_' + pose], an = this.catalog.anchors[sprite + '_' + pose] ?? {}, ch = fig.querySelector('img.ch');
-    const variant = variantOf(this.byId, outfit), ready = variant && this.town.outfitLoaded?.has(sprite + '__' + variant), vurl = ready ? this.town.outfitUrl(sprite, variant, pose) : null;
-    // 衣服圖還沒載好：先畫原圖，載好再重畫一次（render 會從目前的 ui 重新算，孩子已經點別件或關掉商店就不會畫出過期的衣服）
-    if (variant && !ready) this.town._preloadOutfit?.(sprite, variant).then(() => { if (this.el) this.render(); }, () => {});
+    // v70 戴帽子（含試戴）：這個外觀有「沒毛巾」的圖就畫那一組（want）。只載要畫的那一組（4 張）；
+    // 沒毛巾的那一組載不到，才改載有毛巾的那一組（wear），並記在 hatlessFailed——這次開商店不再試（不然「失敗 → 重畫 → 再試」會一直繞），下次開商店會再試。
+    const wear = variantOf(this.byId, outfit), want = drawVariant(this.town.outfitSprites, sprite, wear, !!(outfit?.hat && this.byId.get(outfit.hat)));
+    const failed = (this.hatlessFailed ??= new Set()), draw = want !== wear && failed.has(sprite + '__' + want) ? wear : want;
+    const loaded = v => !!v && !!this.town.outfitLoaded?.has(sprite + '__' + v), variant = loaded(draw) ? draw : loaded(wear) ? wear : null, vurl = variant ? this.town.outfitUrl(sprite, variant, pose) : null;
+    // 要畫的那一組還沒載好：先畫手上已經有的（有毛巾的那一組，沒有就原圖），載好再重畫一次（render 會從目前的 ui 重新算，孩子已經點別件或關掉商店就不會畫出過期的衣服）
+    if (draw && !loaded(draw)) this.town._preloadOutfit?.(sprite, draw).then(() => { if (this.el) this.render(); }, () => { if (draw !== wear) { failed.add(sprite + '__' + draw); if (this.el) this.render(); } });
     fig.style.aspectRatio = (m.w / m.h).toFixed(4);
     if (vurl) Object.assign(ch.style, { maxWidth: 'none', ...frameStyle(m, this.town.outfitPad) });
     else for (const k of ['max-width', 'left', 'top', 'width', 'height']) ch.style.removeProperty(k);

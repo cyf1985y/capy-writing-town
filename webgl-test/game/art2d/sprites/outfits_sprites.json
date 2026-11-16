@@ -478,5 +478,1485 @@
   "file": "outfit/bunny_b__hoodie_wave.webp",
   "w": 333,
   "h": 446
+ },
+ "capy_cocoa__nt_idle": {
+  "file": "outfit/capy_cocoa__nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__nt_happy": {
+  "file": "outfit/capy_cocoa__nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__nt_surprised": {
+  "file": "outfit/capy_cocoa__nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__nt_wave": {
+  "file": "outfit/capy_cocoa__nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__nt_idle": {
+  "file": "outfit/capy_orange__nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__nt_happy": {
+  "file": "outfit/capy_orange__nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__nt_surprised": {
+  "file": "outfit/capy_orange__nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__nt_wave": {
+  "file": "outfit/capy_orange__nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__astronaut_idle": {
+  "file": "outfit/capy_cocoa__astronaut_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__astronaut_happy": {
+  "file": "outfit/capy_cocoa__astronaut_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__astronaut_surprised": {
+  "file": "outfit/capy_cocoa__astronaut_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__astronaut_wave": {
+  "file": "outfit/capy_cocoa__astronaut_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_cocoa__firefighter_idle": {
+  "file": "outfit/capy_cocoa__firefighter_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__firefighter_happy": {
+  "file": "outfit/capy_cocoa__firefighter_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__firefighter_surprised": {
+  "file": "outfit/capy_cocoa__firefighter_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__firefighter_wave": {
+  "file": "outfit/capy_cocoa__firefighter_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_cocoa__chef_idle": {
+  "file": "outfit/capy_cocoa__chef_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__chef_happy": {
+  "file": "outfit/capy_cocoa__chef_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__chef_surprised": {
+  "file": "outfit/capy_cocoa__chef_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__chef_wave": {
+  "file": "outfit/capy_cocoa__chef_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_cocoa__doctor_idle": {
+  "file": "outfit/capy_cocoa__doctor_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__doctor_happy": {
+  "file": "outfit/capy_cocoa__doctor_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__doctor_surprised": {
+  "file": "outfit/capy_cocoa__doctor_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__doctor_wave": {
+  "file": "outfit/capy_cocoa__doctor_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_cocoa__hero_idle": {
+  "file": "outfit/capy_cocoa__hero_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__hero_happy": {
+  "file": "outfit/capy_cocoa__hero_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__hero_surprised": {
+  "file": "outfit/capy_cocoa__hero_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__hero_wave": {
+  "file": "outfit/capy_cocoa__hero_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_cocoa__pajama_idle": {
+  "file": "outfit/capy_cocoa__pajama_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__pajama_happy": {
+  "file": "outfit/capy_cocoa__pajama_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__pajama_surprised": {
+  "file": "outfit/capy_cocoa__pajama_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__pajama_wave": {
+  "file": "outfit/capy_cocoa__pajama_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_cocoa__soccer_idle": {
+  "file": "outfit/capy_cocoa__soccer_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__soccer_happy": {
+  "file": "outfit/capy_cocoa__soccer_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__soccer_surprised": {
+  "file": "outfit/capy_cocoa__soccer_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__soccer_wave": {
+  "file": "outfit/capy_cocoa__soccer_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_cocoa__hawaii_idle": {
+  "file": "outfit/capy_cocoa__hawaii_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__hawaii_happy": {
+  "file": "outfit/capy_cocoa__hawaii_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__hawaii_surprised": {
+  "file": "outfit/capy_cocoa__hawaii_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__hawaii_wave": {
+  "file": "outfit/capy_cocoa__hawaii_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_cocoa__xmas_idle": {
+  "file": "outfit/capy_cocoa__xmas_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__xmas_happy": {
+  "file": "outfit/capy_cocoa__xmas_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__xmas_surprised": {
+  "file": "outfit/capy_cocoa__xmas_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__xmas_wave": {
+  "file": "outfit/capy_cocoa__xmas_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__astronaut_idle": {
+  "file": "outfit/capy_orange__astronaut_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__astronaut_happy": {
+  "file": "outfit/capy_orange__astronaut_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__astronaut_surprised": {
+  "file": "outfit/capy_orange__astronaut_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__astronaut_wave": {
+  "file": "outfit/capy_orange__astronaut_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_orange__firefighter_idle": {
+  "file": "outfit/capy_orange__firefighter_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__firefighter_happy": {
+  "file": "outfit/capy_orange__firefighter_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__firefighter_surprised": {
+  "file": "outfit/capy_orange__firefighter_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__firefighter_wave": {
+  "file": "outfit/capy_orange__firefighter_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_orange__chef_idle": {
+  "file": "outfit/capy_orange__chef_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__chef_happy": {
+  "file": "outfit/capy_orange__chef_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__chef_surprised": {
+  "file": "outfit/capy_orange__chef_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__chef_wave": {
+  "file": "outfit/capy_orange__chef_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_orange__doctor_idle": {
+  "file": "outfit/capy_orange__doctor_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__doctor_happy": {
+  "file": "outfit/capy_orange__doctor_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__doctor_surprised": {
+  "file": "outfit/capy_orange__doctor_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__doctor_wave": {
+  "file": "outfit/capy_orange__doctor_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_orange__hero_idle": {
+  "file": "outfit/capy_orange__hero_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__hero_happy": {
+  "file": "outfit/capy_orange__hero_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__hero_surprised": {
+  "file": "outfit/capy_orange__hero_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__hero_wave": {
+  "file": "outfit/capy_orange__hero_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_orange__pajama_idle": {
+  "file": "outfit/capy_orange__pajama_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__pajama_happy": {
+  "file": "outfit/capy_orange__pajama_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__pajama_surprised": {
+  "file": "outfit/capy_orange__pajama_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__pajama_wave": {
+  "file": "outfit/capy_orange__pajama_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_orange__soccer_idle": {
+  "file": "outfit/capy_orange__soccer_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__soccer_happy": {
+  "file": "outfit/capy_orange__soccer_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__soccer_surprised": {
+  "file": "outfit/capy_orange__soccer_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__soccer_wave": {
+  "file": "outfit/capy_orange__soccer_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_orange__hawaii_idle": {
+  "file": "outfit/capy_orange__hawaii_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__hawaii_happy": {
+  "file": "outfit/capy_orange__hawaii_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__hawaii_surprised": {
+  "file": "outfit/capy_orange__hawaii_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__hawaii_wave": {
+  "file": "outfit/capy_orange__hawaii_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_orange__xmas_idle": {
+  "file": "outfit/capy_orange__xmas_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__xmas_happy": {
+  "file": "outfit/capy_orange__xmas_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__xmas_surprised": {
+  "file": "outfit/capy_orange__xmas_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__xmas_wave": {
+  "file": "outfit/capy_orange__xmas_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "bunny_a__astronaut_idle": {
+  "file": "outfit/bunny_a__astronaut_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__astronaut_happy": {
+  "file": "outfit/bunny_a__astronaut_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__astronaut_surprised": {
+  "file": "outfit/bunny_a__astronaut_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__astronaut_wave": {
+  "file": "outfit/bunny_a__astronaut_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__firefighter_idle": {
+  "file": "outfit/bunny_a__firefighter_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__firefighter_happy": {
+  "file": "outfit/bunny_a__firefighter_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__firefighter_surprised": {
+  "file": "outfit/bunny_a__firefighter_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__firefighter_wave": {
+  "file": "outfit/bunny_a__firefighter_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__chef_idle": {
+  "file": "outfit/bunny_a__chef_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__chef_happy": {
+  "file": "outfit/bunny_a__chef_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__chef_surprised": {
+  "file": "outfit/bunny_a__chef_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__chef_wave": {
+  "file": "outfit/bunny_a__chef_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__doctor_idle": {
+  "file": "outfit/bunny_a__doctor_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__doctor_happy": {
+  "file": "outfit/bunny_a__doctor_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__doctor_surprised": {
+  "file": "outfit/bunny_a__doctor_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__doctor_wave": {
+  "file": "outfit/bunny_a__doctor_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__hero_idle": {
+  "file": "outfit/bunny_a__hero_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__hero_happy": {
+  "file": "outfit/bunny_a__hero_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__hero_surprised": {
+  "file": "outfit/bunny_a__hero_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__hero_wave": {
+  "file": "outfit/bunny_a__hero_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__pajama_idle": {
+  "file": "outfit/bunny_a__pajama_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__pajama_happy": {
+  "file": "outfit/bunny_a__pajama_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__pajama_surprised": {
+  "file": "outfit/bunny_a__pajama_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__pajama_wave": {
+  "file": "outfit/bunny_a__pajama_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__soccer_idle": {
+  "file": "outfit/bunny_a__soccer_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__soccer_happy": {
+  "file": "outfit/bunny_a__soccer_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__soccer_surprised": {
+  "file": "outfit/bunny_a__soccer_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__soccer_wave": {
+  "file": "outfit/bunny_a__soccer_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__hawaii_idle": {
+  "file": "outfit/bunny_a__hawaii_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__hawaii_happy": {
+  "file": "outfit/bunny_a__hawaii_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__hawaii_surprised": {
+  "file": "outfit/bunny_a__hawaii_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__hawaii_wave": {
+  "file": "outfit/bunny_a__hawaii_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__xmas_idle": {
+  "file": "outfit/bunny_a__xmas_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__xmas_happy": {
+  "file": "outfit/bunny_a__xmas_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__xmas_surprised": {
+  "file": "outfit/bunny_a__xmas_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__xmas_wave": {
+  "file": "outfit/bunny_a__xmas_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_b__astronaut_idle": {
+  "file": "outfit/bunny_b__astronaut_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__astronaut_happy": {
+  "file": "outfit/bunny_b__astronaut_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__astronaut_surprised": {
+  "file": "outfit/bunny_b__astronaut_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__astronaut_wave": {
+  "file": "outfit/bunny_b__astronaut_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "bunny_b__firefighter_idle": {
+  "file": "outfit/bunny_b__firefighter_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__firefighter_happy": {
+  "file": "outfit/bunny_b__firefighter_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__firefighter_surprised": {
+  "file": "outfit/bunny_b__firefighter_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__firefighter_wave": {
+  "file": "outfit/bunny_b__firefighter_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "bunny_b__chef_idle": {
+  "file": "outfit/bunny_b__chef_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__chef_happy": {
+  "file": "outfit/bunny_b__chef_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__chef_surprised": {
+  "file": "outfit/bunny_b__chef_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__chef_wave": {
+  "file": "outfit/bunny_b__chef_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "bunny_b__doctor_idle": {
+  "file": "outfit/bunny_b__doctor_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__doctor_happy": {
+  "file": "outfit/bunny_b__doctor_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__doctor_surprised": {
+  "file": "outfit/bunny_b__doctor_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__doctor_wave": {
+  "file": "outfit/bunny_b__doctor_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "bunny_b__hero_idle": {
+  "file": "outfit/bunny_b__hero_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__hero_happy": {
+  "file": "outfit/bunny_b__hero_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__hero_surprised": {
+  "file": "outfit/bunny_b__hero_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__hero_wave": {
+  "file": "outfit/bunny_b__hero_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "bunny_b__pajama_idle": {
+  "file": "outfit/bunny_b__pajama_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__pajama_happy": {
+  "file": "outfit/bunny_b__pajama_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__pajama_surprised": {
+  "file": "outfit/bunny_b__pajama_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__pajama_wave": {
+  "file": "outfit/bunny_b__pajama_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "bunny_b__soccer_idle": {
+  "file": "outfit/bunny_b__soccer_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__soccer_happy": {
+  "file": "outfit/bunny_b__soccer_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__soccer_surprised": {
+  "file": "outfit/bunny_b__soccer_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__soccer_wave": {
+  "file": "outfit/bunny_b__soccer_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "bunny_b__hawaii_idle": {
+  "file": "outfit/bunny_b__hawaii_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__hawaii_happy": {
+  "file": "outfit/bunny_b__hawaii_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__hawaii_surprised": {
+  "file": "outfit/bunny_b__hawaii_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__hawaii_wave": {
+  "file": "outfit/bunny_b__hawaii_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "bunny_b__xmas_idle": {
+  "file": "outfit/bunny_b__xmas_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__xmas_happy": {
+  "file": "outfit/bunny_b__xmas_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__xmas_surprised": {
+  "file": "outfit/bunny_b__xmas_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__xmas_wave": {
+  "file": "outfit/bunny_b__xmas_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "capy_cocoa__wizard_idle": {
+  "file": "outfit/capy_cocoa__wizard_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__wizard_happy": {
+  "file": "outfit/capy_cocoa__wizard_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__wizard_surprised": {
+  "file": "outfit/capy_cocoa__wizard_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__wizard_wave": {
+  "file": "outfit/capy_cocoa__wizard_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__wizard_idle": {
+  "file": "outfit/capy_orange__wizard_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__wizard_happy": {
+  "file": "outfit/capy_orange__wizard_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__wizard_surprised": {
+  "file": "outfit/capy_orange__wizard_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__wizard_wave": {
+  "file": "outfit/capy_orange__wizard_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "bunny_a__wizard_idle": {
+  "file": "outfit/bunny_a__wizard_idle.webp",
+  "w": 362,
+  "h": 446
+ },
+ "bunny_a__wizard_happy": {
+  "file": "outfit/bunny_a__wizard_happy.webp",
+  "w": 366,
+  "h": 446
+ },
+ "bunny_a__wizard_surprised": {
+  "file": "outfit/bunny_a__wizard_surprised.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_a__wizard_wave": {
+  "file": "outfit/bunny_a__wizard_wave.webp",
+  "w": 354,
+  "h": 446
+ },
+ "bunny_b__wizard_idle": {
+  "file": "outfit/bunny_b__wizard_idle.webp",
+  "w": 324,
+  "h": 446
+ },
+ "bunny_b__wizard_happy": {
+  "file": "outfit/bunny_b__wizard_happy.webp",
+  "w": 334,
+  "h": 446
+ },
+ "bunny_b__wizard_surprised": {
+  "file": "outfit/bunny_b__wizard_surprised.webp",
+  "w": 325,
+  "h": 446
+ },
+ "bunny_b__wizard_wave": {
+  "file": "outfit/bunny_b__wizard_wave.webp",
+  "w": 333,
+  "h": 446
+ },
+ "capy_cocoa__yukata_nt_idle": {
+  "file": "outfit/capy_cocoa__yukata_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__yukata_nt_happy": {
+  "file": "outfit/capy_cocoa__yukata_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__yukata_nt_surprised": {
+  "file": "outfit/capy_cocoa__yukata_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__yukata_nt_wave": {
+  "file": "outfit/capy_cocoa__yukata_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__yukata_nt_idle": {
+  "file": "outfit/capy_orange__yukata_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__yukata_nt_happy": {
+  "file": "outfit/capy_orange__yukata_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__yukata_nt_surprised": {
+  "file": "outfit/capy_orange__yukata_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__yukata_nt_wave": {
+  "file": "outfit/capy_orange__yukata_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__raincoat_nt_idle": {
+  "file": "outfit/capy_cocoa__raincoat_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__raincoat_nt_happy": {
+  "file": "outfit/capy_cocoa__raincoat_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__raincoat_nt_surprised": {
+  "file": "outfit/capy_cocoa__raincoat_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__raincoat_nt_wave": {
+  "file": "outfit/capy_cocoa__raincoat_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__raincoat_nt_idle": {
+  "file": "outfit/capy_orange__raincoat_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__raincoat_nt_happy": {
+  "file": "outfit/capy_orange__raincoat_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__raincoat_nt_surprised": {
+  "file": "outfit/capy_orange__raincoat_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__raincoat_nt_wave": {
+  "file": "outfit/capy_orange__raincoat_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__overalls_nt_idle": {
+  "file": "outfit/capy_cocoa__overalls_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__overalls_nt_happy": {
+  "file": "outfit/capy_cocoa__overalls_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__overalls_nt_surprised": {
+  "file": "outfit/capy_cocoa__overalls_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__overalls_nt_wave": {
+  "file": "outfit/capy_cocoa__overalls_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__overalls_nt_idle": {
+  "file": "outfit/capy_orange__overalls_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__overalls_nt_happy": {
+  "file": "outfit/capy_orange__overalls_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__overalls_nt_surprised": {
+  "file": "outfit/capy_orange__overalls_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__overalls_nt_wave": {
+  "file": "outfit/capy_orange__overalls_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__sweater_nt_idle": {
+  "file": "outfit/capy_cocoa__sweater_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__sweater_nt_happy": {
+  "file": "outfit/capy_cocoa__sweater_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__sweater_nt_surprised": {
+  "file": "outfit/capy_cocoa__sweater_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__sweater_nt_wave": {
+  "file": "outfit/capy_cocoa__sweater_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__sweater_nt_idle": {
+  "file": "outfit/capy_orange__sweater_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__sweater_nt_happy": {
+  "file": "outfit/capy_orange__sweater_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__sweater_nt_surprised": {
+  "file": "outfit/capy_orange__sweater_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__sweater_nt_wave": {
+  "file": "outfit/capy_orange__sweater_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__sailor_nt_idle": {
+  "file": "outfit/capy_cocoa__sailor_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__sailor_nt_happy": {
+  "file": "outfit/capy_cocoa__sailor_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__sailor_nt_surprised": {
+  "file": "outfit/capy_cocoa__sailor_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__sailor_nt_wave": {
+  "file": "outfit/capy_cocoa__sailor_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__sailor_nt_idle": {
+  "file": "outfit/capy_orange__sailor_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__sailor_nt_happy": {
+  "file": "outfit/capy_orange__sailor_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__sailor_nt_surprised": {
+  "file": "outfit/capy_orange__sailor_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__sailor_nt_wave": {
+  "file": "outfit/capy_orange__sailor_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__hoodie_nt_idle": {
+  "file": "outfit/capy_cocoa__hoodie_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__hoodie_nt_happy": {
+  "file": "outfit/capy_cocoa__hoodie_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__hoodie_nt_surprised": {
+  "file": "outfit/capy_cocoa__hoodie_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__hoodie_nt_wave": {
+  "file": "outfit/capy_cocoa__hoodie_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__hoodie_nt_idle": {
+  "file": "outfit/capy_orange__hoodie_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__hoodie_nt_happy": {
+  "file": "outfit/capy_orange__hoodie_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__hoodie_nt_surprised": {
+  "file": "outfit/capy_orange__hoodie_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__hoodie_nt_wave": {
+  "file": "outfit/capy_orange__hoodie_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__astronaut_nt_idle": {
+  "file": "outfit/capy_cocoa__astronaut_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__astronaut_nt_happy": {
+  "file": "outfit/capy_cocoa__astronaut_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__astronaut_nt_surprised": {
+  "file": "outfit/capy_cocoa__astronaut_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__astronaut_nt_wave": {
+  "file": "outfit/capy_cocoa__astronaut_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__astronaut_nt_idle": {
+  "file": "outfit/capy_orange__astronaut_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__astronaut_nt_happy": {
+  "file": "outfit/capy_orange__astronaut_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__astronaut_nt_surprised": {
+  "file": "outfit/capy_orange__astronaut_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__astronaut_nt_wave": {
+  "file": "outfit/capy_orange__astronaut_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__firefighter_nt_idle": {
+  "file": "outfit/capy_cocoa__firefighter_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__firefighter_nt_happy": {
+  "file": "outfit/capy_cocoa__firefighter_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__firefighter_nt_surprised": {
+  "file": "outfit/capy_cocoa__firefighter_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__firefighter_nt_wave": {
+  "file": "outfit/capy_cocoa__firefighter_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__firefighter_nt_idle": {
+  "file": "outfit/capy_orange__firefighter_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__firefighter_nt_happy": {
+  "file": "outfit/capy_orange__firefighter_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__firefighter_nt_surprised": {
+  "file": "outfit/capy_orange__firefighter_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__firefighter_nt_wave": {
+  "file": "outfit/capy_orange__firefighter_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__chef_nt_idle": {
+  "file": "outfit/capy_cocoa__chef_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__chef_nt_happy": {
+  "file": "outfit/capy_cocoa__chef_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__chef_nt_surprised": {
+  "file": "outfit/capy_cocoa__chef_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__chef_nt_wave": {
+  "file": "outfit/capy_cocoa__chef_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__chef_nt_idle": {
+  "file": "outfit/capy_orange__chef_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__chef_nt_happy": {
+  "file": "outfit/capy_orange__chef_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__chef_nt_surprised": {
+  "file": "outfit/capy_orange__chef_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__chef_nt_wave": {
+  "file": "outfit/capy_orange__chef_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__doctor_nt_idle": {
+  "file": "outfit/capy_cocoa__doctor_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__doctor_nt_happy": {
+  "file": "outfit/capy_cocoa__doctor_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__doctor_nt_surprised": {
+  "file": "outfit/capy_cocoa__doctor_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__doctor_nt_wave": {
+  "file": "outfit/capy_cocoa__doctor_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__doctor_nt_idle": {
+  "file": "outfit/capy_orange__doctor_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__doctor_nt_happy": {
+  "file": "outfit/capy_orange__doctor_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__doctor_nt_surprised": {
+  "file": "outfit/capy_orange__doctor_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__doctor_nt_wave": {
+  "file": "outfit/capy_orange__doctor_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__hero_nt_idle": {
+  "file": "outfit/capy_cocoa__hero_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__hero_nt_happy": {
+  "file": "outfit/capy_cocoa__hero_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__hero_nt_surprised": {
+  "file": "outfit/capy_cocoa__hero_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__hero_nt_wave": {
+  "file": "outfit/capy_cocoa__hero_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__hero_nt_idle": {
+  "file": "outfit/capy_orange__hero_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__hero_nt_happy": {
+  "file": "outfit/capy_orange__hero_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__hero_nt_surprised": {
+  "file": "outfit/capy_orange__hero_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__hero_nt_wave": {
+  "file": "outfit/capy_orange__hero_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__pajama_nt_idle": {
+  "file": "outfit/capy_cocoa__pajama_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__pajama_nt_happy": {
+  "file": "outfit/capy_cocoa__pajama_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__pajama_nt_surprised": {
+  "file": "outfit/capy_cocoa__pajama_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__pajama_nt_wave": {
+  "file": "outfit/capy_cocoa__pajama_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__pajama_nt_idle": {
+  "file": "outfit/capy_orange__pajama_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__pajama_nt_happy": {
+  "file": "outfit/capy_orange__pajama_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__pajama_nt_surprised": {
+  "file": "outfit/capy_orange__pajama_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__pajama_nt_wave": {
+  "file": "outfit/capy_orange__pajama_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__soccer_nt_idle": {
+  "file": "outfit/capy_cocoa__soccer_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__soccer_nt_happy": {
+  "file": "outfit/capy_cocoa__soccer_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__soccer_nt_surprised": {
+  "file": "outfit/capy_cocoa__soccer_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__soccer_nt_wave": {
+  "file": "outfit/capy_cocoa__soccer_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__soccer_nt_idle": {
+  "file": "outfit/capy_orange__soccer_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__soccer_nt_happy": {
+  "file": "outfit/capy_orange__soccer_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__soccer_nt_surprised": {
+  "file": "outfit/capy_orange__soccer_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__soccer_nt_wave": {
+  "file": "outfit/capy_orange__soccer_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__hawaii_nt_idle": {
+  "file": "outfit/capy_cocoa__hawaii_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__hawaii_nt_happy": {
+  "file": "outfit/capy_cocoa__hawaii_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__hawaii_nt_surprised": {
+  "file": "outfit/capy_cocoa__hawaii_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__hawaii_nt_wave": {
+  "file": "outfit/capy_cocoa__hawaii_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__hawaii_nt_idle": {
+  "file": "outfit/capy_orange__hawaii_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__hawaii_nt_happy": {
+  "file": "outfit/capy_orange__hawaii_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__hawaii_nt_surprised": {
+  "file": "outfit/capy_orange__hawaii_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__hawaii_nt_wave": {
+  "file": "outfit/capy_orange__hawaii_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__xmas_nt_idle": {
+  "file": "outfit/capy_cocoa__xmas_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__xmas_nt_happy": {
+  "file": "outfit/capy_cocoa__xmas_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__xmas_nt_surprised": {
+  "file": "outfit/capy_cocoa__xmas_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__xmas_nt_wave": {
+  "file": "outfit/capy_cocoa__xmas_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__xmas_nt_idle": {
+  "file": "outfit/capy_orange__xmas_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__xmas_nt_happy": {
+  "file": "outfit/capy_orange__xmas_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__xmas_nt_surprised": {
+  "file": "outfit/capy_orange__xmas_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__xmas_nt_wave": {
+  "file": "outfit/capy_orange__xmas_nt_wave.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__wizard_nt_idle": {
+  "file": "outfit/capy_cocoa__wizard_nt_idle.webp",
+  "w": 384,
+  "h": 446
+ },
+ "capy_cocoa__wizard_nt_happy": {
+  "file": "outfit/capy_cocoa__wizard_nt_happy.webp",
+  "w": 406,
+  "h": 446
+ },
+ "capy_cocoa__wizard_nt_surprised": {
+  "file": "outfit/capy_cocoa__wizard_nt_surprised.webp",
+  "w": 374,
+  "h": 446
+ },
+ "capy_cocoa__wizard_nt_wave": {
+  "file": "outfit/capy_cocoa__wizard_nt_wave.webp",
+  "w": 392,
+  "h": 446
+ },
+ "capy_orange__wizard_nt_idle": {
+  "file": "outfit/capy_orange__wizard_nt_idle.webp",
+  "w": 372,
+  "h": 446
+ },
+ "capy_orange__wizard_nt_happy": {
+  "file": "outfit/capy_orange__wizard_nt_happy.webp",
+  "w": 401,
+  "h": 446
+ },
+ "capy_orange__wizard_nt_surprised": {
+  "file": "outfit/capy_orange__wizard_nt_surprised.webp",
+  "w": 369,
+  "h": 446
+ },
+ "capy_orange__wizard_nt_wave": {
+  "file": "outfit/capy_orange__wizard_nt_wave.webp",
+  "w": 384,
+  "h": 446
  }
 }

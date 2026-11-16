@@ -8,6 +8,16 @@
   { "id": "outfit_overalls", "variant": "overalls", "name": "吊帶褲", "price": 35 },
   { "id": "outfit_sweater", "variant": "sweater", "name": "紅毛衣", "price": 35 },
   { "id": "outfit_sailor", "variant": "sailor", "name": "水手服", "price": 40 },
-  { "id": "outfit_hoodie", "variant": "hoodie", "name": "薄荷帽T", "price": 40 }
+  { "id": "outfit_hoodie", "variant": "hoodie", "name": "薄荷帽T", "price": 40 },
+  { "id": "outfit_chef", "variant": "chef", "name": "廚師服", "price": 45 },
+  { "id": "outfit_soccer", "variant": "soccer", "name": "足球衣", "price": 45 },
+  { "id": "outfit_hawaii", "variant": "hawaii", "name": "夏威夷衫", "price": 45 },
+  { "id": "outfit_firefighter", "variant": "firefighter", "name": "消防員外套", "price": 50 },
+  { "id": "outfit_doctor", "variant": "doctor", "name": "醫生白袍", "price": 50 },
+  { "id": "outfit_xmas", "variant": "xmas", "name": "聖誕裝", "price": 50 },
+  { "id": "outfit_wizard", "variant": "wizard", "name": "巫師袍", "price": 55 },
+  { "id": "outfit_pajama", "variant": "pajama", "name": "連身睡衣", "price": 55 },
+  { "id": "outfit_astronaut", "variant": "astronaut", "name": "太空人裝", "price": 60 },
+  { "id": "outfit_hero", "variant": "hero", "name": "超人裝", "price": 60 }
  ]
 }

@@ -3,7 +3,7 @@
 // 同 rewardKey 已在 ledger → 不重發（rewardNew=false）。缺字形資料的字寫 status=deferred，不算 passed。
 // crashAt（測試用）：'afterArtifact' | 'afterProgress' | 'afterLedger'（交易內，reload 後交易被 IndexedDB 丟棄，三者一致回滾）、
 //                   'afterCommit'（交易 complete 後、效果播放前 reload，驗證重開由帳本推導且不重發）。
-import { rowProblem } from './backup-validate.js?v=69'; // v69：讀檔時把壞掉的資料列隔離（不拿來用，也不刪）
+import { rowProblem } from './backup-validate.js?v=70'; // v69：讀檔時把壞掉的資料列隔離（不拿來用，也不刪）
 export const DB_NAME = 'capy_writing';
 export const DB_VERSION = 1;
 export const SCHEMA_VERSION = 1;

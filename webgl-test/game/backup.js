@@ -4,12 +4,12 @@
 //   還原採「合併」：作品、獎勵帳本只補沒有的；進度同一字以「已通過」優先，其次較新的。不會刪掉現有資料。
 //   v17：家長自訂獎勵（localStorage）由呼叫端給 localMerge 合併函式，備份格式 version 仍是 1。
 // 注意：iPhone「加入主畫面」後的 App 和 Safari 是兩份分開的存檔，搬家要用備份檔。
-import { BACKUP_FORMAT, STORES, LIMITS, validateBackup, rowProblem } from './backup-validate.js?v=69'; // v69
+import { BACKUP_FORMAT, STORES, LIMITS, validateBackup, rowProblem } from './backup-validate.js?v=70'; // v69
 export { BACKUP_FORMAT, LIMITS };
 const wrap = req => new Promise((res, rej) => { req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); });
 const done = tx => new Promise((res, rej) => { tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error || new Error('IDB_TX_ABORT')); });
 
-import { shareTextFile } from './app-env.js?v=69';
+import { shareTextFile } from './app-env.js?v=70';
 export async function requestPersist() {
   const st = navigator.storage;
   const info = { supported: !!st?.persist, persisted: false, standalone: matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true, usage: null };

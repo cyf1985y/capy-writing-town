@@ -84,15 +84,15 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 </div>
 <div class="preview" id="preview"></div>
 <script type="module">
-import { loadContract } from './content.js?v=69';
-import { openDB } from './store.js?v=69';
-import { starsOf, bestStars, starText } from './stars.js?v=69';
-import { wordHTML, zhuyinHTML } from './writing-panel.js?v=69';
-import { BOOKS, currentBook, profileFor } from './books.js?v=69';
-import { currentSkin, loadSkin } from './skin.js?v=69';
-import { loadTwIndex } from './tw-index.js?v=69'; // v69：筆順索引讀不到就不畫練習單
-import { validArtifact } from './backup-validate.js?v=69'; // v69：壞掉的作品不拿來用
-import { isApp, plugin } from './app-env.js?v=69'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
+import { loadContract } from './content.js?v=70';
+import { openDB } from './store.js?v=70';
+import { starsOf, bestStars, starText } from './stars.js?v=70';
+import { wordHTML, zhuyinHTML } from './writing-panel.js?v=70';
+import { BOOKS, currentBook, profileFor } from './books.js?v=70';
+import { currentSkin, loadSkin } from './skin.js?v=70';
+import { loadTwIndex } from './tw-index.js?v=70'; // v69：筆順索引讀不到就不畫練習單
+import { validArtifact } from './backup-validate.js?v=70'; // v69：壞掉的作品不拿來用
+import { isApp, plugin } from './app-env.js?v=70'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
 const NOPRINT = isApp() && !plugin('CapyPrint');
 if (NOPRINT) document.querySelector('.tools').insertAdjacentHTML('beforeend', '<span id="noPrint" style="font-size:13px;color:#a8440e">App 裡不能列印，請用 Safari 打開網站版列印。</span>');
 
@@ -180,9 +180,9 @@ $('#printBtn').addEventListener('click', async () => { await Promise.all([...doc
 try {
   loaded = await loadContract('../../', BOOKS[BOOK].contract);
   tasks = [...loaded.writingTasks.values()];
-  try { ZY = (await get('./zhuyin.json?v=69')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
+  try { ZY = (await get('./zhuyin.json?v=70')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
   // v69：索引是必要教材；讀不到就停在這裡（外層 catch 顯示訊息），不印出可能是另一種筆順的字
-  try { TW = (await loadTwIndex('../vendor-v2/hanzi-writer/data-tw/index.json?v=69')).chars; twReady = true; }
+  try { TW = (await loadTwIndex('../vendor-v2/hanzi-writer/data-tw/index.json?v=70')).chars; twReady = true; }
   catch (e) { twFailed = true; for (const id of ['#defBtn', '#noneBtn', '#printBtn']) $(id).disabled = true; throw e; } // 按鈕在這之前就掛好了，要一起停用
   try { // 唯讀：只開 readonly 交易讀作品
     const db = await openDB(), tx = db.transaction('artifacts', 'readonly');
