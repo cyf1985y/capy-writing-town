@@ -3,6 +3,7 @@
 // 同 rewardKey 已在 ledger → 不重發（rewardNew=false）。缺字形資料的字寫 status=deferred，不算 passed。
 // crashAt（測試用）：'afterArtifact' | 'afterProgress' | 'afterLedger'（交易內，reload 後交易被 IndexedDB 丟棄，三者一致回滾）、
 //                   'afterCommit'（交易 complete 後、效果播放前 reload，驗證重開由帳本推導且不重發）。
+import { rowProblem } from './backup-validate.js?v=69'; // v69：讀檔時把壞掉的資料列隔離（不拿來用，也不刪）
 export const DB_NAME = 'capy_writing';
 export const DB_VERSION = 1;
 export const SCHEMA_VERSION = 1;
@@ -41,14 +42,18 @@ export class Store {
   /** 讀出本 profile 的全部狀態（重開時推導固定終點用） */
   async load() {
     const tx = this.db.transaction(STORES, 'readonly');
-    const [progress, artifacts, ledger] = await Promise.all([
+    const [progressAll, artifactsAll, ledgerAll] = await Promise.all([
       wrap(tx.objectStore('progress').index('profileId').getAll(this.profileId)),
       wrap(tx.objectStore('artifacts').index('profileId').getAll(this.profileId)),
       wrap(tx.objectStore('rewardLedger').index('profileId').getAll(this.profileId)),
     ]);
+    // v69：壞掉的資料列（例如舊版還原進來、缺 drawnPaths 的作品）不拿來用——以前會讓初始化丟錯、「開始寫字」永遠停用。資料庫裡的不刪。
+    const good = (n, list) => list.filter(r => rowProblem(n, r, this.profileId) === null);
+    const progress = good('progress', progressAll), artifacts = good('artifacts', artifactsAll), ledger = good('rewardLedger', ledgerAll);
+    const okA = new Set(artifacts), bad = { artifacts: artifactsAll.filter(a => !okA.has(a)).map(a => a?.artifactId ?? null), progress: progressAll.length - progress.length, ledger: ledgerAll.length - ledger.length };
     const current = r => this.isCurrent(r); // 題庫版本不同的舊紀錄不計入；legacySha256 列出的舊版本照樣算（v55）
     const passedTaskIds = progress.filter(r => current(r) && r.status === 'passed').map(r => r.taskId);
-    return { progress, artifacts, ledger, passedTaskIds, committedRewardKeys: ledger.map(l => l.rewardKey) };
+    return { progress, artifacts, ledger, bad, passedTaskIds, committedRewardKeys: ledger.map(l => l.rewardKey) };
   }
 
   _baseProgress(task, attemptId, status, extra = {}) {

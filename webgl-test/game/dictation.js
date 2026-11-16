@@ -4,8 +4,8 @@
 // 要再練的字（注音第一次沒拼對、用了提示、或寫錯很多筆）記在 localStorage，下次優先出題；之後一次答對就會消掉。
 // 注音磚是用點的，不是手寫（沒有注音符號的筆順資料）。語音用裝置內建的語音，輕聲、多音字唸得對不對要真人聽。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { bravo, flash } from './fx.js?v=68';
-import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=68';
+import { bravo, flash } from './fx.js?v=69';
+import { introText, zhuyinHTML, loadCharData, QUIZ_CONFIG, FAT_FINGER } from './writing-panel.js?v=69';
 
 const CSS = `
 .dc-overlay{position:fixed;inset:0;z-index:1000;background:rgba(91,58,74,.72);display:flex;align-items:center;justify-content:center;font:16px system-ui,"Noto Sans TC",sans-serif;color:var(--ui-ink,#5B3A4A);touch-action:manipulation}
@@ -97,7 +97,19 @@ export function pickQuestions(pool, weak = {}, n = DICTATION_N) {
   return shuffle([...w, ...shuffle(ok.filter(t => !got.has(t.char))).slice(0, n - w.length)]);
 }
 /** 存檔 {v, weak:{字:次數≤3}, sessions, tested:{字:考過幾次}, missed:{字:沒全對幾次}, history:[{at, qs:[{c, zy, w}]}]}；w：ok／hint（看提示）／many（錯 3 筆以上）／skip */
-export function loadWeak(key) { try { const o = JSON.parse(localStorage.getItem(key) || 'null'); return o && typeof o.weak === 'object' && o.weak ? o : { v: 1, weak: {}, sessions: 0 }; } catch { return { v: 1, weak: {}, sessions: 0 }; } }
+const HAN1 = /^\p{Script=Han}$/u, isObj = o => !!o && typeof o === 'object' && !Array.isArray(o), W_OK = new Set(['ok', 'hint', 'many', 'skip']);
+const countMap = (o, lo, hi) => Object.fromEntries(Object.entries(isObj(o) ? o : {}).filter(([c, n]) => HAN1.test(c) && Number.isInteger(n) && n >= lo && n <= hi));
+/** v69：把讀進來的聽寫紀錄整理成合法結構（壞掉的項目丟掉，不丟錯）。以前只檢查 weak 是物件，history 壞掉會讓家長面板打不開。 */
+export function normalizeWeak(o) {
+  if (!isObj(o)) return { v: 1, weak: {}, sessions: 0 };
+  const out = { v: 1, weak: countMap(o.weak, 1, 3), sessions: Number.isInteger(o.sessions) && o.sessions >= 0 ? o.sessions : 0 };
+  if (o.tested !== undefined) out.tested = countMap(o.tested, 0, Number.MAX_SAFE_INTEGER);
+  if (o.missed !== undefined) out.missed = countMap(o.missed, 0, Number.MAX_SAFE_INTEGER);
+  if (o.history !== undefined) out.history = (Array.isArray(o.history) ? o.history : []).map(h => (isObj(h) && typeof h.at === 'string' && Array.isArray(h.qs)
+    ? { at: h.at, qs: h.qs.filter(q => isObj(q) && typeof q.c === 'string' && HAN1.test(q.c) && W_OK.has(q.w)).map(q => ({ c: q.c, zy: q.zy === true, w: q.w })) } : null)).filter(h => h && h.qs.length);
+  return out;
+}
+export function loadWeak(key) { try { return normalizeWeak(JSON.parse(localStorage.getItem(key) || 'null')); } catch { return { v: 1, weak: {}, sessions: 0 }; } }
 
 export class Dictation {
   /** dataBaseFor(char) 回傳字形資料夾；wordZhuyin(word) 回傳詞語逐字注音（沒有就只顯示國字） */

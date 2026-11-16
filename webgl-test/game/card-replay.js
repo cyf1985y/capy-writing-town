@@ -2,7 +2,7 @@
 // 存檔的 drawnPaths 只有座標、沒有時間，所以是「等速」重播，不是原本的書寫速度。
 // 動畫用 Web Animations，播完即停（不用無限動畫）；prefers-reduced-motion 時直接顯示完成圖。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { zhuyinHTML, wordHTML } from './writing-panel.js?v=68';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=69';
 
 /** 重播速度：字形座標（1024 em）每毫秒走幾單位；每筆最短時間；筆與筆之間的停頓 */
 export const REPLAY = Object.freeze({ unitsPerMs: 1.1, minStrokeMs: 180, gapMs: 150, startMs: 250 });
@@ -46,6 +46,7 @@ export function cardWords(info) {
 }
 export const cardSayText = (char, words) => [char, ...words].join('，');
 
+const esc = s => String(s).replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';'); // v69：存檔裡的字進 innerHTML 前先轉義
 export class CardReplay {
   /**
    * @param {object} o
@@ -68,8 +69,8 @@ export class CardReplay {
     const go = [this.o.onRewrite ? '<button type="button" data-act="rewrite">✏️ 再寫一次</button>' : '', this.o.canParts?.(artifact.char) ? '<button type="button" data-act="parts">🧩 部件小偵探</button>' : ''].filter(Boolean);
     const el = document.createElement('div'); el.className = 'cr-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', `字卡「${artifact.char}」`);
     el.innerHTML = `<div class="cr-box">
-      <div class="cr-head"><h2>${artifact.char}</h2>${zhuyinHTML(info.zhuyin)}${info.radical ? `<span class="cr-rad">部首：${info.radical}</span>` : ''}<button type="button" data-act="close">關閉</button></div>
-      <div class="cr-stage"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" role="img" aria-label="我寫的「${artifact.char}」"><line x1="${size / 2}" y1="0" x2="${size / 2}" y2="${size}" stroke="#e8e1d2" stroke-dasharray="4 4"/><line x1="0" y1="${size / 2}" x2="${size}" y2="${size / 2}" stroke="#e8e1d2" stroke-dasharray="4 4"/><g transform="${t.transform}">${paths}</g></svg></div>
+      <div class="cr-head"><h2>${esc(artifact.char)}</h2>${zhuyinHTML(info.zhuyin)}${info.radical ? `<span class="cr-rad">部首：${info.radical}</span>` : ''}<button type="button" data-act="close">關閉</button></div>
+      <div class="cr-stage"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" role="img" aria-label="我寫的「${esc(artifact.char)}」"><line x1="${size / 2}" y1="0" x2="${size / 2}" y2="${size}" stroke="#e8e1d2" stroke-dasharray="4 4"/><line x1="0" y1="${size / 2}" x2="${size}" y2="${size / 2}" stroke="#e8e1d2" stroke-dasharray="4 4"/><g transform="${t.transform}">${paths}</g></svg></div>
       <div class="cr-words">${words.map(w => `<span>${wordHTML(w, this.o.wordZhuyin?.(w))}</span>`).join('')}</div>
       <p class="cr-note">這是你寫的筆跡（用固定速度重播）</p>
       <div class="cr-actions"><button type="button" data-act="replay">▶ 再看一次</button><button type="button" data-act="say">🔊 再唸一次</button></div>

@@ -1,9 +1,9 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { isApp, bindExternalLinks } from './app-env.js?v=68'; // v54 App 版
-import { starsOf } from './stars.js?v=68';
-import { LEVELS } from './writing-panel.js?v=68';
-import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=68';
+import { isApp, bindExternalLinks } from './app-env.js?v=69'; // v54 App 版
+import { starsOf } from './stars.js?v=69';
+import { LEVELS } from './writing-panel.js?v=69';
+import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=69';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -138,7 +138,10 @@ export class ParentPanel {
   open() {
     if (this.el) return;
     if (!document.getElementById('pp-style')) { const s = document.createElement('style'); s.id = 'pp-style'; s.textContent = CSS; document.head.append(s); }
-    const st = parentStats(this.getData()), set = loadSettings(), maxMs = Math.max(1, ...st.week.map(w => w.ms));
+    // v69：面板的每一區各自保護。某一區的資料壞掉（丟例外）→ 那一區顯示「讀不到」，其他區照常；備份／還原按鈕一定在。
+    const safe = (name, f) => { try { return f() ?? ''; } catch (e) { this.log('parent section failed: ' + name + ' ' + e); return `<p class="pp-note pp-broken" data-broken="${name}">這一區的資料讀不到。</p>`; } };
+    let st; try { st = parentStats(this.getData()); } catch (e) { this.log('parent section failed: stats ' + e); st = { learned: 0, totalChars: 0, today: { n: 0, ms: 0 }, week: [], weak: [], levelCount: LEVELS.map(() => 0), broken: true }; }
+    const set = loadSettings(), maxMs = Math.max(1, ...st.week.map(w => w.ms));
     const seg = (key, opts) => `<div class="seg">${opts.map(([v, l]) => `<button type="button" data-k="${key}" data-v="${v}" aria-pressed="${String(set[key]) === String(v)}">${l}</button>`).join('')}</div>`;
     const el = document.createElement('div'); el.className = 'pp-overlay'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-modal', 'true'); el.setAttribute('aria-label', '家長面板');
     el.innerHTML = `<div class="pp-dialog">
@@ -150,25 +153,26 @@ export class ParentPanel {
       <div class="pp-week">${st.week.map(w => `<div title="${w.d}：${w.n} 次"><span>${mins(w.ms)}</span><i style="height:${Math.round(70 * w.ms / maxMs)}%"></i>${w.d.slice(5).replace('-', '/')}</div>`).join('')}</div>
       <h3>關卡進度（已過關的字）</h3>
       <div class="pp-kpis">${LEVELS.map((l, i) => `<div>${l.icon} ${l.label}<b>${st.levelCount[i]}</b>字</div>`).join('')}</div>
-      ${(() => { const q = this.seasons?.info().list.filter(x => x.runs) ?? []; return q.length ? `<p class="pp-note" style="margin:6px 0 0">🌸 季節小考（課本外的字，不算進上面的進度）：${q.map(x => `${esc(x.short)} 做過 ${x.runs} 次`).join('、')}</p>` : ''; })()}
-      ${(() => { const k = this.strokes?.summary?.(); return k ? `<p class="pp-note" style="margin:6px 0 0">✏️ 筆畫練習：練過 ${k.done}／${k.total} 種，描得好 ${k.good} 次</p>${k.weak?.length ? `<p class="pp-note pp-weakstroke" style="margin:4px 0 0">🎯 最近兩週最常寫錯的筆畫：${k.weak.map(w => `${esc(w.name)}（寫過 ${w.seen} 次，寫錯 ${w.misses} 次）`).join('、')}。建議先到大廳「✏️ 筆畫練習」練這幾種。<small style="display:block;opacity:.75">寫錯是寫錯的次數，同一筆錯好幾次會算好幾次。</small></p>` : ''}` : ''; })()}
+      ${st.broken ? '<p class="pp-note pp-broken" data-broken="stats">學習紀錄讀不到。</p>' : ''}
+      ${safe('seasonRuns', () => { const q = this.seasons?.info().list.filter(x => x.runs) ?? []; return q.length ? `<p class="pp-note" style="margin:6px 0 0">🌸 季節小考（課本外的字，不算進上面的進度）：${q.map(x => `${esc(x.short)} 做過 ${x.runs} 次`).join('、')}</p>` : ''; })}
+      ${safe('strokes', () => { const k = this.strokes?.summary?.(); return k ? `<p class="pp-note" style="margin:6px 0 0">✏️ 筆畫練習：練過 ${k.done}／${k.total} 種，描得好 ${k.good} 次</p>${k.weak?.length ? `<p class="pp-note pp-weakstroke" style="margin:4px 0 0">🎯 最近兩週最常寫錯的筆畫：${k.weak.map(w => `${esc(w.name)}（寫過 ${w.seen} 次，寫錯 ${w.misses} 次）`).join('、')}。建議先到大廳「✏️ 筆畫練習」練這幾種。<small style="display:block;opacity:.75">寫錯是寫錯的次數，同一筆錯好幾次會算好幾次。</small></p>` : ''}` : ''; })}
       </div><div class="pp-c">
       <h3>常錯的字</h3>
-      ${st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${w.char}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${w.worstStroke.name}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${w.char.codePointAt(0)}" target="_blank" rel="noopener" data-ext>教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>'}
+      ${safe('weak', () => st.weak.length ? `<ul class="pp-weak">${st.weak.map(w => `<li><span class="ch">${esc(w.char)}</span><span>寫了 ${w.writes} 次，錯 ${w.mistakes} 次、提示 ${w.hints} 次<small>${w.worstStroke ? `最常錯在第 ${w.worstStroke.n} 筆${w.worstStroke.name ? `（${esc(w.worstStroke.name)}）` : ''}，錯 ${w.worstStroke.misses} 次` : '還沒有逐筆紀錄（v12 以後寫的才有）'}</small></span><a href="https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=${Number(String(w.char).codePointAt(0)) || 0}" target="_blank" rel="noopener" data-ext>教育部筆順 ↗</a></li>`).join('')}</ul>` : '<p class="pp-note">目前沒有寫錯或用提示的字。</p>')}
       </div></section>
-      ${this.dictation ? `<section class="pp-sec" data-sec="dict">${this._dictationHTML()}</section>` : ''}
+      ${this.dictation ? `<section class="pp-sec" data-sec="dict">${safe('dict', () => this._dictationHTML())}</section>` : ''}
       <section class="pp-sec" data-sec="star"><div class="pp-c">
       ${this.rewards ? '<h3>🎁 獎勵（用星星換）</h3><div class="pp-rw"></div>' : ''}
       </div><div class="pp-c">
-      ${this.shop ? (() => { const s = this.shop.summary(); return s ? `<h3>🏪 配件商店</h3>
+      ${this.shop ? safe('shop', () => { const s = this.shop.summary(); return s ? `<h3>🏪 配件商店</h3>
       <div class="pp-save pp-shop"><p>孩子自己用星星買配件，幫小鎮的朋友換裝。已買 <b>${s.count}</b>／${s.all} 件${s.gifted ? `（另有朋友送的 ${s.gifted} 件）` : ''}，花了 ★${s.spent}，還能用 ★${Math.max(0, s.balance)}。</p>
         <p class="pp-note" style="margin:0">配件的星星和上面的獎勵<b>分開算</b>：買配件不會讓獎勵變遠，兌換獎勵也不會讓配件星星變少。買了不能退。</p>
         ${s.names.length ? `<details><summary>已買的配件（${s.names.length} 件）</summary><p style="margin:4px 0 0">${s.names.map(esc).join('、')}</p></details>` : ''}
         ${s.seasons?.length ? `<p style="margin:6px 0 0">🌸 用星星提早換的季節：${s.seasons.map(x => `${esc(x.name)}（★${x.cost}）`).join('、')}</p>` : ''}
-        ${s.space ? `<p class="pp-space" style="margin:6px 0 0">🛰️ 太空基地：升級 ${s.space.builds} 次、火箭零件 ${s.space.parts} 個、去過 ${s.space.planets} 顆星球（共用 ★${s.space.cost}）</p>` : ''}</div>` : ''; })() : ''}
+        ${s.space ? `<p class="pp-space" style="margin:6px 0 0">🛰️ 太空基地：升級 ${s.space.builds} 次、火箭零件 ${s.space.parts} 個、去過 ${s.space.planets} 顆星球（共用 ★${s.space.cost}）</p>` : ''}</div>` : ''; }) : ''}
       </div></section>
       <section class="pp-sec" data-sec="set"><div class="pp-c">
-      ${this.backup ? (() => { const i = this.backup.info() ?? {}; return `<h3>📱 存檔保護</h3>
+      ${this.backup ? (() => { let i = {}; try { i = this.backup.info() ?? {}; } catch (e) { this.log('parent section failed: backup info ' + e); } return `<h3>📱 存檔保護</h3>
       <div class="pp-save">
         ${isApp() ? `<p><span class="ok">✔ 資料存在這個 App 裡</span>，沒有網路也能玩。<b>刪掉 App 會連進度一起刪掉</b>，換 iPad 或刪 App 前，先按「備份」。</p>
         <p>App 和 Safari 網站版的進度是分開的。要把網站版的進度搬過來：先在 Safari 按「備份」，再到 App 按「還原」（兩個課程要各做一次）。</p>` : `<p>${i.standalone ? '<span class="ok">✔ 已從主畫面開啟</span>，資料比較不會被系統清掉。' : '<span class="warn">建議加到主畫面</span>：在 Safari 按分享鈕 ⬆️ →「加入主畫面」，以後從主畫面的圖示打開。'}${i.persisted ? '（瀏覽器已同意長期保存）' : ''}</p>
@@ -185,16 +189,16 @@ export class ParentPanel {
         <span>複習方式</span>${seg('reviewDictation', [[true, '聽寫'], [false, '照進度']])}
         ${this.shop ? `<span>配件商店</span>${seg('shop', [[true, '開'], [false, '關']])}` : ''}
         ${this.skins?.list.length > 1 ? `<span>遊戲主題</span><div class="seg">${this.skins.list.map(b => `<button type="button" data-skin="${esc(b.id)}" aria-pressed="${b.id === this.skins.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
-        ${this._seasonSetHTML()}
-        ${this._lessonMaxHTML(set)}
+        ${safe('seasonSet', () => this._seasonSetHTML())}
+        ${safe('lessonMax', () => this._lessonMaxHTML(set))}
         ${this.books ? `<span>課程</span><div class="seg">${this.books.list.map(b => `<button type="button" data-book="${esc(b.id)}" aria-pressed="${b.id === this.books.current}">${esc(b.label)}</button>`).join('')}</div>` : ''}
       </div>
       <p class="pp-note">🔍 <a href="./game/check.html"${isApp() ? '' : ' target="_blank" rel="noopener"'}>家長核對頁</a>：逐項確認台灣筆順修正、筆畫名稱、注音與部件表，核對完可匯出結果。</p>
       <p class="pp-note">🖨️ <a href="./game/worksheet.html"${isApp() ? '' : ' target="_blank" rel="noopener"'}>列印練習單</a>：把還沒三顆星、常錯的字印成 A4 練習單（可存成 PDF）。</p>
       </div><div class="pp-c">
       ${this.skins?.list.length > 1 ? '<p class="pp-note">換遊戲主題只是換圖案和朋友的樣子，會重新載入；學會的字、星星、獎勵和配件都不變。</p>' : ''}
-      ${this._namesHTML()}
-      ${this.seasons?.info().list.length ? `<p class="pp-note">季節只是換顏色和飄落的小東西，不影響學習進度，也不用重新載入。總星數到了會自動解鎖${this.seasons.shop === false ? '' : '，孩子也可以在商店用星星提早換'}。換上季節後地圖上會出現「季節小考」（課本外的字，第一次做完送星星）。</p>` : ''}
+      ${safe('names', () => this._namesHTML())}
+      ${safe('seasonNote', () => this.seasons?.info().list.length ? `<p class="pp-note">季節只是換顏色和飄落的小東西，不影響學習進度，也不用重新載入。總星數到了會自動解鎖${this.seasons.shop === false ? '' : '，孩子也可以在商店用星星提早換'}。換上季節後地圖上會出現「季節小考」（課本外的字，第一次做完送星星）。</p>` : '')}
       ${this.books?.lessons?.length > 2 ? '<p class="pp-note">「可以寫到」：孩子只能選到這一課（第 0 課一直開著），只改目前這個課程。已經學會的字照樣會出現在每日複習、聽寫小考和守門員。</p>' : ''}
       ${this.books ? '<p class="pp-note">換課程會重新載入。每個課程的進度、星星、獎勵和配件分開記，換回來都還在；備份也要在各課程分別做。</p>' : ''}
       <p class="pp-note">🔒 <a href="./game/privacy.html">隱私權政策</a>　❓ <a href="./game/support.html">使用說明與聯絡</a></p>
@@ -233,7 +237,8 @@ export class ParentPanel {
     });
     bindExternalLinks(el, m => this.log(m)); // v54：外部連結（App 裡先過家長確認）
     document.body.append(el); this.el = el; this.stats = st; this._showTab(this._tab);
-    this._rw = { mode: null, id: null, msg: '', quiz: null }; this._renderRewards();
+    this._rw = { mode: null, id: null, msg: '', quiz: null };
+    try { this._renderRewards(); } catch (e) { this.log('parent section failed: rewards ' + e); const box = el.querySelector('.pp-rw'); if (box) box.innerHTML = '<p class="pp-note pp-broken" data-broken="rewards">這一區的資料讀不到。</p>'; }
   }
   /** v56「可以寫到」：不限＋第 1 課…倒數第二課（最後一課＝不限） */
   /** v60 朋友名字（只改目前這個主題） */

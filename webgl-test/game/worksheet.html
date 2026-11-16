@@ -84,13 +84,15 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 </div>
 <div class="preview" id="preview"></div>
 <script type="module">
-import { loadContract } from './content.js?v=68';
-import { openDB } from './store.js?v=68';
-import { starsOf, bestStars, starText } from './stars.js?v=68';
-import { wordHTML, zhuyinHTML } from './writing-panel.js?v=68';
-import { BOOKS, currentBook, profileFor } from './books.js?v=68';
-import { currentSkin, loadSkin } from './skin.js?v=68';
-import { isApp, plugin } from './app-env.js?v=68'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
+import { loadContract } from './content.js?v=69';
+import { openDB } from './store.js?v=69';
+import { starsOf, bestStars, starText } from './stars.js?v=69';
+import { wordHTML, zhuyinHTML } from './writing-panel.js?v=69';
+import { BOOKS, currentBook, profileFor } from './books.js?v=69';
+import { currentSkin, loadSkin } from './skin.js?v=69';
+import { loadTwIndex } from './tw-index.js?v=69'; // v69：筆順索引讀不到就不畫練習單
+import { validArtifact } from './backup-validate.js?v=69'; // v69：壞掉的作品不拿來用
+import { isApp, plugin } from './app-env.js?v=69'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
 const NOPRINT = isApp() && !plugin('CapyPrint');
 if (NOPRINT) document.querySelector('.tools').insertAdjacentHTML('beforeend', '<span id="noPrint" style="font-size:13px;color:#a8440e">App 裡不能列印，請用 Safari 打開網站版列印。</span>');
 
@@ -120,7 +122,8 @@ const setDeco = on => { $('#preview').classList.toggle('nodeco', !on); $('#decoB
 try { setDeco(localStorage.getItem(DECO_KEY) !== '0'); } catch { setDeco(true); }
 $('#decoBox').addEventListener('change', e => setDeco(e.target.checked));
 const dataUrl = ch => '../vendor-v2/hanzi-writer/' + (TW[ch] ? 'data-tw/' : 'data/') + encodeURIComponent(ch) + '.json'; // 和遊戲相同：修正字讀 data-tw
-const loadGlyph = ch => glyphs.get(ch) ?? glyphs.set(ch, get(dataUrl(ch)).catch(() => null)).get(ch);
+let twReady = false, twFailed = false; // v69：筆順索引讀到了才是 true；沒讀到就不抓任何字形（不管是誰呼叫的）
+const loadGlyph = ch => (twReady ? glyphs.get(ch) ?? glyphs.set(ch, get(dataUrl(ch)).catch(() => null)).get(ch) : Promise.resolve(null));
 
 // Hanzi Writer 字形座標：1024 見方、y 軸朝上、基線 900
 const glyphSVG = g => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" aria-hidden="true"><g transform="scale(1,-1) translate(0,-900)">${g.strokes.map(d => `<path d="${esc(d)}"/>`).join('')}</g></svg>`;
@@ -148,6 +151,7 @@ let mode = 'char'; try { const m = localStorage.getItem(MODE_KEY); if (['char', 
 $('#modeSel').value = mode;
 $('#modeSel').addEventListener('change', e => { mode = e.target.value; try { localStorage.setItem(MODE_KEY, mode); } catch { /* 私密模式 */ } renderSheet(); });
 async function renderSheet() {
+  if (!twReady) return; // v69：筆順索引沒讀到就不畫（不管是誰呼叫的）
   const list = selected.map(ch => tasks.find(t => t.char === ch)).filter(Boolean);
   const gs = await Promise.all(list.map(t => loadGlyph(t.char)));
   const ok = list.map((t, i) => [t, gs[i]]).filter(([, g]) => g), missing = list.filter((t, i) => !gs[i]).map(t => t.char), rows = ok;
@@ -176,16 +180,18 @@ $('#printBtn').addEventListener('click', async () => { await Promise.all([...doc
 try {
   loaded = await loadContract('../../', BOOKS[BOOK].contract);
   tasks = [...loaded.writingTasks.values()];
-  try { ZY = (await get('./zhuyin.json?v=68')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
-  try { TW = (await get('../vendor-v2/hanzi-writer/data-tw/index.json?v=68')).chars ?? {}; } catch { /* 沒有索引就全用原資料 */ }
+  try { ZY = (await get('./zhuyin.json?v=69')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
+  // v69：索引是必要教材；讀不到就停在這裡（外層 catch 顯示訊息），不印出可能是另一種筆順的字
+  try { TW = (await loadTwIndex('../vendor-v2/hanzi-writer/data-tw/index.json?v=69')).chars; twReady = true; }
+  catch (e) { twFailed = true; for (const id of ['#defBtn', '#noneBtn', '#printBtn']) $(id).disabled = true; throw e; } // 按鈕在這之前就掛好了，要一起停用
   try { // 唯讀：只開 readonly 交易讀作品
     const db = await openDB(), tx = db.transaction('artifacts', 'readonly');
     artifacts = await new Promise((res, rej) => { const r = tx.objectStore('artifacts').index('profileId').getAll(PROFILE_ID); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
-    db.close();
+    db.close(); artifacts = artifacts.filter(validArtifact);
   } catch (e) { $('#msg').textContent = '讀不到遊戲紀錄（' + e + '），可以手動選字。'; }
   selected = defaultPicks(artifacts);
   renderPick(); await renderSheet();
   if (!artifacts.length) $('#msg').textContent = '這台裝置還沒有寫字紀錄。可以在下面自己勾選要練習的字。';
-} catch (e) { $('#msg').textContent = '載入失敗：' + e; }
+} catch (e) { $('#msg').textContent = twFailed ? '筆順資料讀不到，請重新整理再試一次。' : '載入失敗：' + e; }
 if (qs.get('test') === '1') window.__ws = { defaultPicks, loadGlyph, dataUrl, renderSheet, get selected() { return selected; }, set selected(v) { selected = v; }, get artifacts() { return artifacts; }, get TW() { return TW; }, renderPick };
 </script>
