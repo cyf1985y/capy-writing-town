@@ -1,11 +1,12 @@
 {
  "_meta": {
-  "version": "1.2",
+  "version": "1.3",
   "date": "2026-11-08",
   "source": "教育部《國字標準字體筆順學習網》 https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=<Unicode 十進位>",
   "method": "抓取教育部頁面每一筆外框的中心與大小，與 hanzi-writer-data@2.0.1 的筆畫中線做最小成本配對；順序不同就重排，教育部多一畫就把一筆依中線切成兩筆（外框依投影位置切開）。只重排／切開原資料，不含教育部字形。 v1.1：再以教育部頁面的 Track（每筆行筆軌跡）比對起筆方向，比／花的匕首筆改成由左往右，說的上方兩筆左右鏡射成「八」形。",
   "license": "衍生自 hanzi-writer-data（Arphic Public License，見 ARPHICPL.TXT）",
-  "v1.2": "加入課程 2新字的修正：出都悄呢房（tw_check.py／tw_fix.py，做法同 v1.1）"
+  "v1.2": "加入課程 2新字的修正：出都悄呢房（tw_check.py／tw_fix.py，做法同 v1.1）",
+  "v1.3": "字形修正（筆順不變）：也他地起（shape_fix.py；依教育部《異體字字典》字樣說明：也的首筆橫鉤不回鉤、起的右邊作巳封口）"
  },
  "chars": {
   "來": {
@@ -396,6 +397,82 @@
    "humanCheck": "pending",
    "addedFor": "nani_1a",
    "directionFix": "stroke 1 mirrored"
+  },
+  "也": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=20063",
+   "moeStrokes": 3,
+   "originalStrokes": 3,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2
+   ],
+   "split": null,
+   "originalSha256": "b382d98d228813ea32074caf8fee764b136593b5094579f4c00b2dd407c38dd3",
+   "sha256": "c0f881aa66d6c7a5e923b06d7257a60f284a292609c3b79384db7617c2b26df8",
+   "humanCheck": "pending",
+   "shapeFix": "stroke 1 (橫鉤): hook removed, pointed end (MOE 字樣說明「首筆作一橫鉤」)",
+   "addedFor": "v73 parent report"
+  },
+  "他": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=20182",
+   "moeStrokes": 5,
+   "originalStrokes": 5,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4
+   ],
+   "split": null,
+   "originalSha256": "93c72a3fb00f00e9d7c3da8e2bf25e913bd3eba3c71eaafacc69f55891dc5625",
+   "sha256": "2f2592aaecb9f9a629011b5a4337262fd33854a73805e75f406b870490fe546a",
+   "humanCheck": "pending",
+   "shapeFix": "stroke 3 (橫鉤 of 也): hook removed, pointed end",
+   "addedFor": "v73 parent report"
+  },
+  "地": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=22320",
+   "moeStrokes": 6,
+   "originalStrokes": 6,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "split": null,
+   "originalSha256": "ec1d89cb0ee0f4c93d546d561ea28b00f0378769c061ec5bf5f67381074765a3",
+   "sha256": "48e6eba6d2e53fb4f41337a31627153104d201787b3dc020a23db62c9fa4ad09",
+   "humanCheck": "pending",
+   "shapeFix": "stroke 4 (橫鉤 of 也): hook removed, pointed end",
+   "addedFor": "v73 parent report"
+  },
+  "起": {
+   "moeUrl": "https://stroke-order.learningweb.moe.edu.tw/dictView.jsp?ID=36215",
+   "moeStrokes": 10,
+   "originalStrokes": 10,
+   "newOrderFromOriginal": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "split": null,
+   "originalSha256": "a5301507b7db54210b4c2ff8ddd07489329117e7dd2e9b527cb595dc6f709c8c",
+   "sha256": "ad7e6046b249ab4211a13801977de1d19123f0df3618b17995cb5425f6eb1e0c",
+   "humanCheck": "pending",
+   "shapeFix": "stroke 10 (豎曲鉤 of 巳): starts at the top, closed with stroke 8 (MOE 字樣說明「起筆處與上橫折相接封口」)",
+   "addedFor": "v73 parent report"
   }
  }
 }

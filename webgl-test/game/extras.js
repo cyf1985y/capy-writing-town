@@ -5,7 +5,7 @@
 // 存在 localStorage `capy_extras_<profileId>`：
 //   { version:1, mastery:{<lesson>:{at}}, gifts:{<resident object>:{at,stars,itemId}}, bonusStars:[{id,kind,stars,at}] }
 // 不認得的頂層欄位原樣保留（之後階段向前相容）。設計文件：docs/plans/2026-11-12-phase1-area-mastery-and-friend-gifts.md
-import { emptyEarned, normalizeEarned, mergeEarned } from './earned.js?v=72'; // v72 得到過的只會多不會少
+import { emptyEarned, normalizeEarned, mergeEarned } from './earned.js?v=73'; // v72 得到過的只會多不會少
 export const extrasKey = profileId => 'capy_extras_' + profileId;
 export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] }, season: { current: null, currentAt: '', unlocked: {} }, quests: {}, repeat: {}, strokes: {}, earned: emptyEarned() });
 export const BOSS_STAGES = 8;

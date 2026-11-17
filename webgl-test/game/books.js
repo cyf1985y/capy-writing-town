@@ -4,7 +4,7 @@
 // v72 兩種樣子（設計 docs/plans/2026-11-17-appstore-app-web-flavors.md §2、§6）：
 //   App＝課程 1／課程 2、依筆畫數自編的分組（courses/course*.json）；網頁＝課程名稱和分組照課本（courses/web/，App 打包時排除）。
 //   課程 id 改成 course1／course2（網址、備份檔用）；舊 id（legacyId）照樣認得。存檔後綴 '@nani_1a' 不改（裝置裡的資料不搬）。
-import { isApp } from './app-env.js?v=72';
+import { isApp } from './app-env.js?v=73';
 const C = 'webgl-test/game/courses/';
 export const BOOKS = {
   course1: { label: '課程 1', contract: C + 'course1.json', webContract: C + 'web/course1.json', suffix: '', legacyId: 'kangxuan_1a' },
@@ -36,7 +36,7 @@ export const lessonKeyFor = id => 'capy_lesson' + (BOOKS[bookId(id)]?.suffix ?? 
 export async function applyWebLabels(base, flavor) {
   if (flavor !== 'web') return null;
   try {
-    const r = await fetch(base + WEB_LABELS + '?v=72'); if (!r.ok) return null;
+    const r = await fetch(base + WEB_LABELS + '?v=73'); if (!r.ok) return null;
     const j = await r.json();
     for (const [id, l] of Object.entries(j?.labels ?? {})) if (BOOKS[id] && typeof l === 'string' && l && l.length <= 12) BOOKS[id].label = l;
     return Object.fromEntries(Object.entries(BOOKS).map(([k, v]) => [k, v.label]));
