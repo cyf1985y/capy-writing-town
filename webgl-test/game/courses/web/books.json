@@ -1,0 +1,7 @@
+{
+ "note": "網頁專用（App 打包時排除整個 courses/web/）：課程名稱。設計 docs/plans/2026-11-17-appstore-app-web-flavors.md §2",
+ "labels": {
+  "course1": "康軒版",
+  "course2": "南一版"
+ }
+}

@@ -53,7 +53,7 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 .big-zy .zy{font-size:18px}
 </style>
 <h1>🔍 家長核對頁</h1>
-<p class="lead">這些資料是 AI 整理的，請對照課本或教育部網站逐項確認。按「✔ 對」或「✘ 不對」（不對的請寫一下哪裡不對）。結果只存在這台裝置，核對完請按「匯出結果」把檔案傳給開發者。</p>
+<p class="lead">這些資料是 AI 整理的，請對照課本或教育部網站逐項確認。按「✔ 對」或「✘ 不對」（不對的請寫一下哪裡不對）。結果只存在這台裝置。核對完可以按「匯出結果」存成檔案，或拍照、列印留存。</p>
 <div class="bar">
   <div class="tabs" role="tablist"></div>
   <label class="filter"><input type="checkbox" id="onlyTodo"> 只看還沒核對的</label>
@@ -63,15 +63,15 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 <div class="list" id="list"></div>
 <script type="module">
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { zhuyinHTML, wordHTML } from './writing-panel.js?v=71';
-import { isApp, shareTextFile, bindExternalLinks } from './app-env.js?v=71'; // v54 App 版
-import { parentGate, gateValid } from './parent-gate.js?v=71';
+import { zhuyinHTML, wordHTML } from './writing-panel.js?v=72';
+import { isApp, shareTextFile, bindExternalLinks } from './app-env.js?v=72'; // v54 App 版
+import { parentGate, gateValid } from './parent-gate.js?v=72';
 const KEY = 'capy_check_v1', $ = s => document.querySelector(s);
 const get = async u => { const r = await fetch(u, { cache: 'no-cache' }); if (!r.ok) throw new Error(u + ' HTTP ' + r.status); return r.json(); };
-const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=71'), get('./stroke_names.json?v=71'), get('./zhuyin.json?v=71'), get('./parts_game.json?v=71')]);
+const [TW, SN, ZY, PARTS] = await Promise.all([get('../vendor-v2/hanzi-writer/data-tw/index.json?v=72'), get('./stroke_names.json?v=72'), get('./zhuyin.json?v=72'), get('./parts_game.json?v=72')]);
 // v53：季節小考的字、守門員的部件題、朋友台詞（讀不到就不出現那一頁，其他照常）
 const opt = u => get(u).catch(() => null);
-const [SEASONS, BPARTS, EXTRAS, BSTROKES] = await Promise.all([opt('./seasons.json?v=71'), opt('./boss_parts.json?v=71'), opt('./extras.json?v=71'), opt('./strokes/strokes.json?v=71')]); // v57 基本筆畫
+const [SEASONS, BPARTS, EXTRAS, BSTROKES] = await Promise.all([opt('./seasons.json?v=72'), opt('./boss_parts.json?v=72'), opt('./extras.json?v=72'), opt('./strokes/strokes.json?v=72')]); // v57 基本筆畫
 let state = {}; try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { state = {}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { $('#msg').textContent = '無法儲存（私密瀏覽？）'; } };
 const dataUrl = ch => (TW.chars[ch] ? '../vendor-v2/hanzi-writer/data-tw/' : '../vendor-v2/hanzi-writer/data/') + encodeURIComponent(ch) + '.json';
@@ -196,7 +196,7 @@ $('#exportBtn').addEventListener('click', async () => {
   const name = `小一寫字核對結果_${obj.exportedAt.slice(0, 10)}.json`, n = Object.values(summary).map(s => s.checked).reduce((a, b) => a + b, 0);
   if (isApp() && !gateValid() && !(await parentGate({ reason: 'check-export' }))) return; // v54：App 裡匯出前確認是大人（核對頁直接打開時）
   let r; try { r = await shareTextFile(name, JSON.stringify(obj, null, 1)); } catch (err) { $('#msg').textContent = '匯出失敗：' + (err?.message || err); return; }
-  $('#msg').textContent = r.via === 'cancel' ? '已取消。' : r.via === 'unavailable' ? '⚠️ App 裡現在不能存檔案，請截圖回報。' : `${r.via === 'share' ? '已分享' : '已下載'} ${name}（${n} 項已核對）`;
+  $('#msg').textContent = r.via === 'cancel' ? '已取消。' : r.via === 'unavailable' ? '⚠️ App 裡現在不能存檔案，請截圖留存。' : `${r.via === 'share' ? '已分享' : '已下載'} ${name}（${n} 項已核對）`;
   window.__checkLastExport = r;
 });
 bindExternalLinks($('#list'));

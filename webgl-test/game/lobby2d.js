@@ -4,9 +4,9 @@
 // - TownFx2D：區域彩度（未寫的區域蓋一層去彩度的同一張插畫，用低解析度遮罩混合）、地圖標記、點角色、寫完字的慶祝、鏡頭推近。
 // - Reward2D：第一次得獎時泡泡從廣場走到溫泉池邊、池子冒蒸氣；之後只跳一下。由帳本筆數推導，不另存。
 // - Album2D：沿用 Album 的解鎖規則，縮圖改用角色插畫、卡框用甜點卡框。
-import { Album } from './album.js?v=71';
-import { placeAccessory } from './shop.js?v=71';
-import { OUTFIT_POSES, variantKey, frameStyle, variantOf, drawVariant } from './outfit.js?v=71';
+import { Album } from './album.js?v=72';
+import { placeAccessory } from './shop.js?v=72';
+import { OUTFIT_POSES, variantKey, frameStyle, variantOf, drawVariant } from './outfit.js?v=72';
 
 const CSS = `
 .t2-view{position:relative;overflow:hidden;margin:0 auto;border-radius:16px;background:#FFF0F5;box-shadow:0 4px 14px rgba(0,0,0,.15);touch-action:manipulation;user-select:none;-webkit-user-select:none}
@@ -516,7 +516,7 @@ export class TownFx2D {
   _updateClouds(passed, instant) {
     const left = {};
     for (const [l, els] of Object.entries(this.clouds ?? {})) {
-      const done = (this.contract.modes['lesson_' + l]?.writingTaskIds || []).filter(id => passed.has(id)).length;
+      const st = this.lessonState(l, passed), done = Math.max(st.got, Math.ceil(st.ratio * els.length - 1e-9)); // 雲：曾經吹走的不會再回來
       els.forEach((el, i) => { if (instant) el.style.transition = 'none'; el.classList.toggle('gone', i < done); if (instant) requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = ''; })); });
       left[l] = Math.max(0, els.length - done);
     }
@@ -560,30 +560,37 @@ export class TownFx2D {
     return below;
   }
   zoneOfLesson(l) { return this.zoneIds.indexOf(this.lessonToZone[String(l)]); }
+  /**
+   * v72 一課的狀態（設計 docs/plans/2026-11-17-appstore-app-web-flavors.md §4）：this.floors＝{ 課號: 0..1 }＝曾經寫到幾成（game-v1.html 依 extras.earned 設定）。
+   * got／total＝實際寫了幾個字（給「再寫 N 字」這種要孩子照著做的數字）；ratio＝max(實際比例, 曾經的比例)（給彩度、影子、雲這種外觀，不會變回去）；
+   * unlocked＝實際寫完或曾經寫完。
+   */
+  lessonState(l, passed) {
+    const ids = this.contract.modes['lesson_' + l]?.writingTaskIds || [], got = ids.filter(id => passed.has(id)).length, f = this.floors?.[String(l)] ?? 0, cur = ids.length ? got / ids.length : 0;
+    return { got, total: ids.length, ratio: Math.max(cur, f), unlocked: ids.length > 0 && (got === ids.length || f >= 1) };
+  }
   /** 已解鎖（出現在小鎮上）的朋友：規則同圖鑑 */
   unlockedNames(passed) {
     const set = new Set(passed);
     return this.contract.album.residents.filter(r => {
       if (r.unlockLesson == null) return true;
-      const ids = this.contract.modes['lesson_' + r.unlockLesson]?.writingTaskIds || [];
-      return ids.length > 0 && ids.every(id => set.has(id));
+      return this.lessonState(r.unlockLesson, set).unlocked;
     }).map(r => r.object);
   }
   setProgress(passedTaskIds, { instant = false } = {}) {
     const passed = new Set(passedTaskIds), ratio = {};
     for (const [l, z] of Object.entries(this.lessonToZone)) {
-      const ids = this.contract.modes['lesson_' + l]?.writingTaskIds || [], done = ids.filter(id => passed.has(id)).length;
-      ratio[z] = Math.max(ratio[z] ?? 0, ids.length ? done / ids.length : 0);
+      ratio[z] = Math.max(ratio[z] ?? 0, this.lessonState(l, passed).ratio);
     }
     const glob = ratio[this.lessonToZone[String(this.colorCfg.globalLesson)]] ?? 0;
     const sat = this.zoneIds.map(z => Math.max(ratio[z] ?? 0, glob));
     let outside = Math.max(glob, sat.reduce((a, b) => a + b, 0) / sat.length), zs, lessonSat = null;
     const fog = this.map?.fog;
     if (fog?.byLesson) { /* v61 太空：每一課一個圓（圓心＝標記），不用甜點的 5 區（設計 docs/plans/2026-11-14-space-polish.md §1） */
-      const gl = String(this.colorCfg.globalLesson), gIds = this.contract.modes['lesson_' + gl]?.writingTaskIds || [], g2 = gIds.length ? gIds.filter(id => passed.has(id)).length / gIds.length : 0;
+      const gl = String(this.colorCfg.globalLesson), g2 = this.lessonState(gl, passed).ratio;
       lessonSat = {}; zs = [];
       for (const l of Object.keys(this.lessonToZone)) {
-        const ids = this.contract.modes['lesson_' + l]?.writingTaskIds || [], s = Math.max(ids.length ? ids.filter(id => passed.has(id)).length / ids.length : 0, g2);
+        const s = Math.max(this.lessonState(l, passed).ratio, g2);
         lessonSat[l] = +s.toFixed(2); const at = this.art.pins?.[l]?.at; if (at) zs.push({ c: at, r: fog.r ?? 150, s });
       }
       const v = Object.values(lessonSat); outside = Math.max(g2, v.length ? v.reduce((a, b) => a + b, 0) / v.length : 0);
@@ -594,8 +601,8 @@ export class TownFx2D {
     this.preview = {};
     for (const r of this.contract.album.residents) {
       if (on.has(r.object) || r.unlockLesson == null) continue;
-      const ids = this.contract.modes['lesson_' + r.unlockLesson]?.writingTaskIds || [], done = ids.filter(id => passed.has(id)).length;
-      if (ids.length && done / ids.length >= pv.showAtRatio) this.preview[r.object] = { remaining: ids.length - done, near: ids.length - done <= pv.nearRemaining };
+      const st = this.lessonState(r.unlockLesson, passed), left = st.total - st.got; // 影子：外觀用曾經的比例；「再寫 N 字」用實際還差幾個字
+      if (st.total && st.ratio >= pv.showAtRatio) this.preview[r.object] = { remaining: left, near: left <= pv.nearRemaining };
     }
     for (const c of this.town.chars.values()) {
       const was = this._visible(c), now = on.has(c.name), pre = this.preview[c.name], wasShadow = c.el.classList.contains('shadow');

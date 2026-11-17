@@ -1,9 +1,9 @@
 // v12 家長面板：練習統計、常錯的字（錯在第幾筆）、關卡進度、設定。
 // 只讀存檔（IndexedDB 作品），不寫入；設定存在 localStorage `capy_settings`（只是這台裝置的偏好）。
-import { isApp, bindExternalLinks } from './app-env.js?v=71'; // v54 App 版
-import { starsOf } from './stars.js?v=71';
-import { LEVELS } from './writing-panel.js?v=71';
-import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=71';
+import { isApp, bindExternalLinks } from './app-env.js?v=72'; // v54 App 版
+import { starsOf } from './stars.js?v=72';
+import { LEVELS } from './writing-panel.js?v=72';
+import { loadRewards, saveRewards, rewardState, costMaxOf, addReward, editReward, archiveReward, redeemReward, MAX_ACTIVE, TITLE_MAX } from './rewards.js?v=72';
 
 export const SETTINGS_KEY = 'capy_settings';
 export const DEFAULT_SETTINGS = Object.freeze({ speed: 'mid', intro: 'full', strokeVoice: true, reviewDictation: true, shop: true });
@@ -15,9 +15,11 @@ export function loadSettings() {
  * 回傳 null＝不限制（沒設或壞值）。v70 起可以選到最後一課（選最後一課＝全部開著，但按鈕會亮在那一課上，家長看得懂）。第 0 課一直開放（由呼叫端處理）。
  */
 export function lessonMaxOf(settings, book, lessons) {
-  const v = settings?.lessonMax?.[book], last = Math.max(...lessons);
+  const lm = settings?.lessonMax, v = lm?.[book] ?? lm?.[LEGACY_BOOK[book]], last = Math.max(...lessons); // v72：課程 id 改名，舊 id 存的設定照樣認得
   return Number.isInteger(v) && v >= 1 && v <= last ? v : null;
 }
+/** v72 課程 id 改名（books.js）：新 id → 舊 id（只給讀舊設定用；這裡不 import books.js，免得 Node 測試要 window） */
+export const LEGACY_BOOK = { course1: 'kangxuan_1a', course2: 'nani_1a' };
 function saveSettings(s) { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch { /* 私密模式：只在這次有效 */ } }
 
 const day = d => new Date(d).toLocaleDateString('sv');
@@ -147,7 +149,7 @@ export class ParentPanel {
     el.innerHTML = `<div class="pp-dialog">
       <h2>👪 家長面板${this._tabsHTML()}<button type="button" data-act="close">關閉</button></h2>
       <section class="pp-sec" data-sec="learn"><div class="pp-c">
-      ${this.books ? `<p class="pp-note" style="margin:0 0 8px">📚 目前課程：<b>${esc(this.books.list.find(b => b.id === this.books.current)?.label ?? '')}</b>（可在「設定」切換）</p>` : ''}
+      ${this.books ? `<p class="pp-note" style="margin:0 0 8px">📚 目前課程：<b>${esc(this.books.list.find(b => b.id === this.books.current)?.label ?? '')}</b>${Number.isInteger(this.books.chars) ? `（${this.books.chars} 字）` : ''}（可在「設定」切換）</p>` : ''}
       <div class="pp-kpis"><div>學會的字<b>${st.learned}</b>／${st.totalChars}</div><div>今天寫了<b>${st.today.n}</b>次</div><div>今天練習<b>${mins(st.today.ms)}</b>分鐘</div></div>
       <h3>最近 7 天（分鐘）</h3>
       <div class="pp-week">${st.week.map(w => `<div title="${w.d}：${w.n} 次"><span>${mins(w.ms)}</span><i style="height:${Math.round(70 * w.ms / maxMs)}%"></i>${w.d.slice(5).replace('-', '/')}</div>`).join('')}</div>
@@ -218,6 +220,7 @@ export class ParentPanel {
       if (b.dataset.nreset != null) return this._nameSet(b.dataset.nreset, ''); // v60 恢復預設名字
       if (b.dataset.lmax != null) { // v56 可以寫到第幾課
         const s = loadSettings(), lm = { ...(s.lessonMax && typeof s.lessonMax === 'object' ? s.lessonMax : {}) }, v = b.dataset.lmax;
+        delete lm[LEGACY_BOOK[this.books.current]]; // v72：寫新 id，舊 id 的那一筆拿掉
         if (v === '') delete lm[this.books.current]; else lm[this.books.current] = Number(v);
         s.lessonMax = lm; saveSettings(s);
         for (const x of el.querySelectorAll('button[data-lmax]')) x.setAttribute('aria-pressed', String(x === b));

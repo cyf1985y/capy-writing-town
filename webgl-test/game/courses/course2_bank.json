@@ -4,46 +4,10 @@
   "course": "course2",
   "note": "一年級上學期常用字；注音、部首、筆畫依教育部辭典與標準字體；只收寫字需要的資料。"
  },
- "lessons": [
-  {
-   "id": 0,
-   "title": "看圖識字"
-  },
-  {
-   "id": 1,
-   "title": "走一走"
-  },
-  {
-   "id": 2,
-   "title": "開心笑"
-  },
-  {
-   "id": 3,
-   "title": "一起玩"
-  },
-  {
-   "id": 4,
-   "title": "好朋友"
-  },
-  {
-   "id": 5,
-   "title": "有沒有"
-  },
-  {
-   "id": 6,
-   "title": "說說話"
-  },
-  {
-   "id": 7,
-   "title": "過新年"
-  }
- ],
  "characters": [
   {
    "char": "日",
    "zhuyin": "ㄖˋ",
-   "lesson": 0,
-   "lesson_title": "看圖識字",
    "radical": "日 ",
    "strokes_total": 4,
    "strokes_after_radical": 0,
@@ -54,8 +18,6 @@
   {
    "char": "月",
    "zhuyin": "ㄩㄝˋ",
-   "lesson": 0,
-   "lesson_title": "看圖識字",
    "radical": "月 ",
    "strokes_total": 4,
    "strokes_after_radical": 0,
@@ -66,8 +28,6 @@
   {
    "char": "山",
    "zhuyin": "ㄕㄢ",
-   "lesson": 0,
-   "lesson_title": "看圖識字",
    "radical": "山 ",
    "strokes_total": 3,
    "strokes_after_radical": 0,
@@ -78,8 +38,6 @@
   {
    "char": "木",
    "zhuyin": "ㄇㄨˋ",
-   "lesson": 0,
-   "lesson_title": "看圖識字",
    "radical": "木 ",
    "strokes_total": 4,
    "strokes_after_radical": 0,
@@ -90,8 +48,6 @@
   {
    "char": "水",
    "zhuyin": "ㄕㄨㄟˇ",
-   "lesson": 0,
-   "lesson_title": "看圖識字",
    "radical": "水 ",
    "strokes_total": 4,
    "strokes_after_radical": 0,
@@ -102,8 +58,6 @@
   {
    "char": "人",
    "zhuyin": "ㄖㄣˊ",
-   "lesson": 0,
-   "lesson_title": "看圖識字",
    "radical": "人 ",
    "strokes_total": 2,
    "strokes_after_radical": 0,
@@ -114,8 +68,6 @@
   {
    "char": "手",
    "zhuyin": "ㄕㄡˇ",
-   "lesson": 0,
-   "lesson_title": "看圖識字",
    "radical": "手 ",
    "strokes_total": 4,
    "strokes_after_radical": 0,
@@ -126,8 +78,6 @@
   {
    "char": "門",
    "zhuyin": "ㄇㄣˊ",
-   "lesson": 0,
-   "lesson_title": "看圖識字",
    "radical": "門 ",
    "strokes_total": 8,
    "strokes_after_radical": 0,
@@ -138,8 +88,6 @@
   {
    "char": "小",
    "zhuyin": "ㄒㄧㄠˇ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "小 ",
    "strokes_total": 3,
    "strokes_after_radical": 0,
@@ -150,8 +98,6 @@
   {
    "char": "上",
    "zhuyin": "ㄕㄤˋ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "一 ",
    "strokes_total": 3,
    "strokes_after_radical": 2,
@@ -162,8 +108,6 @@
   {
    "char": "走",
    "zhuyin": "ㄗㄡˇ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "走 ",
    "strokes_total": 7,
    "strokes_after_radical": 0,
@@ -174,8 +118,6 @@
   {
    "char": "左",
    "zhuyin": "ㄗㄨㄛˇ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "工 ",
    "strokes_total": 5,
    "strokes_after_radical": 2,
@@ -186,8 +128,6 @@
   {
    "char": "右",
    "zhuyin": "ㄧㄡˋ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "口 ",
    "strokes_total": 5,
    "strokes_after_radical": 2,
@@ -198,8 +138,6 @@
   {
    "char": "向",
    "zhuyin": "ㄒㄧㄤˋ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "口 ",
    "strokes_total": 6,
    "strokes_after_radical": 3,
@@ -210,8 +148,6 @@
   {
    "char": "魚",
    "zhuyin": "ㄩˊ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "魚 ",
    "strokes_total": 11,
    "strokes_after_radical": 0,
@@ -222,8 +158,6 @@
   {
    "char": "也",
    "zhuyin": "ㄧㄝˇ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "乙 ",
    "strokes_total": 3,
    "strokes_after_radical": 2,
@@ -234,8 +168,6 @@
   {
    "char": "來",
    "zhuyin": "ㄌㄞˊ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "人 ",
    "strokes_total": 8,
    "strokes_after_radical": 6,
@@ -246,8 +178,6 @@
   {
    "char": "加",
    "zhuyin": "ㄐㄧㄚ",
-   "lesson": 1,
-   "lesson_title": "走一走",
    "radical": "力 ",
    "strokes_total": 5,
    "strokes_after_radical": 3,
@@ -258,8 +188,6 @@
   {
    "char": "開",
    "zhuyin": "ㄎㄞ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "門 ",
    "strokes_total": 12,
    "strokes_after_radical": 4,
@@ -270,8 +198,6 @@
   {
    "char": "出",
    "zhuyin": "ㄔㄨ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "凵 ",
    "strokes_total": 5,
    "strokes_after_radical": 3,
@@ -282,8 +208,6 @@
   {
    "char": "招",
    "zhuyin": "ㄓㄠ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "手 ",
    "strokes_total": 8,
    "strokes_after_radical": 5,
@@ -294,8 +218,6 @@
   {
    "char": "車",
    "zhuyin": "ㄔㄜ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "車 ",
    "strokes_total": 7,
    "strokes_after_radical": 0,
@@ -306,8 +228,6 @@
   {
    "char": "子",
    "zhuyin": "˙ㄗ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "子 ",
    "strokes_total": 3,
    "strokes_after_radical": 0,
@@ -318,8 +238,6 @@
   {
    "char": "地",
    "zhuyin": "ㄉㄧˋ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "土 ",
    "strokes_total": 6,
    "strokes_after_radical": 3,
@@ -330,8 +248,6 @@
   {
    "char": "花",
    "zhuyin": "ㄏㄨㄚ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "艸 ",
    "strokes_total": 8,
    "strokes_after_radical": 4,
@@ -342,8 +258,6 @@
   {
    "char": "朵",
    "zhuyin": "ㄉㄨㄛˇ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "木 ",
    "strokes_total": 6,
    "strokes_after_radical": 2,
@@ -354,8 +268,6 @@
   {
    "char": "在",
    "zhuyin": "ㄗㄞˋ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "土 ",
    "strokes_total": 6,
    "strokes_after_radical": 3,
@@ -366,8 +278,6 @@
   {
    "char": "笑",
    "zhuyin": "ㄒㄧㄠˋ",
-   "lesson": 2,
-   "lesson_title": "開心笑",
    "radical": "竹 ",
    "strokes_total": 10,
    "strokes_after_radical": 4,
@@ -378,8 +288,6 @@
   {
    "char": "泡",
    "zhuyin": "ㄆㄠˋ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "水 ",
    "strokes_total": 8,
    "strokes_after_radical": 5,
@@ -390,8 +298,6 @@
   {
    "char": "玩",
    "zhuyin": "ㄨㄢˊ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "玉 ",
    "strokes_total": 8,
    "strokes_after_radical": 4,
@@ -402,8 +308,6 @@
   {
    "char": "大",
    "zhuyin": "ㄉㄚˋ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "大 ",
    "strokes_total": 3,
    "strokes_after_radical": 0,
@@ -414,8 +318,6 @@
   {
    "char": "起",
    "zhuyin": "ㄑㄧˇ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "走 ",
    "strokes_total": 10,
    "strokes_after_radical": 3,
@@ -426,8 +328,6 @@
   {
    "char": "好",
    "zhuyin": "ㄏㄠˇ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "女 ",
    "strokes_total": 6,
    "strokes_after_radical": 3,
@@ -438,8 +338,6 @@
   {
    "char": "多",
    "zhuyin": "ㄉㄨㄛ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "夕 ",
    "strokes_total": 6,
    "strokes_after_radical": 3,
@@ -450,8 +348,6 @@
   {
    "char": "我",
    "zhuyin": "ㄨㄛˇ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "戈 ",
    "strokes_total": 7,
    "strokes_after_radical": 3,
@@ -462,8 +358,6 @@
   {
    "char": "的",
    "zhuyin": "˙ㄉㄜ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "白 ",
    "strokes_total": 8,
    "strokes_after_radical": 3,
@@ -474,8 +368,6 @@
   {
    "char": "你",
    "zhuyin": "ㄋㄧˇ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "人 ",
    "strokes_total": 7,
    "strokes_after_radical": 5,
@@ -486,8 +378,6 @@
   {
    "char": "抱",
    "zhuyin": "ㄅㄠˋ",
-   "lesson": 3,
-   "lesson_title": "一起玩",
    "radical": "手 ",
    "strokes_total": 8,
    "strokes_after_radical": 5,
@@ -498,8 +388,6 @@
   {
    "char": "爸",
    "zhuyin": "ㄅㄚˋ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "父 ",
    "strokes_total": 8,
    "strokes_after_radical": 4,
@@ -510,8 +398,6 @@
   {
    "char": "到",
    "zhuyin": "ㄉㄠˋ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "刀 ",
    "strokes_total": 8,
    "strokes_after_radical": 6,
@@ -522,8 +408,6 @@
   {
    "char": "青",
    "zhuyin": "ㄑㄧㄥ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "青 ",
    "strokes_total": 8,
    "strokes_after_radical": 0,
@@ -534,8 +418,6 @@
   {
    "char": "叫",
    "zhuyin": "ㄐㄧㄠˋ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "口 ",
    "strokes_total": 5,
    "strokes_after_radical": 2,
@@ -546,8 +428,6 @@
   {
    "char": "下",
    "zhuyin": "ㄒㄧㄚˋ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "一 ",
    "strokes_total": 3,
    "strokes_after_radical": 2,
@@ -558,8 +438,6 @@
   {
    "char": "那",
    "zhuyin": "ㄋㄚˋ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "邑 ",
    "strokes_total": 7,
    "strokes_after_radical": 4,
@@ -570,8 +448,6 @@
   {
    "char": "和",
    "zhuyin": "ㄏㄢˋ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "口 ",
    "strokes_total": 8,
    "strokes_after_radical": 5,
@@ -582,8 +458,6 @@
   {
    "char": "要",
    "zhuyin": "ㄧㄠˋ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "襾 ",
    "strokes_total": 9,
    "strokes_after_radical": 3,
@@ -594,8 +468,6 @@
   {
    "char": "他",
    "zhuyin": "ㄊㄚ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "人 ",
    "strokes_total": 5,
    "strokes_after_radical": 3,
@@ -606,8 +478,6 @@
   {
    "char": "朋",
    "zhuyin": "ㄆㄥˊ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "月 ",
    "strokes_total": 8,
    "strokes_after_radical": 4,
@@ -618,8 +488,6 @@
   {
    "char": "友",
    "zhuyin": "ㄧㄡˇ",
-   "lesson": 4,
-   "lesson_title": "好朋友",
    "radical": "又 ",
    "strokes_total": 4,
    "strokes_after_radical": 2,
@@ -630,8 +498,6 @@
   {
    "char": "外",
    "zhuyin": "ㄨㄞˋ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "夕 ",
    "strokes_total": 5,
    "strokes_after_radical": 2,
@@ -642,8 +508,6 @@
   {
    "char": "住",
    "zhuyin": "ㄓㄨˋ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "人 ",
    "strokes_total": 7,
    "strokes_after_radical": 5,
@@ -654,8 +518,6 @@
   {
    "char": "個",
    "zhuyin": "˙ㄍㄜ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "人 ",
    "strokes_total": 10,
    "strokes_after_radical": 8,
@@ -666,8 +528,6 @@
   {
    "char": "們",
    "zhuyin": "˙ㄇㄣ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "人 ",
    "strokes_total": 10,
    "strokes_after_radical": 8,
@@ -678,8 +538,6 @@
   {
    "char": "這",
    "zhuyin": "ㄓㄜˋ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "辵 ",
    "strokes_total": 11,
    "strokes_after_radical": 7,
@@ -690,8 +548,6 @@
   {
    "char": "裡",
    "zhuyin": "ㄌㄧˇ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "衣 ",
    "strokes_total": 13,
    "strokes_after_radical": 7,
@@ -702,8 +558,6 @@
   {
    "char": "有",
    "zhuyin": "ㄧㄡˇ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "月 ",
    "strokes_total": 6,
    "strokes_after_radical": 2,
@@ -714,8 +568,6 @@
   {
    "char": "沒",
    "zhuyin": "ㄇㄟˊ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "水 ",
    "strokes_total": 7,
    "strokes_after_radical": 4,
@@ -726,8 +578,6 @@
   {
    "char": "是",
    "zhuyin": "ㄕˋ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "日 ",
    "strokes_total": 9,
    "strokes_after_radical": 5,
@@ -738,8 +588,6 @@
   {
    "char": "什",
    "zhuyin": "ㄕㄣˊ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "人 ",
    "strokes_total": 4,
    "strokes_after_radical": 2,
@@ -750,8 +598,6 @@
   {
    "char": "麼",
    "zhuyin": "˙ㄇㄜ",
-   "lesson": 5,
-   "lesson_title": "有沒有",
    "radical": "麻 ",
    "strokes_total": 14,
    "strokes_after_radical": 3,
@@ -762,8 +608,6 @@
   {
    "char": "金",
    "zhuyin": "ㄐㄧㄣ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "金 ",
    "strokes_total": 8,
    "strokes_after_radical": 0,
@@ -774,8 +618,6 @@
   {
    "char": "說",
    "zhuyin": "ㄕㄨㄛ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "言 ",
    "strokes_total": 14,
    "strokes_after_radical": 7,
@@ -786,8 +628,6 @@
   {
    "char": "句",
    "zhuyin": "ㄐㄩˋ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "口 ",
    "strokes_total": 5,
    "strokes_after_radical": 2,
@@ -798,8 +638,6 @@
   {
    "char": "話",
    "zhuyin": "ㄏㄨㄚˋ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "言 ",
    "strokes_total": 13,
    "strokes_after_radical": 6,
@@ -810,8 +648,6 @@
   {
    "char": "兩",
    "zhuyin": "ㄌㄧㄤˇ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "入 ",
    "strokes_total": 8,
    "strokes_after_radical": 6,
@@ -822,8 +658,6 @@
   {
    "char": "都",
    "zhuyin": "ㄉㄡ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "邑 ",
    "strokes_total": 11,
    "strokes_after_radical": 8,
@@ -834,8 +668,6 @@
   {
    "char": "悄",
    "zhuyin": "ㄑㄧㄠˇ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "心 ",
    "strokes_total": 10,
    "strokes_after_radical": 7,
@@ -846,8 +678,6 @@
   {
    "char": "尾",
    "zhuyin": "ㄨㄟˇ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "尸 ",
    "strokes_total": 7,
    "strokes_after_radical": 4,
@@ -858,8 +688,6 @@
   {
    "char": "巴",
    "zhuyin": "ㄅㄚ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "己 ",
    "strokes_total": 4,
    "strokes_after_radical": 1,
@@ -870,8 +698,6 @@
   {
    "char": "滿",
    "zhuyin": "ㄇㄢˇ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "水 ",
    "strokes_total": 14,
    "strokes_after_radical": 11,
@@ -882,8 +708,6 @@
   {
    "char": "紅",
    "zhuyin": "ㄏㄨㄥˊ",
-   "lesson": 6,
-   "lesson_title": "說說話",
    "radical": "糸 ",
    "strokes_total": 9,
    "strokes_after_radical": 3,
@@ -894,8 +718,6 @@
   {
    "char": "春",
    "zhuyin": "ㄔㄨㄣ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "日 ",
    "strokes_total": 9,
    "strokes_after_radical": 5,
@@ -906,8 +728,6 @@
   {
    "char": "貼",
    "zhuyin": "ㄊㄧㄝ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "貝 ",
    "strokes_total": 12,
    "strokes_after_radical": 5,
@@ -918,8 +738,6 @@
   {
    "char": "呢",
    "zhuyin": "˙ㄋㄜ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "口 ",
    "strokes_total": 8,
    "strokes_after_radical": 5,
@@ -930,8 +748,6 @@
   {
    "char": "了",
    "zhuyin": "˙ㄌㄜ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "亅 ",
    "strokes_total": 2,
    "strokes_after_radical": 1,
@@ -942,8 +758,6 @@
   {
    "char": "請",
    "zhuyin": "ㄑㄧㄥˇ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "言 ",
    "strokes_total": 15,
    "strokes_after_radical": 8,
@@ -954,8 +768,6 @@
   {
    "char": "天",
    "zhuyin": "ㄊㄧㄢ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "大 ",
    "strokes_total": 4,
    "strokes_after_radical": 1,
@@ -966,8 +778,6 @@
   {
    "char": "家",
    "zhuyin": "ㄐㄧㄚ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "宀 ",
    "strokes_total": 10,
    "strokes_after_radical": 7,
@@ -978,8 +788,6 @@
   {
    "char": "把",
    "zhuyin": "ㄅㄚˇ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "手 ",
    "strokes_total": 7,
    "strokes_after_radical": 4,
@@ -990,8 +798,6 @@
   {
    "char": "不",
    "zhuyin": "ㄅㄨˋ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "一 ",
    "strokes_total": 4,
    "strokes_after_radical": 3,
@@ -1002,8 +808,6 @@
   {
    "char": "房",
    "zhuyin": "ㄈㄤˊ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "戶 ",
    "strokes_total": 8,
    "strokes_after_radical": 4,
@@ -1014,8 +818,6 @@
   {
    "char": "福",
    "zhuyin": "ㄈㄨˊ",
-   "lesson": 7,
-   "lesson_title": "過新年",
    "radical": "示 ",
    "strokes_total": 14,
    "strokes_after_radical": 9,
@@ -1029,7 +831,6 @@
   {
    "id": "NA001",
    "type": "write",
-   "lesson": 0,
    "char": "日",
    "zhuyin": "ㄖˋ",
    "hint_word": "生日",
@@ -1040,7 +841,6 @@
   {
    "id": "NA002",
    "type": "write",
-   "lesson": 0,
    "char": "月",
    "zhuyin": "ㄩㄝˋ",
    "hint_word": "月亮",
@@ -1051,7 +851,6 @@
   {
    "id": "NA003",
    "type": "write",
-   "lesson": 0,
    "char": "山",
    "zhuyin": "ㄕㄢ",
    "hint_word": "高山",
@@ -1062,7 +861,6 @@
   {
    "id": "NA004",
    "type": "write",
-   "lesson": 0,
    "char": "木",
    "zhuyin": "ㄇㄨˋ",
    "hint_word": "木頭",
@@ -1073,7 +871,6 @@
   {
    "id": "NA005",
    "type": "write",
-   "lesson": 0,
    "char": "水",
    "zhuyin": "ㄕㄨㄟˇ",
    "hint_word": "喝水",
@@ -1084,7 +881,6 @@
   {
    "id": "NA006",
    "type": "write",
-   "lesson": 0,
    "char": "人",
    "zhuyin": "ㄖㄣˊ",
    "hint_word": "大人",
@@ -1095,7 +891,6 @@
   {
    "id": "NA007",
    "type": "write",
-   "lesson": 0,
    "char": "手",
    "zhuyin": "ㄕㄡˇ",
    "hint_word": "小手",
@@ -1106,7 +901,6 @@
   {
    "id": "NA008",
    "type": "write",
-   "lesson": 0,
    "char": "門",
    "zhuyin": "ㄇㄣˊ",
    "hint_word": "開門",
@@ -1117,7 +911,6 @@
   {
    "id": "NA009",
    "type": "write",
-   "lesson": 1,
    "char": "小",
    "zhuyin": "ㄒㄧㄠˇ",
    "hint_word": "大小",
@@ -1128,7 +921,6 @@
   {
    "id": "NA010",
    "type": "write",
-   "lesson": 1,
    "char": "上",
    "zhuyin": "ㄕㄤˋ",
    "hint_word": "上面",
@@ -1139,7 +931,6 @@
   {
    "id": "NA011",
    "type": "write",
-   "lesson": 1,
    "char": "走",
    "zhuyin": "ㄗㄡˇ",
    "hint_word": "走路",
@@ -1150,7 +941,6 @@
   {
    "id": "NA012",
    "type": "write",
-   "lesson": 1,
    "char": "左",
    "zhuyin": "ㄗㄨㄛˇ",
    "hint_word": "左手",
@@ -1161,7 +951,6 @@
   {
    "id": "NA013",
    "type": "write",
-   "lesson": 1,
    "char": "右",
    "zhuyin": "ㄧㄡˋ",
    "hint_word": "右手",
@@ -1172,7 +961,6 @@
   {
    "id": "NA014",
    "type": "write",
-   "lesson": 1,
    "char": "向",
    "zhuyin": "ㄒㄧㄤˋ",
    "hint_word": "向前",
@@ -1183,7 +971,6 @@
   {
    "id": "NA015",
    "type": "write",
-   "lesson": 1,
    "char": "魚",
    "zhuyin": "ㄩˊ",
    "hint_word": "小魚",
@@ -1194,7 +981,6 @@
   {
    "id": "NA016",
    "type": "write",
-   "lesson": 1,
    "char": "也",
    "zhuyin": "ㄧㄝˇ",
    "hint_word": "也是",
@@ -1205,7 +991,6 @@
   {
    "id": "NA017",
    "type": "write",
-   "lesson": 1,
    "char": "來",
    "zhuyin": "ㄌㄞˊ",
    "hint_word": "來到",
@@ -1216,7 +1001,6 @@
   {
    "id": "NA018",
    "type": "write",
-   "lesson": 1,
    "char": "加",
    "zhuyin": "ㄐㄧㄚ",
    "hint_word": "加油",
@@ -1227,7 +1011,6 @@
   {
    "id": "NA019",
    "type": "write",
-   "lesson": 2,
    "char": "開",
    "zhuyin": "ㄎㄞ",
    "hint_word": "張開",
@@ -1238,7 +1021,6 @@
   {
    "id": "NA020",
    "type": "write",
-   "lesson": 2,
    "char": "出",
    "zhuyin": "ㄔㄨ",
    "hint_word": "出去",
@@ -1249,7 +1031,6 @@
   {
    "id": "NA021",
    "type": "write",
-   "lesson": 2,
    "char": "招",
    "zhuyin": "ㄓㄠ",
    "hint_word": "招手",
@@ -1260,7 +1041,6 @@
   {
    "id": "NA022",
    "type": "write",
-   "lesson": 2,
    "char": "車",
    "zhuyin": "ㄔㄜ",
    "hint_word": "車子",
@@ -1271,7 +1051,6 @@
   {
    "id": "NA023",
    "type": "write",
-   "lesson": 2,
    "char": "子",
    "zhuyin": "˙ㄗ",
    "hint_word": "車子",
@@ -1282,7 +1061,6 @@
   {
    "id": "NA024",
    "type": "write",
-   "lesson": 2,
    "char": "地",
    "zhuyin": "ㄉㄧˋ",
    "hint_word": "地上",
@@ -1293,7 +1071,6 @@
   {
    "id": "NA025",
    "type": "write",
-   "lesson": 2,
    "char": "花",
    "zhuyin": "ㄏㄨㄚ",
    "hint_word": "花朵",
@@ -1304,7 +1081,6 @@
   {
    "id": "NA026",
    "type": "write",
-   "lesson": 2,
    "char": "朵",
    "zhuyin": "ㄉㄨㄛˇ",
    "hint_word": "花朵",
@@ -1315,7 +1091,6 @@
   {
    "id": "NA027",
    "type": "write",
-   "lesson": 2,
    "char": "在",
    "zhuyin": "ㄗㄞˋ",
    "hint_word": "在家",
@@ -1326,7 +1101,6 @@
   {
    "id": "NA028",
    "type": "write",
-   "lesson": 2,
    "char": "笑",
    "zhuyin": "ㄒㄧㄠˋ",
    "hint_word": "笑臉",
@@ -1337,7 +1111,6 @@
   {
    "id": "NA029",
    "type": "write",
-   "lesson": 3,
    "char": "泡",
    "zhuyin": "ㄆㄠˋ",
    "hint_word": "泡澡",
@@ -1348,7 +1121,6 @@
   {
    "id": "NA030",
    "type": "write",
-   "lesson": 3,
    "char": "玩",
    "zhuyin": "ㄨㄢˊ",
    "hint_word": "好玩",
@@ -1359,7 +1131,6 @@
   {
    "id": "NA031",
    "type": "write",
-   "lesson": 3,
    "char": "大",
    "zhuyin": "ㄉㄚˋ",
    "hint_word": "大家",
@@ -1370,7 +1141,6 @@
   {
    "id": "NA032",
    "type": "write",
-   "lesson": 3,
    "char": "起",
    "zhuyin": "ㄑㄧˇ",
    "hint_word": "一起",
@@ -1381,7 +1151,6 @@
   {
    "id": "NA033",
    "type": "write",
-   "lesson": 3,
    "char": "好",
    "zhuyin": "ㄏㄠˇ",
    "hint_word": "好多",
@@ -1392,7 +1161,6 @@
   {
    "id": "NA034",
    "type": "write",
-   "lesson": 3,
    "char": "多",
    "zhuyin": "ㄉㄨㄛ",
    "hint_word": "好多",
@@ -1403,7 +1171,6 @@
   {
    "id": "NA035",
    "type": "write",
-   "lesson": 3,
    "char": "我",
    "zhuyin": "ㄨㄛˇ",
    "hint_word": "我們",
@@ -1414,7 +1181,6 @@
   {
    "id": "NA036",
    "type": "write",
-   "lesson": 3,
    "char": "的",
    "zhuyin": "˙ㄉㄜ",
    "hint_word": "我的",
@@ -1425,7 +1191,6 @@
   {
    "id": "NA037",
    "type": "write",
-   "lesson": 3,
    "char": "你",
    "zhuyin": "ㄋㄧˇ",
    "hint_word": "你們",
@@ -1436,7 +1201,6 @@
   {
    "id": "NA038",
    "type": "write",
-   "lesson": 3,
    "char": "抱",
    "zhuyin": "ㄅㄠˋ",
    "hint_word": "抱抱",
@@ -1447,7 +1211,6 @@
   {
    "id": "NA039",
    "type": "write",
-   "lesson": 4,
    "char": "爸",
    "zhuyin": "ㄅㄚˋ",
    "hint_word": "爸爸",
@@ -1458,7 +1221,6 @@
   {
    "id": "NA040",
    "type": "write",
-   "lesson": 4,
    "char": "到",
    "zhuyin": "ㄉㄠˋ",
    "hint_word": "看到",
@@ -1469,7 +1231,6 @@
   {
    "id": "NA041",
    "type": "write",
-   "lesson": 4,
    "char": "青",
    "zhuyin": "ㄑㄧㄥ",
    "hint_word": "青草",
@@ -1480,7 +1241,6 @@
   {
    "id": "NA042",
    "type": "write",
-   "lesson": 4,
    "char": "叫",
    "zhuyin": "ㄐㄧㄠˋ",
    "hint_word": "大叫",
@@ -1491,7 +1251,6 @@
   {
    "id": "NA043",
    "type": "write",
-   "lesson": 4,
    "char": "下",
    "zhuyin": "ㄒㄧㄚˋ",
    "hint_word": "一下子",
@@ -1502,7 +1261,6 @@
   {
    "id": "NA044",
    "type": "write",
-   "lesson": 4,
    "char": "那",
    "zhuyin": "ㄋㄚˋ",
    "hint_word": "那裡",
@@ -1513,7 +1271,6 @@
   {
    "id": "NA045",
    "type": "write",
-   "lesson": 4,
    "char": "和",
    "zhuyin": "ㄏㄢˋ",
    "hint_word": "你和我",
@@ -1524,7 +1281,6 @@
   {
    "id": "NA046",
    "type": "write",
-   "lesson": 4,
    "char": "要",
    "zhuyin": "ㄧㄠˋ",
    "hint_word": "想要",
@@ -1535,7 +1291,6 @@
   {
    "id": "NA047",
    "type": "write",
-   "lesson": 4,
    "char": "他",
    "zhuyin": "ㄊㄚ",
    "hint_word": "他們",
@@ -1546,7 +1301,6 @@
   {
    "id": "NA048",
    "type": "write",
-   "lesson": 4,
    "char": "朋",
    "zhuyin": "ㄆㄥˊ",
    "hint_word": "朋友",
@@ -1557,7 +1311,6 @@
   {
    "id": "NA049",
    "type": "write",
-   "lesson": 4,
    "char": "友",
    "zhuyin": "ㄧㄡˇ",
    "hint_word": "朋友",
@@ -1568,7 +1321,6 @@
   {
    "id": "NA050",
    "type": "write",
-   "lesson": 5,
    "char": "外",
    "zhuyin": "ㄨㄞˋ",
    "hint_word": "外面",
@@ -1579,7 +1331,6 @@
   {
    "id": "NA051",
    "type": "write",
-   "lesson": 5,
    "char": "住",
    "zhuyin": "ㄓㄨˋ",
    "hint_word": "住在",
@@ -1590,7 +1341,6 @@
   {
    "id": "NA052",
    "type": "write",
-   "lesson": 5,
    "char": "個",
    "zhuyin": "˙ㄍㄜ",
    "hint_word": "哪個",
@@ -1601,7 +1351,6 @@
   {
    "id": "NA053",
    "type": "write",
-   "lesson": 5,
    "char": "們",
    "zhuyin": "˙ㄇㄣ",
    "hint_word": "我們",
@@ -1612,7 +1361,6 @@
   {
    "id": "NA054",
    "type": "write",
-   "lesson": 5,
    "char": "這",
    "zhuyin": "ㄓㄜˋ",
    "hint_word": "這裡",
@@ -1623,7 +1371,6 @@
   {
    "id": "NA055",
    "type": "write",
-   "lesson": 5,
    "char": "裡",
    "zhuyin": "ㄌㄧˇ",
    "hint_word": "這裡",
@@ -1634,7 +1381,6 @@
   {
    "id": "NA056",
    "type": "write",
-   "lesson": 5,
    "char": "有",
    "zhuyin": "ㄧㄡˇ",
    "hint_word": "沒有",
@@ -1645,7 +1391,6 @@
   {
    "id": "NA057",
    "type": "write",
-   "lesson": 5,
    "char": "沒",
    "zhuyin": "ㄇㄟˊ",
    "hint_word": "沒有",
@@ -1656,7 +1401,6 @@
   {
    "id": "NA058",
    "type": "write",
-   "lesson": 5,
    "char": "是",
    "zhuyin": "ㄕˋ",
    "hint_word": "不是",
@@ -1667,7 +1411,6 @@
   {
    "id": "NA059",
    "type": "write",
-   "lesson": 5,
    "char": "什",
    "zhuyin": "ㄕㄣˊ",
    "hint_word": "什麼",
@@ -1678,7 +1421,6 @@
   {
    "id": "NA060",
    "type": "write",
-   "lesson": 5,
    "char": "麼",
    "zhuyin": "˙ㄇㄜ",
    "hint_word": "什麼",
@@ -1689,7 +1431,6 @@
   {
    "id": "NA061",
    "type": "write",
-   "lesson": 6,
    "char": "金",
    "zhuyin": "ㄐㄧㄣ",
    "hint_word": "金色",
@@ -1700,7 +1441,6 @@
   {
    "id": "NA062",
    "type": "write",
-   "lesson": 6,
    "char": "說",
    "zhuyin": "ㄕㄨㄛ",
    "hint_word": "說話",
@@ -1711,7 +1451,6 @@
   {
    "id": "NA063",
    "type": "write",
-   "lesson": 6,
    "char": "句",
    "zhuyin": "ㄐㄩˋ",
    "hint_word": "句子",
@@ -1722,7 +1461,6 @@
   {
    "id": "NA064",
    "type": "write",
-   "lesson": 6,
    "char": "話",
    "zhuyin": "ㄏㄨㄚˋ",
    "hint_word": "悄悄話",
@@ -1733,7 +1471,6 @@
   {
    "id": "NA065",
    "type": "write",
-   "lesson": 6,
    "char": "兩",
    "zhuyin": "ㄌㄧㄤˇ",
    "hint_word": "兩個",
@@ -1744,7 +1481,6 @@
   {
    "id": "NA066",
    "type": "write",
-   "lesson": 6,
    "char": "都",
    "zhuyin": "ㄉㄡ",
    "hint_word": "都是",
@@ -1755,7 +1491,6 @@
   {
    "id": "NA067",
    "type": "write",
-   "lesson": 6,
    "char": "悄",
    "zhuyin": "ㄑㄧㄠˇ",
    "hint_word": "悄悄話",
@@ -1766,7 +1501,6 @@
   {
    "id": "NA068",
    "type": "write",
-   "lesson": 6,
    "char": "尾",
    "zhuyin": "ㄨㄟˇ",
    "hint_word": "尾巴",
@@ -1777,7 +1511,6 @@
   {
    "id": "NA069",
    "type": "write",
-   "lesson": 6,
    "char": "巴",
    "zhuyin": "ㄅㄚ",
    "hint_word": "巴士",
@@ -1788,7 +1521,6 @@
   {
    "id": "NA070",
    "type": "write",
-   "lesson": 6,
    "char": "滿",
    "zhuyin": "ㄇㄢˇ",
    "hint_word": "滿滿",
@@ -1799,7 +1531,6 @@
   {
    "id": "NA071",
    "type": "write",
-   "lesson": 6,
    "char": "紅",
    "zhuyin": "ㄏㄨㄥˊ",
    "hint_word": "紅花",
@@ -1810,7 +1541,6 @@
   {
    "id": "NA072",
    "type": "write",
-   "lesson": 7,
    "char": "春",
    "zhuyin": "ㄔㄨㄣ",
    "hint_word": "春天",
@@ -1821,7 +1551,6 @@
   {
    "id": "NA073",
    "type": "write",
-   "lesson": 7,
    "char": "貼",
    "zhuyin": "ㄊㄧㄝ",
    "hint_word": "貼紙",
@@ -1832,7 +1561,6 @@
   {
    "id": "NA074",
    "type": "write",
-   "lesson": 7,
    "char": "呢",
    "zhuyin": "˙ㄋㄜ",
    "hint_word": "你呢",
@@ -1843,7 +1571,6 @@
   {
    "id": "NA075",
    "type": "write",
-   "lesson": 7,
    "char": "了",
    "zhuyin": "˙ㄌㄜ",
    "hint_word": "好了",
@@ -1854,7 +1581,6 @@
   {
    "id": "NA076",
    "type": "write",
-   "lesson": 7,
    "char": "請",
    "zhuyin": "ㄑㄧㄥˇ",
    "hint_word": "請坐",
@@ -1865,7 +1591,6 @@
   {
    "id": "NA077",
    "type": "write",
-   "lesson": 7,
    "char": "天",
    "zhuyin": "ㄊㄧㄢ",
    "hint_word": "春天",
@@ -1876,7 +1601,6 @@
   {
    "id": "NA078",
    "type": "write",
-   "lesson": 7,
    "char": "家",
    "zhuyin": "ㄐㄧㄚ",
    "hint_word": "家裡",
@@ -1887,7 +1611,6 @@
   {
    "id": "NA079",
    "type": "write",
-   "lesson": 7,
    "char": "把",
    "zhuyin": "ㄅㄚˇ",
    "hint_word": "一把",
@@ -1898,7 +1621,6 @@
   {
    "id": "NA080",
    "type": "write",
-   "lesson": 7,
    "char": "不",
    "zhuyin": "ㄅㄨˋ",
    "hint_word": "好不好",
@@ -1909,7 +1631,6 @@
   {
    "id": "NA081",
    "type": "write",
-   "lesson": 7,
    "char": "房",
    "zhuyin": "ㄈㄤˊ",
    "hint_word": "房子",
@@ -1920,7 +1641,6 @@
   {
    "id": "NA082",
    "type": "write",
-   "lesson": 7,
    "char": "福",
    "zhuyin": "ㄈㄨˊ",
    "hint_word": "幸福",

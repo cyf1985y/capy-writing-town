@@ -2,7 +2,7 @@
  "_note": "太空探險主題（冒險卡通風）。圖片在 sprites/（cut_space.py 從 raw/ 切出），座標由 gen_theme.py 產生（不要手改，改 gen_theme.py 再重跑）。名字、標題、配色都是暫定（pending）。",
  "ready": true,
  "_ready": "true＝圖片、座標、程式都好了，家長頁才會出現「太空探險」",
- "title": "卡比巴拉隊長 · 太空寫字基地",
+ "title": "小一寫字樂園",
  "albumTitle": "太空隊員圖鑑",
  "sprites": "sprites/",
  "manifest": "sprites.json",

@@ -4,9 +4,9 @@
 // - 支援：正常完成、取消、重試、看示範、字形檔缺失（顯示訊息並回報 deferred）。
 // - 面板是全螢幕覆層：pointer/wheel/touch/key 事件在覆層層級 stopPropagation，不穿透到 3D 場景。
 import HanziWriter from '../vendor-v2/hanzi-writer/lib/dist/index.esm.js';
-import { sha256Hex } from './content.js?v=71';
-import { bravo, flash, spark } from './fx.js?v=71';
-import { starsOf } from './stars.js?v=71'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
+import { sha256Hex } from './content.js?v=72';
+import { bravo, flash, spark } from './fx.js?v=72';
+import { starsOf } from './stars.js?v=72'; // 契約 v3 feedback：筆畫閃光、完成慶祝（音效由 o.sound 提供，可省略）；v4 加星光尾巴
 
 export const WRITER_VERSION = 'hanzi-writer@3.7.3';
 export const DATA_VERSION = 'hanzi-writer-data@2.0.1';
@@ -165,7 +165,7 @@ const uuid = () => (crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now()
 /** 只讀本機字形資料；回傳 {data, bytes, sha256}。檔案缺失或壞 JSON 會 throw。 */
 export async function loadCharData(char, dataBase) {
   // v71：網址帶版號、不再要求瀏覽器每次重新下載（以前是 cache: 'no-store'）。字形檔只會在部署時變，部署時版號一起換，所以不會拿到舊檔。
-  const url = dataBase + encodeURIComponent(char) + '.json?v=71';
+  const url = dataBase + encodeURIComponent(char) + '.json?v=72';
   const response = await fetch(url);
   if (!response.ok) { const e = new Error('CHAR_DATA_MISSING'); e.detail = { char, url, status: response.status }; throw e; }
   const bytes = new Uint8Array(await response.arrayBuffer());

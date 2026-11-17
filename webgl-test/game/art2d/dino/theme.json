@@ -2,7 +2,7 @@
  "_note": "恐龍島主題。圖片放在 sprites/，檔名和甜點版相同（見 PROMPTS_dino.md 的角色對應）。sprites/sprites.json 存在才會出現在家長頁的主題選單。names 是 8 位朋友的暫定名字（順序同契約 album.residents），可以改。",
  "ready": true,
  "_ready": "true＝圖片已切好放進 sprites/，家長頁會出現「恐龍島」",
- "title": "恐龍寶寶 · 寫字恐龍島",
+ "title": "小一寫字樂園",
  "albumTitle": "恐龍朋友圖鑑",
  "sprites": "sprites/",
  "manifest": "sprites.json",

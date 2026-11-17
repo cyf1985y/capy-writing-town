@@ -40,9 +40,10 @@ export class Album {
     const passed = new Set(passedTaskIds);
     return this.cfg.residents.map(r => {
       if (r.unlockLesson == null) return { ...r, unlocked: true, done: 0, total: 0 };
+      // v72：曾經寫完的課不會變回鎖住（townFx.lessonState 含 extras.earned 的下限；設計 docs/plans/2026-11-17-appstore-app-web-flavors.md §4）
       const ids = this.contract.modes['lesson_' + r.unlockLesson]?.writingTaskIds || [];
-      const done = ids.filter(id => passed.has(id)).length;
-      return { ...r, unlocked: ids.length > 0 && done === ids.length, done, total: ids.length };
+      const st = this.townFx?.lessonState ? this.townFx.lessonState(r.unlockLesson, passed) : { got: ids.filter(id => passed.has(id)).length, total: ids.length, unlocked: ids.length > 0 && ids.every(id => passed.has(id)) };
+      return { ...r, unlocked: st.unlocked, done: st.got, total: st.total };
     });
   }
   /** 比較前後進度，回傳新解鎖的名字 */
@@ -63,7 +64,7 @@ export class Album {
     const grid = el.querySelector('.al-grid');
     for (const r of list) {
       const b = document.createElement('button'); b.type = 'button'; b.className = 'al-card' + (r.unlocked ? '' : ' locked') + (r.unlocked && (highlight.includes(r.object) || !this.seen.has(r.object)) ? ' new' : '');
-      const lessonName = r.unlockLesson === 0 ? '首冊數字' : `第 ${r.unlockLesson} 課`;
+      const t0 = this.contract.modes.lesson_0?.title, lessonName = r.unlockLesson === 0 ? (t0 ? `「${t0}」` : '第 0 課') : `第 ${r.unlockLesson} 課`; // v72：不用「首冊」（課本用語）
       b.innerHTML = `<img alt="" src="${this._snap(r.object)}"><b>${r.unlocked ? r.name : '？？？'}</b><small>${r.unlocked ? (r.note || lessonName + '的朋友') : `寫完${lessonName}（${r.done}/${r.total}）`}</small>`;
       b.disabled = !r.unlocked; b.dataset.object = r.object;
       if (r.unlocked) b.addEventListener('click', () => this.visit(r));

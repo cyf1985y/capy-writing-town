@@ -1,72 +1,38 @@
 {
- "contractVersion": "12.0",
+ "contractVersion": "course1-2.0",
  "generated": "2026-11-10",
  "content": {
   "file": "webgl-test/game/courses/course1_bank.json",
   "contentVersion": "2.0",
-  "contentSha256": "96c83418996837ed001416efd5d733237b06abd16a05347756143acf7bac1f93",
+  "contentSha256": "f12606385845547b42e1aede0a9d05f875baf2fa75e99f00650cf1358a37500c",
   "onMismatch": "reject_load",
-  "migrationPolicy": "rewardKey 不含 contentVersion；legacySha256 的舊題庫紀錄照樣算數（只增不減）；taskId、字、順序不變",
+  "migrationPolicy": "rewardKey 不含 contentVersion；legacySha256 的舊題庫紀錄照樣算數（只增不減）；taskId、字不變；分組只在契約裡（App、網頁各一份）",
   "legacySha256": [
-   "b4bb4f1663e76503a9276ead3a40a53cbb2ed87c2763426f72d60365930a1b94"
+   "b4bb4f1663e76503a9276ead3a40a53cbb2ed87c2763426f72d60365930a1b94",
+   "96c83418996837ed001416efd5d733237b06abd16a05347756143acf7bac1f93"
   ]
  },
  "modes": {
-  "demo3": {
-   "writingTaskIds": [
-    "W0018",
-    "W0019",
-    "W0012"
-   ],
-   "questionIds": [],
-   "completionLabel": null,
-   "showLessonComplete": false
-  },
-  "lesson1_full": {
-   "writingTaskIds": [
-    "W0011",
-    "W0012",
-    "W0013",
-    "W0014",
-    "W0015",
-    "W0016",
-    "W0017",
-    "W0018",
-    "W0019"
-   ],
-   "questionIds": [
-    "Q0011",
-    "Q0012",
-    "Q0013",
-    "Q0014",
-    "Q0015",
-    "Q0016",
-    "Q0017",
-    "Q0018",
-    "Q0019"
-   ],
-   "completionRule": "all writingTaskIds status=passed AND every questionId answered correctly at least once",
-   "deferredCountsAsPassed": false,
-   "requiresGlyphReviewPass": true
-  },
   "lesson_0": {
    "lesson": 0,
-   "title": "數字",
-   "chars": "一二三四五六七八九十",
+   "title": "1～3 畫",
+   "chars": "一七九了二人八十又下上三",
    "writingTaskIds": [
     "W0001",
-    "W0002",
-    "W0003",
-    "W0004",
-    "W0005",
-    "W0006",
     "W0007",
-    "W0008",
     "W0009",
-    "W0010"
+    "W0027",
+    "W0002",
+    "W0049",
+    "W0008",
+    "W0010",
+    "W0071",
+    "W0019",
+    "W0018",
+    "W0003"
    ],
    "questionIds": [],
-   "completionLabel": "「數字」的字都寫好了！",
+   "completionLabel": "「1～3 畫」的字都寫好了！",
    "showLessonComplete": true,
    "deferredCountsAsPassed": false,
    "glyphReviewStatus": "pending",
@@ -74,21 +40,24 @@
   },
   "lesson_1": {
    "lesson": 1,
-   "title": "左右上下",
-   "chars": "拍手左右你他也上下",
+   "title": "3～4 畫",
+   "chars": "也千大子小山不五什六分友",
    "writingTaskIds": [
-    "W0011",
-    "W0012",
-    "W0013",
-    "W0014",
-    "W0015",
-    "W0016",
     "W0017",
-    "W0018",
-    "W0019"
+    "W0034",
+    "W0041",
+    "W0045",
+    "W0046",
+    "W0035",
+    "W0065",
+    "W0005",
+    "W0063",
+    "W0006",
+    "W0025",
+    "W0036"
    ],
    "questionIds": [],
-   "completionLabel": "第1課「左右上下」的字都寫好了！",
+   "completionLabel": "第1課「3～4 畫」的字都寫好了！",
    "showLessonComplete": true,
    "deferredCountsAsPassed": false,
    "glyphReviewStatus": "pending",
@@ -96,23 +65,24 @@
   },
   "lesson_2": {
    "lesson": 2,
-   "title": "你我他",
-   "chars": "這是誰的我分好了啊多個",
+   "title": "4～6 畫",
+   "chars": "心手比王主他右四外左白同",
    "writingTaskIds": [
-    "W0020",
-    "W0021",
-    "W0022",
-    "W0023",
-    "W0024",
-    "W0025",
-    "W0026",
-    "W0027",
-    "W0028",
-    "W0029",
-    "W0030"
+    "W0057",
+    "W0012",
+    "W0058",
+    "W0069",
+    "W0070",
+    "W0016",
+    "W0014",
+    "W0004",
+    "W0061",
+    "W0013",
+    "W0074",
+    "W0066"
    ],
    "questionIds": [],
-   "completionLabel": "第2課「你我他」的字都寫好了！",
+   "completionLabel": "第2課「4～6 畫」的字都寫好了！",
    "showLessonComplete": true,
    "deferredCountsAsPassed": false,
    "glyphReviewStatus": "pending",
@@ -120,26 +90,24 @@
   },
   "lesson_3": {
    "lesson": 3,
-   "title": "山和海",
-   "chars": "秋高朋千山友和到們玩大起陪海",
+   "title": "6～7 畫",
+   "chars": "向在多好早有朵你我找走那",
    "writingTaskIds": [
-    "W0031",
-    "W0032",
-    "W0033",
-    "W0034",
-    "W0035",
-    "W0036",
-    "W0037",
-    "W0038",
-    "W0039",
-    "W0040",
-    "W0041",
-    "W0042",
-    "W0043",
-    "W0044"
+    "W0079",
+    "W0078",
+    "W0029",
+    "W0026",
+    "W0067",
+    "W0062",
+    "W0081",
+    "W0015",
+    "W0024",
+    "W0052",
+    "W0077",
+    "W0084"
    ],
    "questionIds": [],
-   "completionLabel": "第3課「山和海」的字都寫好了！",
+   "completionLabel": "第3課「6～7 畫」的字都寫好了！",
    "showLessonComplete": true,
    "deferredCountsAsPassed": false,
    "glyphReviewStatus": "pending",
@@ -147,25 +115,24 @@
   },
   "lesson_4": {
    "lesson": 4,
-   "title": "看一看",
-   "chars": "子小課兩人拉看找隻青蛙開心",
+   "title": "8 畫",
+   "chars": "兩到和拍拉朋玩的花長門青",
    "writingTaskIds": [
-    "W0045",
-    "W0046",
-    "W0047",
     "W0048",
-    "W0049",
+    "W0038",
+    "W0037",
+    "W0011",
     "W0050",
-    "W0051",
-    "W0052",
-    "W0053",
-    "W0054",
-    "W0055",
-    "W0056",
-    "W0057"
+    "W0033",
+    "W0040",
+    "W0023",
+    "W0075",
+    "W0073",
+    "W0059",
+    "W0054"
    ],
    "questionIds": [],
-   "completionLabel": "第4課「看一看」的字都寫好了！",
+   "completionLabel": "第4課「8 畫」的字都寫好了！",
    "showLessonComplete": true,
    "deferredCountsAsPassed": false,
    "glyphReviewStatus": "pending",
@@ -173,26 +140,24 @@
   },
   "lesson_5": {
    "lesson": 5,
-   "title": "裡面外面",
-   "chars": "比門裡外有什麼不同早晚王主又",
+   "title": "9～11 畫",
+   "chars": "是看秋紅們個海起隻高啊從",
    "writingTaskIds": [
-    "W0058",
-    "W0059",
-    "W0060",
-    "W0061",
-    "W0062",
-    "W0063",
-    "W0064",
-    "W0065",
-    "W0066",
-    "W0067",
-    "W0068",
-    "W0069",
-    "W0070",
-    "W0071"
+    "W0021",
+    "W0051",
+    "W0031",
+    "W0076",
+    "W0039",
+    "W0030",
+    "W0044",
+    "W0042",
+    "W0053",
+    "W0032",
+    "W0028",
+    "W0082"
    ],
    "questionIds": [],
-   "completionLabel": "第5課「裡面外面」的字都寫好了！",
+   "completionLabel": "第5課「9～11 畫」的字都寫好了！",
    "showLessonComplete": true,
    "deferredCountsAsPassed": false,
    "glyphReviewStatus": "pending",
@@ -200,25 +165,24 @@
   },
   "lesson_6": {
    "lesson": 6,
-   "title": "花和路",
-   "chars": "路長白花紅走在向說朵從頭那",
+   "title": "11～16 畫",
+   "chars": "晚這陪蛙開裡路說麼課誰頭",
    "writingTaskIds": [
+    "W0068",
+    "W0020",
+    "W0043",
+    "W0055",
+    "W0056",
+    "W0060",
     "W0072",
-    "W0073",
-    "W0074",
-    "W0075",
-    "W0076",
-    "W0077",
-    "W0078",
-    "W0079",
     "W0080",
-    "W0081",
-    "W0082",
-    "W0083",
-    "W0084"
+    "W0064",
+    "W0047",
+    "W0022",
+    "W0083"
    ],
    "questionIds": [],
-   "completionLabel": "第6課「花和路」的字都寫好了！",
+   "completionLabel": "第6課「11～16 畫」的字都寫好了！",
    "showLessonComplete": true,
    "deferredCountsAsPassed": false,
    "glyphReviewStatus": "pending",
@@ -423,11 +387,10 @@
    "lesson_5",
    "lesson_6"
   ],
-  "defaultMode": "lesson_1",
+  "defaultMode": "lesson_0",
   "switchWithoutReload": true,
-  "note": "progressKey／rewardKey 不含 mode，切換章節共用同一份進度與帳本；每字只發一次獎",
-  "map": "v13：選課只用地圖標記（2D 大廳隱藏頂部章節列，改顯示總進度）；點別課標記＝切課，點目前這課的標記＝開始寫字。3D 大廳仍保留章節列",
-  "pinSpacing": "共用一區的「數」與「1」：數往左下、1 往右上，螢幕中心距 ≥ 70 px；其他標記 ≥ 52 px；熱區 48×48 px"
+  "note": "progressKey／rewardKey 不含 mode，切換章節共用同一份進度與帳本；每字只發一次獎；分組依筆畫數（App 的自編字表）",
+  "map": "v13：選課只用地圖標記（2D 大廳隱藏頂部章節列，改顯示總進度）；點別課標記＝切課，點目前這課的標記＝開始寫字。3D 大廳仍保留章節列"
  },
  "feedback": {
   "stroke": {
@@ -553,7 +516,7 @@
   "title": "水豚×兔兔圖鑑"
  },
  "theme": {
-  "title": "卡比巴拉×小兔兔 · 小一寫字樂園",
+  "title": "小一寫字樂園",
   "ui": {
    "primary": "#FF8A80",
    "primaryDark": "#E8665C",
@@ -757,7 +720,8 @@
      985,
      872
     ],
-    "icon": "pin_entry"
+    "icon": "pin_entry",
+    "label": "起"
    },
    "1": {
     "at": [
@@ -888,12 +852,42 @@
    "rule": "未寫的區域蓋一層半透明奶油色霧（不透明度＝(1−彩度)×0.9），寫越多越清楚"
   },
   "castNamesNote": "8 位朋友目前共用 4 種外觀（capy_cocoa、capy_orange、bunny_a、bunny_b）；之後可再生成新角色替換",
-  "pinsNote": "v13：「數」移到正下方餅乾拱門、第 1 課改水果攤專屬縮圖、第 6 課移到左上餅乾屋（溫泉區只留第 5 課）；馬卡龍店保留給之後的課。手機寬 414 px 時任兩顆標記中心距仍 ≥ 193 插畫 px",
   "nextHint": {
    "resident": "Resident_static_N101_160",
    "rule": "「下一個字」用對話氣泡顯示在泡泡（廣場水豚）頭上，點氣泡＝開始寫字；面板開著或鏡頭在飛時隱藏"
   },
   "cloudsRemoved": "v16：使用者覺得慢、要求拿掉雲。每課雲朵（84 個帶陰影的 DOM 元素）不再產生；寫字進度改由既有的區域彩度、影子朋友與標記進度表現"
  },
- "course": "course1"
+ "course": "course1",
+ "flavor": "app",
+ "legacyGroups": {
+  "0": [
+   "W0001",
+   "W0010"
+  ],
+  "1": [
+   "W0011",
+   "W0019"
+  ],
+  "2": [
+   "W0020",
+   "W0030"
+  ],
+  "3": [
+   "W0031",
+   "W0044"
+  ],
+  "4": [
+   "W0045",
+   "W0057"
+  ],
+  "5": [
+   "W0058",
+   "W0071"
+  ],
+  "6": [
+   "W0072",
+   "W0084"
+  ]
+ }
 }

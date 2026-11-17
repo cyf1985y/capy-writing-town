@@ -5,8 +5,9 @@
 // 存在 localStorage `capy_extras_<profileId>`：
 //   { version:1, mastery:{<lesson>:{at}}, gifts:{<resident object>:{at,stars,itemId}}, bonusStars:[{id,kind,stars,at}] }
 // 不認得的頂層欄位原樣保留（之後階段向前相容）。設計文件：docs/plans/2026-11-12-phase1-area-mastery-and-friend-gifts.md
+import { emptyEarned, normalizeEarned, mergeEarned } from './earned.js?v=72'; // v72 得到過的只會多不會少
 export const extrasKey = profileId => 'capy_extras_' + profileId;
-export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] }, season: { current: null, currentAt: '', unlocked: {} }, quests: {}, repeat: {}, strokes: {} });
+export const emptyExtras = () => ({ version: 1, mastery: {}, gifts: {}, bonusStars: [], boss: { cleared: 0, history: [] }, season: { current: null, currentAt: '', unlocked: {} }, quests: {}, repeat: {}, strokes: {}, earned: emptyEarned() });
 export const BOSS_STAGES = 8;
 const intIn = (n, a, b) => Number.isInteger(n) && n >= a && n <= b;
 const isObj = o => !!o && typeof o === 'object' && !Array.isArray(o);
@@ -55,6 +56,7 @@ export function normalizeExtras(obj) {
   }
   out.repeat = cleanRepeat(obj.repeat);
   out.strokes = cleanStrokes(obj.strokes);
+  out.earned = normalizeEarned(obj.earned); // v72
   return out;
 }
 export function loadExtras(key) { try { return normalizeExtras(JSON.parse(localStorage.getItem(key) || 'null')); } catch { return emptyExtras(); } }
@@ -101,7 +103,7 @@ export function mergeExtras(cur, inc) {
   const a = normalizeExtras(cur), b = normalizeExtras(inc);
   return normalizeExtras({ ...b, ...a, mastery: { ...b.mastery, ...a.mastery }, gifts: { ...b.gifts, ...a.gifts }, bonusStars: [...a.bonusStars, ...b.bonusStars.filter(x => !a.bonusStars.some(y => y.id === x.id))],
     boss: { cleared: Math.max(a.boss.cleared, b.boss.cleared), history: [...a.boss.history, ...b.boss.history.filter(x => !a.boss.history.some(y => y.stage === x.stage))] }, // 守門員：關數取大的、紀錄依關聯集（星星 boss:k 依 id 聯集，每關只有一筆）
-    season: mergeSeason(a.season, b.season), quests: mergeQuests(a.quests, b.quests), repeat: mergeRepeat(a.repeat, b.repeat), strokes: mergeStrokes(a.strokes, b.strokes) });
+    season: mergeSeason(a.season, b.season), quests: mergeQuests(a.quests, b.quests), repeat: mergeRepeat(a.repeat, b.repeat), strokes: mergeStrokes(a.strokes, b.strokes), earned: mergeEarned(a.earned, b.earned) });
 }
 /** v52：解鎖依鍵聯集（留較早的）；current 留 currentAt 較新的，一樣新留本機的 */
 function mergeSeason(a, b) {

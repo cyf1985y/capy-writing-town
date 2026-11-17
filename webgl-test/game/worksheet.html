@@ -70,7 +70,10 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
   body{padding:0;background:#fff}
   .noprint{display:none!important}
   .preview{overflow:visible;padding:0}
-  .sheet{margin:0;box-shadow:none;break-after:page;page-break-after:always;height:297mm;min-height:0;overflow:hidden}
+  /* v72：不再固定 297mm 高——iOS 列印不照 @page margin:0，可印範圍比 A4 短，固定高度的最後一張會多出一張空白頁。
+     改成內容多高就多高、留白縮小、整張縮到 85%（一張約 25 公分，A4 和 Letter 加 1.27 公分邊界都放得下）。設計 docs/plans/2026-11-17-appstore-app-web-flavors.md §7 */
+  .sheet{margin:0;box-shadow:none;break-after:page;page-break-after:always;height:auto;min-height:0;padding:6mm 10mm;overflow:visible;zoom:.85}
+  .ft{margin-top:3mm}
   .sheet:last-child{break-after:auto;page-break-after:auto}
   .cell{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
@@ -84,16 +87,16 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 </div>
 <div class="preview" id="preview"></div>
 <script type="module">
-import { loadContract } from './content.js?v=71';
-import { openDB } from './store.js?v=71';
-import { starsOf, bestStars, starText } from './stars.js?v=71';
-import { wordHTML, zhuyinHTML } from './writing-panel.js?v=71';
-import { BOOKS, currentBook, profileFor } from './books.js?v=71';
-import { currentSkin, loadSkin } from './skin.js?v=71';
-import { loadTwIndex } from './tw-index.js?v=71'; // v69：筆順索引讀不到就不畫練習單
-import { rowProblem } from './backup-validate.js?v=71'; // v69：壞掉的作品不拿來用
-import { ArtifactIndex } from './artifact-index.js?v=71'; // v71：只讀作品的摘要（這一頁只用到哪個字、寫錯幾次、哪天寫的），不把全部筆跡讀進來
-import { isApp, plugin } from './app-env.js?v=71'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
+import { loadContract } from './content.js?v=72';
+import { openDB } from './store.js?v=72';
+import { starsOf, bestStars, starText } from './stars.js?v=72';
+import { wordHTML, zhuyinHTML } from './writing-panel.js?v=72';
+import { BOOKS, currentBook, profileFor, currentFlavor, loadBookContract } from './books.js?v=72';
+import { currentSkin, loadSkin } from './skin.js?v=72';
+import { loadTwIndex } from './tw-index.js?v=72'; // v69：筆順索引讀不到就不畫練習單
+import { rowProblem } from './backup-validate.js?v=72'; // v69：壞掉的作品不拿來用
+import { ArtifactIndex } from './artifact-index.js?v=72'; // v71：只讀作品的摘要（這一頁只用到哪個字、寫錯幾次、哪天寫的），不把全部筆跡讀進來
+import { isApp, plugin } from './app-env.js?v=72'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
 const NOPRINT = isApp() && !plugin('CapyPrint');
 if (NOPRINT) document.querySelector('.tools').insertAdjacentHTML('beforeend', '<span id="noPrint" style="font-size:13px;color:#a8440e">App 裡不能列印，請用 Safari 打開網站版列印。</span>');
 
@@ -179,11 +182,11 @@ $('#noneBtn').addEventListener('click', () => { selected = []; renderPick(); ren
 $('#printBtn').addEventListener('click', async () => { await Promise.all([...document.querySelectorAll('.sheet img')].map(im => im.decode().catch(() => {}))); const P = plugin('CapyPrint'); if (P) { try { await P.print(); } catch (e) { alert('列印失敗：' + (e?.message || e)); } } else window.print(); }); // 插畫載完再印
 
 try {
-  loaded = await loadContract('../../', BOOKS[BOOK].contract);
+  loaded = (await loadBookContract(loadContract, '../../', BOOK, currentFlavor(qs))).loaded; // v72：App／網頁各用自己的分組
   tasks = [...loaded.writingTasks.values()];
-  try { ZY = (await get('./zhuyin.json?v=71')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
+  try { ZY = (await get('./zhuyin.json?v=72')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
   // v69：索引是必要教材；讀不到就停在這裡（外層 catch 顯示訊息），不印出可能是另一種筆順的字
-  try { TW = (await loadTwIndex('../vendor-v2/hanzi-writer/data-tw/index.json?v=71')).chars; twReady = true; }
+  try { TW = (await loadTwIndex('../vendor-v2/hanzi-writer/data-tw/index.json?v=72')).chars; twReady = true; }
   catch (e) { twFailed = true; for (const id of ['#defBtn', '#noneBtn', '#printBtn']) $(id).disabled = true; throw e; } // 按鈕在這之前就掛好了，要一起停用
   try { // 唯讀：只開 readonly 交易讀作品
     const db = await openDB(); // v71：和遊戲共用同一份摘要快取（設計 docs/plans/2026-11-16-longterm-perf.md §3）；主資料庫仍然只讀

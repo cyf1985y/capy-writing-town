@@ -4,13 +4,14 @@
 //   還原採「合併」：作品、獎勵帳本只補沒有的；進度同一字以「已通過」優先，其次較新的。不會刪掉現有資料。
 //   v17：家長自訂獎勵（localStorage）由呼叫端給 localMerge 合併函式，備份格式 version 仍是 1。
 // 注意：iPhone「加入主畫面」後的 App 和 Safari 是兩份分開的存檔，搬家要用備份檔。
-import { BACKUP_FORMAT, STORES, LIMITS, validateBackup, rowProblem } from './backup-validate.js?v=71'; // v69
+import { BACKUP_FORMAT, STORES, LIMITS, validateBackup, rowProblem } from './backup-validate.js?v=72'; // v69
 export { BACKUP_FORMAT, LIMITS };
 const wrap = req => new Promise((res, rej) => { req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); });
 const done = tx => new Promise((res, rej) => { tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error || new Error('IDB_TX_ABORT')); });
 
-import { shareTextFile } from './app-env.js?v=71';
-import { bumpIndexGen } from './artifact-index.js?v=71';
+import { shareTextFile } from './app-env.js?v=72';
+import { bumpIndexGen } from './artifact-index.js?v=72';
+import { toPublic, toInternal } from './backup-codes.js?v=72'; // v72：備份檔裡用中性的課程代號
 export async function requestPersist() {
   const st = navigator.storage;
   const info = { supported: !!st?.persist, persisted: false, standalone: matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true, usage: null };
@@ -25,7 +26,7 @@ export async function exportBackup(db, { profileId, localKeys = [] }) {
   // v69：壞掉的資料列不放進備份（這樣做出來的備份一定通過還原時的檢查）；資料庫裡的不動
   for (const n of STORES) { const all = data[n]; data[n] = all.filter(r => rowProblem(n, r, profileId) === null); skipped[n] = all.length - data[n].length; }
   const local = {}; for (const k of localKeys) { try { const v = localStorage.getItem(k); if (v != null) local[k] = v; } catch { /* ignore */ } }
-  const out = { format: BACKUP_FORMAT, version: 1, exportedAt: new Date().toISOString(), profileId, data, local };
+  const out = toPublic({ format: BACKUP_FORMAT, version: 1, exportedAt: new Date().toISOString(), profileId, data, local }); // v72：內部代號 → 新代號
   Object.defineProperty(out, 'skipped', { value: skipped, enumerable: false }); // 不寫進檔案，只給呼叫端記 log
   return out;
 }
@@ -38,7 +39,8 @@ const stamp = r => r.updatedAt || r.completedAt || r.startedAt || '';
  * v69：先整份檢查（validateBackup，格式不對就丟錯、什麼都不寫；個別壞掉的資料列挑掉不還原），再用一個交易寫入；
  * 交易中任何例外都明確 abort（前面寫的一起回滾）——以前例外發生時交易沒有取消，會留下半套資料。
  */
-export async function importBackup(db, obj, { profileId, localKeys = [], localMerge = {} }) {
+export async function importBackup(db, obj0, { profileId, localKeys = [], localMerge = {} }) {
+  const obj = toInternal(obj0); // v72：新代號 → 內部代號（舊備份原樣）
   const v = validateBackup(obj, { profileId });
   const tx = db.transaction(STORES, 'readwrite'), added = { progress: 0, artifacts: 0, rewardLedger: 0 }; let kept = 0;
   const finished = done(tx); finished.catch(() => {}); // 先掛上監聽：abort 之後才 await 也不會變成沒人處理的 rejection

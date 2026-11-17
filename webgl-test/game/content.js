@@ -40,7 +40,7 @@ export async function loadContract(base = '../', contractFile = 'game/contract_v
     const lesson = mode.lesson ?? 1;
     for (const id of mode.writingTaskIds) {
       const t = writingTasks.get(id);
-      if (!t || t.type !== 'write' || t.lesson !== lesson) {
+      if (!t || t.type !== 'write' || (t.lesson !== undefined && t.lesson !== lesson)) { // v72：題庫沒有課次（分組只在契約裡）就不比課號
         const err = new Error(`INVALID_WHITELIST_TASK:${id}`);
         throw err;
       }
