@@ -3,7 +3,8 @@
 // 同 rewardKey 已在 ledger → 不重發（rewardNew=false）。缺字形資料的字寫 status=deferred，不算 passed。
 // crashAt（測試用）：'afterArtifact' | 'afterProgress' | 'afterLedger'（交易內，reload 後交易被 IndexedDB 丟棄，三者一致回滾）、
 //                   'afterCommit'（交易 complete 後、效果播放前 reload，驗證重開由帳本推導且不重發）。
-import { rowProblem } from './backup-validate.js?v=70'; // v69：讀檔時把壞掉的資料列隔離（不拿來用，也不刪）
+import { rowProblem } from './backup-validate.js?v=71'; // v69：讀檔時把壞掉的資料列隔離（不拿來用，也不刪）
+import { ArtifactIndex, bumpIndexGen } from './artifact-index.js?v=71'; // v71：作品只讀「去掉筆跡的摘要」，要筆跡再拿整筆（設計 docs/plans/2026-11-16-longterm-perf.md §3）
 export const DB_NAME = 'capy_writing';
 export const DB_VERSION = 1;
 export const SCHEMA_VERSION = 1;
@@ -37,24 +38,39 @@ export class Store {
     this.okSha = new Set([contentSha256, ...(contract?.content?.legacySha256 ?? [])]);
   }
   isCurrent(r) { return !!r && this.okSha.has(r.contentSha256); }
-  async open() { this.db = await openDB(); return this; }
+  async open() {
+    this.db = await openDB();
+    this.index = new ArtifactIndex({ db: this.db, profileId: this.profileId, problem: r => rowProblem('artifacts', r, this.profileId), log: this.log }); // v71
+    return this;
+  }
 
-  /** 讀出本 profile 的全部狀態（重開時推導固定終點用） */
-  async load() {
-    const tx = this.db.transaction(STORES, 'readonly');
-    const [progressAll, artifactsAll, ledgerAll] = await Promise.all([
+  /** 進度和獎勵帳本（各最多一個字一筆，很小，整份讀）。不碰作品 */
+  async _light() {
+    const tx = this.db.transaction(['progress', 'rewardLedger'], 'readonly');
+    const [progressAll, ledgerAll] = await Promise.all([
       wrap(tx.objectStore('progress').index('profileId').getAll(this.profileId)),
-      wrap(tx.objectStore('artifacts').index('profileId').getAll(this.profileId)),
       wrap(tx.objectStore('rewardLedger').index('profileId').getAll(this.profileId)),
     ]);
-    // v69：壞掉的資料列（例如舊版還原進來、缺 drawnPaths 的作品）不拿來用——以前會讓初始化丟錯、「開始寫字」永遠停用。資料庫裡的不刪。
+    // v69：壞掉的資料列不拿來用——以前會讓初始化丟錯、「開始寫字」永遠停用。資料庫裡的不刪。
     const good = (n, list) => list.filter(r => rowProblem(n, r, this.profileId) === null);
-    const progress = good('progress', progressAll), artifacts = good('artifacts', artifactsAll), ledger = good('rewardLedger', ledgerAll);
-    const okA = new Set(artifacts), bad = { artifacts: artifactsAll.filter(a => !okA.has(a)).map(a => a?.artifactId ?? null), progress: progressAll.length - progress.length, ledger: ledgerAll.length - ledger.length };
+    const progress = good('progress', progressAll), ledger = good('rewardLedger', ledgerAll);
     const current = r => this.isCurrent(r); // 題庫版本不同的舊紀錄不計入；legacySha256 列出的舊版本照樣算（v55）
     const passedTaskIds = progress.filter(r => current(r) && r.status === 'passed').map(r => r.taskId);
-    return { progress, artifacts, ledger, bad, passedTaskIds, committedRewardKeys: ledger.map(l => l.rewardKey) };
+    return { progress, ledger, passedTaskIds, bad: { progress: progressAll.length - progress.length, ledger: ledgerAll.length - ledger.length } };
   }
+
+  /**
+   * 讀出本 profile 的全部狀態（重開時推導固定終點用）。
+   * v71：artifacts 是「摘要」——每一筆沒有 drawnPaths（筆跡），多一個 strokes（筆數），其他欄位照舊；當成唯讀。要筆跡用 fullArtifacts(ids)。
+   * 壞掉的作品（例如舊版還原進來、缺 drawnPaths 的）不在 artifacts 裡，id 列在 bad.artifacts。
+   * 作品和進度不在同一個讀取交易：中間別的分頁剛好存了一個字時，這一次可能差一筆，下一次 load() 就一致（這些只拿來顯示和算星數，不會寫回去）。
+   */
+  async load({ onProgress } = {}) {
+    const a = await this.index.sync({ onProgress }), l = await this._light();
+    return { progress: l.progress, artifacts: a.artifacts, ledger: l.ledger, bad: { artifacts: a.bad, progress: l.bad.progress, ledger: l.bad.ledger }, passedTaskIds: l.passedTaskIds, committedRewardKeys: l.ledger.map(x => x.rewardKey) };
+  }
+  /** v71：整筆作品（含筆跡），照 ids 的順序；不存在或壞掉的略過。畫字卡、重播筆跡用 */
+  fullArtifacts(ids) { return this.index.full(ids); }
 
   _baseProgress(task, attemptId, status, extra = {}) {
     return { progressKey: progressKey(this.profileId, task.id), schemaVersion: SCHEMA_VERSION, contentVersion: this.contract.content.contentVersion, contentSha256: this.contentSha256,
@@ -124,10 +140,10 @@ export class Store {
     throw new Error('CRASH_SIMULATED:' + point);
   }
 
-  /** localStorage 只放摘要快取（不是真相來源） */
+  /** localStorage 只放摘要快取（不是真相來源）。v71：只讀進度和帳本，不讀作品（以前每寫完一個字都把全部作品重讀一次） */
   async writeSummary() {
     try {
-      const { passedTaskIds, ledger } = await this.load();
+      const { passedTaskIds, ledger } = await this._light();
       localStorage.setItem('capy_writing_summary', JSON.stringify({ schemaVersion: SCHEMA_VERSION, profileId: this.profileId, contentSha256: this.contentSha256, passedTaskIds, rewards: ledger.length, updatedAt: new Date().toISOString() }));
     } catch (e) { this.log('summary write failed: ' + e); }
   }
@@ -143,4 +159,5 @@ export async function clearProfile(db, profileId) {
   const tx = db.transaction(STORES, 'readwrite');
   for (const name of STORES) { const s = tx.objectStore(name); const rows = await wrap(s.index('profileId').getAll(profileId)); for (const r of rows) s.delete(r[s.keyPath]); }
   await txDone(tx); localStorage.removeItem('capy_writing_summary');
+  await bumpIndexGen(); // v71：摘要快取整個作廢（清掉又放回同一個 id 的作品，光對 id 看不出內容換了）
 }

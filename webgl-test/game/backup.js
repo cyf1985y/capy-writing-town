@@ -4,12 +4,13 @@
 //   還原採「合併」：作品、獎勵帳本只補沒有的；進度同一字以「已通過」優先，其次較新的。不會刪掉現有資料。
 //   v17：家長自訂獎勵（localStorage）由呼叫端給 localMerge 合併函式，備份格式 version 仍是 1。
 // 注意：iPhone「加入主畫面」後的 App 和 Safari 是兩份分開的存檔，搬家要用備份檔。
-import { BACKUP_FORMAT, STORES, LIMITS, validateBackup, rowProblem } from './backup-validate.js?v=70'; // v69
+import { BACKUP_FORMAT, STORES, LIMITS, validateBackup, rowProblem } from './backup-validate.js?v=71'; // v69
 export { BACKUP_FORMAT, LIMITS };
 const wrap = req => new Promise((res, rej) => { req.onsuccess = () => res(req.result); req.onerror = () => rej(req.error); });
 const done = tx => new Promise((res, rej) => { tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error || new Error('IDB_TX_ABORT')); });
 
-import { shareTextFile } from './app-env.js?v=70';
+import { shareTextFile } from './app-env.js?v=71';
+import { bumpIndexGen } from './artifact-index.js?v=71';
 export async function requestPersist() {
   const st = navigator.storage;
   const info = { supported: !!st?.persist, persisted: false, standalone: matchMedia?.('(display-mode: standalone)').matches || navigator.standalone === true, usage: null };
@@ -52,6 +53,7 @@ export async function importBackup(db, obj, { profileId, localKeys = [], localMe
     }
   } catch (e) { try { tx.abort(); } catch { /* 已經結束或已經取消 */ } await finished.catch(() => {}); throw e; }
   await finished;
+  await bumpIndexGen(); // v71：還原之後作品的摘要快取整個重做（設計 docs/plans/2026-11-16-longterm-perf.md §3.2）
   // localStorage 的鍵：預設「本機已有就不覆蓋」；localMerge[k](本機字串|null, 備份字串) 有給就用它合併（v17 獎勵與兌換紀錄）。舊備份沒有的鍵就跳過。
   // v69：備份裡的值不是字串 → 跳過那個鍵（不另外限制長度：匯出得出來的就要還原得回去，大小只看整個檔的上限）
   const src = obj.local && typeof obj.local === 'object' && !Array.isArray(obj.local) ? obj.local : {};

@@ -84,15 +84,16 @@ h1{font-size:19px;margin:0 0 4px;color:var(--pri)}
 </div>
 <div class="preview" id="preview"></div>
 <script type="module">
-import { loadContract } from './content.js?v=70';
-import { openDB } from './store.js?v=70';
-import { starsOf, bestStars, starText } from './stars.js?v=70';
-import { wordHTML, zhuyinHTML } from './writing-panel.js?v=70';
-import { BOOKS, currentBook, profileFor } from './books.js?v=70';
-import { currentSkin, loadSkin } from './skin.js?v=70';
-import { loadTwIndex } from './tw-index.js?v=70'; // v69：筆順索引讀不到就不畫練習單
-import { validArtifact } from './backup-validate.js?v=70'; // v69：壞掉的作品不拿來用
-import { isApp, plugin } from './app-env.js?v=70'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
+import { loadContract } from './content.js?v=71';
+import { openDB } from './store.js?v=71';
+import { starsOf, bestStars, starText } from './stars.js?v=71';
+import { wordHTML, zhuyinHTML } from './writing-panel.js?v=71';
+import { BOOKS, currentBook, profileFor } from './books.js?v=71';
+import { currentSkin, loadSkin } from './skin.js?v=71';
+import { loadTwIndex } from './tw-index.js?v=71'; // v69：筆順索引讀不到就不畫練習單
+import { rowProblem } from './backup-validate.js?v=71'; // v69：壞掉的作品不拿來用
+import { ArtifactIndex } from './artifact-index.js?v=71'; // v71：只讀作品的摘要（這一頁只用到哪個字、寫錯幾次、哪天寫的），不把全部筆跡讀進來
+import { isApp, plugin } from './app-env.js?v=71'; // v54：App 裡用原生列印外掛 CapyPrint（WKWebView 不支援 window.print）
 const NOPRINT = isApp() && !plugin('CapyPrint');
 if (NOPRINT) document.querySelector('.tools').insertAdjacentHTML('beforeend', '<span id="noPrint" style="font-size:13px;color:#a8440e">App 裡不能列印，請用 Safari 打開網站版列印。</span>');
 
@@ -180,14 +181,13 @@ $('#printBtn').addEventListener('click', async () => { await Promise.all([...doc
 try {
   loaded = await loadContract('../../', BOOKS[BOOK].contract);
   tasks = [...loaded.writingTasks.values()];
-  try { ZY = (await get('./zhuyin.json?v=70')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
+  try { ZY = (await get('./zhuyin.json?v=71')).words ?? {}; } catch { /* 沒有詞語注音就只印詞 */ }
   // v69：索引是必要教材；讀不到就停在這裡（外層 catch 顯示訊息），不印出可能是另一種筆順的字
-  try { TW = (await loadTwIndex('../vendor-v2/hanzi-writer/data-tw/index.json?v=70')).chars; twReady = true; }
+  try { TW = (await loadTwIndex('../vendor-v2/hanzi-writer/data-tw/index.json?v=71')).chars; twReady = true; }
   catch (e) { twFailed = true; for (const id of ['#defBtn', '#noneBtn', '#printBtn']) $(id).disabled = true; throw e; } // 按鈕在這之前就掛好了，要一起停用
   try { // 唯讀：只開 readonly 交易讀作品
-    const db = await openDB(), tx = db.transaction('artifacts', 'readonly');
-    artifacts = await new Promise((res, rej) => { const r = tx.objectStore('artifacts').index('profileId').getAll(PROFILE_ID); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
-    db.close(); artifacts = artifacts.filter(validArtifact);
+    const db = await openDB(); // v71：和遊戲共用同一份摘要快取（設計 docs/plans/2026-11-16-longterm-perf.md §3）；主資料庫仍然只讀
+    try { artifacts = (await new ArtifactIndex({ db, profileId: PROFILE_ID, problem: r => rowProblem('artifacts', r, PROFILE_ID) }).sync()).artifacts; } finally { db.close(); }
   } catch (e) { $('#msg').textContent = '讀不到遊戲紀錄（' + e + '），可以手動選字。'; }
   selected = defaultPicks(artifacts);
   renderPick(); await renderSheet();
